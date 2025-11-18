@@ -31,12 +31,14 @@ export function RightSidebar({
   const supabase = createClient();
 
   useEffect(() => {
+    // Reset writer model when project changes
+    setWriterModel(null);
+    setTrainingCount(0);
+    
     if (projectId) {
       loadProject();
     } else {
       setProject(null);
-      setWriterModel(null);
-      setTrainingCount(0);
     }
   }, [projectId]);
 
@@ -56,7 +58,8 @@ export function RightSidebar({
   useEffect(() => {
     if (writerModelId) {
       loadWriterModel();
-    } else {
+    } else if (!project?.writer_model_id) {
+      // Only clear if project doesn't have writer_model_id either
       setWriterModel(null);
       setTrainingCount(0);
     }
