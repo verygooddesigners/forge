@@ -8,13 +8,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const supabase = createClient();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +24,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      const supabase = createClient();
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
