@@ -43,19 +43,28 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal }: Ed
   const loadProject = async () => {
     if (!projectId) return;
 
-    const { data, error } = await supabase
-      .from('projects')
-      .select(`
-        *,
-        brief:brief_id (content),
-        writer_model:writer_model_id (id)
-      `)
-      .eq('id', projectId)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select(`
+          *,
+          brief:brief_id (content)
+        `)
+        .eq('id', projectId)
+        .single();
 
-    if (!error && data) {
-      setProject(data as Project);
-      setContent(data.content || null);
+      if (error) {
+        console.error('Error loading project:', error);
+        return;
+      }
+
+      if (data) {
+        console.log('Project loaded:', data.headline, 'Writer Model ID:', data.writer_model_id);
+        setProject(data as Project);
+        setContent(data.content || null);
+      }
+    } catch (error) {
+      console.error('Error loading project:', error);
     }
   };
 
@@ -83,12 +92,43 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal }: Ed
   };
 
   const handleGenerateContent = async () => {
-    if (!project || !projectId || !writerModelId) return;
+    if (!project || !projectId) {
+      alert('Project not loaded. Please try again.');
+      return;
+    }
+
+    // Use writerModelId from prop or from project
+    const modelId = writerModelId || project.writer_model_id;
+    if (!modelId) {
+      alert('No writer model selected. Please select a writer model for this project.');
+      return;
+    }
 
     setGenerating(true);
     try {
-      // Get brief content
-      const briefContent = project.brief?.content || null;
+      // Get brief content - need to load it if not already loaded
+      let briefContent = project.brief?.content || null;
+      
+      // If brief content not loaded, fetch it
+      if (!briefContent && project.brief_id) {
+        const { data: briefData } = await supabase
+          .from('briefs')
+          .select('content')
+          .eq('id', project.brief_id)
+          .single();
+        
+        if (briefData) {
+          briefContent = briefData.content;
+        }
+      }
+
+      console.log('Generating content with:', {
+        projectId,
+        headline: project.headline,
+        primaryKeyword: project.primary_keyword,
+        writerModelId: modelId,
+        hasBrief: !!briefContent,
+      });
 
       const response = await fetch('/api/generate', {
         method: 'POST',
@@ -101,7 +141,7 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal }: Ed
           primaryKeyword: project.primary_keyword,
           secondaryKeywords: project.secondary_keywords || [],
           wordCount: project.word_count_target || 800,
-          writerModelId,
+          writerModelId: modelId,
           briefContent: briefContent ? JSON.stringify(briefContent) : null,
         }),
       });

@@ -42,20 +42,15 @@ export function RightSidebar({
     }
   }, [projectId]);
 
-  // Also load writer model when project loads and has writer_model_id (if writerModelId prop not provided)
-  useEffect(() => {
-    if (project?.writer_model_id && !writerModelId) {
-      loadWriterModelById(project.writer_model_id);
-    }
-  }, [project?.writer_model_id, writerModelId]);
 
   useEffect(() => {
-    if (project?.headline && project?.primary_keyword) {
+    if (project && (project.headline || project.primary_keyword)) {
       fetchNews();
     }
   }, [project]);
 
   useEffect(() => {
+    console.log('writerModelId changed:', writerModelId);
     if (writerModelId) {
       loadWriterModel();
     } else if (!project?.writer_model_id) {
@@ -65,18 +60,39 @@ export function RightSidebar({
     }
   }, [writerModelId]);
 
+  // Also try loading from project if writerModelId prop is not set
+  useEffect(() => {
+    if (project?.writer_model_id && !writerModelId) {
+      console.log('Loading writer model from project:', project.writer_model_id);
+      loadWriterModelById(project.writer_model_id);
+    }
+  }, [project?.writer_model_id, writerModelId]);
+
   const loadProject = async () => {
     if (!projectId) return;
 
     try {
+      console.log('Loading project:', projectId);
       const { data, error } = await supabase
         .from('projects')
         .select('*')
         .eq('id', projectId)
         .single();
 
-      if (!error && data) {
+      if (error) {
+        console.error('Error loading project:', error);
+        return;
+      }
+
+      if (data) {
+        console.log('Project loaded:', data.headline, 'Writer Model ID:', data.writer_model_id);
         setProject(data as Project);
+        
+        // Load writer model from project if writerModelId prop not set
+        if (data.writer_model_id && !writerModelId) {
+          console.log('Loading writer model from project data');
+          loadWriterModelById(data.writer_model_id);
+        }
       }
     } catch (error) {
       console.error('Error loading project:', error);
@@ -84,8 +100,12 @@ export function RightSidebar({
   };
 
   const loadWriterModelById = async (modelId: string) => {
-    if (!modelId) return;
+    if (!modelId) {
+      console.log('loadWriterModelById: No modelId provided');
+      return;
+    }
 
+    console.log('Loading writer model:', modelId);
     try {
       // Load writer model
       const { data: model, error: modelError } = await supabase
@@ -94,8 +114,16 @@ export function RightSidebar({
         .eq('id', modelId)
         .single();
 
-      if (!modelError && model) {
+      if (modelError) {
+        console.error('Error loading writer model:', modelError);
+        return;
+      }
+
+      if (model) {
+        console.log('Writer model loaded:', model.name);
         setWriterModel(model);
+      } else {
+        console.log('No writer model found for ID:', modelId);
       }
 
       // Load training count
@@ -104,7 +132,10 @@ export function RightSidebar({
         .select('*', { count: 'exact', head: true })
         .eq('model_id', modelId);
 
-      if (!countError && count !== null) {
+      if (countError) {
+        console.error('Error loading training count:', countError);
+      } else if (count !== null) {
+        console.log('Training count:', count);
         setTrainingCount(count);
       }
     } catch (error) {
@@ -226,7 +257,7 @@ export function RightSidebar({
           </CardHeader>
           <CardContent className="flex-1 overflow-auto">
             <TabsContent value="news" className="mt-0 space-y-3">
-              {projectId && project && (project.headline || project.primary_keyword) ? (
+              {projectId && project ? (
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <p className="text-xs text-muted-foreground">Recent relevant news</p>
