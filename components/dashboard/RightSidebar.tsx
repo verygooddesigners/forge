@@ -35,8 +35,17 @@ export function RightSidebar({
       loadProject();
     } else {
       setProject(null);
+      setWriterModel(null);
+      setTrainingCount(0);
     }
   }, [projectId]);
+
+  // Also load writer model when project loads and has writer_model_id (if writerModelId prop not provided)
+  useEffect(() => {
+    if (project?.writer_model_id && !writerModelId) {
+      loadWriterModelById(project.writer_model_id);
+    }
+  }, [project?.writer_model_id, writerModelId]);
 
   useEffect(() => {
     if (project?.headline && project?.primary_keyword) {
@@ -71,15 +80,15 @@ export function RightSidebar({
     }
   };
 
-  const loadWriterModel = async () => {
-    if (!writerModelId) return;
+  const loadWriterModelById = async (modelId: string) => {
+    if (!modelId) return;
 
     try {
       // Load writer model
       const { data: model, error: modelError } = await supabase
         .from('writer_models')
         .select('*')
-        .eq('id', writerModelId)
+        .eq('id', modelId)
         .single();
 
       if (!modelError && model) {
@@ -90,7 +99,7 @@ export function RightSidebar({
       const { count, error: countError } = await supabase
         .from('training_content')
         .select('*', { count: 'exact', head: true })
-        .eq('model_id', writerModelId);
+        .eq('model_id', modelId);
 
       if (!countError && count !== null) {
         setTrainingCount(count);
@@ -98,6 +107,11 @@ export function RightSidebar({
     } catch (error) {
       console.error('Error loading writer model:', error);
     }
+  };
+
+  const loadWriterModel = async () => {
+    if (!writerModelId) return;
+    await loadWriterModelById(writerModelId);
   };
 
   const getInitials = (name: string): string => {
