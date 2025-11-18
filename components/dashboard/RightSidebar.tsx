@@ -120,6 +120,7 @@ export function RightSidebar({
           headline: project.headline,
           primaryKeyword: project.primary_keyword,
           secondaryKeywords: project.secondary_keywords || [],
+          topic: project.topic || null,
         }),
       });
 

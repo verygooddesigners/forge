@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { headline, primaryKeyword, secondaryKeywords } = await request.json();
+    const { headline, primaryKeyword, secondaryKeywords, topic } = await request.json();
 
     if (!headline && !primaryKeyword) {
       return NextResponse.json(
@@ -20,8 +20,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Build search query
-    const query = [headline, primaryKeyword, ...(secondaryKeywords || [])]
+    // Build search query from headline, keywords, and topic
+    const query = [
+      headline,
+      primaryKeyword,
+      ...(secondaryKeywords || []),
+      topic
+    ]
       .filter(Boolean)
       .join(' ');
 
