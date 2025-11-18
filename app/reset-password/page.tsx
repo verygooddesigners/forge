@@ -19,14 +19,50 @@ function ResetPasswordForm() {
   const [success, setSuccess] = useState(false);
   const router = useRouter();
 
+
   useEffect(() => {
-    // Check if we have the hash fragment with the token
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash;
+    // Handle the password reset token when component mounts
+    const handlePasswordReset = async () => {
+      if (typeof window === 'undefined') return;
+
+      const hash = window.location.hash.substring(1);
       if (!hash) {
         setError('Invalid reset link. Please request a new password reset.');
+        return;
       }
-    }
+
+      const params = new URLSearchParams(hash);
+      const accessToken = params.get('access_token');
+      const refreshToken = params.get('refresh_token');
+      const type = params.get('type');
+
+      if (accessToken && type === 'recovery') {
+        try {
+          const supabase = createClient();
+          
+          // Set the session using both access and refresh tokens
+          const { data, error: sessionError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken || '',
+          });
+
+          if (sessionError) {
+            console.error('Session error:', sessionError);
+            setError('Invalid or expired reset link. Please request a new password reset.');
+          } else if (data.session) {
+            // Session set successfully, user can now reset password
+            console.log('Session established for password reset');
+          }
+        } catch (err: any) {
+          console.error('Error setting session:', err);
+          setError('Invalid reset link. Please request a new password reset.');
+        }
+      } else {
+        setError('Invalid reset link. Missing required tokens.');
+      }
+    };
+
+    handlePasswordReset();
   }, []);
 
   const handleResetPassword = async (e: React.FormEvent) => {
@@ -48,26 +84,22 @@ function ResetPasswordForm() {
     try {
       const supabase = createClient();
       
-      // Get the hash fragment from the URL
-      const hash = window.location.hash.substring(1);
-      const params = new URLSearchParams(hash);
-      const accessToken = params.get('access_token');
-      const type = params.get('type');
-
-      if (!accessToken || type !== 'recovery') {
-        throw new Error('Invalid reset link');
-      }
-
-      // Update the password using the access token
+      // Update the password (session should already be set from useEffect)
       const { error: updateError } = await supabase.auth.updateUser({
         password: password,
       });
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        if (updateError.message.includes('session')) {
+          throw new Error('Session expired. Please request a new password reset link.');
+        }
+        throw updateError;
+      }
 
       setSuccess(true);
       
-      // Redirect to login after 2 seconds
+      // Sign out and redirect to login after 2 seconds
+      await supabase.auth.signOut();
       setTimeout(() => {
         router.push('/login');
       }, 2000);
