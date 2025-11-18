@@ -30,10 +30,14 @@ export async function generateContent(
     throw new Error('CLAUDE_API_KEY is not configured. Please add it to your .env.local file.');
   }
 
+  // Separate system message from user/assistant messages
+  const systemMessage = messages.find(m => m.role === 'system');
+  const nonSystemMessages = messages.filter(m => m.role !== 'system');
+
   // Convert messages format for Claude API
-  const claudeMessages = messages.map(msg => ({
-    role: msg.role === 'system' ? 'user' : msg.role,
-    content: msg.role === 'system' ? `System: ${msg.content}` : msg.content,
+  const claudeMessages = nonSystemMessages.map(msg => ({
+    role: msg.role as 'user' | 'assistant',
+    content: msg.content,
   }));
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -47,8 +51,8 @@ export async function generateContent(
       model,
       max_tokens: maxTokens,
       temperature,
-      messages: claudeMessages.filter(m => m.role !== 'system'),
-      system: messages.find(m => m.role === 'system')?.content || undefined,
+      messages: claudeMessages,
+      system: systemMessage?.content || undefined,
     }),
   });
 
@@ -74,25 +78,34 @@ export async function streamContent(
     maxTokens = 4000,
   } = options;
 
+  // Separate system message from user/assistant messages
+  const systemMessage = messages.find(m => m.role === 'system');
+  const nonSystemMessages = messages.filter(m => m.role !== 'system');
+
   // Convert messages format for Claude API
-  const claudeMessages = messages.map(msg => ({
-    role: msg.role === 'system' ? 'user' : msg.role,
-    content: msg.role === 'system' ? `System: ${msg.content}` : msg.content,
+  const claudeMessages = nonSystemMessages.map(msg => ({
+    role: msg.role as 'user' | 'assistant',
+    content: msg.content,
   }));
+
+  const apiKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error('CLAUDE_API_KEY is not configured. Please add it to your .env.local file.');
+  }
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY || '',
+      'x-api-key': apiKey,
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
       model,
       max_tokens: maxTokens,
       temperature,
-      messages: claudeMessages.filter(m => m.role !== 'system'),
-      system: messages.find(m => m.role === 'system')?.content || undefined,
+      messages: claudeMessages,
+      system: systemMessage?.content || undefined,
       stream: true,
     }),
   });
