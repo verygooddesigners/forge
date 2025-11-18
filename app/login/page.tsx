@@ -16,6 +16,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resetSent, setResetSent] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -38,6 +39,31 @@ export default function LoginPage() {
       }
     } catch (err: any) {
       setError(err.message || 'Failed to sign in');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError('Please enter your email address first');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) throw error;
+
+      setResetSent(true);
+    } catch (err: any) {
+      setError(err.message || 'Failed to send password reset email');
     } finally {
       setLoading(false);
     }
@@ -85,9 +111,24 @@ export default function LoginPage() {
                 {error}
               </div>
             )}
+            {resetSent && (
+              <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
+                Password reset email sent! Check your inbox.
+              </div>
+            )}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign In'}
             </Button>
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                className="text-sm text-muted-foreground hover:text-primary underline"
+                disabled={loading}
+              >
+                Forgot password?
+              </button>
+            </div>
           </form>
         </CardContent>
       </Card>
