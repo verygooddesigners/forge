@@ -3,6 +3,40 @@ import { createClient } from '@/lib/supabase/server';
 import { findSimilarTrainingContent, buildContextFromExamples, buildContentGenerationPrompt } from '@/lib/rag';
 import { streamContent } from '@/lib/ai';
 
+/**
+ * Convert TipTap JSON to plain text
+ */
+function convertTipTapToText(doc: any): string {
+  if (!doc || !doc.content) return '';
+
+  const extractText = (node: any): string => {
+    if (node.type === 'text') {
+      return node.text || '';
+    }
+    
+    if (node.content && Array.isArray(node.content)) {
+      const text = node.content.map(extractText).join('');
+      
+      // Add formatting based on node type
+      if (node.type === 'heading') {
+        const level = node.attrs?.level || 1;
+        const prefix = '#'.repeat(level) + ' ';
+        return prefix + text + '\n\n';
+      }
+      
+      if (node.type === 'paragraph') {
+        return text + '\n\n';
+      }
+      
+      return text;
+    }
+    
+    return '';
+  };
+
+  return doc.content.map(extractText).join('').trim();
+}
+
 export async function POST(request: NextRequest) {
   try {
     const {
@@ -54,13 +88,32 @@ export async function POST(request: NextRequest) {
     // Build context from examples
     const writerContext = buildContextFromExamples(similarContent);
 
+    // Convert brief content from TipTap JSON to plain text
+    let briefText = 'Write a well-structured article with clear headings and paragraphs.';
+    if (briefContent) {
+      try {
+        // Parse if it's a string
+        const briefJson = typeof briefContent === 'string' ? JSON.parse(briefContent) : briefContent;
+        
+        // Convert TipTap JSON to plain text
+        if (briefJson && briefJson.content) {
+          briefText = convertTipTapToText(briefJson);
+        } else {
+          briefText = briefContent;
+        }
+      } catch (e) {
+        // If parsing fails, use as-is
+        briefText = typeof briefContent === 'string' ? briefContent : JSON.stringify(briefContent);
+      }
+    }
+
     // Build the prompt
     const prompt = buildContentGenerationPrompt(
       headline,
       primaryKeyword,
       secondaryKeywords || [],
       wordCount || 800,
-      briefContent || 'Write a well-structured article with clear headings and paragraphs.',
+      briefText,
       writerContext,
       masterInstructions
     );

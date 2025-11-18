@@ -107,7 +107,8 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal }: Ed
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate content');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Failed to generate content (${response.status})`);
       }
 
       // Stream the response
@@ -187,9 +188,10 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal }: Ed
         .from('projects')
         .update({ content: tipTapContent })
         .eq('id', projectId);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating content:', error);
-      alert('Failed to generate content. Please try again.');
+      const errorMessage = error.message || 'Failed to generate content. Please try again.';
+      alert(`Error: ${errorMessage}`);
     } finally {
       setGenerating(false);
     }
