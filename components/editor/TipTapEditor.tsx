@@ -36,6 +36,7 @@ export function TipTapEditor({
     ],
     content,
     editable,
+    immediatelyRender: false,
     editorProps: {
       attributes: {
         class: 'prose prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none min-h-[400px]',
