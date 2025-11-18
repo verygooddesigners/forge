@@ -51,6 +51,20 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Check if user with this email already exists
+    const { data: existingUser } = await adminClient
+      .from('users')
+      .select('id, email')
+      .eq('email', email)
+      .single();
+
+    if (existingUser) {
+      return NextResponse.json(
+        { error: 'A user with this email already exists' },
+        { status: 400 }
+      );
+    }
+
     // Create auth user
     const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
       email,
@@ -59,6 +73,13 @@ export async function POST(request: NextRequest) {
     });
 
     if (authError) {
+      // Check if it's a duplicate email error
+      if (authError.message.includes('already registered') || authError.message.includes('already exists')) {
+        return NextResponse.json(
+          { error: 'A user with this email already exists' },
+          { status: 400 }
+        );
+      }
       return NextResponse.json(
         { error: authError.message },
         { status: 400 }
@@ -72,14 +93,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create user profile in public.users table
+    // Use upsert to handle any edge cases where profile might already exist
     const { error: profileError } = await adminClient
       .from('users')
-      .insert({
+      .upsert({
         id: authData.user.id,
         email: authData.user.email!,
         full_name: fullName || null,
         role: role || 'strategist',
+      }, {
+        onConflict: 'id'
       });
 
     if (profileError) {
