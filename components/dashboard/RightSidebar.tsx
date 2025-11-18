@@ -6,23 +6,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Newspaper, TrendingUp, RefreshCw } from 'lucide-react';
-import { NewsArticle } from '@/types';
+import { NewsArticle, WriterModel, Project } from '@/types';
 import { NewsCard } from './NewsCard';
+import { createClient } from '@/lib/supabase/client';
 
 interface RightSidebarProps {
   projectId: string | null;
   writerModelId: string | null;
-  headline?: string;
-  primaryKeyword?: string;
-  secondaryKeywords?: string[];
 }
 
 export function RightSidebar({ 
   projectId, 
-  writerModelId,
-  headline,
-  primaryKeyword,
-  secondaryKeywords
+  writerModelId
 }: RightSidebarProps) {
   const [activeTab, setActiveTab] = useState('news');
   const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([]);
@@ -30,15 +25,91 @@ export function RightSidebar({
   const [seoScore, setSeoScore] = useState(0);
   const [seoSuggestions, setSeoSuggestions] = useState<string[]>([]);
   const [loadingSEO, setLoadingSEO] = useState(false);
+  const [writerModel, setWriterModel] = useState<WriterModel | null>(null);
+  const [trainingCount, setTrainingCount] = useState<number>(0);
+  const [project, setProject] = useState<Project | null>(null);
+  const supabase = createClient();
 
   useEffect(() => {
-    if (projectId && headline && primaryKeyword) {
+    if (projectId) {
+      loadProject();
+    } else {
+      setProject(null);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
+    if (project?.headline && project?.primary_keyword) {
       fetchNews();
     }
-  }, [projectId, headline, primaryKeyword]);
+  }, [project]);
+
+  useEffect(() => {
+    if (writerModelId) {
+      loadWriterModel();
+    } else {
+      setWriterModel(null);
+      setTrainingCount(0);
+    }
+  }, [writerModelId]);
+
+  const loadProject = async () => {
+    if (!projectId) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('id', projectId)
+        .single();
+
+      if (!error && data) {
+        setProject(data as Project);
+      }
+    } catch (error) {
+      console.error('Error loading project:', error);
+    }
+  };
+
+  const loadWriterModel = async () => {
+    if (!writerModelId) return;
+
+    try {
+      // Load writer model
+      const { data: model, error: modelError } = await supabase
+        .from('writer_models')
+        .select('*')
+        .eq('id', writerModelId)
+        .single();
+
+      if (!modelError && model) {
+        setWriterModel(model);
+      }
+
+      // Load training count
+      const { count, error: countError } = await supabase
+        .from('training_content')
+        .select('*', { count: 'exact', head: true })
+        .eq('model_id', writerModelId);
+
+      if (!countError && count !== null) {
+        setTrainingCount(count);
+      }
+    } catch (error) {
+      console.error('Error loading writer model:', error);
+    }
+  };
+
+  const getInitials = (name: string): string => {
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
 
   const fetchNews = async () => {
-    if (!headline && !primaryKeyword) return;
+    if (!project?.headline && !project?.primary_keyword) return;
 
     setLoadingNews(true);
     try {
@@ -46,9 +117,9 @@ export function RightSidebar({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          headline,
-          primaryKeyword,
-          secondaryKeywords,
+          headline: project.headline,
+          primaryKeyword: project.primary_keyword,
+          secondaryKeywords: project.secondary_keywords || [],
         }),
       });
 
@@ -73,8 +144,8 @@ export function RightSidebar({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           content: '<h1>Sample content</h1>',
-          primaryKeyword,
-          secondaryKeywords,
+          primaryKeyword: project?.primary_keyword || '',
+          secondaryKeywords: project?.secondary_keywords || [],
           currentScore: seoScore,
         }),
       });
@@ -98,16 +169,22 @@ export function RightSidebar({
           <CardTitle className="text-sm font-medium">Writer Model</CardTitle>
         </CardHeader>
         <CardContent>
-          {writerModelId ? (
+          {writerModel ? (
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="text-xs font-semibold text-primary">JB</span>
+                <span className="text-xs font-semibold text-primary">
+                  {getInitials(writerModel.name)}
+                </span>
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium">Jeremy Botter</p>
-                <p className="text-xs text-muted-foreground">45 training pieces</p>
+                <p className="text-sm font-medium">{writerModel.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {trainingCount} training {trainingCount === 1 ? 'piece' : 'pieces'}
+                </p>
               </div>
             </div>
+          ) : writerModelId ? (
+            <p className="text-sm text-muted-foreground">Loading model...</p>
           ) : (
             <p className="text-sm text-muted-foreground">No model selected</p>
           )}
@@ -131,7 +208,7 @@ export function RightSidebar({
           </CardHeader>
           <CardContent className="flex-1 overflow-auto">
             <TabsContent value="news" className="mt-0 space-y-3">
-              {projectId && (headline || primaryKeyword) ? (
+              {projectId && project && (project.headline || project.primary_keyword) ? (
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <p className="text-xs text-muted-foreground">Recent relevant news</p>
