@@ -41,9 +41,11 @@ export function UserManagement({ adminUser }: UserManagementProps) {
   const [showDialog, setShowDialog] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [role, setRole] = useState<UserRole>('strategist');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -63,24 +65,54 @@ export function UserManagement({ adminUser }: UserManagementProps) {
 
   const resetForm = () => {
     setEmail('');
+    setPassword('');
     setFullName('');
     setRole('strategist');
     setEditingUser(null);
+    setError(null);
   };
 
   const handleCreateUser = async () => {
+    if (!email || !password) {
+      setError('Email and password are required');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
     setLoading(true);
+    setError(null);
+
     try {
-      // Note: In production, you'd use Supabase Admin API or a server action
-      // For now, this is a placeholder showing the UI flow
-      console.log('Create user:', { email, fullName, role });
-      
+      const response = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          fullName: fullName || null,
+          role,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create user');
+      }
+
       // Close dialog and reload
       setShowDialog(false);
       resetForm();
       await loadUsers();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating user:', error);
+      setError(error.message || 'Failed to create user');
     } finally {
       setLoading(false);
     }
@@ -201,11 +233,17 @@ export function UserManagement({ adminUser }: UserManagementProps) {
             <DialogDescription>
               {editingUser 
                 ? 'Update user information and role' 
-                : 'Create a new user account. Credentials will be sent to their email.'}
+                : 'Create a new user account with email and password.'}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
+            {error && (
+              <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
+                {error}
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -214,8 +252,24 @@ export function UserManagement({ adminUser }: UserManagementProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={!!editingUser}
+                required
               />
             </div>
+
+            {!editingUser && (
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                  placeholder="At least 6 characters"
+                />
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="fullName">Full Name</Label>
@@ -223,6 +277,7 @@ export function UserManagement({ adminUser }: UserManagementProps) {
                 id="fullName"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
+                placeholder="Optional"
               />
             </div>
 
@@ -242,7 +297,7 @@ export function UserManagement({ adminUser }: UserManagementProps) {
             <Button
               className="w-full"
               onClick={() => editingUser ? handleUpdateUser(editingUser.id) : handleCreateUser()}
-              disabled={loading || !email}
+              disabled={loading || !email || (!editingUser && !password)}
             >
               {loading ? 'Saving...' : (editingUser ? 'Update User' : 'Create User')}
             </Button>
