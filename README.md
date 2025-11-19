@@ -223,4 +223,4 @@ Built with:
 ---
 
 **RotoWrite** - AI-Powered Content Creation Platform  
-Version 1.0.0 | Built with ❤️ for RotoWire
+Version v1.01.00 | Built with ❤️ for RotoWire

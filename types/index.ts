@@ -1,11 +1,13 @@
 // Core type definitions for RotoWrite
 
-export type UserRole = 'admin' | 'strategist';
+export type UserRole = 'admin' | 'strategist' | 'editor';
+export type AccountStatus = 'pending' | 'strategist' | 'editor' | 'admin';
 
 export interface User {
   id: string;
   email: string;
   role: UserRole;
+  account_status: AccountStatus;
   full_name?: string;
   avatar_url?: string;
   created_at: string;

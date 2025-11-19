@@ -117,7 +117,72 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-normal;
+    font-weight: 400;
+  }
+  
+  /* Typography weights as per user story */
+  h1 {
+    font-weight: 800;
+  }
+  
+  h2, h3 {
+    font-weight: 600;
+  }
+  
+  h4, h5, h6 {
+    font-weight: 600;
+  }
+  
+  /* Dividing lines - 1px soft purple with padding */
+  .divider {
+    border-top: 1px solid hsl(var(--primary) / 0.2);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  /* Form field styling - bottom line with purple stroke */
+  .form-field-bottom-line {
+    border: none;
+    border-bottom: 1px solid hsl(var(--primary) / 0.3);
+    border-radius: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .form-field-bottom-line:focus {
+    border-bottom-color: hsl(var(--primary));
+  }
+  
+  /* Slide animations for project creation modal */
+  @keyframes slide-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slide-in-left {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .animate-slide-in-right {
+    animation: slide-in-right 0.3s ease-out;
+  }
+  
+  .animate-slide-in-left {
+    animation: slide-in-left 0.3s ease-out;
   }
 }
 

@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/select';
 import { createClient } from '@/lib/supabase/client';
 import { WriterModel, Brief, Project } from '@/types';
-import { ArrowLeft, ArrowRight, FileText } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Plus, Check } from 'lucide-react';
 
 interface ProjectCreationModalProps {
   open: boolean;
@@ -30,7 +30,7 @@ interface ProjectCreationModalProps {
   onProjectCreated?: (project: Project) => void;
 }
 
-type Step = 'initial' | 'details' | 'model' | 'brief';
+type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export function ProjectCreationModal({
   open,
@@ -38,10 +38,11 @@ export function ProjectCreationModal({
   userId,
   onProjectCreated,
 }: ProjectCreationModalProps) {
-  const [step, setStep] = useState<Step>('initial');
-  const [action, setAction] = useState<'new' | 'existing' | null>(null);
+  const [step, setStep] = useState<Step>(1);
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
   
   // Project details
+  const [projectName, setProjectName] = useState('');
   const [headline, setHeadline] = useState('');
   const [primaryKeyword, setPrimaryKeyword] = useState('');
   const [secondaryKeywords, setSecondaryKeywords] = useState('');
@@ -55,7 +56,6 @@ export function ProjectCreationModal({
   // Available options
   const [writerModels, setWriterModels] = useState<WriterModel[]>([]);
   const [briefs, setBriefs] = useState<Brief[]>([]);
-  const [existingProjects, setExistingProjects] = useState<Project[]>([]);
   
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
@@ -79,22 +79,22 @@ export function ProjectCreationModal({
       .select('*')
       .or(`is_shared.eq.true,created_by.eq.${userId}`)
       .order('name');
-    
-    // Load user's existing projects
-    const { data: projects } = await supabase
-      .from('projects')
-      .select('*')
-      .eq('user_id', userId)
-      .order('updated_at', { ascending: false });
 
-    if (models) setWriterModels(models);
+    if (models) {
+      setWriterModels(models);
+      
+      // Auto-select user's writer model if it exists
+      const userModel = models.find(m => m.strategist_id === userId);
+      if (userModel) {
+        setSelectedModelId(userModel.id);
+      }
+    }
     if (briefsData) setBriefs(briefsData);
-    if (projects) setExistingProjects(projects);
   };
 
   const resetForm = () => {
-    setStep('initial');
-    setAction(null);
+    setStep(1);
+    setProjectName('');
     setHeadline('');
     setPrimaryKeyword('');
     setSecondaryKeywords('');
@@ -102,27 +102,21 @@ export function ProjectCreationModal({
     setWordCount('800');
     setSelectedModelId('');
     setSelectedBriefId('');
+    setSlideDirection('right');
   };
 
-  const handleInitial = (selectedAction: 'new' | 'existing') => {
-    setAction(selectedAction);
-    if (selectedAction === 'new') {
-      setStep('details');
-    } else {
-      // Load existing project
-      // For now, just close the modal
-      onOpenChange(false);
+  const handleNext = () => {
+    setSlideDirection('right');
+    if (step < 9) {
+      setStep((step + 1) as Step);
     }
   };
 
-  const handleDetailsNext = () => {
-    if (!headline || !primaryKeyword) return;
-    setStep('model');
-  };
-
-  const handleModelNext = () => {
-    if (!selectedModelId) return;
-    setStep('brief');
+  const handleBack = () => {
+    setSlideDirection('left');
+    if (step > 1) {
+      setStep((step - 1) as Step);
+    }
   };
 
   const handleCreateProject = async () => {
@@ -158,6 +152,41 @@ export function ProjectCreationModal({
     }
   };
 
+  const canProceed = () => {
+    switch (step) {
+      case 1: return projectName.trim() !== '';
+      case 2: return headline.trim() !== '';
+      case 3: return primaryKeyword.trim() !== '';
+      case 4: return true; // Secondary keywords are optional
+      case 5: return true; // Topic is optional
+      case 6: return selectedModelId !== '';
+      case 7: return selectedBriefId !== '';
+      case 8: return wordCount !== '' && parseInt(wordCount) > 0;
+      case 9: return true;
+      default: return false;
+    }
+  };
+
+  const getStepTitle = () => {
+    switch (step) {
+      case 1: return 'Project Name';
+      case 2: return 'Headline (H1)';
+      case 3: return 'Primary Keyword';
+      case 4: return 'Secondary Keywords';
+      case 5: return 'Additional Details';
+      case 6: return 'Writer Model';
+      case 7: return 'Brief Template';
+      case 8: return 'Word Count Target';
+      case 9: return 'Confirmation';
+      default: return '';
+    }
+  };
+
+  const getTrainingPercentage = (model: WriterModel) => {
+    const count = model.metadata?.total_training_pieces || 0;
+    return Math.min(100, Math.round((count / 25) * 100));
+  };
+
   return (
     <Dialog open={open} onOpenChange={(open) => {
       onOpenChange(open);
@@ -165,197 +194,269 @@ export function ProjectCreationModal({
     }}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>
-            {step === 'initial' && 'Get Started'}
-            {step === 'details' && 'Project Details'}
-            {step === 'model' && 'Choose Writer Model'}
-            {step === 'brief' && 'Select Brief'}
+          <DialogTitle className="text-xl font-semibold">
+            New Project - {getStepTitle()}
           </DialogTitle>
           <DialogDescription>
-            {step === 'initial' && 'Create a new project or open an existing one'}
-            {step === 'details' && 'Enter the details for your new content project'}
-            {step === 'model' && 'Select which writer model to use for this project'}
-            {step === 'brief' && 'Choose a brief template to structure your content'}
+            Step {step} of 9
           </DialogDescription>
         </DialogHeader>
 
-        <div className="py-4">
-          {/* Initial Step */}
-          {step === 'initial' && (
-            <div className="grid gap-4">
-              <Button
-                variant="outline"
-                className="h-24 flex flex-col gap-2"
-                onClick={() => handleInitial('new')}
-              >
-                <FileText className="h-8 w-8" />
-                <span className="text-base font-medium">New Project</span>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-24 flex flex-col gap-2"
-                onClick={() => handleInitial('existing')}
-              >
-                <FileText className="h-8 w-8" />
-                <span className="text-base font-medium">Open Existing Project</span>
-              </Button>
-            </div>
-          )}
+        <div className="py-6 min-h-[300px] relative overflow-hidden">
+          <div 
+            className={`transition-all duration-300 ease-in-out ${
+              slideDirection === 'right' ? 'animate-slide-in-right' : 'animate-slide-in-left'
+            }`}
+            key={step}
+          >
+            {/* Step 1: Project Name */}
+            {step === 1 && (
+              <div className="space-y-4">
+                <Label htmlFor="projectName">What is the name of your new project?</Label>
+                <Input
+                  id="projectName"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                  placeholder="e.g., Ravens Playoff Analysis"
+                  className="form-field-bottom-line"
+                  autoFocus
+                />
+              </div>
+            )}
 
-          {/* Details Step */}
-          {step === 'details' && (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="headline">Headline *</Label>
+            {/* Step 2: Headline */}
+            {step === 2 && (
+              <div className="space-y-4">
+                <Label htmlFor="headline">What is the H1 for your content?</Label>
                 <Input
                   id="headline"
-                  placeholder="Enter your story headline"
                   value={headline}
                   onChange={(e) => setHeadline(e.target.value)}
+                  placeholder="e.g., Baltimore Ravens Playoff Chances 2024"
+                  className="form-field-bottom-line"
+                  autoFocus
                 />
               </div>
+            )}
 
-              <div className="space-y-2">
-                <Label htmlFor="primaryKeyword">Primary Keyword *</Label>
+            {/* Step 3: Primary Keyword */}
+            {step === 3 && (
+              <div className="space-y-4">
+                <Label htmlFor="primaryKeyword">What is the primary keyword?</Label>
                 <Input
                   id="primaryKeyword"
-                  placeholder="e.g., Baltimore Ravens"
                   value={primaryKeyword}
                   onChange={(e) => setPrimaryKeyword(e.target.value)}
+                  placeholder="e.g., Baltimore Ravens playoffs"
+                  className="form-field-bottom-line"
+                  autoFocus
                 />
               </div>
+            )}
 
-              <div className="space-y-2">
-                <Label htmlFor="secondaryKeywords">Secondary Keywords</Label>
-                <Input
+            {/* Step 4: Secondary Keywords */}
+            {step === 4 && (
+              <div className="space-y-4">
+                <Label htmlFor="secondaryKeywords">What are the secondary keywords? (Separate each with a comma)</Label>
+                <Textarea
                   id="secondaryKeywords"
-                  placeholder="Comma-separated (e.g., NFL playoffs, AFC North)"
                   value={secondaryKeywords}
                   onChange={(e) => setSecondaryKeywords(e.target.value)}
+                  placeholder="e.g., AFC North, NFL playoffs, playoff seeding"
+                  rows={3}
+                  className="form-field-bottom-line"
+                  autoFocus
                 />
               </div>
+            )}
 
-              <div className="space-y-2">
-                <Label htmlFor="topic">Topic (Optional)</Label>
+            {/* Step 5: Additional Details */}
+            {step === 5 && (
+              <div className="space-y-4">
+                <Label htmlFor="topic">Write any more details about the content you want the Writing Engine to take into consideration</Label>
                 <Textarea
                   id="topic"
-                  placeholder="Brief description of what this content is about"
-                  rows={3}
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
+                  placeholder="Additional context, angle, or requirements..."
+                  rows={4}
+                  className="form-field-bottom-line"
+                  autoFocus
                 />
               </div>
+            )}
 
-              <div className="space-y-2">
-                <Label htmlFor="wordCount">Target Word Count</Label>
+            {/* Step 6: Writer Model */}
+            {step === 6 && (
+              <div className="space-y-4">
+                <Label>Choose your writer model</Label>
+                <Select value={selectedModelId} onValueChange={setSelectedModelId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a writer model" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {writerModels.map((model) => (
+                      <SelectItem key={model.id} value={model.id}>
+                        <div className="flex items-center gap-2">
+                          <span>{model.name}</span>
+                          <span className="text-xs text-muted-foreground">
+                            ({getTrainingPercentage(model)}% trained)
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {writerModels.length === 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    No writer models available. Please create one in the Writer Factory.
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Step 7: Brief Chooser */}
+            {step === 7 && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label>Choose a brief template</Label>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => {
+                      // TODO: Open brief builder modal
+                      alert('Brief builder integration coming soon');
+                    }}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    New Brief
+                  </Button>
+                </div>
+                <Select value={selectedBriefId} onValueChange={setSelectedBriefId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a brief template" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {briefs.map((brief) => (
+                      <SelectItem key={brief.id} value={brief.id}>
+                        {brief.name}
+                        {brief.is_shared && (
+                          <span className="text-xs text-muted-foreground ml-2">(Shared)</span>
+                        )}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {briefs.length === 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    No briefs available. Please create one in the Brief Builder.
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Step 8: Word Count */}
+            {step === 8 && (
+              <div className="space-y-4">
+                <Label htmlFor="wordCount">How many words should the story be?</Label>
                 <Input
                   id="wordCount"
                   type="number"
-                  placeholder="800"
                   value={wordCount}
                   onChange={(e) => setWordCount(e.target.value)}
+                  placeholder="800"
+                  min="100"
+                  className="form-field-bottom-line"
+                  autoFocus
                 />
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Model Selection Step */}
-          {step === 'model' && (
-            <div className="space-y-4">
-              <Label>Select Writer Model</Label>
-              <Select value={selectedModelId} onValueChange={setSelectedModelId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose a writer model" />
-                </SelectTrigger>
-                <SelectContent>
-                  {writerModels.map((model) => (
-                    <SelectItem key={model.id} value={model.id}>
-                      {model.name}
-                      {model.metadata?.total_training_pieces && (
-                        <span className="text-xs text-muted-foreground ml-2">
-                          ({model.metadata.total_training_pieces} pieces)
-                        </span>
-                      )}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {writerModels.length === 0 && (
-                <p className="text-sm text-muted-foreground">
-                  No writer models available. Please create one in the Writer Factory.
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Brief Selection Step */}
-          {step === 'brief' && (
-            <div className="space-y-4">
-              <Label>Select Brief/Scaffold</Label>
-              <Select value={selectedBriefId} onValueChange={setSelectedBriefId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose a brief template" />
-                </SelectTrigger>
-                <SelectContent>
-                  {briefs.map((brief) => (
-                    <SelectItem key={brief.id} value={brief.id}>
-                      {brief.name}
-                      {brief.is_shared && (
-                        <span className="text-xs text-muted-foreground ml-2">(Shared)</span>
-                      )}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {briefs.length === 0 && (
-                <p className="text-sm text-muted-foreground">
-                  No briefs available. Please create one in the Brief Builder.
-                </p>
-              )}
-            </div>
-          )}
+            {/* Step 9: Confirmation */}
+            {step === 9 && (
+              <div className="space-y-4">
+                <h3 className="font-semibold text-lg mb-4">Please confirm your project details:</h3>
+                <div className="space-y-3 bg-accent/50 p-4 rounded-lg">
+                  <div>
+                    <span className="text-sm font-medium text-muted-foreground">Project Name:</span>
+                    <p className="font-medium">{projectName}</p>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-muted-foreground">Headline:</span>
+                    <p className="font-medium">{headline}</p>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-muted-foreground">Primary Keyword:</span>
+                    <p className="font-medium">{primaryKeyword}</p>
+                  </div>
+                  {secondaryKeywords && (
+                    <div>
+                      <span className="text-sm font-medium text-muted-foreground">Secondary Keywords:</span>
+                      <p className="font-medium">{secondaryKeywords}</p>
+                    </div>
+                  )}
+                  {topic && (
+                    <div>
+                      <span className="text-sm font-medium text-muted-foreground">Additional Details:</span>
+                      <p className="font-medium">{topic}</p>
+                    </div>
+                  )}
+                  <div>
+                    <span className="text-sm font-medium text-muted-foreground">Writer Model:</span>
+                    <p className="font-medium">
+                      {writerModels.find(m => m.id === selectedModelId)?.name || 'N/A'}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-muted-foreground">Brief:</span>
+                    <p className="font-medium">
+                      {briefs.find(b => b.id === selectedBriefId)?.name || 'N/A'}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-muted-foreground">Target Word Count:</span>
+                    <p className="font-medium">{wordCount} words</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex justify-between">
+        <div className="flex justify-between pt-4 border-t">
           <Button
             variant="outline"
-            onClick={() => {
-              if (step === 'details') setStep('initial');
-              else if (step === 'model') setStep('details');
-              else if (step === 'brief') setStep('model');
-            }}
-            disabled={step === 'initial'}
+            onClick={handleBack}
+            disabled={step === 1}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Button>
 
-          <Button
-            onClick={() => {
-              if (step === 'details') handleDetailsNext();
-              else if (step === 'model') handleModelNext();
-              else if (step === 'brief') handleCreateProject();
-            }}
-            disabled={
-              (step === 'details' && (!headline || !primaryKeyword)) ||
-              (step === 'model' && !selectedModelId) ||
-              (step === 'brief' && (!selectedBriefId || loading))
-            }
-          >
-            {step === 'brief' ? (
-              loading ? 'Creating...' : 'Start New Project'
-            ) : (
-              <>
-                Next
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </>
-            )}
-          </Button>
+          {step < 9 ? (
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed()}
+            >
+              Next
+              <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
+          ) : (
+            <Button
+              onClick={handleCreateProject}
+              disabled={loading || !canProceed()}
+            >
+              {loading ? 'Creating...' : (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  Start Project
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </DialogContent>
     </Dialog>
   );
 }
-
-

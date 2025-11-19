@@ -12,9 +12,10 @@ interface EditorPanelProps {
   projectId: string | null;
   writerModelId: string | null;
   onOpenProjectModal: () => void;
+  onContentChange?: (content: any) => void;
 }
 
-export function EditorPanel({ projectId, writerModelId, onOpenProjectModal }: EditorPanelProps) {
+export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onContentChange }: EditorPanelProps) {
   const [content, setContent] = useState<any>(null);
   const [project, setProject] = useState<Project | null>(null);
   const [wordCount, setWordCount] = useState(0);
@@ -25,6 +26,13 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal }: Ed
   
   // Debounce content changes for auto-save
   const debouncedContent = useDebounce(content, 2000);
+
+  // Notify parent of content changes
+  useEffect(() => {
+    if (onContentChange) {
+      onContentChange(content);
+    }
+  }, [content, onContentChange]);
 
   // Load project content
   useEffect(() => {
@@ -264,35 +272,17 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal }: Ed
 
   return (
     <div className="flex-1 bg-white rounded-lg shadow-lg flex flex-col">
-      {/* Header with Generate Button */}
-      {project && (
-        <div className="border-b px-4 py-3 flex justify-between items-center">
-          <div>
-            <h2 className="font-semibold text-lg">{project.headline}</h2>
-            <p className="text-sm text-muted-foreground">
-              {project.primary_keyword}
-              {project.secondary_keywords && project.secondary_keywords.length > 0 && (
-                <> • {project.secondary_keywords.join(', ')}</>
-              )}
-            </p>
-          </div>
-          <Button
-            onClick={handleGenerateContent}
-            disabled={generating || !writerModelId}
-            className="gap-2"
-          >
-            <Sparkles className="h-4 w-4" />
-            {generating ? 'Generating...' : 'Generate Content'}
-          </Button>
-        </div>
-      )}
-
-      <TipTapEditor
-        content={content}
-        onChange={handleContentChange}
-        onWordCountChange={handleWordCountChange}
-        placeholder={project ? "Click 'Generate Content' to create your article..." : "Start writing your content..."}
-      />
+      <div className="flex-1 overflow-hidden">
+        <TipTapEditor
+          content={content}
+          onChange={handleContentChange}
+          onWordCountChange={handleWordCountChange}
+          placeholder={project ? "Start writing your content..." : "Start writing your content..."}
+          onGenerateContent={handleGenerateContent}
+          generating={generating}
+          canGenerate={!!writerModelId && !!project}
+        />
+      </div>
 
       {/* Status Bar */}
       <div className="border-t px-4 py-2 text-xs text-muted-foreground flex justify-between items-center">

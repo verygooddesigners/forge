@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -14,9 +15,12 @@ export const dynamic = 'force-dynamic';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [resetSent, setResetSent] = useState(false);
+  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -39,6 +43,36 @@ export default function LoginPage() {
       }
     } catch (err: any) {
       setError(err.message || 'Failed to sign in');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setRegisterSuccess(false);
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, fullName }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Registration failed');
+      }
+
+      setRegisterSuccess(true);
+      setEmail('');
+      setPassword('');
+      setFullName('');
+    } catch (err: any) {
+      setError(err.message || 'Failed to register');
     } finally {
       setLoading(false);
     }
@@ -73,63 +107,132 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
+          <CardTitle className="text-2xl font-extrabold text-center">
             RotoWrite
           </CardTitle>
           <CardDescription className="text-center">
-            Sign in to your account to continue
+            {activeTab === 'login' ? 'Sign in to your account' : 'Create a new account'}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                disabled={loading}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={loading}
-              />
-            </div>
-            {error && (
-              <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
-                {error}
-              </div>
-            )}
-            {resetSent && (
-              <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
-                Password reset email sent! Check your inbox.
-              </div>
-            )}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
-            </Button>
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={handleForgotPassword}
-                className="text-sm text-muted-foreground hover:text-primary underline"
-                disabled={loading}
-              >
-                Forgot password?
-              </button>
-            </div>
-          </form>
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'login' | 'register')}>
+            <TabsList className="grid w-full grid-cols-2 mb-4">
+              <TabsTrigger value="login">Login</TabsTrigger>
+              <TabsTrigger value="register">Register</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="login">
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="login-email">Email</Label>
+                  <Input
+                    id="login-email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    disabled={loading}
+                    className="border-b-2 border-t-0 border-l-0 border-r-0 border-primary/30 focus:border-primary rounded-none px-0"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="login-password">Password</Label>
+                  <Input
+                    id="login-password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={loading}
+                    className="border-b-2 border-t-0 border-l-0 border-r-0 border-primary/30 focus:border-primary rounded-none px-0"
+                  />
+                </div>
+                {error && activeTab === 'login' && (
+                  <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
+                    {error}
+                  </div>
+                )}
+                {resetSent && (
+                  <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
+                    Password reset email sent! Check your inbox.
+                  </div>
+                )}
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? 'Signing in...' : 'Sign In'}
+                </Button>
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={handleForgotPassword}
+                    className="text-sm text-muted-foreground hover:text-primary underline"
+                    disabled={loading}
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              </form>
+            </TabsContent>
+            
+            <TabsContent value="register">
+              <form onSubmit={handleRegister} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="register-name">Full Name</Label>
+                  <Input
+                    id="register-name"
+                    type="text"
+                    placeholder="John Doe"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                    disabled={loading}
+                    className="border-b-2 border-t-0 border-l-0 border-r-0 border-primary/30 focus:border-primary rounded-none px-0"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="register-email">Email</Label>
+                  <Input
+                    id="register-email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    disabled={loading}
+                    className="border-b-2 border-t-0 border-l-0 border-r-0 border-primary/30 focus:border-primary rounded-none px-0"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="register-password">Password</Label>
+                  <Input
+                    id="register-password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={loading}
+                    minLength={6}
+                    className="border-b-2 border-t-0 border-l-0 border-r-0 border-primary/30 focus:border-primary rounded-none px-0"
+                  />
+                </div>
+                {error && activeTab === 'register' && (
+                  <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
+                    {error}
+                  </div>
+                )}
+                {registerSuccess && (
+                  <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
+                    Registration successful! Please check your email to verify your account.
+                  </div>
+                )}
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? 'Creating account...' : 'Register'}
+                </Button>
+              </form>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
     </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, UserRole } from '@/types';
+import { User, UserRole, AccountStatus } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -44,8 +44,10 @@ export function UserManagement({ adminUser }: UserManagementProps) {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [role, setRole] = useState<UserRole>('strategist');
+  const [accountStatus, setAccountStatus] = useState<AccountStatus>('pending');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -68,8 +70,10 @@ export function UserManagement({ adminUser }: UserManagementProps) {
     setPassword('');
     setFullName('');
     setRole('strategist');
+    setAccountStatus('pending');
     setEditingUser(null);
     setError(null);
+    setSuccess(null);
   };
 
   const handleCreateUser = async () => {
@@ -120,19 +124,51 @@ export function UserManagement({ adminUser }: UserManagementProps) {
 
   const handleUpdateUser = async (userId: string) => {
     setLoading(true);
+    setError(null);
+    setSuccess(null);
+    
     try {
+      const oldStatus = editingUser?.account_status;
+      const statusChanged = oldStatus === 'pending' && accountStatus !== 'pending';
+
       const { error } = await supabase
         .from('users')
-        .update({ full_name: fullName, role })
+        .update({ 
+          full_name: fullName, 
+          role, 
+          account_status: accountStatus 
+        })
         .eq('id', userId);
 
-      if (!error) {
+      if (error) throw error;
+
+      // Send notification email if status changed from pending to active
+      if (statusChanged) {
+        try {
+          await fetch('/api/admin/users/notify-status-change', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId,
+              email: editingUser?.email,
+              newStatus: accountStatus,
+            }),
+          });
+          setSuccess('User updated and notification email sent!');
+        } catch (emailError) {
+          console.error('Email notification failed:', emailError);
+          setSuccess('User updated but email notification failed.');
+        }
+      }
+
+      setTimeout(() => {
         setShowDialog(false);
         resetForm();
-        await loadUsers();
-      }
-    } catch (error) {
+        loadUsers();
+      }, statusChanged ? 1500 : 0);
+    } catch (error: any) {
       console.error('Error updating user:', error);
+      setError(error.message || 'Failed to update user');
     } finally {
       setLoading(false);
     }
@@ -156,6 +192,7 @@ export function UserManagement({ adminUser }: UserManagementProps) {
     setEmail(user.email);
     setFullName(user.full_name || '');
     setRole(user.role);
+    setAccountStatus(user.account_status);
     setShowDialog(true);
   };
 
@@ -180,6 +217,7 @@ export function UserManagement({ adminUser }: UserManagementProps) {
               <TableRow>
                 <TableHead>Email</TableHead>
                 <TableHead>Name</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -190,6 +228,17 @@ export function UserManagement({ adminUser }: UserManagementProps) {
                 <TableRow key={user.id}>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.full_name || '-'}</TableCell>
+                  <TableCell>
+                    <Badge 
+                      variant={
+                        user.account_status === 'pending' ? 'outline' :
+                        user.account_status === 'admin' ? 'default' : 
+                        'secondary'
+                      }
+                    >
+                      {user.account_status}
+                    </Badge>
+                  </TableCell>
                   <TableCell>
                     <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
                       {user.role}
@@ -243,6 +292,11 @@ export function UserManagement({ adminUser }: UserManagementProps) {
                 {error}
               </div>
             )}
+            {success && (
+              <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
+                {success}
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -281,6 +335,28 @@ export function UserManagement({ adminUser }: UserManagementProps) {
               />
             </div>
 
+            {editingUser && (
+              <div className="space-y-2">
+                <Label htmlFor="accountStatus">Account Status</Label>
+                <Select value={accountStatus} onValueChange={(value) => setAccountStatus(value as AccountStatus)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="strategist">Strategist</SelectItem>
+                    <SelectItem value="editor">Editor</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+                {editingUser.account_status === 'pending' && accountStatus !== 'pending' && (
+                  <p className="text-sm text-muted-foreground">
+                    User will receive a notification email when status is changed from pending.
+                  </p>
+                )}
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="role">Role</Label>
               <Select value={role} onValueChange={(value) => setRole(value as UserRole)}>
@@ -290,6 +366,7 @@ export function UserManagement({ adminUser }: UserManagementProps) {
                 <SelectContent>
                   <SelectItem value="admin">Admin</SelectItem>
                   <SelectItem value="strategist">Strategist</SelectItem>
+                  <SelectItem value="editor">Editor</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -15,13 +15,17 @@ import {
   Undo,
   Redo,
   Code,
+  Sparkles,
 } from 'lucide-react';
 
 interface EditorToolbarProps {
   editor: Editor;
+  onGenerateContent?: () => void;
+  generating?: boolean;
+  canGenerate?: boolean;
 }
 
-export function EditorToolbar({ editor }: EditorToolbarProps) {
+export function EditorToolbar({ editor, onGenerateContent, generating = false, canGenerate = false }: EditorToolbarProps) {
   if (!editor) {
     return null;
   }
@@ -50,8 +54,9 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
   );
 
   return (
-    <div className="border-b px-4 py-2 flex items-center gap-1 flex-wrap">
-      {/* Undo/Redo */}
+    <div className="border-b px-4 py-2 flex items-center justify-between gap-2">
+      <div className="flex items-center gap-1 flex-wrap">
+        {/* Undo/Redo */}
       <ToolbarButton
         onClick={() => editor.chain().focus().undo().run()}
         title="Undo"
@@ -143,6 +148,19 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
       >
         <Quote className="h-4 w-4" />
       </ToolbarButton>
+      </div>
+
+      {/* Generate Content Button */}
+      {onGenerateContent && (
+        <Button
+          onClick={onGenerateContent}
+          disabled={generating || !canGenerate}
+          className="gap-2 flex-shrink-0"
+        >
+          <Sparkles className="h-4 w-4" />
+          {generating ? 'Generating...' : 'Generate Content'}
+        </Button>
+      )}
     </div>
   );
 }

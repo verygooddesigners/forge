@@ -13,6 +13,9 @@ interface TipTapEditorProps {
   placeholder?: string;
   editable?: boolean;
   onWordCountChange?: (count: number) => void;
+  onGenerateContent?: () => void;
+  generating?: boolean;
+  canGenerate?: boolean;
 }
 
 export function TipTapEditor({
@@ -21,6 +24,9 @@ export function TipTapEditor({
   placeholder = 'Start writing...',
   editable = true,
   onWordCountChange,
+  onGenerateContent,
+  generating = false,
+  canGenerate = false,
 }: TipTapEditorProps) {
   const editor = useEditor({
     extensions: [
@@ -39,7 +45,7 @@ export function TipTapEditor({
     immediatelyRender: false,
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none min-h-[400px]',
+        class: 'prose prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none h-full',
       },
     },
     onUpdate: ({ editor }) => {
@@ -66,9 +72,14 @@ export function TipTapEditor({
 
   return (
     <div className="flex flex-col h-full">
-      <EditorToolbar editor={editor} />
-      <div className="flex-1 overflow-auto px-6 py-4">
-        <EditorContent editor={editor} />
+      <EditorToolbar 
+        editor={editor}
+        onGenerateContent={onGenerateContent}
+        generating={generating}
+        canGenerate={canGenerate}
+      />
+      <div className="flex-1 overflow-y-auto px-6 py-4">
+        <EditorContent editor={editor} className="h-full" />
       </div>
     </div>
   );
