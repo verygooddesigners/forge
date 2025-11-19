@@ -82,9 +82,10 @@ INSTRUCTIONS:
 5. Aim for approximately ${wordCount} words
 6. Write engaging, informative content that would rank well in search results
 7. Match the tone, voice, and style from the examples
-8. Use HTML formatting (h1, h2, h3, p tags)
+8. Use Markdown formatting for headings (# for H1, ## for H2, ### for H3)
+9. Write clear paragraphs separated by blank lines
 
-Write the complete article now:`;
+Write the complete article now in plain text with Markdown formatting:`;
 }
 
 

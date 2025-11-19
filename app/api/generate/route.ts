@@ -39,6 +39,8 @@ function convertTipTapToText(doc: any): string {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('[GENERATE] Starting content generation...');
+    
     const {
       projectId,
       headline,
@@ -49,10 +51,21 @@ export async function POST(request: NextRequest) {
       briefContent,
     } = await request.json();
 
+    console.log('[GENERATE] Request data:', {
+      projectId,
+      headline,
+      primaryKeyword,
+      hasSecondaryKeywords: !!secondaryKeywords,
+      wordCount,
+      writerModelId,
+      hasBriefContent: !!briefContent,
+    });
+
     // Validate required fields
     if (!headline || !primaryKeyword || !writerModelId) {
+      console.error('[GENERATE] Missing required fields:', { headline: !!headline, primaryKeyword: !!primaryKeyword, writerModelId: !!writerModelId });
       return new Response(
-        JSON.stringify({ error: 'Missing required fields' }),
+        JSON.stringify({ error: 'Missing required fields: headline, primaryKeyword, or writerModelId' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -60,35 +73,65 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
 
     // Verify user is authenticated
+    console.log('[GENERATE] Checking authentication...');
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
+      console.error('[GENERATE] User not authenticated');
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
+    console.log('[GENERATE] User authenticated:', user.id);
 
-    // Get AI master instructions
-    const { data: aiSettings } = await supabase
-      .from('ai_settings')
-      .select('setting_value')
-      .eq('setting_key', 'master_instructions')
-      .single();
+    // Get AI master instructions (optional - don't fail if missing)
+    console.log('[GENERATE] Fetching AI master instructions...');
+    let masterInstructions = '';
+    try {
+      const { data: aiSettings, error: settingsError } = await supabase
+        .from('ai_settings')
+        .select('setting_value')
+        .eq('setting_key', 'master_instructions')
+        .single();
 
-    const masterInstructions = aiSettings?.setting_value || '';
+      if (settingsError) {
+        console.warn('[GENERATE] ai_settings query failed (non-fatal):', settingsError.message);
+      } else {
+        masterInstructions = aiSettings?.setting_value || '';
+        console.log('[GENERATE] Master instructions loaded');
+      }
+    } catch (settingsErr) {
+      console.warn('[GENERATE] ai_settings table might not exist (non-fatal):', settingsErr);
+    }
 
     // Use RAG to find similar training content
+    console.log('[GENERATE] Fetching training content for model:', writerModelId);
     const queryText = `${headline} ${primaryKeyword} ${secondaryKeywords?.join(' ') || ''}`;
-    const similarContent = await findSimilarTrainingContent(
-      writerModelId,
-      queryText,
-      3 // Get top 3 examples
-    );
-
-    // Build context from examples
-    const writerContext = buildContextFromExamples(similarContent);
+    let similarContent = [];
+    let writerContext = '';
+    
+    try {
+      similarContent = await findSimilarTrainingContent(
+        writerModelId,
+        queryText,
+        3 // Get top 3 examples
+      );
+      console.log('[GENERATE] Found training content:', similarContent.length, 'examples');
+      
+      // Build context from examples
+      writerContext = buildContextFromExamples(similarContent);
+      
+      if (similarContent.length === 0) {
+        console.warn('[GENERATE] No training content found for this writer model');
+        writerContext = 'No specific training examples available. Write in a professional, engaging style.';
+      }
+    } catch (ragError: any) {
+      console.error('[GENERATE] Error fetching training content:', ragError.message);
+      writerContext = 'No specific training examples available. Write in a professional, engaging style.';
+    }
 
     // Convert brief content from TipTap JSON to plain text
+    console.log('[GENERATE] Processing brief content...');
     let briefText = 'Write a well-structured article with clear headings and paragraphs.';
     if (briefContent) {
       try {
@@ -98,16 +141,20 @@ export async function POST(request: NextRequest) {
         // Convert TipTap JSON to plain text
         if (briefJson && briefJson.content) {
           briefText = convertTipTapToText(briefJson);
+          console.log('[GENERATE] Brief content converted to text:', briefText.substring(0, 100) + '...');
         } else {
           briefText = briefContent;
         }
-      } catch (e) {
-        // If parsing fails, use as-is
-        briefText = typeof briefContent === 'string' ? briefContent : JSON.stringify(briefContent);
+      } catch (e: any) {
+        console.warn('[GENERATE] Brief parsing error (using default):', e.message);
+        briefText = 'Write a well-structured article with clear headings and paragraphs.';
       }
+    } else {
+      console.log('[GENERATE] No brief content provided, using default');
     }
 
     // Build the prompt
+    console.log('[GENERATE] Building prompt...');
     const prompt = buildContentGenerationPrompt(
       headline,
       primaryKeyword,
@@ -117,18 +164,30 @@ export async function POST(request: NextRequest) {
       writerContext,
       masterInstructions
     );
+    console.log('[GENERATE] Prompt built, length:', prompt.length);
 
     // Generate content with streaming
-    const stream = await streamContent([
-      {
-        role: 'system',
-        content: 'You are an expert content writer specialized in SEO-optimized articles.',
-      },
-      {
-        role: 'user',
-        content: prompt,
-      },
-    ]);
+    console.log('[GENERATE] Calling Claude API for streaming...');
+    let stream: ReadableStream;
+    try {
+      stream = await streamContent([
+        {
+          role: 'system',
+          content: 'You are an expert content writer specialized in SEO-optimized articles.',
+        },
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ]);
+      console.log('[GENERATE] Stream created successfully');
+    } catch (aiError: any) {
+      console.error('[GENERATE] Claude API error:', aiError.message);
+      return new Response(
+        JSON.stringify({ error: `AI Generation failed: ${aiError.message}` }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Convert Claude's stream to SSE format
     const encoder = new TextEncoder();
@@ -203,10 +262,15 @@ export async function POST(request: NextRequest) {
         'Connection': 'keep-alive',
       },
     });
-  } catch (error) {
-    console.error('Error in generate route:', error);
+  } catch (error: any) {
+    console.error('[GENERATE] Fatal error in generate route:', error);
+    console.error('[GENERATE] Error stack:', error.stack);
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ 
+        error: 'Internal server error', 
+        details: error.message || 'Unknown error',
+        type: error.constructor.name 
+      }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }

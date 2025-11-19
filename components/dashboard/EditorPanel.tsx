@@ -156,7 +156,11 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onCo
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(errorData.error || `Failed to generate content (${response.status})`);
+        const errorMessage = errorData.details 
+          ? `${errorData.error}: ${errorData.details}`
+          : errorData.error || `Failed to generate content (${response.status})`;
+        console.error('Generation API error:', errorData);
+        throw new Error(errorMessage);
       }
 
       // Stream the response
@@ -207,26 +211,172 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onCo
         }
       }
 
-      // Final content conversion - convert plain text to proper TipTap format
-      const paragraphs = generatedText.split('\n\n').filter(p => p.trim());
+      // Final content conversion - convert markdown text to proper TipTap format
+      const lines = generatedText.split('\n');
+      const tipTapNodes = [];
+      let currentParagraph = '';
+      let inList = false;
+      let listItems: string[] = [];
+      let listType: 'bullet' | 'ordered' | null = null;
+
+      const parseInlineFormatting = (text: string) => {
+        const content = [];
+        let remainingText = text;
+        let position = 0;
+
+        while (position < remainingText.length) {
+          // Check for bold (**text** or __text__)
+          const boldMatch = remainingText.slice(position).match(/^(\*\*|__)(.*?)\1/);
+          if (boldMatch) {
+            if (position > 0) {
+              content.push({ type: 'text', text: remainingText.slice(0, position) });
+              remainingText = remainingText.slice(position);
+              position = 0;
+            }
+            content.push({ 
+              type: 'text', 
+              text: boldMatch[2],
+              marks: [{ type: 'bold' }]
+            });
+            remainingText = remainingText.slice(boldMatch[0].length);
+            continue;
+          }
+
+          // Check for italic (*text* or _text_)
+          const italicMatch = remainingText.slice(position).match(/^(\*|_)(.*?)\1/);
+          if (italicMatch) {
+            if (position > 0) {
+              content.push({ type: 'text', text: remainingText.slice(0, position) });
+              remainingText = remainingText.slice(position);
+              position = 0;
+            }
+            content.push({ 
+              type: 'text', 
+              text: italicMatch[2],
+              marks: [{ type: 'italic' }]
+            });
+            remainingText = remainingText.slice(italicMatch[0].length);
+            continue;
+          }
+
+          position++;
+        }
+
+        if (remainingText) {
+          content.push({ type: 'text', text: remainingText });
+        }
+
+        return content.length > 0 ? content : [{ type: 'text', text }];
+      };
+
+      const flushList = () => {
+        if (listItems.length > 0 && listType) {
+          tipTapNodes.push({
+            type: listType === 'bullet' ? 'bulletList' : 'orderedList',
+            content: listItems.map(item => ({
+              type: 'listItem',
+              content: [{
+                type: 'paragraph',
+                content: parseInlineFormatting(item),
+              }],
+            })),
+          });
+          listItems = [];
+          listType = null;
+          inList = false;
+        }
+      };
+
+      for (const line of lines) {
+        const trimmedLine = line.trim();
+        
+        // Check if it's a heading (starts with #)
+        if (trimmedLine.startsWith('#') && !trimmedLine.startsWith('##')) {
+          flushList();
+          if (currentParagraph) {
+            tipTapNodes.push({
+              type: 'paragraph',
+              content: parseInlineFormatting(currentParagraph.trim()),
+            });
+            currentParagraph = '';
+          }
+          
+          const level = trimmedLine.match(/^#+/)?.[0].length || 1;
+          const text = trimmedLine.replace(/^#+\s*/, '').trim();
+          if (text) {
+            tipTapNodes.push({
+              type: 'heading',
+              attrs: { level: Math.min(level, 3) },
+              content: parseInlineFormatting(text),
+            });
+          }
+        } 
+        // Check for bullet list
+        else if (trimmedLine.match(/^[-*]\s/)) {
+          if (currentParagraph) {
+            tipTapNodes.push({
+              type: 'paragraph',
+              content: parseInlineFormatting(currentParagraph.trim()),
+            });
+            currentParagraph = '';
+          }
+          const itemText = trimmedLine.replace(/^[-*]\s/, '').trim();
+          if (listType !== 'bullet') {
+            flushList();
+            listType = 'bullet';
+          }
+          listItems.push(itemText);
+          inList = true;
+        }
+        // Check for ordered list
+        else if (trimmedLine.match(/^\d+\.\s/)) {
+          if (currentParagraph) {
+            tipTapNodes.push({
+              type: 'paragraph',
+              content: parseInlineFormatting(currentParagraph.trim()),
+            });
+            currentParagraph = '';
+          }
+          const itemText = trimmedLine.replace(/^\d+\.\s/, '').trim();
+          if (listType !== 'ordered') {
+            flushList();
+            listType = 'ordered';
+          }
+          listItems.push(itemText);
+          inList = true;
+        }
+        else if (trimmedLine === '') {
+          flushList();
+          if (currentParagraph) {
+            tipTapNodes.push({
+              type: 'paragraph',
+              content: parseInlineFormatting(currentParagraph.trim()),
+            });
+            currentParagraph = '';
+          }
+        } else {
+          if (inList) {
+            flushList();
+          }
+          if (currentParagraph) {
+            currentParagraph += ' ' + trimmedLine;
+          } else {
+            currentParagraph = trimmedLine;
+          }
+        }
+      }
+
+      flushList();
+      if (currentParagraph) {
+        tipTapNodes.push({
+          type: 'paragraph',
+          content: parseInlineFormatting(currentParagraph.trim()),
+        });
+      }
+
       const tipTapContent = {
         type: 'doc',
-        content: paragraphs.map((para) => {
-          // Check if it's a heading (starts with #)
-          if (para.trim().startsWith('#')) {
-            const level = para.match(/^#+/)?.[0].length || 1;
-            const text = para.replace(/^#+\s*/, '').trim();
-            return {
-              type: `heading`,
-              attrs: { level: Math.min(level, 3) },
-              content: [{ type: 'text', text }],
-            };
-          }
-          return {
-            type: 'paragraph',
-            content: para.trim() ? [{ type: 'text', text: para.trim() }] : [],
-          };
-        }).filter((node) => node.content && node.content.length > 0),
+        content: tipTapNodes.filter((node) => node.content && (node.content.length > 0 || node.type === 'bulletList' || node.type === 'orderedList')),
       };
 
       setContent(tipTapContent);
@@ -238,8 +388,22 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onCo
         .eq('id', projectId);
     } catch (error: any) {
       console.error('Error generating content:', error);
-      const errorMessage = error.message || 'Failed to generate content. Please try again.';
-      alert(`Error: ${errorMessage}`);
+      let errorMessage = 'Failed to generate content. Please try again.';
+      
+      // Provide more specific error messages
+      if (error.message) {
+        if (error.message.includes('CLAUDE_API_KEY')) {
+          errorMessage = 'Claude API key is not configured. Please contact your administrator.';
+        } else if (error.message.includes('Unauthorized')) {
+          errorMessage = 'Your session has expired. Please log in again.';
+        } else if (error.message.includes('training content')) {
+          errorMessage = 'No training content found for this writer model. Please add training content in the Writer Factory before generating content.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      alert(`Content Generation Error:\n\n${errorMessage}\n\nPlease check the browser console for more details.`);
     } finally {
       setGenerating(false);
     }

@@ -20,7 +20,7 @@ export async function generateContent(
   options: AIOptions = {}
 ): Promise<string> {
   const {
-    model = 'claude-3-5-sonnet-20241022',
+    model = 'claude-sonnet-4-20250514',
     temperature = 0.7,
     maxTokens = 4000,
   } = options;
@@ -73,7 +73,7 @@ export async function streamContent(
   options: AIOptions = {}
 ): Promise<ReadableStream> {
   const {
-    model = 'claude-3-5-sonnet-20241022',
+    model = 'claude-sonnet-4-20250514',
     temperature = 0.7,
     maxTokens = 4000,
   } = options;

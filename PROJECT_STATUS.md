@@ -1,6 +1,6 @@
 # RotoWrite - Project Status
 
-**Version:** v1.01.00  
+**Version:** v1.01.01  
 **Last Updated:** January 17, 2025  
 **Deployed:** https://rotowrite.vercel.app  
 **Repository:** https://github.com/verygooddesigners/rotowrite

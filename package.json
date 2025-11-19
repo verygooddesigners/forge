@@ -1,6 +1,6 @@
 {
   "name": "rotowrite",
-  "version": "1.01.00",
+  "version": "1.01.01",
   "private": true,
   "scripts": {
     "dev": "next dev -p 5309",
