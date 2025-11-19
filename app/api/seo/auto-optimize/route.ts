@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { SEOEngine } from '@/lib/seo-engine';
 
 export async function POST(request: NextRequest) {
   try {
-    const { projectId, content } = await request.json();
+    const { projectId, content, suggestions } = await request.json();
 
     if (!projectId || !content) {
       return NextResponse.json(
@@ -20,19 +21,35 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // TODO: Implement AI-powered auto-optimization
-    // This would analyze the content and suggest improvements
-    // For now, return a placeholder response
+    // Get project to extract SEO package
+    const { data: project, error: projectError } = await supabase
+      .from('projects')
+      .select('headline, primary_keyword, secondary_keywords, word_count_target')
+      .eq('id', projectId)
+      .single();
+
+    if (projectError || !project) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+    }
+
+    // Use SEO Engine for auto-optimization
+    const seoEngine = new SEOEngine(content, {
+      headline: project.headline,
+      primaryKeyword: project.primary_keyword,
+      secondaryKeywords: project.secondary_keywords || [],
+      wordCount: project.word_count_target,
+    });
+
+    // If suggestions not provided, generate them first
+    const optimizationSuggestions = suggestions || await seoEngine.generateAISuggestions();
+    
+    // Apply auto-optimization
+    const optimizedContent = await seoEngine.autoOptimize(optimizationSuggestions);
 
     return NextResponse.json({
       success: true,
-      suggestions: [
-        'Add more instances of your primary keyword in headings',
-        'Increase content length to meet target word count',
-        'Add more images to improve visual appeal',
-        'Break up long paragraphs for better readability',
-      ],
-      optimizedContent: content, // Would contain AI-optimized version
+      suggestions: optimizationSuggestions,
+      optimizedContent,
     });
   } catch (error) {
     console.error('Error in auto-optimize:', error);

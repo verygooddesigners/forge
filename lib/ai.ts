@@ -1,4 +1,5 @@
 // AI Provider abstraction layer - supports Claude API
+import { STYLE_ANALYSIS_SYSTEM_PROMPT } from './prompts';
 
 interface AIMessage {
   role: 'system' | 'user' | 'assistant';
@@ -125,14 +126,7 @@ export async function analyzeWritingStyle(content: string) {
   const messages: AIMessage[] = [
     {
       role: 'system',
-      content: `You are a writing style analyzer. Analyze the following content and provide a detailed analysis of:
-- Tone (e.g., professional, casual, authoritative, friendly)
-- Voice (e.g., active, passive, direct, narrative)
-- Vocabulary level (e.g., simple, intermediate, advanced, technical)
-- Sentence structure (e.g., short and punchy, complex, varied, flowing)
-- Key phrases or expressions that are characteristic
-
-Return your analysis as a JSON object with these exact keys: tone, voice, vocabulary_level, sentence_structure, key_phrases (array).`,
+      content: STYLE_ANALYSIS_SYSTEM_PROMPT,
     },
     {
       role: 'user',

@@ -1,22 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import Link from 'next/link';
 import { Input } from '@/components/ui/input';
-import { Search, BookOpen, Sparkles, FileText, Target, Zap, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Search, BookOpen, Sparkles, FileText, Target, Zap, Download, Home, ArrowLeft } from 'lucide-react';
 
-interface UserGuideModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
-
-export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
+export default function UserGuidePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSection, setSelectedSection] = useState('getting-started');
 
@@ -1543,20 +1533,40 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
   );
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="!max-w-[70vw] !w-[70vw] max-h-[90vh] p-0">
-        <div className="flex h-[85vh]">
-          {/* Left Sidebar - Table of Contents */}
-          <div className="w-80 border-r flex flex-col bg-gradient-to-b from-violet-50 to-white">
-            <DialogHeader className="px-6 pt-6 pb-4 border-b bg-white">
-              <DialogTitle className="text-xl font-bold flex items-center gap-2">
-                <BookOpen className="h-6 w-6 text-primary" />
-                User Guide
-              </DialogTitle>
-              <DialogDescription className="text-sm">
-                Everything you need to master RotoWrite
-              </DialogDescription>
-            </DialogHeader>
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50">
+      {/* Header */}
+      <header className="bg-white border-b sticky top-0 z-50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <BookOpen className="h-8 w-8 text-primary" />
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">RotoWrite User Guide</h1>
+              <p className="text-sm text-muted-foreground">Everything you need to master RotoWrite</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Link href="/">
+              <Button variant="outline" size="sm">
+                <Home className="h-4 w-4 mr-2" />
+                Home
+              </Button>
+            </Link>
+            <Link href="/login">
+              <Button size="sm">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Sign In
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden" style={{ height: 'calc(100vh - 140px)' }}>
+          <div className="flex h-full">
+            {/* Left Sidebar - Table of Contents */}
+            <div className="w-80 border-r flex flex-col bg-gradient-to-b from-violet-50 to-white">
             
             {/* Sticky Search Bar */}
             <div className="sticky top-0 bg-white border-b px-4 py-3 z-10">
@@ -1602,22 +1612,23 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
             </div>
           </div>
 
-          {/* Right Side - Guide Content */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="px-12 py-10 max-w-4xl mx-auto">
-              {/* Title */}
-              <h1 className="text-3xl font-bold mb-8 text-foreground border-b-2 border-primary pb-4">
-                {guideContent[selectedSection]?.title}
-              </h1>
-              
-              {/* Content */}
-              <div className="prose prose-slate prose-lg max-w-none">
-                {guideContent[selectedSection]?.content}
+            {/* Right Side - Guide Content */}
+            <div className="flex-1 overflow-y-auto">
+              <div className="px-12 py-10 max-w-5xl mx-auto">
+                {/* Title */}
+                <h1 className="text-3xl font-bold mb-8 text-foreground border-b-2 border-primary pb-4">
+                  {guideContent[selectedSection]?.title}
+                </h1>
+                
+                {/* Content */}
+                <div className="prose prose-slate prose-lg max-w-none">
+                  {guideContent[selectedSection]?.content}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 }
