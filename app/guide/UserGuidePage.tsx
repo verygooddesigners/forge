@@ -800,6 +800,86 @@ export default function UserGuidePage() {
               This means you get instant feedback without lag while typing.
             </p>
           </div>
+
+          <h3 className="text-xl font-semibold mt-12 mb-4">The SEO Engine: Under the Hood</h3>
+
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-lg p-6 mb-6">
+            <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
+              <Zap className="h-5 w-5 text-blue-600" />
+              Powered by Advanced AI Analysis
+            </h4>
+            <p className="leading-relaxed text-sm">
+              RotoWrite now features a centralized <strong>SEO Engine</strong> that powers all optimization features. 
+              This sophisticated system combines traditional SEO metrics with AI-powered analysis from Claude to provide 
+              comprehensive, intelligent content optimization.
+            </p>
+          </div>
+
+          <div className="space-y-5">
+            <div className="border-l-4 border-violet-400 pl-5">
+              <h4 className="font-semibold mb-2">Real-Time Keyword Tracking</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The SEO Engine tracks all keywords (primary, secondary, and suggested) in real-time as you write. 
+                It calculates ideal density ranges based on your target word count and shows status indicators 
+                (optimal/under/over) for each keyword, updating live as your content changes.
+              </p>
+            </div>
+
+            <div className="border-l-4 border-violet-400 pl-5">
+              <h4 className="font-semibold mb-2">AI-Powered Suggestions</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                When you request SEO suggestions, the Engine uses Claude to analyze your content against your 
+                SEO Package and current score. It provides 5-7 specific, actionable recommendations like 
+                "Add your primary keyword to the H2 in paragraph 3" rather than generic advice.
+              </p>
+            </div>
+
+            <div className="border-l-4 border-violet-400 pl-5">
+              <h4 className="font-semibold mb-2">Auto-Optimization</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The Auto-Optimize feature uses AI to actually rewrite portions of your content to implement 
+                SEO suggestions. It preserves your writing style and tone while improving keyword placement, 
+                heading structure, and overall optimization—all powered by the same Writer Model that generated your content.
+              </p>
+            </div>
+
+            <div className="border-l-4 border-violet-400 pl-5">
+              <h4 className="font-semibold mb-2">Internal Linking Intelligence</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The Engine analyzes your content and compares it against your other projects to suggest relevant 
+                internal links. It identifies the best anchor text, explains why each link adds value, and shows 
+                exactly where to place links for maximum SEO benefit.
+              </p>
+            </div>
+
+            <div className="border-l-4 border-violet-400 pl-5">
+              <h4 className="font-semibold mb-2">Content Metrics Analysis</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Beyond just word counts, the SEO Engine extracts comprehensive metrics: heading distribution 
+                (H1/H2/H3), paragraph count, image count, and content structure. These metrics are compared 
+                against ideal ranges calculated for your specific content length and topic.
+              </p>
+            </div>
+
+            <div className="border-l-4 border-violet-400 pl-5">
+              <h4 className="font-semibold mb-2">Competitor Analysis (Coming Soon)</h4>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                The SEO Engine includes built-in competitor analysis capabilities. It can compare your content 
+                against top-ranking competitors to identify content gaps, keyword opportunities, and structural 
+                differences that could improve your rankings.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded-r-lg mt-8">
+            <h4 className="font-semibold mb-2 text-green-900">🎯 Always Getting Smarter</h4>
+            <p className="text-sm text-green-800 leading-relaxed">
+              The SEO Engine is designed to evolve with the latest SEO best practices and AI capabilities. 
+              As search algorithms change and new optimization techniques emerge, the Engine can be updated 
+              without changing how you use RotoWrite—your workflow stays the same while the intelligence behind 
+              it gets better.
+            </p>
+          </div>
         </div>
       ),
     },
