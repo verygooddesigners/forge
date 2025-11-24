@@ -1,14 +1,42 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, BookOpen, Sparkles, FileText, Target, Zap, Download, Home, ArrowLeft, Cpu, Bot } from 'lucide-react';
+import { Search, BookOpen, Sparkles, FileText, Target, Zap, Download, Home, ArrowLeft, Cpu, Bot, Menu, X, ChevronRight } from 'lucide-react';
 
 export default function UserGuidePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSection, setSelectedSection] = useState('getting-started');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Close mobile menu when section changes
+  const handleSectionSelect = (sectionId: string) => {
+    setSelectedSection(sectionId);
+    setIsMobileMenuOpen(false);
+  };
+
+  // Close mobile menu on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsMobileMenuOpen(false);
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, []);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   const tableOfContents = [
     { id: 'getting-started', title: 'Getting Started', icon: BookOpen },
@@ -1925,38 +1953,128 @@ export default function UserGuidePage() {
     <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50">
       {/* Header */}
       <header className="bg-white border-b sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <BookOpen className="h-8 w-8 text-primary" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-violet-100 transition-colors"
+            aria-label="Open menu"
+          >
+            <Menu className="h-6 w-6 text-foreground" />
+          </button>
+          
+          <div className="flex items-center gap-2 sm:gap-3">
+            <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
             <div>
-              <h1 className="text-2xl font-bold text-foreground">RotoWrite User Guide</h1>
-              <p className="text-sm text-muted-foreground">Everything you need to master RotoWrite</p>
+              <h1 className="text-lg sm:text-2xl font-bold text-foreground">RotoWrite User Guide</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">Everything you need to master RotoWrite</p>
             </div>
           </div>
+          
           <div className="flex gap-2">
             <Link href="/">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="hidden sm:flex">
                 <Home className="h-4 w-4 mr-2" />
                 Home
               </Button>
+              <Button variant="outline" size="sm" className="sm:hidden p-2">
+                <Home className="h-4 w-4" />
+              </Button>
             </Link>
             <Link href="/login">
-              <Button size="sm">
+              <Button size="sm" className="hidden sm:flex">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Sign In
+              </Button>
+              <Button size="sm" className="sm:hidden p-2">
+                <ArrowLeft className="h-4 w-4" />
               </Button>
             </Link>
           </div>
         </div>
       </header>
 
+      {/* Mobile Sidebar Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-50 lg:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile Sidebar */}
+      <div className={`
+        fixed inset-y-0 left-0 z-50 w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out lg:hidden
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
+        <div className="flex flex-col h-full">
+          {/* Mobile Sidebar Header */}
+          <div className="flex items-center justify-between px-4 py-4 border-b bg-gradient-to-r from-violet-100 to-purple-100">
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-6 w-6 text-primary" />
+              <span className="font-semibold text-foreground">Contents</span>
+            </div>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 rounded-lg hover:bg-violet-200 transition-colors"
+              aria-label="Close menu"
+            >
+              <X className="h-5 w-5 text-foreground" />
+            </button>
+          </div>
+
+          {/* Mobile Search */}
+          <div className="px-4 py-3 border-b">
+            <div className="relative">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search guide..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 h-9"
+              />
+            </div>
+          </div>
+
+          {/* Mobile TOC */}
+          <div className="flex-1 overflow-y-auto p-3">
+            <div className="space-y-1">
+              {filteredContent.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleSectionSelect(item.id)}
+                    className={`w-full text-left px-4 py-3.5 rounded-lg text-sm transition-all flex items-center gap-3 ${
+                      selectedSection === item.id
+                        ? 'bg-primary text-primary-foreground shadow-md font-semibold'
+                        : 'hover:bg-violet-100 text-foreground active:bg-violet-200'
+                    }`}
+                  >
+                    <Icon className="h-5 w-5 flex-shrink-0" />
+                    <span className="leading-tight">{item.title}</span>
+                    <ChevronRight className="h-4 w-4 ml-auto opacity-50" />
+                  </button>
+                );
+              })}
+            </div>
+
+            {filteredContent.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                <p className="text-sm">No results found</p>
+                <p className="text-xs mt-1">Try a different search term</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden" style={{ height: 'calc(100vh - 140px)' }}>
-          <div className="flex h-full">
-            {/* Left Sidebar - Table of Contents */}
-            <div className="w-80 border-r flex flex-col bg-gradient-to-b from-violet-50 to-white">
-            
+      <div className="max-w-7xl mx-auto p-3 sm:p-6">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden lg:flex" style={{ minHeight: 'calc(100vh - 120px)' }}>
+          
+          {/* Desktop Sidebar - Hidden on Mobile */}
+          <div className="hidden lg:flex lg:w-80 border-r flex-col bg-gradient-to-b from-violet-50 to-white">
             {/* Sticky Search Bar */}
             <div className="sticky top-0 bg-white border-b px-4 py-3 z-10">
               <div className="relative">
@@ -2001,18 +2119,34 @@ export default function UserGuidePage() {
             </div>
           </div>
 
-            {/* Right Side - Guide Content */}
-            <div className="flex-1 overflow-y-auto">
-              <div className="px-12 py-10 max-w-5xl mx-auto">
-                {/* Title */}
-                <h1 className="text-3xl font-bold mb-8 text-foreground border-b-2 border-primary pb-4">
-                  {guideContent[selectedSection]?.title}
-                </h1>
-                
-                {/* Content */}
-                <div className="prose prose-slate prose-lg max-w-none">
-                  {guideContent[selectedSection]?.content}
-                </div>
+          {/* Right Side - Guide Content */}
+          <div className="flex-1 overflow-y-auto">
+            {/* Mobile Section Indicator */}
+            <div className="lg:hidden sticky top-0 bg-white/95 backdrop-blur-sm border-b px-4 py-3 z-10">
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <BookOpen className="h-4 w-4" />
+                <span className="font-medium text-foreground">{tableOfContents.find(i => i.id === selectedSection)?.title}</span>
+                <ChevronRight className="h-4 w-4 rotate-90" />
+              </button>
+            </div>
+
+            <div className="px-4 sm:px-8 lg:px-12 py-6 sm:py-10 max-w-5xl mx-auto">
+              {/* Title */}
+              <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-foreground border-b-2 border-primary pb-4">
+                {guideContent[selectedSection]?.title}
+              </h1>
+              
+              {/* Content */}
+              <div className="prose prose-slate prose-sm sm:prose-lg max-w-none 
+                prose-headings:scroll-mt-20
+                prose-h3:text-lg prose-h3:sm:text-xl
+                prose-p:text-sm prose-p:sm:text-base
+                prose-li:text-sm prose-li:sm:text-base
+              ">
+                {guideContent[selectedSection]?.content}
               </div>
             </div>
           </div>
