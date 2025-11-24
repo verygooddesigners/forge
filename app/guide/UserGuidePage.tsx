@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, BookOpen, Sparkles, FileText, Target, Zap, Download, Home, ArrowLeft } from 'lucide-react';
+import { Search, BookOpen, Sparkles, FileText, Target, Zap, Download, Home, ArrowLeft, Cpu, Bot } from 'lucide-react';
 
 export default function UserGuidePage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,6 +12,7 @@ export default function UserGuidePage() {
 
   const tableOfContents = [
     { id: 'getting-started', title: 'Getting Started', icon: BookOpen },
+    { id: 'ai-architecture', title: 'AI Architecture', icon: Cpu },
     { id: 'registration', title: 'Account Registration', icon: FileText },
     { id: 'writer-factory', title: 'Writer Factory', icon: Sparkles },
     { id: 'brief-builder', title: 'Brief Builder', icon: FileText },
@@ -114,6 +115,314 @@ export default function UserGuidePage() {
             The result is content that ranks well in search engines while maintaining your authentic voice 
             and following your exact content structure requirements.
           </p>
+        </div>
+      ),
+    },
+
+    'ai-architecture': {
+      title: 'AI Architecture: The Multi-Agent System',
+      content: (
+        <div className="space-y-6">
+          <p className="text-lg leading-relaxed">
+            RotoWrite is powered by a sophisticated <strong>Multi-Agent AI System</strong> – a team of 7 specialized 
+            AI agents that work together to produce high-quality, SEO-optimized content in your unique voice. 
+            Each agent has a specific role and expertise, making the whole system more powerful than any single AI could be.
+          </p>
+
+          <div className="bg-gradient-to-r from-violet-100 to-purple-100 border-2 border-primary rounded-lg p-8 my-8">
+            <h3 className="text-xl font-bold mb-4 text-center flex items-center justify-center gap-2">
+              <Cpu className="h-6 w-6 text-primary" />
+              The 7-Agent Orchestra
+            </h3>
+            <p className="text-center text-muted-foreground mb-6">
+              Just like a symphony orchestra has different sections working in harmony, 
+              RotoWrite's agents each play their part to create content that ranks and resonates.
+            </p>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">Meet the Agents</h3>
+
+          <div className="space-y-6">
+            {/* Agent 1 */}
+            <div className="border-l-4 border-violet-500 pl-6 py-4 bg-violet-50/50 rounded-r-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-violet-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  1
+                </div>
+                <h4 className="font-bold text-lg text-violet-900">Content Generation Agent</h4>
+              </div>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                The primary writer of your team. This agent takes your brief, keywords, and writer model context 
+                to generate complete articles with proper structure, headings, tables, and lists.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-violet-200 text-violet-800 rounded text-xs font-medium">Article Generation</span>
+                <span className="px-2 py-1 bg-violet-200 text-violet-800 rounded text-xs font-medium">Streaming Output</span>
+                <span className="px-2 py-1 bg-violet-200 text-violet-800 rounded text-xs font-medium">SEO Integration</span>
+              </div>
+            </div>
+
+            {/* Agent 2 */}
+            <div className="border-l-4 border-blue-500 pl-6 py-4 bg-blue-50/50 rounded-r-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  2
+                </div>
+                <h4 className="font-bold text-lg text-blue-900">Writer Training Agent</h4>
+              </div>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Your voice analyst. When you add content to the Writer Factory, this agent analyzes your writing 
+                samples to extract tone, vocabulary patterns, sentence structure, and stylistic elements that make 
+                your writing unique.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-blue-200 text-blue-800 rounded text-xs font-medium">Style Analysis</span>
+                <span className="px-2 py-1 bg-blue-200 text-blue-800 rounded text-xs font-medium">Voice Extraction</span>
+                <span className="px-2 py-1 bg-blue-200 text-blue-800 rounded text-xs font-medium">Pattern Recognition</span>
+              </div>
+            </div>
+
+            {/* Agent 3 */}
+            <div className="border-l-4 border-green-500 pl-6 py-4 bg-green-50/50 rounded-r-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  3
+                </div>
+                <h4 className="font-bold text-lg text-green-900">SEO Optimization Agent</h4>
+              </div>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Your search engine strategist. This agent analyzes your content for keyword density, heading 
+                structure, and SEO best practices. It calculates your SEO score and provides specific 
+                recommendations for improvement.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-green-200 text-green-800 rounded text-xs font-medium">Keyword Analysis</span>
+                <span className="px-2 py-1 bg-green-200 text-green-800 rounded text-xs font-medium">SEO Scoring</span>
+                <span className="px-2 py-1 bg-green-200 text-green-800 rounded text-xs font-medium">Optimization Tips</span>
+              </div>
+            </div>
+
+            {/* Agent 4 */}
+            <div className="border-l-4 border-orange-500 pl-6 py-4 bg-orange-50/50 rounded-r-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  4
+                </div>
+                <h4 className="font-bold text-lg text-orange-900">Quality Assurance Agent</h4>
+              </div>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Your editor and proofreader. Powered by both AI and LanguageTool, this agent checks grammar, 
+                spelling, readability, and consistency. It ensures your content is polished and professional 
+                before publishing.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-orange-200 text-orange-800 rounded text-xs font-medium">Grammar Check</span>
+                <span className="px-2 py-1 bg-orange-200 text-orange-800 rounded text-xs font-medium">Readability Score</span>
+                <span className="px-2 py-1 bg-orange-200 text-orange-800 rounded text-xs font-medium">Consistency Review</span>
+              </div>
+            </div>
+
+            {/* Agent 5 */}
+            <div className="border-l-4 border-pink-500 pl-6 py-4 bg-pink-50/50 rounded-r-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-pink-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  5
+                </div>
+                <h4 className="font-bold text-lg text-pink-900">Persona & Tone Agent</h4>
+              </div>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Your voice coach. If content needs tone adjustment – perhaps it's too formal when you write 
+                casually, or vice versa – this agent refines the language to match your writer model's 
+                personality while preserving SEO keywords.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-pink-200 text-pink-800 rounded text-xs font-medium">Tone Matching</span>
+                <span className="px-2 py-1 bg-pink-200 text-pink-800 rounded text-xs font-medium">Voice Adaptation</span>
+                <span className="px-2 py-1 bg-pink-200 text-pink-800 rounded text-xs font-medium">Style Consistency</span>
+              </div>
+            </div>
+
+            {/* Agent 6 */}
+            <div className="border-l-4 border-indigo-500 pl-6 py-4 bg-indigo-50/50 rounded-r-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-indigo-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  6
+                </div>
+                <h4 className="font-bold text-lg text-indigo-900">Creative Features Agent</h4>
+              </div>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Your workflow coordinator. When complex tasks require multiple agents working together, 
+                this agent orchestrates the process – routing tasks to the right specialists and combining 
+                their outputs into cohesive results.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-indigo-200 text-indigo-800 rounded text-xs font-medium">Workflow Management</span>
+                <span className="px-2 py-1 bg-indigo-200 text-indigo-800 rounded text-xs font-medium">Multi-Agent Tasks</span>
+                <span className="px-2 py-1 bg-indigo-200 text-indigo-800 rounded text-xs font-medium">Data Transform</span>
+              </div>
+            </div>
+
+            {/* Agent 7 */}
+            <div className="border-l-4 border-cyan-500 pl-6 py-4 bg-cyan-50/50 rounded-r-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-cyan-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  7
+                </div>
+                <h4 className="font-bold text-lg text-cyan-900">Visual Extraction Agent</h4>
+              </div>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Your data reader. This agent can extract structured data from images – screenshots of sports 
+                statistics, tables, or any visual content. It turns images into usable data that other agents 
+                can work with.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-cyan-200 text-cyan-800 rounded text-xs font-medium">Image Analysis</span>
+                <span className="px-2 py-1 bg-cyan-200 text-cyan-800 rounded text-xs font-medium">Data Extraction</span>
+                <span className="px-2 py-1 bg-cyan-200 text-cyan-800 rounded text-xs font-medium">Table Parsing</span>
+              </div>
+            </div>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-12 mb-4">How Agents Work Together</h3>
+
+          <p className="leading-relaxed mb-6">
+            When you create content in RotoWrite, multiple agents collaborate behind the scenes:
+          </p>
+
+          <div className="bg-gradient-to-r from-slate-50 to-slate-100 border border-slate-300 rounded-lg p-6 my-6">
+            <div className="space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                  1
+                </div>
+                <div>
+                  <h5 className="font-semibold">Writer Training Analyzes Your Voice</h5>
+                  <p className="text-sm text-muted-foreground">
+                    When you add samples to Writer Factory, Agent #2 extracts your unique writing patterns
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                  2
+                </div>
+                <div>
+                  <h5 className="font-semibold">SEO Agent Prepares Keyword Strategy</h5>
+                  <p className="text-sm text-muted-foreground">
+                    When you analyze your SEO Package, Agent #3 generates keyword suggestions and targets
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-violet-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                  3
+                </div>
+                <div>
+                  <h5 className="font-semibold">Content Agent Creates Your Article</h5>
+                  <p className="text-sm text-muted-foreground">
+                    Agent #1 combines your brief, keywords, and writer model to generate content
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-pink-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                  4
+                </div>
+                <div>
+                  <h5 className="font-semibold">Persona Agent Fine-Tunes Voice</h5>
+                  <p className="text-sm text-muted-foreground">
+                    Agent #5 ensures the content matches your authentic voice and tone
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                  5
+                </div>
+                <div>
+                  <h5 className="font-semibold">QA Agent Reviews Quality</h5>
+                  <p className="text-sm text-muted-foreground">
+                    Agent #4 checks grammar, readability, and consistency before final output
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">Agent Guardrails</h3>
+
+          <p className="leading-relaxed mb-4">
+            Each agent has built-in <strong>guardrails</strong> that define what it can and cannot do. 
+            This ensures agents stay focused on their specialties and don't overstep their roles:
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="border border-green-200 bg-green-50 rounded-lg p-4">
+              <h5 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
+                <span className="text-green-600">✓</span> Agents CAN:
+              </h5>
+              <ul className="text-sm text-green-800 space-y-1">
+                <li>• Perform their specialized tasks</li>
+                <li>• Access relevant data for their role</li>
+                <li>• Provide recommendations within their expertise</li>
+                <li>• Collaborate with other agents through defined channels</li>
+              </ul>
+            </div>
+
+            <div className="border border-red-200 bg-red-50 rounded-lg p-4">
+              <h5 className="font-semibold text-red-900 mb-2 flex items-center gap-2">
+                <span className="text-red-600">✗</span> Agents CANNOT:
+              </h5>
+              <ul className="text-sm text-red-800 space-y-1">
+                <li>• Perform tasks outside their specialty</li>
+                <li>• Modify database records directly</li>
+                <li>• Access other users' data</li>
+                <li>• Make changes without proper validation</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="bg-violet-50 border-l-4 border-primary p-6 rounded-r-lg mt-8">
+            <h4 className="font-semibold mb-3 flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary" />
+              Why Multi-Agent Matters
+            </h4>
+            <p className="leading-relaxed text-sm mb-3">
+              Traditional AI systems use a single model for everything, which can lead to inconsistent results. 
+              RotoWrite's multi-agent approach means:
+            </p>
+            <ul className="text-sm space-y-2">
+              <li className="flex items-start gap-2">
+                <span className="text-primary mt-1">✓</span>
+                <span><strong>Specialized expertise</strong> – Each agent excels at its specific task</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-primary mt-1">✓</span>
+                <span><strong>Better quality</strong> – Multiple review passes catch more issues</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-primary mt-1">✓</span>
+                <span><strong>Consistent voice</strong> – Dedicated agents maintain your authentic style</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-primary mt-1">✓</span>
+                <span><strong>Scalable power</strong> – Complex tasks are broken down and handled efficiently</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-lg mt-6">
+            <p className="text-sm font-medium text-amber-900 mb-2">🔧 For Administrators</p>
+            <p className="text-sm text-amber-800">
+              Super administrators can fine-tune each agent's behavior through the <strong>AI Agents</strong> tab 
+              in the Admin Dashboard. Adjust system prompts, temperature settings, and other parameters to 
+              optimize agent performance for your specific needs.
+            </p>
+          </div>
         </div>
       ),
     },
