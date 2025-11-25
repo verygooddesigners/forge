@@ -529,7 +529,7 @@ export default function AITeamPage() {
 
                   <div className="bg-white border border-slate-200 rounded-lg p-4">
                     <h5 className="font-semibold text-slate-900 mb-3">
-                      NFL Odds Extractor (Weekly)
+                      Smart Odds Capture (Weekly)
                     </h5>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
@@ -577,21 +577,21 @@ export default function AITeamPage() {
                       <tr>
                         <td className="py-3 px-4 font-medium">Low</td>
                         <td className="py-3 px-4">40</td>
-                        <td className="py-3 px-4">$1.80 + $4.00 (NFL)</td>
+                        <td className="py-3 px-4">$1.80 + $4.00 (Smart Odds)</td>
                         <td className="py-3 px-4">~$0.50</td>
                         <td className="py-3 px-4 font-semibold text-green-600">$6-7/mo</td>
                       </tr>
                       <tr>
                         <td className="py-3 px-4 font-medium">Medium</td>
                         <td className="py-3 px-4">200</td>
-                        <td className="py-3 px-4">$9.00 + $4.00 (NFL)</td>
+                        <td className="py-3 px-4">$9.00 + $4.00 (Smart Odds)</td>
                         <td className="py-3 px-4">~$1.00</td>
                         <td className="py-3 px-4 font-semibold text-green-600">$14-15/mo</td>
                       </tr>
                       <tr>
                         <td className="py-3 px-4 font-medium">High</td>
                         <td className="py-3 px-4">400</td>
-                        <td className="py-3 px-4">$18.00 + $4.00 (NFL)</td>
+                        <td className="py-3 px-4">$18.00 + $4.00 (Smart Odds)</td>
                         <td className="py-3 px-4">~$2.00</td>
                         <td className="py-3 px-4 font-semibold text-green-600">$24-25/mo</td>
                       </tr>
