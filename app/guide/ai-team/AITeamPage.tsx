@@ -20,6 +20,8 @@ import {
   Sliders,
   Users,
   ShieldCheck,
+  Clock,
+  Calculator,
 } from 'lucide-react';
 import AgentDiagram from './AgentDiagram';
 
@@ -617,6 +619,27 @@ export default function AITeamPage() {
                     </li>
                   </ul>
                 </div>
+
+                {/* Time Savings Calculator CTA */}
+                <Link
+                  href="/guide/time-savings"
+                  className="mt-6 block bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-6 text-white hover:from-violet-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-white/20 rounded-lg p-3">
+                        <Calculator className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <h5 className="font-bold text-lg">Calculate Your Time Savings</h5>
+                        <p className="text-violet-100 text-sm">
+                          See how much time your team could save with RotoWrite&apos;s AI agents
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-6 w-6 text-violet-200" />
+                  </div>
+                </Link>
               </div>
             </section>
 

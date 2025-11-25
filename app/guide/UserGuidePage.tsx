@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, BookOpen, Sparkles, FileText, Target, Zap, Download, Home, ArrowLeft, Cpu, Bot, Menu, X, ChevronRight } from 'lucide-react';
+import { Search, BookOpen, Sparkles, FileText, Target, Zap, Download, Home, ArrowLeft, Cpu, Bot, Menu, X, ChevronRight, Clock, Calculator, ExternalLink } from 'lucide-react';
 
 export default function UserGuidePage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -450,6 +450,45 @@ export default function UserGuidePage() {
               in the Admin Dashboard. Adjust system prompts, temperature settings, and other parameters to 
               optimize agent performance for your specific needs.
             </p>
+          </div>
+
+          {/* Explore More Links */}
+          <div className="mt-10 grid sm:grid-cols-2 gap-4">
+            <Link
+              href="/guide/time-savings"
+              className="group flex items-center gap-4 p-5 bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-200 rounded-xl hover:border-emerald-400 hover:shadow-md transition-all"
+            >
+              <div className="bg-emerald-500 rounded-lg p-3 group-hover:bg-emerald-600 transition-colors">
+                <Calculator className="h-5 w-5 text-white" />
+              </div>
+              <div className="flex-1">
+                <h5 className="font-semibold text-emerald-900 group-hover:text-emerald-700">
+                  Time Savings Calculator
+                </h5>
+                <p className="text-sm text-emerald-700">
+                  See how much time your team could save
+                </p>
+              </div>
+              <ExternalLink className="h-4 w-4 text-emerald-400 group-hover:text-emerald-600" />
+            </Link>
+
+            <Link
+              href="/guide/ai-team"
+              className="group flex items-center gap-4 p-5 bg-gradient-to-r from-violet-50 to-purple-50 border-2 border-violet-200 rounded-xl hover:border-violet-400 hover:shadow-md transition-all"
+            >
+              <div className="bg-violet-500 rounded-lg p-3 group-hover:bg-violet-600 transition-colors">
+                <Cpu className="h-5 w-5 text-white" />
+              </div>
+              <div className="flex-1">
+                <h5 className="font-semibold text-violet-900 group-hover:text-violet-700">
+                  Full AI Team Documentation
+                </h5>
+                <p className="text-sm text-violet-700">
+                  Technical specs, costs & security details
+                </p>
+              </div>
+              <ExternalLink className="h-4 w-4 text-violet-400 group-hover:text-violet-600" />
+            </Link>
           </div>
         </div>
       ),
