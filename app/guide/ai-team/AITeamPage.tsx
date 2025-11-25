@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowLeft,
   Cpu,
@@ -16,6 +17,9 @@ import {
   Workflow,
   AlertTriangle,
   ChevronRight,
+  Sliders,
+  Users,
+  ShieldCheck,
 } from 'lucide-react';
 import AgentDiagram from './AgentDiagram';
 
@@ -29,12 +33,24 @@ const tableOfContents: TOCItem[] = [
   { id: 'introduction', title: 'Introduction' },
   { id: 'meet-the-agents', title: 'Meet the Agents' },
   {
+    id: 'cost-analysis',
+    title: 'Cost Analysis',
+    children: [
+      { id: 'per-operation-costs', title: 'Per-Operation Costs' },
+      { id: 'monthly-estimates', title: 'Monthly Estimates' },
+    ],
+  },
+  {
     id: 'agent-collaboration',
     title: 'Agent Collaboration',
     children: [
       { id: 'workflow-overview', title: 'Workflow Overview' },
       { id: 'agent-guardrails', title: 'Agent Guardrails' },
     ],
+  },
+  {
+    id: 'agent-tuning',
+    title: 'Agent Tuning & Configuration',
   },
   {
     id: 'technical-specifications',
@@ -47,17 +63,11 @@ const tableOfContents: TOCItem[] = [
   },
   { id: 'data-flow', title: 'Data Flow Architecture' },
   {
-    id: 'cost-analysis',
-    title: 'Cost Analysis',
-    children: [
-      { id: 'per-operation-costs', title: 'Per-Operation Costs' },
-      { id: 'monthly-estimates', title: 'Monthly Estimates' },
-    ],
-  },
-  {
     id: 'security-compliance',
     title: 'Security & Compliance',
     children: [
+      { id: 'gdc-data-isolation', title: 'GDC Data Isolation' },
+      { id: 'microsoft-sso', title: 'Microsoft SSO Integration' },
       { id: 'data-protection', title: 'Data Protection' },
       { id: 'compliance-standards', title: 'Compliance Standards' },
     ],
@@ -480,6 +490,136 @@ export default function AITeamPage() {
               </div>
             </section>
 
+            {/* Cost Analysis - Moved up */}
+            <section id="cost-analysis">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <DollarSign className="h-6 w-6 text-violet-600" />
+                Cost Analysis
+              </h2>
+
+              <div id="per-operation-costs" className="mb-8">
+                <h3 className="text-xl font-semibold text-slate-900 mb-4">
+                  Per-Operation Costs
+                </h3>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="bg-white border border-slate-200 rounded-lg p-4">
+                    <h5 className="font-semibold text-slate-900 mb-3">
+                      Standard Article Generation
+                    </h5>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Input tokens:</span>
+                        <span className="font-mono">~5,000</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Output tokens:</span>
+                        <span className="font-mono">~2,000</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Typical length:</span>
+                        <span className="font-mono">800 words</span>
+                      </div>
+                      <div className="pt-2 border-t border-slate-100 flex justify-between font-semibold">
+                        <span>Cost per article:</span>
+                        <span className="text-green-600">$0.045 (4.5¢)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white border border-slate-200 rounded-lg p-4">
+                    <h5 className="font-semibold text-slate-900 mb-3">
+                      NFL Odds Extractor (Weekly)
+                    </h5>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Image processing:</span>
+                        <span className="font-mono">2 × $0.48</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-600">Content generation:</span>
+                        <span className="font-mono">~$0.05</span>
+                      </div>
+                      <div className="pt-2 border-t border-slate-100 flex justify-between font-semibold">
+                        <span>Cost per week:</span>
+                        <span className="text-green-600">~$1.00</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="monthly-estimates" className="mb-8">
+                <h3 className="text-xl font-semibold text-slate-900 mb-4">Monthly Estimates</h3>
+
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm border border-slate-200 rounded-lg overflow-hidden">
+                    <thead className="bg-slate-50">
+                      <tr>
+                        <th className="text-left py-3 px-4 font-semibold text-slate-700 border-b">
+                          Usage Level
+                        </th>
+                        <th className="text-left py-3 px-4 font-semibold text-slate-700 border-b">
+                          Articles/Month
+                        </th>
+                        <th className="text-left py-3 px-4 font-semibold text-slate-700 border-b">
+                          Claude API
+                        </th>
+                        <th className="text-left py-3 px-4 font-semibold text-slate-700 border-b">
+                          OpenAI
+                        </th>
+                        <th className="text-left py-3 px-4 font-semibold text-slate-700 border-b">
+                          Total
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      <tr>
+                        <td className="py-3 px-4 font-medium">Low</td>
+                        <td className="py-3 px-4">40</td>
+                        <td className="py-3 px-4">$1.80 + $4.00 (NFL)</td>
+                        <td className="py-3 px-4">~$0.50</td>
+                        <td className="py-3 px-4 font-semibold text-green-600">$6-7/mo</td>
+                      </tr>
+                      <tr>
+                        <td className="py-3 px-4 font-medium">Medium</td>
+                        <td className="py-3 px-4">200</td>
+                        <td className="py-3 px-4">$9.00 + $4.00 (NFL)</td>
+                        <td className="py-3 px-4">~$1.00</td>
+                        <td className="py-3 px-4 font-semibold text-green-600">$14-15/mo</td>
+                      </tr>
+                      <tr>
+                        <td className="py-3 px-4 font-medium">High</td>
+                        <td className="py-3 px-4">400</td>
+                        <td className="py-3 px-4">$18.00 + $4.00 (NFL)</td>
+                        <td className="py-3 px-4">~$2.00</td>
+                        <td className="py-3 px-4 font-semibold text-green-600">$24-25/mo</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="mt-6 bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h5 className="font-semibold text-green-900 mb-2">Cost Summary</h5>
+                  <ul className="text-sm text-green-800 space-y-1">
+                    <li>
+                      • <strong>Extraordinarily cost-effective:</strong> Even high usage is
+                      under $30/month
+                    </li>
+                    <li>
+                      • <strong>Predictable pricing:</strong> Linear cost scaling with usage
+                    </li>
+                    <li>
+                      • <strong>No minimum commitment:</strong> Pay only for what you use
+                    </li>
+                    <li>
+                      • <strong>Single vendor:</strong> Consolidated billing through Anthropic
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
             {/* Agent Collaboration */}
             <section id="agent-collaboration">
               <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
@@ -708,6 +848,120 @@ export default function AITeamPage() {
                       </tr>
                     </tbody>
                   </table>
+                </div>
+              </div>
+            </section>
+
+            {/* Agent Tuning & Configuration - NEW SECTION */}
+            <section id="agent-tuning">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <Sliders className="h-6 w-6 text-violet-600" />
+                Agent Tuning & Configuration
+              </h2>
+
+              <p className="text-slate-600 leading-relaxed mb-6">
+                Each AI agent can be fine-tuned through the Admin Dashboard to optimize
+                performance for specific use cases. The configuration interface allows
+                administrators to adjust system prompts, model parameters, and guardrails for
+                each agent independently.
+              </p>
+
+              <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-lg mb-8">
+                <div className="bg-slate-50 px-4 py-3 border-b border-slate-200">
+                  <h4 className="font-semibold text-slate-700 flex items-center gap-2">
+                    <Settings className="h-4 w-4" />
+                    Admin Dashboard: AI Agent Configuration
+                  </h4>
+                </div>
+                <div className="p-4">
+                  <Image
+                    src="/images/guide/admin-agent-config.png"
+                    alt="RotoWrite Admin Dashboard showing AI Agent Configuration interface with system instructions, temperature slider, max tokens, model selection, and guardrails for the Content Generation agent"
+                    width={1200}
+                    height={800}
+                    className="rounded-lg border border-slate-200 w-full"
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-white border border-slate-200 rounded-lg p-5">
+                  <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                    <Sliders className="h-4 w-4 text-violet-600" />
+                    Configurable Parameters
+                  </h4>
+                  <ul className="text-sm text-slate-600 space-y-3">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong>System Instructions</strong> – Custom prompts that define agent
+                        behavior, role, capabilities, and output format
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong>Temperature</strong> – Controls creativity vs. consistency
+                        (0.0-1.0 scale)
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong>Max Tokens</strong> – Maximum response length for the agent
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong>Model Selection</strong> – Choose from available Claude models
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <strong>Guardrails</strong> – Toggle safety constraints on/off
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-white border border-slate-200 rounded-lg p-5">
+                  <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                    <Cpu className="h-4 w-4 text-violet-600" />
+                    Per-Agent Customization
+                  </h4>
+                  <p className="text-sm text-slate-600 mb-4">
+                    Each of the 7 agents has its own configuration tab, allowing independent
+                    tuning:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 bg-violet-100 text-violet-700 rounded-full text-xs font-medium">
+                      Content
+                    </span>
+                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                      Writer
+                    </span>
+                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                      SEO
+                    </span>
+                    <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-medium">
+                      QA
+                    </span>
+                    <span className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-xs font-medium">
+                      Persona
+                    </span>
+                    <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-medium">
+                      Creative
+                    </span>
+                    <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-medium">
+                      Visual
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-500 mt-4">
+                    Changes can be saved or reset to defaults at any time. All configurations
+                    are stored in the database and applied in real-time.
+                  </p>
                 </div>
               </div>
             </section>
@@ -1064,142 +1318,120 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...`}</code>
               </div>
             </section>
 
-            {/* Cost Analysis */}
-            <section id="cost-analysis">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <DollarSign className="h-6 w-6 text-violet-600" />
-                Cost Analysis
-              </h2>
-
-              <div id="per-operation-costs" className="mb-8">
-                <h3 className="text-xl font-semibold text-slate-900 mb-4">
-                  Per-Operation Costs
-                </h3>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="bg-white border border-slate-200 rounded-lg p-4">
-                    <h5 className="font-semibold text-slate-900 mb-3">
-                      Standard Article Generation
-                    </h5>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Input tokens:</span>
-                        <span className="font-mono">~5,000</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Output tokens:</span>
-                        <span className="font-mono">~2,000</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Typical length:</span>
-                        <span className="font-mono">800 words</span>
-                      </div>
-                      <div className="pt-2 border-t border-slate-100 flex justify-between font-semibold">
-                        <span>Cost per article:</span>
-                        <span className="text-green-600">$0.045 (4.5¢)</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white border border-slate-200 rounded-lg p-4">
-                    <h5 className="font-semibold text-slate-900 mb-3">
-                      NFL Odds Extractor (Weekly)
-                    </h5>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Image processing:</span>
-                        <span className="font-mono">2 × $0.48</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Content generation:</span>
-                        <span className="font-mono">~$0.05</span>
-                      </div>
-                      <div className="pt-2 border-t border-slate-100 flex justify-between font-semibold">
-                        <span>Cost per week:</span>
-                        <span className="text-green-600">~$1.00</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div id="monthly-estimates" className="mb-8">
-                <h3 className="text-xl font-semibold text-slate-900 mb-4">Monthly Estimates</h3>
-
-                <div className="overflow-x-auto">
-                  <table className="min-w-full text-sm border border-slate-200 rounded-lg overflow-hidden">
-                    <thead className="bg-slate-50">
-                      <tr>
-                        <th className="text-left py-3 px-4 font-semibold text-slate-700 border-b">
-                          Usage Level
-                        </th>
-                        <th className="text-left py-3 px-4 font-semibold text-slate-700 border-b">
-                          Articles/Month
-                        </th>
-                        <th className="text-left py-3 px-4 font-semibold text-slate-700 border-b">
-                          Claude API
-                        </th>
-                        <th className="text-left py-3 px-4 font-semibold text-slate-700 border-b">
-                          OpenAI
-                        </th>
-                        <th className="text-left py-3 px-4 font-semibold text-slate-700 border-b">
-                          Total
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      <tr>
-                        <td className="py-3 px-4 font-medium">Low</td>
-                        <td className="py-3 px-4">40</td>
-                        <td className="py-3 px-4">$1.80 + $4.00 (NFL)</td>
-                        <td className="py-3 px-4">~$0.50</td>
-                        <td className="py-3 px-4 font-semibold text-green-600">$6-7/mo</td>
-                      </tr>
-                      <tr>
-                        <td className="py-3 px-4 font-medium">Medium</td>
-                        <td className="py-3 px-4">200</td>
-                        <td className="py-3 px-4">$9.00 + $4.00 (NFL)</td>
-                        <td className="py-3 px-4">~$1.00</td>
-                        <td className="py-3 px-4 font-semibold text-green-600">$14-15/mo</td>
-                      </tr>
-                      <tr>
-                        <td className="py-3 px-4 font-medium">High</td>
-                        <td className="py-3 px-4">400</td>
-                        <td className="py-3 px-4">$18.00 + $4.00 (NFL)</td>
-                        <td className="py-3 px-4">~$2.00</td>
-                        <td className="py-3 px-4 font-semibold text-green-600">$24-25/mo</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="mt-6 bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h5 className="font-semibold text-green-900 mb-2">Cost Summary</h5>
-                  <ul className="text-sm text-green-800 space-y-1">
-                    <li>
-                      • <strong>Extraordinarily cost-effective:</strong> Even high usage is
-                      under $30/month
-                    </li>
-                    <li>
-                      • <strong>Predictable pricing:</strong> Linear cost scaling with usage
-                    </li>
-                    <li>
-                      • <strong>No minimum commitment:</strong> Pay only for what you use
-                    </li>
-                    <li>
-                      • <strong>Single vendor:</strong> Consolidated billing through Anthropic
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            {/* Security & Compliance */}
+            {/* Security & Compliance - Updated with GDC Data Isolation */}
             <section id="security-compliance">
               <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                 <Shield className="h-6 w-6 text-violet-600" />
                 Security & Compliance
               </h2>
+
+              {/* GDC Data Isolation - MAJOR HIGHLIGHT */}
+              <div id="gdc-data-isolation" className="mb-8">
+                <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl p-8 text-white shadow-lg">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-white/20 rounded-full p-3">
+                      <ShieldCheck className="h-8 w-8" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold mb-3">
+                        Zero GDC Internal Data Usage
+                      </h3>
+                      <p className="text-lg text-emerald-50 leading-relaxed mb-4">
+                        RotoWrite operates completely independently from GDC&apos;s internal
+                        systems and data. The application uses <strong>no GDC internal data</strong> whatsoever.
+                      </p>
+                      <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                        <ul className="space-y-2 text-emerald-50">
+                          <li className="flex items-center gap-2">
+                            <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+                            <span>No access to internal GDC databases or systems</span>
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+                            <span>No proprietary company data processed or stored</span>
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+                            <span>All AI processing uses external, third-party APIs only</span>
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+                            <span>Content created by users is owned entirely by users</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <p className="mt-4 text-emerald-100 text-sm">
+                        <strong>Only exception:</strong> Microsoft SSO integration (coming soon) for
+                        seamless authentication with @gdcgroup.com accounts.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Microsoft SSO Section - NEW */}
+              <div id="microsoft-sso" className="mb-8">
+                <h3 className="text-xl font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                  <Users className="h-5 w-5 text-blue-600" />
+                  Microsoft SSO Integration
+                </h3>
+
+                <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-blue-500 rounded-lg p-3">
+                      <svg
+                        viewBox="0 0 23 23"
+                        className="h-8 w-8"
+                        fill="white"
+                      >
+                        <path d="M0 0h11v11H0zM12 0h11v11H12zM0 12h11v11H0zM12 12h11v11H12z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h4 className="font-bold text-blue-900 text-lg">Coming Soon</h4>
+                        <span className="px-2 py-0.5 bg-blue-200 text-blue-800 rounded-full text-xs font-medium">
+                          In Development
+                        </span>
+                      </div>
+                      <p className="text-blue-800 leading-relaxed mb-4">
+                        Microsoft Single Sign-On (SSO) integration is being developed to allow
+                        GDC team members to authenticate using their existing corporate
+                        credentials.
+                      </p>
+                      <div className="bg-white rounded-lg p-4 border border-blue-200">
+                        <h5 className="font-semibold text-blue-900 mb-2">
+                          What This Means for GDC Users
+                        </h5>
+                        <ul className="text-sm text-blue-800 space-y-2">
+                          <li className="flex items-start gap-2">
+                            <CheckCircle2 className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                            <span>
+                              Sign in with your <strong>@gdcgroup.com</strong> email address
+                            </span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <CheckCircle2 className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                            <span>No separate password to remember</span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <CheckCircle2 className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                            <span>
+                              Leverages existing Microsoft Entra ID (Azure AD) authentication
+                            </span>
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <CheckCircle2 className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                            <span>
+                              Enterprise-grade security with MFA support
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <div id="data-protection" className="mb-8">
                 <h3 className="text-xl font-semibold text-slate-900 mb-4">Data Protection</h3>
@@ -1434,4 +1666,3 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...`}</code>
     </div>
   );
 }
-
