@@ -28,20 +28,50 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
 
+    // #region agent log
+    const loginStartTime = Date.now();
+    console.log('[Login] Starting login attempt:', { email, timestamp: new Date().toISOString() });
+    // #endregion
+
     try {
       const supabase = createClient();
+      
+      // #region agent log
+      console.log('[Login] Client created, calling signInWithPassword');
+      // #endregion
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
+      // #region agent log
+      console.log('[Login] signInWithPassword completed:', {
+        hasUser: !!data?.user,
+        hasError: !!error,
+        errorMessage: error?.message,
+        duration: Date.now() - loginStartTime
+      });
+      // #endregion
+
       if (error) throw error;
 
       if (data.user) {
+        // #region agent log
+        console.log('[Login] Login successful, redirecting to dashboard');
+        // #endregion
         router.push('/dashboard');
         router.refresh();
       }
     } catch (err: any) {
+      // #region agent log
+      console.error('[Login] Login error:', {
+        errorType: err?.constructor?.name,
+        message: err?.message,
+        fullError: err,
+        duration: Date.now() - loginStartTime
+      });
+      // #endregion
       setError(err.message || 'Failed to sign in');
     } finally {
       setLoading(false);
