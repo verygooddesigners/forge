@@ -53,12 +53,36 @@ export function SEOOptimizationSidebar({
     images: 0,
   });
   
-  const [targetRanges] = useState({
-    words: { min: 3043, max: 3499 },
-    headings: { min: 27, max: 40 },
-    paragraphs: { min: 85, max: 999 },
-    images: { min: 12, max: 20 },
-  });
+  // Calculate target ranges based on project word count target
+  const targetRanges = useMemo(() => {
+    const wordTarget = project?.word_count_target || 800;
+    
+    // Calculate reasonable ranges based on word count
+    // Word count: +/- 10% of target
+    const wordMin = Math.floor(wordTarget * 0.9);
+    const wordMax = Math.ceil(wordTarget * 1.1);
+    
+    // Headings: roughly 1 heading per 100 words
+    const headingsTarget = Math.ceil(wordTarget / 100);
+    const headingsMin = Math.max(5, headingsTarget - 5);
+    const headingsMax = headingsTarget + 10;
+    
+    // Paragraphs: roughly 1 paragraph per 100 words
+    const paragraphsTarget = Math.ceil(wordTarget / 100);
+    const paragraphsMin = Math.max(5, paragraphsTarget - 5);
+    
+    // Images: roughly 1 image per 200-300 words
+    const imagesTarget = Math.max(1, Math.ceil(wordTarget / 250));
+    const imagesMin = Math.max(1, imagesTarget - 2);
+    const imagesMax = imagesTarget + 5;
+    
+    return {
+      words: { min: wordMin, max: wordMax },
+      headings: { min: headingsMin, max: headingsMax },
+      paragraphs: { min: paragraphsMin, max: 999 },
+      images: { min: imagesMin, max: imagesMax },
+    };
+  }, [project?.word_count_target]);
   
   const [terms, setTerms] = useState<TermData[]>([]);
   const [termSearch, setTermSearch] = useState('');
