@@ -31,6 +31,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   const [isShared, setIsShared] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showBriefListModal, setShowBriefListModal] = useState(false);
+  const [isCreating, setIsCreating] = useState(false); // Track create mode
   
   // AI Configuration fields
   const [aiInstructions, setAiInstructions] = useState('');
@@ -135,6 +136,18 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
     }
   };
 
+  const startNewBrief = () => {
+    setSelectedBrief(null);
+    setBriefName('');
+    setBriefContent(null);
+    setCategoryId('');
+    setIsShared(false);
+    setAiInstructions('');
+    setExampleUrls('');
+    setUrlAnalysis(null);
+    setIsCreating(true);
+  };
+
   const resetForm = () => {
     setSelectedBrief(null);
     setBriefName('');
@@ -144,6 +157,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
     setAiInstructions('');
     setExampleUrls('');
     setUrlAnalysis(null);
+    setIsCreating(false);
   };
 
   const analyzeExampleUrls = async () => {
@@ -185,14 +199,14 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   return (
     <>
       <div className="flex-1 bg-white rounded-lg shadow-lg overflow-y-auto">
-        {!selectedBrief && !briefName ? (
+        {!selectedBrief && !isCreating ? (
           // Welcome state - centered like screenshot
           <div className="flex flex-col items-center justify-center h-full p-12 text-center">
             <h2 className="text-3xl font-bold text-primary mb-2">SmartBriefs</h2>
             <p className="text-muted-foreground max-w-md mb-8">
               Create smart AI-powered content templates
             </p>
-            <Button onClick={resetForm} size="lg" className="mb-4">
+            <Button onClick={startNewBrief} size="lg" className="mb-4">
               Create New SmartBrief
             </Button>
             <button
@@ -426,6 +440,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
         onOpenChange={setShowBriefListModal}
         onSelectBrief={(brief) => {
           setSelectedBrief(brief);
+          setIsCreating(true);
         }}
       />
     </>
