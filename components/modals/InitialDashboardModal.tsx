@@ -91,7 +91,7 @@ export function InitialDashboardModal({
         <DialogHeader>
           <DialogTitle className="text-2xl font-extrabold">Welcome to RotoWrite</DialogTitle>
           <DialogDescription>
-            Choose from your recent projects or start something new
+            Choose from your recent projects or start something new. Close this modal to access the sidebar navigation.
           </DialogDescription>
         </DialogHeader>
 

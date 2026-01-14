@@ -49,11 +49,6 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50 p-2.5 relative">
-        {/* Backdrop when initial modal is open */}
-        {showInitialModal && !selectedProject && (
-          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40" />
-        )}
-        
         <div className="flex gap-3 h-[calc(100vh-20px)] relative z-10">
           {/* Left Sidebar */}
           <LeftSidebar 
