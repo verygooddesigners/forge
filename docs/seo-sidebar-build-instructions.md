@@ -364,3 +364,5 @@ interface SEOOptimizationSidebarProps {
 - Optimize for performance (debounce, memoization)
 - Handle edge cases (no content, no project, loading states)
 
+
+

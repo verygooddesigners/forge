@@ -7,10 +7,11 @@ export function PasswordResetHandler() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Check if we're on the home page and have a password reset hash
-    if (pathname === '/' && typeof window !== 'undefined') {
+    // Check if we have a password reset hash on home page or login page
+    if ((pathname === '/' || pathname === '/login') && typeof window !== 'undefined') {
       const hash = window.location.hash;
       if (hash && hash.includes('type=recovery')) {
+        console.log('[PasswordResetHandler] Detected recovery hash, redirecting to reset-password');
         window.location.href = `/reset-password${hash}`;
       }
     }

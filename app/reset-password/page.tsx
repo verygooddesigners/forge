@@ -25,6 +25,18 @@ function ResetPasswordForm() {
     const handlePasswordReset = async () => {
       if (typeof window === 'undefined') return;
 
+      // Check for error in query params first
+      const searchParams = new URLSearchParams(window.location.search);
+      const errorParam = searchParams.get('error');
+      
+      if (errorParam === 'invalid_token') {
+        setError('This password reset link is invalid or has expired. Please request a new password reset.');
+        return;
+      } else if (errorParam === 'no_session') {
+        setError('Unable to establish session. Please request a new password reset.');
+        return;
+      }
+
       const hash = window.location.hash.substring(1);
       if (!hash) {
         setError('Invalid reset link. Please request a new password reset.');
