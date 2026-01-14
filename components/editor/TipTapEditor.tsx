@@ -16,6 +16,8 @@ interface TipTapEditorProps {
   onGenerateContent?: () => void;
   generating?: boolean;
   canGenerate?: boolean;
+  onExport?: () => void;
+  onEditorReady?: (editor: any) => void;
 }
 
 export function TipTapEditor({
@@ -27,6 +29,8 @@ export function TipTapEditor({
   onGenerateContent,
   generating = false,
   canGenerate = false,
+  onExport,
+  onEditorReady,
 }: TipTapEditorProps) {
   const editor = useEditor({
     extensions: [
@@ -66,6 +70,12 @@ export function TipTapEditor({
     }
   }, [content, editor]);
 
+  useEffect(() => {
+    if (editor && onEditorReady) {
+      onEditorReady(editor);
+    }
+  }, [editor, onEditorReady]);
+
   if (!editor) {
     return null;
   }
@@ -77,6 +87,7 @@ export function TipTapEditor({
         onGenerateContent={onGenerateContent}
         generating={generating}
         canGenerate={canGenerate}
+        onExport={onExport}
       />
       <div className="flex-1 overflow-y-auto px-6 py-4">
         <EditorContent editor={editor} className="h-full" />

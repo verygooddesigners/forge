@@ -16,6 +16,7 @@ import {
   Redo,
   Code,
   Sparkles,
+  Download,
 } from 'lucide-react';
 
 interface EditorToolbarProps {
@@ -23,9 +24,10 @@ interface EditorToolbarProps {
   onGenerateContent?: () => void;
   generating?: boolean;
   canGenerate?: boolean;
+  onExport?: () => void;
 }
 
-export function EditorToolbar({ editor, onGenerateContent, generating = false, canGenerate = false }: EditorToolbarProps) {
+export function EditorToolbar({ editor, onGenerateContent, generating = false, canGenerate = false, onExport }: EditorToolbarProps) {
   if (!editor) {
     return null;
   }
@@ -150,17 +152,32 @@ export function EditorToolbar({ editor, onGenerateContent, generating = false, c
       </ToolbarButton>
       </div>
 
-      {/* Generate Content Button */}
-      {onGenerateContent && (
-        <Button
-          onClick={onGenerateContent}
-          disabled={generating || !canGenerate}
-          className="gap-2 flex-shrink-0"
-        >
-          <Sparkles className="h-4 w-4" />
-          {generating ? 'Generating...' : 'Generate Content'}
-        </Button>
-      )}
+      {/* Action Buttons */}
+      <div className="flex gap-2 flex-shrink-0">
+        {/* Export Button */}
+        {onExport && (
+          <Button
+            onClick={onExport}
+            variant="outline"
+            className="gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
+        )}
+
+        {/* Generate Content Button */}
+        {onGenerateContent && (
+          <Button
+            onClick={onGenerateContent}
+            disabled={generating || !canGenerate}
+            className="gap-2"
+          >
+            <Sparkles className="h-4 w-4" />
+            {generating ? 'Generating...' : 'Generate Content'}
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

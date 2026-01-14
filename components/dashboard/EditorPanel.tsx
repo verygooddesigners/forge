@@ -4,9 +4,11 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Save, Sparkles } from 'lucide-react';
 import { TipTapEditor } from '@/components/editor/TipTapEditor';
+import { ExportModal } from '@/components/modals/ExportModal';
 import { createClient } from '@/lib/supabase/client';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Project } from '@/types';
+import { Editor } from '@tiptap/react';
 
 interface EditorPanelProps {
   projectId: string | null;
@@ -22,6 +24,8 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onCo
   const [saving, setSaving] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const editorRef = useRef<Editor | null>(null);
   const supabase = createClient();
   
   // Debounce content changes for auto-save
@@ -435,44 +439,56 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onCo
   }
 
   return (
-    <div className="flex-1 bg-white rounded-lg shadow-lg flex flex-col">
-      <div className="flex-1 overflow-hidden">
-        <TipTapEditor
-          content={content}
-          onChange={handleContentChange}
-          onWordCountChange={handleWordCountChange}
-          placeholder={project ? "Start writing your content..." : "Start writing your content..."}
-          onGenerateContent={handleGenerateContent}
-          generating={generating}
-          canGenerate={!!writerModelId && !!project}
-        />
+    <>
+      <div className="flex-1 bg-white rounded-lg shadow-lg flex flex-col">
+        <div className="flex-1 overflow-hidden">
+          <TipTapEditor
+            content={content}
+            onChange={handleContentChange}
+            onWordCountChange={handleWordCountChange}
+            placeholder={project ? "Start writing your content..." : "Start writing your content..."}
+            onGenerateContent={handleGenerateContent}
+            generating={generating}
+            canGenerate={!!writerModelId && !!project}
+            onExport={() => setShowExportModal(true)}
+            onEditorReady={(editor) => { editorRef.current = editor; }}
+          />
+        </div>
+
+        {/* Status Bar */}
+        <div className="border-t px-4 py-2 text-xs text-muted-foreground flex justify-between items-center">
+          <span className="flex items-center gap-2">
+            {generating ? (
+              <>
+                <Sparkles className="h-3 w-3 animate-spin" />
+                Generating...
+              </>
+            ) : saving ? (
+              <>
+                <Save className="h-3 w-3 animate-spin" />
+                Saving...
+              </>
+            ) : lastSaved ? (
+              <>
+                <Save className="h-3 w-3" />
+                Saved {lastSaved.toLocaleTimeString()}
+              </>
+            ) : (
+              'Ready'
+            )}
+          </span>
+          <span>{wordCount} words</span>
+        </div>
       </div>
 
-      {/* Status Bar */}
-      <div className="border-t px-4 py-2 text-xs text-muted-foreground flex justify-between items-center">
-        <span className="flex items-center gap-2">
-          {generating ? (
-            <>
-              <Sparkles className="h-3 w-3 animate-spin" />
-              Generating...
-            </>
-          ) : saving ? (
-            <>
-              <Save className="h-3 w-3 animate-spin" />
-              Saving...
-            </>
-          ) : lastSaved ? (
-            <>
-              <Save className="h-3 w-3" />
-              Saved {lastSaved.toLocaleTimeString()}
-            </>
-          ) : (
-            'Ready'
-          )}
-        </span>
-        <span>{wordCount} words</span>
-      </div>
-    </div>
+      {/* Export Modal */}
+      <ExportModal
+        open={showExportModal}
+        onOpenChange={setShowExportModal}
+        editor={editorRef.current}
+        projectHeadline={project?.headline}
+      />
+    </>
   );
 }
 
