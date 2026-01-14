@@ -2,17 +2,26 @@
 
 ## Current Issues/Features
 
-- [] On the Brief Builder, when creating a new brief, we need to add a new text input box that will be used like an AI prompt. The user building the brief will be able to write out, in detail, what kind of story the brief is, what the tone is, what kind of information should be contained in the content generated for that type of brief. And there should also be a box where the user can paste multiple URLS linking to that type of story. 
+- [x] On the Brief Builder, when creating a new brief, we need to add a new text input box that will be used like an AI prompt. The user building the brief will be able to write out, in detail, what kind of story the brief is, what the tone is, what kind of information should be contained in the content generated for that type of brief. And there should also be a box where the user can paste multiple URLS linking to that type of story. ✅ COMPLETED
 
-For example, if I wanted to create a new "NFL Picks: Single Game" brief, the creator might type something like: NFL Picks: Single Game stories are focused on a single upcoming NFL game. 
+  **Implementation:**
+  - Added AI Configuration tab to Brief Builder
+  - AI Instructions textarea for describing brief context
+  - Example URLs textarea (one per line)
+  - Analyze Example URLs button powered by Content Generation Agent
+  - AI analyzes structure, tone, key info types, formatting, SEO patterns
+  - Analysis stored in seo_config JSONB field
+  - Guides AI team during content generation
 
-Example URL's: https://www.rotowire.com/football/article/nfl-picks-texans-vs-steelers-nfl-playoffs-best-bets-102538
+- [x] When I click Open Project on the Dashboard, it brings up the New Project modal. It should bring up a modal listing all saved projects, allowing me to click one to open it. ✅ COMPLETED
 
-When the user clicks Create, the AI agent team would then visit that URL (or multiple URLs, if included) and analyze the story content, then embed the information it learned about the story focus, formatting, what kind of information to include, etc into the finished Brief. 
-
-This will help guide the AI Agent Team as it generates content for each brief type.
-
-- [] When I click Open Project on the Dashboard, it brings up the New Project modal. It should bring up a modal listing all saved projects, allowing me to click one to open it. 
+  **Implementation:**
+  - Created ProjectListModal component
+  - Shows all user projects in searchable grid layout
+  - Search by headline, keyword, or topic
+  - Displays word count and last updated date
+  - Separated New Project and Open Project actions
+  - Fixed button handlers in DashboardLayout and EditorPanel 
 
 - [x] Add pop-up modal window that appears during Export process that warns the user that they cannot just copy and paste the generated text directly into the Rotowire CMS and publish it. They have to read it and fact check it. ✅ COMPLETED
 - [x] On the initial modal window that appears, text is still going outside of the card/buttons ✅ COMPLETED
