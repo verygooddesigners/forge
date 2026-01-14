@@ -665,17 +665,117 @@ export default function UserGuidePage() {
             exact specifications.
           </p>
 
-          <h3 className="text-xl font-semibold mt-8 mb-4">Creating a Brief</h3>
+          <h3 className="text-xl font-semibold mt-8 mb-4">SmartBrief Builder: Two Powerful Tabs</h3>
+
+          <p className="leading-relaxed mb-4">
+            SmartBriefs now have two tabs that work together to create intelligent, adaptive content templates:
+          </p>
+
+          <div className="grid gap-4 mb-6">
+            <div className="border border-violet-200 rounded-lg p-5">
+              <h4 className="font-semibold text-lg mb-2">📄 Content Template Tab</h4>
+              <p className="text-muted-foreground leading-relaxed">
+                Use the TipTap editor to define your content structure with headings, lists, and formatting. 
+                This is the scaffold the AI follows when generating articles.
+              </p>
+            </div>
+            
+            <div className="border border-violet-200 rounded-lg p-5 bg-violet-50">
+              <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+                🤖 AI Configuration Tab (NEW!)
+              </h4>
+              <p className="text-muted-foreground leading-relaxed">
+                Teach the AI what this SmartBrief is about by providing instructions and example URLs. 
+                The AI analyzes real articles to understand tone, style, formatting, and content patterns.
+              </p>
+            </div>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">Creating a SmartBrief</h3>
           
           <ol className="list-decimal list-inside space-y-3 ml-4">
             <li className="leading-relaxed">Open the <strong>SmartBrief Builder</strong> from the dashboard</li>
-            <li className="leading-relaxed">Click <strong>New Brief</strong></li>
-            <li className="leading-relaxed">Name your brief (e.g., "NFL Team Analysis Template")</li>
+            <li className="leading-relaxed">Click <strong>New SmartBrief</strong></li>
+            <li className="leading-relaxed">Name your SmartBrief (e.g., "NFL Team Analysis Template")</li>
             <li className="leading-relaxed">Select or create a category</li>
-            <li className="leading-relaxed">Define your content structure using the editor</li>
+            <li className="leading-relaxed"><strong>Content Template Tab:</strong> Define your content structure using the editor</li>
+            <li className="leading-relaxed"><strong>AI Configuration Tab:</strong> Add instructions and example URLs (see below)</li>
             <li className="leading-relaxed">Toggle <strong>Share with other strategists</strong> if applicable</li>
             <li className="leading-relaxed">Click <strong>Create</strong> to save</li>
           </ol>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">Using AI Configuration (Game Changer!)</h3>
+
+          <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded-r-lg mb-6">
+            <p className="text-sm font-medium text-green-900 mb-2">🚀 Why This Matters</p>
+            <p className="text-sm text-green-800">
+              Instead of the AI guessing what you want, it learns from real examples. This dramatically 
+              improves content quality, accuracy, and brand consistency.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <div className="border-l-4 border-primary pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 1: Write AI Instructions</h4>
+              <p className="text-muted-foreground leading-relaxed mb-2">
+                In the <strong>AI Instructions</strong> field, describe:
+              </p>
+              <ul className="space-y-1 ml-4 text-sm">
+                <li>• What type of story this SmartBrief produces</li>
+                <li>• The tone and writing style (casual, authoritative, analytical, etc.)</li>
+                <li>• Key information that should always be included</li>
+                <li>• Any special formatting requirements</li>
+              </ul>
+              <div className="bg-slate-100 p-3 rounded mt-3 text-sm font-mono">
+                Example: "NFL Picks: Single Game stories are focused on a single upcoming NFL game. 
+                They should include odds analysis, betting insights, and predictions with a conversational 
+                but authoritative tone. Always include point spreads, moneylines, and over/under analysis."
+              </div>
+            </div>
+
+            <div className="border-l-4 border-primary pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 2: Add Example URLs</h4>
+              <p className="text-muted-foreground leading-relaxed mb-2">
+                Paste URLs to similar articles (one per line). The AI will visit these URLs and learn from them.
+              </p>
+              <div className="bg-slate-100 p-3 rounded mt-3 text-sm font-mono">
+                https://www.rotowire.com/football/article/nfl-picks-texans-vs-steelers-102538<br/>
+                https://www.rotowire.com/football/article/nfl-picks-ravens-vs-chiefs-103422<br/>
+                https://www.rotowire.com/football/article/nfl-picks-bills-vs-49ers-101234
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                💡 Tip: Include 2-3 high-quality examples for best results (max 3 URLs analyzed)
+              </p>
+            </div>
+
+            <div className="border-l-4 border-primary pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 3: Analyze Example URLs</h4>
+              <p className="text-muted-foreground leading-relaxed mb-2">
+                Click <strong>Analyze Example URLs</strong>. The AI will:
+              </p>
+              <ul className="space-y-1 ml-4 text-sm">
+                <li>✓ Fetch content from each URL</li>
+                <li>✓ Extract content structure and organization patterns</li>
+                <li>✓ Identify tone and writing style</li>
+                <li>✓ Note key information types consistently included</li>
+                <li>✓ Detect formatting conventions (tables, lists, heading levels)</li>
+                <li>✓ Analyze SEO patterns and keyword usage</li>
+                <li>✓ Determine typical length and depth</li>
+              </ul>
+              <p className="text-xs text-amber-700 mt-2">
+                ⏱️ Analysis takes 10-30 seconds depending on URL content size
+              </p>
+            </div>
+
+            <div className="border-l-4 border-primary pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 4: Review Analysis</h4>
+              <p className="text-muted-foreground leading-relaxed">
+                The AI displays a comprehensive analysis showing patterns it extracted. This analysis is 
+                saved with your SmartBrief and used every time you generate content with this template.
+              </p>
+            </div>
+          </div>
 
           <h3 className="text-xl font-semibold mt-8 mb-4">Structuring Your Brief</h3>
 

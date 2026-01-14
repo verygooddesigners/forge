@@ -119,7 +119,27 @@
 - Proportional targets for headings, paragraphs, images
 - Scales based on word count (800, 1500, 3000, etc.)
 
-#### 15. NFL Odds Extractor (Phase 2) ✅
+#### 15. SmartBrief AI Configuration ✅
+- Two-tab interface in SmartBrief Builder
+- AI Instructions textarea for describing brief type, tone, structure
+- Example URLs textarea for reference articles (one per line)
+- Analyze Example URLs button (AI-powered pattern extraction)
+- URL analysis system fetches and analyzes up to 3 URLs
+- Content Generation Agent extracts patterns from real articles
+- Analysis covers: structure, tone, key info, formatting, SEO, length
+- Stored in seo_config JSONB with brief
+- Used by AI during content generation for better accuracy
+- Rebranded "Briefs" → "SmartBriefs" throughout application
+
+#### 16. Project List Modal ✅
+- Created dedicated modal for browsing saved projects
+- Grid layout with search functionality
+- Search by headline, keyword, or topic
+- Displays: headline, keywords (primary + secondary), word count, last updated
+- Separated "New Project" and "Open Project" actions
+- Fixed navigation - "Projects" button now shows project list
+
+#### 17. NFL Odds Extractor (Phase 2) ✅
 - Screenshot upload interface (ESPN + RotoWire odds)
 - Visual Extraction Agent integration
 - Auto-generates structured articles with tables

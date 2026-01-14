@@ -27,7 +27,7 @@
 - Created `InitialDashboardModal` component:
   - Shows on every dashboard visit when no project is selected
   - Displays recent projects list (last 8 projects)
-  - Action buttons: New Project, Open Project, Writer Factory, Brief Builder, User Guide
+  - Action buttons: New Project, Open Project, Writer Factory, SmartBrief Builder, User Guide
   - Backdrop gray overlay when modal is open
 - Created `UserGuideModal` component:
   - Left sidebar with table of contents and search
@@ -195,6 +195,41 @@
 
 - **Time Savings:** Reduces 30+ minutes of manual work to 3-5 minutes
 
+### Phase 15: SmartBrief AI Configuration ✅
+**Date:** January 14, 2026
+
+- **AI Configuration Tab:**
+  - Added second tab to SmartBrief Builder
+  - AI Instructions textarea for describing brief context, tone, structure
+  - Example URLs textarea for providing reference articles (one per line)
+  - Analyze Example URLs button powered by Content Generation Agent
+
+- **URL Analysis System:**
+  - Created `/api/briefs/analyze-urls` endpoint
+  - Fetches content from up to 3 example URLs (10s timeout each)
+  - Strips HTML and extracts main text
+  - Uses Content Generation Agent to analyze patterns
+  - AI extracts: structure, tone, key info types, formatting, SEO, length
+
+- **Analysis Output:**
+  - Comprehensive pattern analysis displayed in modal
+  - Stored in `seo_config` JSONB field: `ai_instructions`, `example_urls`, `url_analysis`
+  - Available to Content Generation Agent during article creation
+  - Improves content accuracy and brand consistency
+
+- **Rebranding:**
+  - Renamed "Briefs" to "SmartBriefs" throughout entire application
+  - Updated all UI components, navigation, modals
+  - Updated user guide and documentation
+  - Reflects enhanced AI-powered capabilities
+
+- **Benefits:**
+  - AI learns from real examples instead of generic instructions
+  - Better tone and style matching
+  - Consistent formatting across content types
+  - Reduced manual prompt engineering
+  - Higher quality content generation
+
 ## Partially Completed Phases
 
 ### Phase 8: Right Sidebar Integration ✅
@@ -237,7 +272,7 @@
 
 ## Technical Improvements Needed
 
-1. **Brief Builder Integration**: Complete the inline brief creation from ProjectCreationModal Step 7
+1. **SmartBrief Builder Integration**: Complete the inline brief creation from ProjectCreationModal Step 7
 2. **API Implementations**: 
    - Auto-optimize needs Claude API integration
    - Internal links needs link analysis algorithm
