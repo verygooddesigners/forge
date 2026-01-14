@@ -6,6 +6,7 @@ import { LeftSidebar } from './LeftSidebar';
 import { RightSidebar } from './RightSidebar';
 import { EditorPanel } from './EditorPanel';
 import { ProjectCreationModal } from '@/components/modals/ProjectCreationModal';
+import { ProjectListModal } from '@/components/modals/ProjectListModal';
 import { WriterFactoryModal } from '@/components/modals/WriterFactoryModal';
 import { BriefBuilderModal } from '@/components/modals/BriefBuilderModal';
 import { InitialDashboardModal } from '@/components/modals/InitialDashboardModal';
@@ -23,7 +24,8 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
   
   // Modal states
   const [showInitialModal, setShowInitialModal] = useState(false);
-  const [showProjectModal, setShowProjectModal] = useState(false);
+  const [showProjectCreationModal, setShowProjectCreationModal] = useState(false);
+  const [showProjectListModal, setShowProjectListModal] = useState(false);
   const [showWriterFactoryModal, setShowWriterFactoryModal] = useState(false);
   const [showBriefBuilderModal, setShowBriefBuilderModal] = useState(false);
   const [showUserGuideModal, setShowUserGuideModal] = useState(false);
@@ -54,7 +56,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
           <LeftSidebar 
             user={user}
             projectId={selectedProject}
-            onOpenProjectModal={() => setShowProjectModal(true)}
+            onOpenProjectModal={() => setShowProjectListModal(true)}
             onOpenWriterFactory={() => setShowWriterFactoryModal(true)}
             onOpenBriefBuilder={() => setShowBriefBuilderModal(true)}
             onOpenNFLOddsExtractor={() => setShowNFLOddsExtractorModal(true)}
@@ -64,7 +66,8 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
           <EditorPanel 
             projectId={selectedProject}
             writerModelId={selectedWriterModel}
-            onOpenProjectModal={() => setShowProjectModal(true)}
+            onOpenProjectModal={() => setShowProjectListModal(true)}
+            onNewProject={() => setShowProjectCreationModal(true)}
             onContentChange={setEditorContent}
           />
 
@@ -82,8 +85,8 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
         open={showInitialModal}
         onOpenChange={setShowInitialModal}
         userId={user.id}
-        onNewProject={() => setShowProjectModal(true)}
-        onOpenProject={() => setShowProjectModal(true)}
+        onNewProject={() => setShowProjectCreationModal(true)}
+        onOpenProject={() => setShowProjectListModal(true)}
         onOpenWriterFactory={() => setShowWriterFactoryModal(true)}
         onOpenBriefBuilder={() => setShowBriefBuilderModal(true)}
         onOpenUserGuide={() => setShowUserGuideModal(true)}
@@ -91,10 +94,17 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
       />
 
       <ProjectCreationModal
-        open={showProjectModal}
-        onOpenChange={setShowProjectModal}
+        open={showProjectCreationModal}
+        onOpenChange={setShowProjectCreationModal}
         userId={user.id}
         onProjectCreated={handleProjectCreated}
+      />
+
+      <ProjectListModal
+        open={showProjectListModal}
+        onOpenChange={setShowProjectListModal}
+        userId={user.id}
+        onSelectProject={handleSelectProject}
       />
       
       <WriterFactoryModal

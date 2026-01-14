@@ -14,10 +14,11 @@ interface EditorPanelProps {
   projectId: string | null;
   writerModelId: string | null;
   onOpenProjectModal: () => void;
+  onNewProject?: () => void;
   onContentChange?: (content: any) => void;
 }
 
-export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onContentChange }: EditorPanelProps) {
+export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNewProject, onContentChange }: EditorPanelProps) {
   const [content, setContent] = useState<any>(null);
   const [project, setProject] = useState<Project | null>(null);
   const [wordCount, setWordCount] = useState(0);
@@ -425,7 +426,7 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onCo
             Create a new project or open an existing one to start writing AI-powered content.
           </p>
           <div className="flex gap-3 justify-center pt-4">
-            <Button size="lg" onClick={onOpenProjectModal}>
+            <Button size="lg" onClick={onNewProject || onOpenProjectModal}>
               <Plus className="mr-2 h-5 w-5" />
               New Project
             </Button>
