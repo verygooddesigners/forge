@@ -5,10 +5,10 @@ import { User, Project } from '@/types';
 import { LeftSidebar } from './LeftSidebar';
 import { RightSidebar } from './RightSidebar';
 import { EditorPanel } from './EditorPanel';
+import { SmartBriefPanel } from './SmartBriefPanel';
 import { ProjectCreationModal } from '@/components/modals/ProjectCreationModal';
 import { ProjectListModal } from '@/components/modals/ProjectListModal';
 import { WriterFactoryModal } from '@/components/modals/WriterFactoryModal';
-import { BriefBuilderModal } from '@/components/modals/BriefBuilderModal';
 import { InitialDashboardModal } from '@/components/modals/InitialDashboardModal';
 import { UserGuideModal } from '@/components/modals/UserGuideModal';
 import { NFLOddsExtractorModal } from '@/components/modals/NFLOddsExtractorModal';
@@ -17,17 +17,19 @@ interface DashboardLayoutProps {
   user: User;
 }
 
+type DashboardView = 'editor' | 'smartbriefs';
+
 export function DashboardLayout({ user }: DashboardLayoutProps) {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [selectedWriterModel, setSelectedWriterModel] = useState<string | null>(null);
   const [editorContent, setEditorContent] = useState<any>(null);
+  const [activeView, setActiveView] = useState<DashboardView>('editor');
   
   // Modal states
   const [showInitialModal, setShowInitialModal] = useState(false);
   const [showProjectCreationModal, setShowProjectCreationModal] = useState(false);
   const [showProjectListModal, setShowProjectListModal] = useState(false);
   const [showWriterFactoryModal, setShowWriterFactoryModal] = useState(false);
-  const [showBriefBuilderModal, setShowBriefBuilderModal] = useState(false);
   const [showUserGuideModal, setShowUserGuideModal] = useState(false);
   const [showNFLOddsExtractorModal, setShowNFLOddsExtractorModal] = useState(false);
 
@@ -41,11 +43,21 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
   const handleProjectCreated = (project: Project) => {
     setSelectedProject(project.id);
     setSelectedWriterModel(project.writer_model_id);
+    setActiveView('editor');
   };
 
   const handleSelectProject = (projectId: string, writerModelId: string) => {
     setSelectedProject(projectId);
     setSelectedWriterModel(writerModelId);
+    setActiveView('editor');
+  };
+
+  const handleOpenSmartBriefs = () => {
+    setActiveView('smartbriefs');
+  };
+
+  const handleBackToEditor = () => {
+    setActiveView('editor');
   };
 
   return (
@@ -58,25 +70,32 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
             projectId={selectedProject}
             onOpenProjectModal={() => setShowProjectListModal(true)}
             onOpenWriterFactory={() => setShowWriterFactoryModal(true)}
-            onOpenBriefBuilder={() => setShowBriefBuilderModal(true)}
+            onOpenBriefBuilder={handleOpenSmartBriefs}
             onOpenNFLOddsExtractor={() => setShowNFLOddsExtractorModal(true)}
           />
 
-          {/* Main Editor */}
-          <EditorPanel 
-            projectId={selectedProject}
-            writerModelId={selectedWriterModel}
-            onOpenProjectModal={() => setShowProjectListModal(true)}
-            onNewProject={() => setShowProjectCreationModal(true)}
-            onContentChange={setEditorContent}
-          />
+          {/* Main Content Area - Conditional */}
+          {activeView === 'smartbriefs' ? (
+            <SmartBriefPanel user={user} onBack={handleBackToEditor} />
+          ) : (
+            <>
+              {/* Main Editor */}
+              <EditorPanel 
+                projectId={selectedProject}
+                writerModelId={selectedWriterModel}
+                onOpenProjectModal={() => setShowProjectListModal(true)}
+                onNewProject={() => setShowProjectCreationModal(true)}
+                onContentChange={setEditorContent}
+              />
 
-          {/* Right Sidebar */}
-          <RightSidebar 
-            projectId={selectedProject}
-            writerModelId={selectedWriterModel}
-            content={editorContent}
-          />
+              {/* Right Sidebar */}
+              <RightSidebar 
+                projectId={selectedProject}
+                writerModelId={selectedWriterModel}
+                content={editorContent}
+              />
+            </>
+          )}
         </div>
       </div>
 
@@ -88,7 +107,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
         onNewProject={() => setShowProjectCreationModal(true)}
         onOpenProject={() => setShowProjectListModal(true)}
         onOpenWriterFactory={() => setShowWriterFactoryModal(true)}
-        onOpenBriefBuilder={() => setShowBriefBuilderModal(true)}
+        onOpenBriefBuilder={handleOpenSmartBriefs}
         onOpenUserGuide={() => setShowUserGuideModal(true)}
         onSelectProject={handleSelectProject}
       />
@@ -110,12 +129,6 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
       <WriterFactoryModal
         open={showWriterFactoryModal}
         onOpenChange={setShowWriterFactoryModal}
-        user={user}
-      />
-
-      <BriefBuilderModal
-        open={showBriefBuilderModal}
-        onOpenChange={setShowBriefBuilderModal}
         user={user}
       />
 
