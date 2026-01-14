@@ -26,9 +26,21 @@ export async function POST(request: NextRequest) {
       expectedFields: ['awayTeam', 'homeTeam', 'date', 'time', 'location'],
     });
 
-    if (!scheduleResult.success || !scheduleResult.data) {
+    if (!scheduleResult.success || !scheduleResult.content) {
       return NextResponse.json(
         { error: 'Failed to extract schedule data', details: scheduleResult.error },
+        { status: 500 }
+      );
+    }
+
+    // Parse the JSON content from the agent response
+    let scheduleData;
+    try {
+      const parsed = JSON.parse(scheduleResult.content);
+      scheduleData = parsed.data || parsed; // Handle both wrapped and direct data
+    } catch (err) {
+      return NextResponse.json(
+        { error: 'Failed to parse schedule data', details: 'Invalid JSON response' },
         { status: 500 }
       );
     }
@@ -45,16 +57,28 @@ export async function POST(request: NextRequest) {
       expectedFields: ['matchup', 'pointSpread', 'moneylineAway', 'moneylineHome', 'overUnder'],
     });
 
-    if (!oddsResult.success || !oddsResult.data) {
+    if (!oddsResult.success || !oddsResult.content) {
       return NextResponse.json(
         { error: 'Failed to extract odds data', details: oddsResult.error },
         { status: 500 }
       );
     }
 
+    // Parse the JSON content from the agent response
+    let oddsData;
+    try {
+      const parsed = JSON.parse(oddsResult.content);
+      oddsData = parsed.data || parsed;
+    } catch (err) {
+      return NextResponse.json(
+        { error: 'Failed to parse odds data', details: 'Invalid JSON response' },
+        { status: 500 }
+      );
+    }
+
     // Merge schedule and odds data
-    const scheduleGames = scheduleResult.data as any[];
-    const oddsGames = oddsResult.data as any[];
+    const scheduleGames = scheduleData as any[];
+    const oddsGames = oddsData as any[];
 
     const mergedGames = scheduleGames.map((game: any) => {
       // Find matching odds for this game
