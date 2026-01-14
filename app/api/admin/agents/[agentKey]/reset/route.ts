@@ -5,9 +5,9 @@ import { AgentKey } from '@/lib/agents/types';
 import { isValidAgentKey, getDefaultAgentConfig } from '@/lib/agents/config';
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     agentKey: string;
-  };
+  }>;
 }
 
 /**
@@ -20,7 +20,7 @@ export async function POST(
   { params }: RouteParams
 ) {
   try {
-    const { agentKey } = params;
+    const { agentKey } = await params;
     
     // Check super admin access
     const user = await getCurrentUser();
