@@ -89,30 +89,30 @@ export async function updateSession(request: NextRequest) {
     user = null;
   }
 
-  // Protected routes
-  const protectedPaths = ['/dashboard', '/admin'];
-  const isProtectedPath = protectedPaths.some(path => 
-    request.nextUrl.pathname.startsWith(path)
-  );
+  // TEMPORARILY DISABLED FOR SCREENSHOTS - Protected routes
+  // const protectedPaths = ['/dashboard', '/admin'];
+  // const isProtectedPath = protectedPaths.some(path => 
+  //   request.nextUrl.pathname.startsWith(path)
+  // );
 
-  if (isProtectedPath && !user) {
-    // #region agent log
-    console.log('[Middleware] Redirecting to login:', { totalDuration: Date.now() - startTime });
-    // #endregion
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    return NextResponse.redirect(url);
-  }
+  // if (isProtectedPath && !user) {
+  //   // #region agent log
+  //   console.log('[Middleware] Redirecting to login:', { totalDuration: Date.now() - startTime });
+  //   // #endregion
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = '/login';
+  //   return NextResponse.redirect(url);
+  // }
 
   // Redirect to dashboard if logged in and trying to access login
-  if (request.nextUrl.pathname === '/login' && user) {
-    // #region agent log
-    console.log('[Middleware] Redirecting to dashboard:', { totalDuration: Date.now() - startTime });
-    // #endregion
-    const url = request.nextUrl.clone();
-    url.pathname = '/dashboard';
-    return NextResponse.redirect(url);
-  }
+  // if (request.nextUrl.pathname === '/login' && user) {
+  //   // #region agent log
+  //   console.log('[Middleware] Redirecting to dashboard:', { totalDuration: Date.now() - startTime });
+  //   // #endregion
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = '/dashboard';
+  //   return NextResponse.redirect(url);
+  // }
 
   // #region agent log
   console.log('[Middleware] Complete:', { totalDuration: Date.now() - startTime, hasUser: !!user, path: request.nextUrl.pathname });

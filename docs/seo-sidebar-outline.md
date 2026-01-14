@@ -39,3 +39,5 @@
 
 - When no content exists in the editor, the Content Score gauge displays 0 and is greyed out, and all metrics show empty or zero states.
 
+
+

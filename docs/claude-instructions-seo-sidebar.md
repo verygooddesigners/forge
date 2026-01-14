@@ -158,3 +158,5 @@ EditorPanel (content)
 - Ensure good performance (debounce, memoization)
 - Make accessible (keyboard nav, ARIA labels)
 
+
+
