@@ -375,7 +375,7 @@ export function LeftSidebar({ user, projectId, onOpenProjectModal, onOpenWriterF
           onClick={onOpenBriefBuilder}
         >
           <BookOpen className="mr-3 h-5 w-5" />
-          Briefs
+          SmartBriefs
         </Button>
         <Button 
           variant="ghost" 

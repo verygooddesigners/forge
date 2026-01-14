@@ -223,12 +223,12 @@ export function RightSidebar({
               )}
             </div>
 
-            {/* Brief Name */}
+            {/* SmartBrief Name */}
             {brief && (
               <>
                 <Separator className="my-3" />
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-2">Brief</p>
+                  <p className="text-xs font-medium text-muted-foreground mb-2">SmartBrief</p>
                   <p className="text-sm font-medium">{brief.name}</p>
                 </div>
               </>

@@ -7,7 +7,7 @@ AI-powered content creation platform with RAG-based writer models, brief builder
 ### Core Features
 - **Writer Engine (RAG)**: Train AI models on specific writer styles using vector embeddings
 - **Multi-Agent System**: 7 specialized AI agents with guardrails and admin controls
-- **Brief Builder**: Create reusable SEO content templates with TipTap editor
+- **SmartBrief Builder**: Create AI-powered content templates with URL analysis
 - **NewsEngine**: Find relevant news with Tavily AI search
 - **SEO Assistant**: Real-time scoring with live keyword tracking as you type
 - **NFL Odds Extractor**: AI-powered screenshot extraction for automated article generation
@@ -79,8 +79,8 @@ http://localhost:5309
 
 ### For Strategists
 1. **Create Writer Model** → Train with your articles
-2. **Build Briefs** → Structure your content templates  
-3. **Start Project** → Choose model + brief + keywords
+2. **Build SmartBriefs** → AI-powered templates with URL analysis  
+3. **Start Project** → Choose model + SmartBrief + keywords
 4. **Generate Content** → AI writes in your style
 5. **Optimize** → Use SEO Assistant with live keyword tracking
 6. **Export** → Download or copy with CMS safety warnings

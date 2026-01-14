@@ -158,8 +158,8 @@ export function InitialDashboardModal({
               }}
             >
               <BookOpen className="h-8 w-8 text-primary flex-shrink-0" />
-              <span className="text-base font-semibold text-center">Brief Builder</span>
-              <span className="text-xs text-muted-foreground text-center line-clamp-2 w-full">Create content templates</span>
+              <span className="text-base font-semibold text-center">SmartBrief Builder</span>
+              <span className="text-xs text-muted-foreground text-center line-clamp-2 w-full">Create AI-powered content templates</span>
             </Button>
           </div>
 

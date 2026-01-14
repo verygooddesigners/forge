@@ -175,7 +175,7 @@ export function ProjectCreationModal({
       case 4: return 'Secondary Keywords';
       case 5: return 'Additional Details';
       case 6: return 'Writer Model';
-      case 7: return 'Brief Template';
+      case 7: return 'SmartBrief Template';
       case 8: return 'Word Count Target';
       case 9: return 'Confirmation';
       default: return '';
@@ -319,7 +319,7 @@ export function ProjectCreationModal({
             {step === 7 && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label>Choose a brief template</Label>
+                  <Label>Choose a SmartBrief template</Label>
                   <Button 
                     variant="ghost" 
                     size="sm"
@@ -334,7 +334,7 @@ export function ProjectCreationModal({
                 </div>
                 <Select value={selectedBriefId} onValueChange={setSelectedBriefId}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a brief template" />
+                    <SelectValue placeholder="Select a SmartBrief template" />
                   </SelectTrigger>
                   <SelectContent>
                     {briefs.map((brief) => (

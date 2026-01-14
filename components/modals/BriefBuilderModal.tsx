@@ -196,7 +196,7 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
   };
 
   const deleteBrief = async (briefId: string) => {
-    if (!confirm('Are you sure you want to delete this brief?')) return;
+    if (!confirm('Are you sure you want to delete this SmartBrief?')) return;
 
     const { error } = await supabase
       .from('briefs')
@@ -269,10 +269,10 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
         <DialogHeader className="px-6 pt-6 pb-4 border-b">
           <DialogTitle className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" />
-            Brief Builder
+            SmartBrief Builder
           </DialogTitle>
           <DialogDescription>
-            Create and manage SEO scaffolds for your content
+            Create AI-powered content templates with URL analysis and intelligent guidance
           </DialogDescription>
         </DialogHeader>
 
@@ -281,7 +281,7 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
           <div className="w-64 flex flex-col gap-2 overflow-auto">
             <Button onClick={resetForm} size="sm" className="w-full">
               <Plus className="h-4 w-4 mr-2" />
-              New Brief
+              New SmartBrief
             </Button>
             
             <div className="space-y-2">
@@ -313,7 +313,7 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
 
               {briefs.length === 0 && (
                 <div className="text-center py-4 text-sm text-muted-foreground">
-                  No briefs yet
+                  No SmartBriefs yet
                 </div>
               )}
             </div>
@@ -324,7 +324,7 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="briefName">Brief Name</Label>
+                  <Label htmlFor="briefName">SmartBrief Name</Label>
                   <Input
                     id="briefName"
                     value={briefName}
@@ -393,7 +393,7 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
                       onClick={() => deleteBrief(selectedBrief.id)}
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
-                      Delete
+                      Delete SmartBrief
                     </Button>
                   )}
                   <Button onClick={saveBrief} disabled={loading || !briefName.trim()} size="sm">
@@ -415,8 +415,8 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
                 <div className="h-full border rounded-lg overflow-hidden bg-white">
                   <TipTapEditor
                     content={briefContent}
-                    onChange={setBriefContent}
-                    placeholder="Create your brief structure here... Use headings, lists, and formatting to define your content scaffold."
+                onChange={setBriefContent}
+                placeholder="Create your SmartBrief structure here... Use headings, lists, and formatting to define your content scaffold."
                   />
                 </div>
               </TabsContent>
@@ -436,7 +436,7 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
                     className="resize-none"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Describe the story type, tone, structure, and key information that should be included when generating content for this brief.
+                    Describe the story type, tone, structure, and key information that should be included when generating content for this SmartBrief.
                   </p>
                 </div>
 
@@ -454,7 +454,7 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
                     className="resize-none font-mono text-sm"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Paste URLs to similar articles. The AI will analyze these examples to understand the formatting, style, and structure for this brief type.
+                    Paste URLs to similar articles. The AI will analyze these examples to understand the formatting, style, and structure for this SmartBrief type.
                   </p>
                 </div>
 

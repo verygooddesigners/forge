@@ -43,7 +43,7 @@ export default function UserGuidePage() {
     { id: 'ai-architecture', title: 'AI Architecture', icon: Cpu },
     { id: 'registration', title: 'Account Registration', icon: FileText },
     { id: 'writer-factory', title: 'Writer Factory', icon: Sparkles },
-    { id: 'brief-builder', title: 'Brief Builder', icon: FileText },
+    { id: 'brief-builder', title: 'SmartBrief Builder', icon: FileText },
     { id: 'creating-projects', title: 'Creating Projects', icon: Target },
     { id: 'nfl-odds-extractor', title: 'NFL Odds Extractor', icon: Target },
     { id: 'seo-package', title: 'Understanding SEO Package', icon: Target },
@@ -69,7 +69,7 @@ export default function UserGuidePage() {
             <p className="leading-relaxed">
               RotoWrite combines three powerful elements to create content that's both SEO-optimized 
               and authentically written in your voice: <strong>Writer Models</strong>, <strong>SEO Packages</strong>, 
-              and <strong>Briefs</strong>. This unique combination ensures your content ranks well while 
+              and <strong>SmartBriefs</strong>. This unique combination ensures your content ranks well while 
               maintaining your personal style.
             </p>
           </div>
@@ -95,7 +95,7 @@ export default function UserGuidePage() {
               </h4>
               <p className="text-muted-foreground leading-relaxed">
                 Create reusable content templates that define structure, required sections, and formatting. 
-                Briefs ensure consistency across all your content while meeting specific requirements.
+                SmartBriefs ensure consistency across all your content while meeting specific requirements.
               </p>
             </div>
 
@@ -656,11 +656,11 @@ export default function UserGuidePage() {
     },
 
     'brief-builder': {
-      title: 'Brief Builder: Content Templates',
+      title: 'SmartBrief Builder: AI-Powered Content Templates',
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed">
-            Briefs are reusable content templates that define the structure, sections, and requirements 
+            SmartBriefs are AI-powered, reusable content templates that define the structure, sections, and requirements 
             for your content. They ensure consistency and help the AI generate content that follows your 
             exact specifications.
           </p>
@@ -668,7 +668,7 @@ export default function UserGuidePage() {
           <h3 className="text-xl font-semibold mt-8 mb-4">Creating a Brief</h3>
           
           <ol className="list-decimal list-inside space-y-3 ml-4">
-            <li className="leading-relaxed">Open the <strong>Brief Builder</strong> from the dashboard</li>
+            <li className="leading-relaxed">Open the <strong>SmartBrief Builder</strong> from the dashboard</li>
             <li className="leading-relaxed">Click <strong>New Brief</strong></li>
             <li className="leading-relaxed">Name your brief (e.g., "NFL Team Analysis Template")</li>
             <li className="leading-relaxed">Select or create a category</li>
@@ -720,7 +720,7 @@ export default function UserGuidePage() {
             </ul>
           </div>
 
-          <h3 className="text-xl font-semibold mt-8 mb-4">Using Briefs in Projects</h3>
+          <h3 className="text-xl font-semibold mt-8 mb-4">Using SmartBriefs in Projects</h3>
 
           <p className="leading-relaxed">
             When creating a new project, you'll select a brief template. The AI uses this template to:
@@ -1853,7 +1853,7 @@ export default function UserGuidePage() {
             <div className="space-y-3">
               <div className="flex gap-3">
                 <div className="font-bold text-blue-600">1.</div>
-                <p className="leading-relaxed">Open <strong>Brief Builder</strong> from the dashboard</p>
+                <p className="leading-relaxed">Open <strong>SmartBrief Builder</strong> from the dashboard</p>
               </div>
               
               <div className="flex gap-3">
