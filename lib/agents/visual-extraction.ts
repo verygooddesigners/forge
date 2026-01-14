@@ -98,12 +98,14 @@ export async function extractFromImage(
         // Try fallback with GPT-4o Vision
         const fallbackResponse = await extractWithGPT4Vision(request, userMessage);
         if (fallbackResponse.success) {
+          // Add note about fallback in the content
+          const contentWithNote = fallbackResponse.content 
+            ? `${fallbackResponse.content}\n\n[Note: Extracted using GPT-4o Vision fallback]`
+            : fallbackResponse.content;
+          
           return {
             ...fallbackResponse,
-            metadata: {
-              ...fallbackResponse.metadata,
-              usedFallback: true,
-            },
+            content: contentWithNote,
           };
         }
       }
