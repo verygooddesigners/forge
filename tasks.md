@@ -1,10 +1,10 @@
 # TASKS
 
 ## Current Issues/Features
-- [] Add pop-up modal window that appears during Export process that warns the user that they cannot just copy and paste the generated text directly into the Rotowire CMS and publish it. They have to read it and fact check it. 
-- [] On the initial modal window that appears, text is still going outside of the card/buttons
-- [] Word count is not being passed from setup into the SEO Wizard
-- [] When a suggested keyword is used in the Editor, the card for that suggested keyword is not updated with the number of times the keyword is used
+- [x] Add pop-up modal window that appears during Export process that warns the user that they cannot just copy and paste the generated text directly into the Rotowire CMS and publish it. They have to read it and fact check it. ✅ COMPLETED
+- [x] On the initial modal window that appears, text is still going outside of the card/buttons ✅ COMPLETED
+- [x] Word count is not being passed from setup into the SEO Wizard ✅ COMPLETED
+- [x] When a suggested keyword is used in the Editor, the card for that suggested keyword is not updated with the number of times the keyword is used ✅ COMPLETED
 
 ## Architectural Refinements (Future Improvements)
 
@@ -38,7 +38,15 @@
 - [] Allow A/B testing different prompt versions
 - [] Benefits: Non-technical users can improve prompts, test variations without code deploys
 
-### 4. Consider Model Context Protocol (MCP)
+### 4. NFL Odds Extractor (Phase 2) ✅ COMPLETED
+- [x] Created API route using Visual Extraction Agent
+- [x] Built image upload modal for ESPN schedule and RotoWire odds
+- [x] Integrated with dashboard navigation
+- [x] Auto-generates structured articles with matchup tables
+- [x] Creates projects with extracted content
+- ✅ Benefits: Saves 25+ minutes per week, eliminates transcription errors
+
+### 5. Consider Model Context Protocol (MCP)
 - [] Research Anthropic's MCP for production readiness
 - [] If available, explore letting Claude directly access training data
 - [] Potential integration with Supabase for direct data access
