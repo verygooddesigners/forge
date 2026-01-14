@@ -10,6 +10,7 @@ import { WriterFactoryModal } from '@/components/modals/WriterFactoryModal';
 import { BriefBuilderModal } from '@/components/modals/BriefBuilderModal';
 import { InitialDashboardModal } from '@/components/modals/InitialDashboardModal';
 import { UserGuideModal } from '@/components/modals/UserGuideModal';
+import { NFLOddsExtractorModal } from '@/components/modals/NFLOddsExtractorModal';
 
 interface DashboardLayoutProps {
   user: User;
@@ -26,6 +27,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
   const [showWriterFactoryModal, setShowWriterFactoryModal] = useState(false);
   const [showBriefBuilderModal, setShowBriefBuilderModal] = useState(false);
   const [showUserGuideModal, setShowUserGuideModal] = useState(false);
+  const [showNFLOddsExtractorModal, setShowNFLOddsExtractorModal] = useState(false);
 
   // Show initial modal when no project is selected
   useEffect(() => {
@@ -60,6 +62,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
             onOpenProjectModal={() => setShowProjectModal(true)}
             onOpenWriterFactory={() => setShowWriterFactoryModal(true)}
             onOpenBriefBuilder={() => setShowBriefBuilderModal(true)}
+            onOpenNFLOddsExtractor={() => setShowNFLOddsExtractorModal(true)}
           />
 
           {/* Main Editor */}
@@ -114,6 +117,13 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
       <UserGuideModal
         open={showUserGuideModal}
         onOpenChange={setShowUserGuideModal}
+      />
+
+      <NFLOddsExtractorModal
+        open={showNFLOddsExtractorModal}
+        onOpenChange={setShowNFLOddsExtractorModal}
+        userId={user.id}
+        onProjectCreated={handleProjectCreated}
       />
     </>
   );
