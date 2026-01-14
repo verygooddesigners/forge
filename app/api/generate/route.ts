@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { findSimilarTrainingContent, buildContextFromExamples, buildContentGenerationPrompt } from '@/lib/rag';
-import { streamContent } from '@/lib/ai';
+import { generateContentStream, ContentGenerationRequest } from '@/lib/agents';
 
 /**
  * Convert TipTap JSON to plain text
@@ -153,36 +153,31 @@ export async function POST(request: NextRequest) {
       console.log('[GENERATE] No brief content provided, using default');
     }
 
-    // Build the prompt
-    console.log('[GENERATE] Building prompt...');
-    const prompt = buildContentGenerationPrompt(
-      headline,
-      primaryKeyword,
-      secondaryKeywords || [],
-      wordCount || 800,
-      briefText,
-      writerContext,
-      masterInstructions
-    );
-    console.log('[GENERATE] Prompt built, length:', prompt.length);
+    // Build the brief with all context
+    console.log('[GENERATE] Building content generation request...');
+    let fullBrief = briefText;
+    if (masterInstructions) {
+      fullBrief = `${masterInstructions}\n\n${briefText}`;
+    }
 
-    // Generate content with streaming
-    console.log('[GENERATE] Calling Claude API for streaming...');
+    // Use Content Generation Agent
+    const agentRequest: ContentGenerationRequest = {
+      brief: fullBrief,
+      primaryKeywords: [primaryKeyword],
+      secondaryKeywords: secondaryKeywords || [],
+      writerModelContext: writerContext,
+      targetWordCount: wordCount || 800,
+      additionalInstructions: `Write an article with the headline: "${headline}"`,
+    };
+
+    // Generate content with streaming using agent
+    console.log('[GENERATE] Calling Content Generation Agent for streaming...');
     let stream: ReadableStream;
     try {
-      stream = await streamContent([
-        {
-          role: 'system',
-          content: 'You are an expert content writer specialized in SEO-optimized articles.',
-        },
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ]);
+      stream = await generateContentStream(agentRequest);
       console.log('[GENERATE] Stream created successfully');
     } catch (aiError: any) {
-      console.error('[GENERATE] Claude API error:', aiError.message);
+      console.error('[GENERATE] Content Generation Agent error:', aiError.message);
       return new Response(
         JSON.stringify({ error: `AI Generation failed: ${aiError.message}` }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }

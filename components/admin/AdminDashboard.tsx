@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { UserManagement } from './UserManagement';
 import { APIKeyManagement } from './APIKeyManagement';
 import { AITuner } from './AITuner';
+import { AgentTuner } from './AgentTuner';
 
 interface AdminDashboardProps {
   user: User;
@@ -17,6 +18,7 @@ interface AdminDashboardProps {
 
 export function AdminDashboard({ user }: AdminDashboardProps) {
   const router = useRouter();
+  const isSuperAdmin = user.email === 'jeremy.botter@gmail.com' || user.email === 'jeremy.botter@gdcgroup.com';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50 p-6">
@@ -37,6 +39,9 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
             <TabsTrigger value="users">User Management</TabsTrigger>
             <TabsTrigger value="api">API Keys</TabsTrigger>
             <TabsTrigger value="ai">AI Tuner</TabsTrigger>
+            {isSuperAdmin && (
+              <TabsTrigger value="agents">AI Agents</TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="users">
@@ -50,6 +55,12 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
           <TabsContent value="ai">
             <AITuner adminUser={user} />
           </TabsContent>
+
+          {isSuperAdmin && (
+            <TabsContent value="agents">
+              <AgentTuner adminUser={user} />
+            </TabsContent>
+          )}
         </Tabs>
       </div>
     </div>

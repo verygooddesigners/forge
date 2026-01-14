@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { analyzeWritingStyle } from '@/lib/ai';
+import { analyzeWritingStyle, generateWriterEmbeddings } from '@/lib/agents';
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,10 +46,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    // Analyze writing style
+    // Analyze writing style using Writer Training Agent
     let analyzedStyle: any = {};
     try {
-      analyzedStyle = await analyzeWritingStyle(content);
+      const analysisResponse = await analyzeWritingStyle({
+        samples: [content],
+        writerName: model.name || 'Writer',
+        existingContext: model.metadata?.style_analysis,
+      });
+      
+      if (analysisResponse.success && analysisResponse.content) {
+        try {
+          analyzedStyle = JSON.parse(analysisResponse.content);
+        } catch {
+          // If parse fails, use default
+          analyzedStyle = {
+            tone: 'professional',
+            voice: 'active',
+            vocabulary_level: 'intermediate',
+            sentence_structure: 'varied',
+            key_phrases: [],
+          };
+        }
+      }
     } catch (styleError: any) {
       console.error('Error analyzing writing style:', styleError);
       // Return a default style if analysis fails
@@ -62,13 +81,25 @@ export async function POST(request: NextRequest) {
       };
     }
 
-    // Save training content with analysis (no embedding - using Claude-only approach)
+    // Generate embeddings using Writer Training Agent (if configured)
+    let embedding = null;
+    try {
+      const embeddingVector = await generateWriterEmbeddings(content);
+      if (embeddingVector) {
+        embedding = embeddingVector;
+      }
+    } catch (embeddingError) {
+      console.warn('Error generating embeddings:', embeddingError);
+      // Continue without embeddings
+    }
+
+    // Save training content with analysis and embeddings
     const { error: insertError } = await supabase
       .from('training_content')
       .insert({
         model_id,
         content,
-        embedding: null, // Not using embeddings with Claude-only setup
+        embedding,
         analyzed_style: analyzedStyle,
       });
 
