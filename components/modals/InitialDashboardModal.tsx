@@ -100,66 +100,66 @@ export function InitialDashboardModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <Button
               variant="outline"
-              className="h-auto flex flex-col gap-2 py-6 hover:bg-primary/5 hover:border-primary px-4"
+              className="h-auto flex flex-col items-center gap-2 py-6 hover:bg-primary/5 hover:border-primary px-4 overflow-hidden"
               onClick={() => setShowRecentProjects(!showRecentProjects)}
               disabled={loading || recentProjects.length === 0}
             >
               <Clock className="h-8 w-8 text-primary flex-shrink-0" />
-              <span className="text-base font-semibold whitespace-nowrap">Recent Projects</span>
-              <span className="text-xs text-muted-foreground text-center break-words w-full">
+              <span className="text-base font-semibold text-center">Recent Projects</span>
+              <span className="text-xs text-muted-foreground text-center line-clamp-2 w-full">
                 {loading ? 'Loading...' : `${recentProjects.length} projects`}
               </span>
             </Button>
             <Button
               variant="outline"
-              className="h-auto flex flex-col gap-2 py-6 hover:bg-primary/5 hover:border-primary px-4"
+              className="h-auto flex flex-col items-center gap-2 py-6 hover:bg-primary/5 hover:border-primary px-4 overflow-hidden"
               onClick={() => {
                 onNewProject();
                 onOpenChange(false);
               }}
             >
               <FileText className="h-8 w-8 text-primary flex-shrink-0" />
-              <span className="text-base font-semibold whitespace-nowrap">New Project</span>
-              <span className="text-xs text-muted-foreground text-center break-words w-full">Create a new content project</span>
+              <span className="text-base font-semibold text-center">New Project</span>
+              <span className="text-xs text-muted-foreground text-center line-clamp-2 w-full">Create a new content project</span>
             </Button>
 
             <Button
               variant="outline"
-              className="h-auto flex flex-col gap-2 py-6 hover:bg-primary/5 hover:border-primary px-4"
+              className="h-auto flex flex-col items-center gap-2 py-6 hover:bg-primary/5 hover:border-primary px-4 overflow-hidden"
               onClick={() => {
                 onOpenProject();
                 onOpenChange(false);
               }}
             >
               <FolderOpen className="h-8 w-8 text-primary flex-shrink-0" />
-              <span className="text-base font-semibold whitespace-nowrap">Browse Projects</span>
-              <span className="text-xs text-muted-foreground text-center break-words w-full">View all projects</span>
+              <span className="text-base font-semibold text-center">Browse Projects</span>
+              <span className="text-xs text-muted-foreground text-center line-clamp-2 w-full">View all projects</span>
             </Button>
 
             <Button
               variant="outline"
-              className="h-auto flex flex-col gap-2 py-6 hover:bg-primary/5 hover:border-primary px-4"
+              className="h-auto flex flex-col items-center gap-2 py-6 hover:bg-primary/5 hover:border-primary px-4 overflow-hidden"
               onClick={() => {
                 onOpenWriterFactory();
                 onOpenChange(false);
               }}
             >
               <Wrench className="h-8 w-8 text-primary flex-shrink-0" />
-              <span className="text-base font-semibold whitespace-nowrap">Writer Factory</span>
-              <span className="text-xs text-muted-foreground text-center break-words w-full">Train AI writer models</span>
+              <span className="text-base font-semibold text-center">Writer Factory</span>
+              <span className="text-xs text-muted-foreground text-center line-clamp-2 w-full">Train AI writer models</span>
             </Button>
 
             <Button
               variant="outline"
-              className="h-auto flex flex-col gap-2 py-6 hover:bg-primary/5 hover:border-primary px-4"
+              className="h-auto flex flex-col items-center gap-2 py-6 hover:bg-primary/5 hover:border-primary px-4 overflow-hidden"
               onClick={() => {
                 onOpenBriefBuilder();
                 onOpenChange(false);
               }}
             >
               <BookOpen className="h-8 w-8 text-primary flex-shrink-0" />
-              <span className="text-base font-semibold whitespace-nowrap">Brief Builder</span>
-              <span className="text-xs text-muted-foreground text-center break-words w-full">Create content templates</span>
+              <span className="text-base font-semibold text-center">Brief Builder</span>
+              <span className="text-xs text-muted-foreground text-center line-clamp-2 w-full">Create content templates</span>
             </Button>
           </div>
 
