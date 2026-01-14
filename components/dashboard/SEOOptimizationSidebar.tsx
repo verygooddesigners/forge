@@ -166,11 +166,14 @@ export function SEOOptimizationSidebar({
       const matches = lowerText.match(regex);
       const currentCount = matches ? matches.length : 0;
       
+      // Parse target as number (it may be a string from API)
+      const targetCount = typeof term.target === 'string' ? parseInt(term.target) : term.target;
+      
       // Determine status based on current vs target
       let status: 'optimal' | 'under' | 'over' = 'under';
-      if (currentCount >= term.target) {
+      if (currentCount >= targetCount) {
         status = 'optimal';
-      } else if (currentCount > term.target * 1.5) {
+      } else if (currentCount > targetCount * 1.5) {
         status = 'over';
       }
       
