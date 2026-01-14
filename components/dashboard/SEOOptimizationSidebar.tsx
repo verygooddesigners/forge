@@ -94,6 +94,7 @@ export function SEOOptimizationSidebar({
   useEffect(() => {
     if (content && projectId) {
       extractMetrics(content);
+      updateKeywordCounts(content);
     } else {
       setMetrics({ words: 0, headings: 0, paragraphs: 0, images: 0 });
       setSeoScore(0);
@@ -138,6 +139,49 @@ export function SEOOptimizationSidebar({
     if (words > 0) {
       calculateScore(newMetrics);
     }
+  };
+
+  const updateKeywordCounts = (tipTapContent: any) => {
+    if (!tipTapContent || !tipTapContent.content || terms.length === 0) {
+      return;
+    }
+
+    // Extract all text from content
+    let fullText = '';
+    const extractText = (node: any) => {
+      if (node.text) {
+        fullText += node.text + ' ';
+      }
+      if (node.content) {
+        node.content.forEach(extractText);
+      }
+    };
+    
+    tipTapContent.content.forEach(extractText);
+    const lowerText = fullText.toLowerCase();
+
+    // Update term counts
+    const updatedTerms = terms.map(term => {
+      const regex = new RegExp(`\\b${term.term.toLowerCase()}\\b`, 'gi');
+      const matches = lowerText.match(regex);
+      const currentCount = matches ? matches.length : 0;
+      
+      // Determine status based on current vs target
+      let status: 'optimal' | 'under' | 'over' = 'under';
+      if (currentCount >= term.target) {
+        status = 'optimal';
+      } else if (currentCount > term.target * 1.5) {
+        status = 'over';
+      }
+      
+      return {
+        ...term,
+        current: currentCount,
+        status,
+      };
+    });
+
+    setTerms(updatedTerms);
   };
 
   const calculateScore = (currentMetrics: ContentMetrics) => {
