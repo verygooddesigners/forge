@@ -6,14 +6,37 @@ export async function GET(request: Request) {
     const requestUrl = new URL(request.url);
     const code = requestUrl.searchParams.get('code');
     const type = requestUrl.searchParams.get('type');
+    const token_hash = requestUrl.searchParams.get('token_hash');
 
-    // Handle password reset redirect
-    if (type === 'recovery') {
-      // Redirect to reset-password page with hash fragment
-      const hash = requestUrl.hash || requestUrl.searchParams.get('hash') || '';
-      return NextResponse.redirect(new URL(`/reset-password${hash}`, requestUrl.origin));
+    // Handle password reset with token_hash
+    if (type === 'recovery' && token_hash) {
+      const supabase = await createClient();
+      
+      // Verify the token_hash and get session tokens
+      const { data, error } = await supabase.auth.verifyOtp({
+        token_hash,
+        type: 'recovery',
+      });
+
+      if (error) {
+        console.error('Error verifying recovery token:', error);
+        return NextResponse.redirect(
+          new URL('/reset-password?error=invalid_token', requestUrl.origin)
+        );
+      }
+
+      // Redirect to reset-password page with session tokens in hash fragment
+      if (data.session) {
+        const hash = `#access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}&type=recovery`;
+        return NextResponse.redirect(new URL(`/reset-password${hash}`, requestUrl.origin));
+      }
+
+      return NextResponse.redirect(
+        new URL('/reset-password?error=no_session', requestUrl.origin)
+      );
     }
 
+    // Handle regular OAuth/email verification with code
     if (code) {
       const supabase = await createClient();
       const { data, error } = await supabase.auth.exchangeCodeForSession(code);
