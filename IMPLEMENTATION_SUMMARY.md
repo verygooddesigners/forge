@@ -98,6 +98,103 @@
 - Added `account_status` field to users table
 - Updated trigger function for new user creation
 
+### Phase 12: Multi-Agent System (Phase 1) ✅ 
+**Date:** January 2026  
+**Migration:** `00005_agent_configs.sql`
+
+- **7 Specialized AI Agents Created:**
+  1. Content Generation Agent - Article writing and streaming
+  2. Writer Training Agent - Style analysis and embeddings
+  3. SEO Optimization Agent - Keyword and content analysis
+  4. Quality Assurance Agent - Grammar checking with LanguageTool
+  5. Persona & Tone Agent - Voice adaptation
+  6. Creative Features Agent - Workflow orchestration
+  7. Visual Extraction Agent - Image data extraction (Claude + GPT-4o fallback)
+
+- **Agent Infrastructure:**
+  - `lib/agents/` directory with 7 agent implementations
+  - `lib/agents/prompts/` with specialized system prompts
+  - `lib/agents/base.ts` for shared utilities
+  - `lib/agents/types.ts` for TypeScript interfaces
+  - `lib/languagetool.ts` for grammar checking integration
+  - `agent_configs` database table with RLS policies
+
+- **Admin UI:**
+  - `AgentTuner` component with tab interface for all 7 agents
+  - Configure system prompts, temperature, max tokens, model selection
+  - Enable/disable agents
+  - Special config sections for QA and Visual agents
+  - Reset to defaults functionality
+  - Super admin only access (jeremy.botter@gmail.com)
+
+- **API Routes:**
+  - `/api/admin/agents` - List and update all agents
+  - `/api/admin/agents/[agentKey]` - Get/update individual agent
+  - `/api/admin/agents/[agentKey]/reset` - Reset to defaults
+
+- **Integration:**
+  - Refactored `/api/generate` to use Content Generation Agent
+  - Refactored `/api/writer-models/train` to use Writer Training Agent
+  - All existing functionality preserved
+
+### Phase 13: Bug Fixes & UX Improvements ✅
+**Date:** January 14, 2026
+
+- **Export Modal with CMS Warning:**
+  - Created `ExportModal` component with critical warning
+  - Users must acknowledge before exporting
+  - Copy to clipboard and download options
+  - HTML and Plain Text export formats
+  - Added Export button to editor toolbar
+
+- **Initial Modal Text Overflow Fixed:**
+  - Added `overflow-hidden` to action buttons
+  - Proper text centering and wrapping with `line-clamp-2`
+  - Prevents text bleeding outside button boundaries
+
+- **Word Count Target Integration:**
+  - SEO Wizard now uses `word_count_target` from project
+  - Dynamic target ranges (±10% for words, proportional for other metrics)
+  - Scales appropriately for different word count targets
+
+- **Real-time Keyword Tracking:**
+  - Live keyword count updates as user types
+  - Uses word boundary regex matching
+  - Updates term cards with current vs target counts
+  - Dynamic status indicators (optimal/under/over)
+
+### Phase 14: NFL Odds Extractor (Phase 2) ✅
+**Date:** January 14, 2026
+
+- **NFL Odds Extractor Feature:**
+  - Created `NFLOddsExtractorModal` component
+  - Upload interface for dual screenshots (ESPN + RotoWire)
+  - Week number and season year configuration
+  - Optional custom headline input
+
+- **API Integration:**
+  - `/api/nfl-odds/extract` endpoint
+  - Uses Visual Extraction Agent for image processing
+  - Extracts schedule data (teams, dates, locations)
+  - Extracts odds data (spreads, moneylines, over/under)
+  - Merges data from both sources
+
+- **Article Generation:**
+  - Auto-generates structured HTML content
+  - Matchup list for tracking (Google Sheets)
+  - Individual matchup sections with odds tables
+  - Prediction sections (blank for manual input)
+  - Picks sections with placeholders
+  - Opening odds summary table
+  - Creates project with generated content
+
+- **Navigation:**
+  - Added "NFL Odds Extractor" button to dashboard sidebar
+  - TrendingUp icon for visual distinction
+  - Integrated with existing modal system
+
+- **Time Savings:** Reduces 30+ minutes of manual work to 3-5 minutes
+
 ## Partially Completed Phases
 
 ### Phase 8: Right Sidebar Integration ✅

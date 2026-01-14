@@ -6,17 +6,23 @@ AI-powered content creation platform with RAG-based writer models, brief builder
 
 ### Core Features
 - **Writer Engine (RAG)**: Train AI models on specific writer styles using vector embeddings
+- **Multi-Agent System**: 7 specialized AI agents with guardrails and admin controls
 - **Brief Builder**: Create reusable SEO content templates with TipTap editor
 - **NewsEngine**: Find relevant news with Tavily AI search
-- **SEO Assistant**: Real-time scoring and AI-powered optimization suggestions
+- **SEO Assistant**: Real-time scoring with live keyword tracking as you type
+- **NFL Odds Extractor**: AI-powered screenshot extraction for automated article generation
+- **Export System**: CMS-ready formatting with critical safety warnings
 - **Project Management**: Complete workflow from creation to publication
-- **Admin Dashboard**: User management, API keys, and AI configuration
+- **Admin Dashboard**: User management, API keys, AI configuration, and Agent Tuner
 
 ### Technical Highlights
-- **RAG Implementation**: pgvector + OpenAI embeddings for style matching
-- **Streaming AI**: Real-time content generation with Grok API
+- **Multi-Agent AI**: 7 specialized agents (Content, Training, SEO, QA, Persona, Creative, Visual)
+- **Visual Extraction**: Claude Vision + GPT-4o fallback for image data extraction
+- **RAG Implementation**: pgvector + Claude for style matching
+- **Streaming AI**: Real-time content generation with Claude Sonnet 4
+- **Live Keyword Tracking**: Real-time keyword count updates in SEO sidebar
 - **Auto-save**: Debounced content persistence
-- **Role-based Access**: Admin and Strategist permissions
+- **Role-based Access**: Admin and Strategist permissions with super admin controls
 - **Beautiful UI**: Violet-themed design with Shadcn UI
 
 ## 🛠 Tech Stack
@@ -76,14 +82,24 @@ http://localhost:5309
 2. **Build Briefs** → Structure your content templates  
 3. **Start Project** → Choose model + brief + keywords
 4. **Generate Content** → AI writes in your style
-5. **Optimize** → Use SEO Assistant to improve
-6. **Publish** → Export polished content
+5. **Optimize** → Use SEO Assistant with live keyword tracking
+6. **Export** → Download or copy with CMS safety warnings
+7. **Publish** → Deploy to RotoWire CMS
+
+### NFL Odds Extractor Workflow
+1. **Upload Screenshots** → ESPN schedule + RotoWire odds
+2. **Configure** → Set week number and season year
+3. **Extract Data** → AI processes images and extracts data
+4. **Review** → Verify extracted matchups and odds
+5. **Generate Article** → Auto-creates structured content with tables
+6. **Edit & Publish** → Add predictions and export
 
 ### For Admins
 - Manage all writer models
 - Create and assign user accounts
 - Configure API keys
-- Set AI master instructions
+- Tune AI agents (system prompts, temperature, tokens)
+- Set agent guardrails and special configs
 - Monitor system usage
 
 ## 📁 Project Structure
@@ -192,15 +208,38 @@ npm start
 npm run lint
 ```
 
+## 🎉 Recent Updates (January 2026)
+
+### Phase 1: Multi-Agent System ✅
+- 7 specialized AI agents with guardrails
+- Database-backed agent configurations
+- Admin Agent Tuner UI for real-time adjustments
+- LanguageTool integration for grammar checking
+- Super admin access controls
+
+### Bug Fixes & Enhancements ✅
+- Export Modal with critical CMS warning and acknowledgement
+- Fixed initial dashboard modal text overflow
+- Dynamic SEO targets based on project word count
+- Real-time keyword usage tracking in SEO sidebar
+
+### Phase 2: NFL Odds Extractor ✅
+- Visual data extraction from screenshots
+- Automated article generation with structured tables
+- Week-by-week odds tracking workflow
+- Saves 25+ minutes per week
+
 ## 📈 Future Enhancements
 
 Ready for:
-- Claude API integration (architecture prepared)
-- Additional AI providers
-- Advanced analytics
+- Microsoft SSO integration (Azure AD)
+- Additional export formats (DOCX, Markdown)
+- Advanced analytics dashboard
 - Content versioning
 - Team collaboration features
-- Export to CMS platforms
+- Enhanced visual extraction preview/editing
+- More agent integrations in UI (QA, Persona, SEO agents)
+- Prompt versioning in database
 
 ## 🤝 Contributing
 

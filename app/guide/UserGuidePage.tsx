@@ -45,6 +45,7 @@ export default function UserGuidePage() {
     { id: 'writer-factory', title: 'Writer Factory', icon: Sparkles },
     { id: 'brief-builder', title: 'Brief Builder', icon: FileText },
     { id: 'creating-projects', title: 'Creating Projects', icon: Target },
+    { id: 'nfl-odds-extractor', title: 'NFL Odds Extractor', icon: Target },
     { id: 'seo-package', title: 'Understanding SEO Package', icon: Target },
     { id: 'seo-wizard', title: 'SEO Wizard Tools', icon: Zap },
     { id: 'content-generation', title: 'Content Generation', icon: Sparkles },
@@ -873,6 +874,113 @@ export default function UserGuidePage() {
       ),
     },
 
+    'nfl-odds-extractor': {
+      title: 'NFL Odds Extractor',
+      content: (
+        <div className="space-y-6">
+          <p className="text-lg leading-relaxed">
+            The NFL Odds Extractor is a powerful automation tool that transforms weekly NFL schedule and odds 
+            data from screenshots into fully-formatted articles. This feature saves 25+ minutes per week and 
+            eliminates transcription errors.
+          </p>
+
+          <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded-r-lg">
+            <p className="text-sm font-medium text-green-900 mb-2">⏱️ Time Savings</p>
+            <p className="text-sm text-green-800">
+              <strong>Manual Process:</strong> 30+ minutes per week<br />
+              <strong>With NFL Odds Extractor:</strong> 3-5 minutes per week<br />
+              <strong>Annual Savings:</strong> ~21.5 hours (52 weeks)
+            </p>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">How It Works</h3>
+
+          <div className="space-y-4">
+            <div className="border-l-4 border-primary pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 1: Access the Feature</h4>
+              <p className="text-muted-foreground leading-relaxed">
+                Click <strong>NFL Odds Extractor</strong> in the dashboard sidebar (look for the trending up icon).
+              </p>
+            </div>
+
+            <div className="border-l-4 border-primary pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 2: Upload Screenshots</h4>
+              <p className="text-muted-foreground leading-relaxed">
+                Upload two screenshots:
+              </p>
+              <ul className="mt-2 space-y-1 ml-4">
+                <li>• <strong>ESPN Schedule:</strong> Screenshot of NFL weekly schedule with dates, times, locations</li>
+                <li>• <strong>RotoWire Odds:</strong> Screenshot of DraftKings odds matrix with spreads, moneylines, over/under</li>
+              </ul>
+            </div>
+
+            <div className="border-l-4 border-primary pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 3: Configure Week Details</h4>
+              <p className="text-muted-foreground leading-relaxed">
+                Enter the week number (1-18) and season year. Optionally add a custom headline, or let the 
+                system auto-generate one.
+              </p>
+            </div>
+
+            <div className="border-l-4 border-primary pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 4: Extract & Generate</h4>
+              <p className="text-muted-foreground leading-relaxed">
+                Click <strong>Extract & Generate</strong>. The Visual Extraction Agent processes both images, 
+                extracts all data (teams, dates, odds, locations), and generates a complete article with 
+                structured tables.
+              </p>
+            </div>
+
+            <div className="border-l-4 border-primary pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 5: Edit & Publish</h4>
+              <p className="text-muted-foreground leading-relaxed">
+                The generated article opens in the editor with all matchup tables populated. Add your 
+                predictions and analysis, then export when ready.
+              </p>
+            </div>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">What Gets Generated</h3>
+
+          <div className="space-y-3">
+            <div className="border border-violet-200 rounded-lg p-4">
+              <h4 className="font-semibold mb-2">Matchup List</h4>
+              <p className="text-sm text-muted-foreground">
+                A simple list of all matchups (e.g., "Lions vs Packers") for copying into your tracking spreadsheet.
+              </p>
+            </div>
+
+            <div className="border border-violet-200 rounded-lg p-4">
+              <h4 className="font-semibold mb-2">Individual Matchup Sections</h4>
+              <p className="text-sm text-muted-foreground">
+                For each game, generates an H2 heading, odds table (7 rows with matchup, spread, moneyline, 
+                over/under, date, location, last verified), prediction section (blank), and picks section 
+                with placeholders.
+              </p>
+            </div>
+
+            <div className="border border-violet-200 rounded-lg p-4">
+              <h4 className="font-semibold mb-2">Opening Odds Summary Table</h4>
+              <p className="text-sm text-muted-foreground">
+                A comprehensive table showing all matchups with opening spreads for tracking line movement.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mt-6">
+            <p className="text-sm font-medium text-blue-900 mb-2">💡 Pro Tips</p>
+            <ul className="text-sm text-blue-800 space-y-2">
+              <li>• Take screenshots at the same size/zoom level each week for consistency</li>
+              <li>• Ensure text in screenshots is clear and readable</li>
+              <li>• The AI handles various screenshot qualities, but clearer is better</li>
+              <li>• Replace all "X" placeholders in picks sections with your predictions</li>
+              <li>• Use the standard editor features to add analysis to prediction sections</li>
+            </ul>
+          </div>
+        </div>
+      ),
+    },
+
     'seo-package': {
       title: 'Understanding the SEO Package',
       content: (
@@ -1594,32 +1702,41 @@ export default function UserGuidePage() {
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed">
-            Once you're satisfied with your content, export it in your preferred format for publishing 
-            or further editing in other tools.
+            Once you're satisfied with your content, use the Export button in the editor toolbar to download 
+            or copy your article. The export system includes critical safety warnings to prevent publishing 
+            AI-generated content without proper review.
           </p>
 
-          <h3 className="text-xl font-semibold mt-8 mb-4">Export Options</h3>
+          <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
+            <p className="text-sm font-medium text-red-900 mb-2">⚠️ CRITICAL: Review Before Publishing</p>
+            <p className="text-sm text-red-800">
+              <strong>Never copy and paste AI-generated content directly into the RotoWire CMS without review!</strong> All content 
+              must be fact-checked, edited, and verified for accuracy. AI can produce errors, outdated information, 
+              or incorrect data that requires human verification.
+            </p>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">How to Export</h3>
+
+          <ol className="list-decimal list-inside space-y-3 ml-4">
+            <li className="leading-relaxed">Complete and finalize your content</li>
+            <li className="leading-relaxed">Click the <strong>Export</strong> button in the editor toolbar (top right)</li>
+            <li className="leading-relaxed">Read and acknowledge the CMS warning</li>
+            <li className="leading-relaxed">Select your export format (HTML or Plain Text)</li>
+            <li className="leading-relaxed">Click <strong>Copy</strong> to copy to clipboard or <strong>Download</strong> to save as file</li>
+          </ol>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">Export Formats</h3>
 
           <div className="grid gap-4">
             <div className="border border-violet-200 rounded-lg p-5">
               <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
                 <FileText className="h-5 w-5 text-primary" />
-                Rich Text
+                HTML Format
               </h4>
               <p className="text-muted-foreground leading-relaxed">
-                Exports with all formatting intact (bold, italic, headings, lists). Perfect for pasting 
-                directly into WordPress, Medium, or other content management systems.
-              </p>
-            </div>
-
-            <div className="border border-violet-200 rounded-lg p-5">
-              <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
-                <FileText className="h-5 w-5 text-primary" />
-                Microsoft Word (.docx)
-              </h4>
-              <p className="text-muted-foreground leading-relaxed">
-                Creates a properly formatted Word document. Ideal for further editing, sharing with editors, 
-                or archiving your content.
+                Exports with all formatting as HTML tags (bold, italic, headings, lists, tables). Best for 
+                pasting into CMSs like RotoWire, WordPress, or any HTML-compatible editor.
               </p>
             </div>
 
@@ -1629,40 +1746,34 @@ export default function UserGuidePage() {
                 Plain Text
               </h4>
               <p className="text-muted-foreground leading-relaxed">
-                Exports without any formatting – just the raw text. Useful for systems that don't support 
-                formatting or when you need to reformat elsewhere.
-              </p>
-            </div>
-
-            <div className="border border-violet-200 rounded-lg p-5">
-              <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
-                <FileText className="h-5 w-5 text-primary" />
-                Markdown
-              </h4>
-              <p className="text-muted-foreground leading-relaxed">
-                Exports in Markdown format with heading markers (##), bullet points (-), and other MD 
-                syntax. Perfect for GitHub, static site generators, or Markdown-based CMSs.
+                Exports without any formatting – just the raw text. Useful for email, simple systems, or 
+                when you need to reformat content elsewhere.
               </p>
             </div>
           </div>
 
-          <h3 className="text-xl font-semibold mt-8 mb-4">How to Export</h3>
+          <h3 className="text-xl font-semibold mt-8 mb-4">Export Safety Feature</h3>
 
-          <ol className="list-decimal list-inside space-y-3 ml-4">
-            <li className="leading-relaxed">Complete and finalize your content</li>
-            <li className="leading-relaxed">Look for the <strong>export icon</strong> in the bottom left of the right sidebar</li>
-            <li className="leading-relaxed">Click the export icon to open the format menu</li>
-            <li className="leading-relaxed">Select your desired format</li>
-            <li className="leading-relaxed">Your content downloads immediately</li>
-          </ol>
+          <p className="leading-relaxed mb-4">
+            The Export Modal includes a mandatory acknowledgement checkbox that you must check before 
+            exporting. This ensures you understand that:
+          </p>
+
+          <ul className="space-y-2 ml-4">
+            <li className="leading-relaxed">✓ AI-generated content requires human review</li>
+            <li className="leading-relaxed">✓ You will fact-check all information before publishing</li>
+            <li className="leading-relaxed">✓ You will edit and verify content accuracy</li>
+            <li className="leading-relaxed">✓ You understand AI can produce errors or outdated data</li>
+          </ul>
 
           <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mt-6">
-            <p className="text-sm font-medium text-blue-900 mb-2">💡 Export Tips</p>
+            <p className="text-sm font-medium text-blue-900 mb-2">💡 Export Best Practices</p>
             <ul className="text-sm text-blue-800 space-y-2">
-              <li>• Rich Text is best for most CMSs and publishing platforms</li>
-              <li>• Use Word format when you need to share with non-technical collaborators</li>
-              <li>• Plain Text works well for email newsletters or simple systems</li>
-              <li>• Markdown is ideal for developers and technical documentation</li>
+              <li>• Always run SEO Wizard before exporting to maximize ranking potential</li>
+              <li>• Use Auto-Optimize for last-minute improvements</li>
+              <li>• Verify all statistics, dates, and factual claims</li>
+              <li>• Check that all placeholder text (like "X" in predictions) is replaced</li>
+              <li>• Use HTML format for RotoWire CMS to preserve tables and formatting</li>
             </ul>
           </div>
 

@@ -1,7 +1,7 @@
 # RotoWrite - Project Status
 
-**Version:** v1.01.01  
-**Last Updated:** January 17, 2025  
+**Version:** v1.02.00  
+**Last Updated:** January 14, 2026  
 **Deployed:** https://rotowrite.vercel.app  
 **Repository:** https://github.com/verygooddesigners/rotowrite
 
@@ -87,71 +87,66 @@
 - Word count tracking
 - Last saved timestamp
 
+#### 11. Multi-Agent System (Phase 1) ✅
+- 7 specialized AI agents with guardrails
+- Database-backed agent configurations (`agent_configs` table)
+- Agent Tuner UI in Admin Dashboard (super admin only)
+- Agents: Content Generation, Writer Training, SEO, Quality Assurance, Persona & Tone, Creative Features, Visual Extraction
+- LanguageTool integration for grammar checking
+- Configurable system prompts, temperature, max tokens
+- Enable/disable agents
+- Reset to defaults functionality
+- Special configs for QA (strictness levels) and Visual (fallback settings)
+
+#### 12. Export System with CMS Warning ✅
+- Export Modal with critical safety warning
+- Mandatory acknowledgement before export
+- Copy to clipboard and download options
+- HTML and Plain Text formats
+- Export button in editor toolbar
+- Prevents accidental direct CMS paste without review
+
+#### 13. Real-time Keyword Tracking ✅
+- Live keyword count updates as you type
+- Word boundary regex matching for accuracy
+- Updates term cards with current vs target
+- Dynamic status indicators (optimal/under/over)
+- Integrated with SEO Wizard
+
+#### 14. Dynamic SEO Targets ✅
+- Word count targets from project setup
+- Automatic range calculation (±10% for words)
+- Proportional targets for headings, paragraphs, images
+- Scales based on word count (800, 1500, 3000, etc.)
+
+#### 15. NFL Odds Extractor (Phase 2) ✅
+- Screenshot upload interface (ESPN + RotoWire odds)
+- Visual Extraction Agent integration
+- Auto-generates structured articles with tables
+- Matchup tracking list for Google Sheets
+- Individual sections per game with odds tables
+- Prediction and picks sections with placeholders
+- Opening odds summary table
+- Week/year configuration
+- Creates project with extracted content
+- Saves 25+ minutes per week
+
 ---
 
 ## 🐛 Current Known Issues
 
-### 1. Writer Model Card Shows Wrong Model
-**Problem:** RightSidebar shows "Jeremy Botter" instead of the selected writer model (e.g., "Blake Weishaar")
+### Resolved Issues ✅
+1. ~~Writer Model Card Shows Wrong Model~~ - **FIXED**
+2. ~~Generate Content Button Fails~~ - **FIXED** (now uses Content Generation Agent)
+3. ~~NewsEngine Shows "Open a project"~~ - **FIXED**
+4. ~~Export modal warning missing~~ - **FIXED** ✅
+5. ~~Initial modal text overflow~~ - **FIXED** ✅
+6. ~~Word count not passing to SEO Wizard~~ - **FIXED** ✅
+7. ~~Keyword usage cards not updating~~ - **FIXED** ✅
 
-**Cause:** Likely one of:
-- `writerModelId` prop not being passed correctly from DashboardLayout
-- Project data not loading writer_model_id
-- State not updating when project changes
-- Caching issue
+### Active Issues (None Currently)
 
-**What's Been Tried:**
-- Added writer model loading from project data
-- Added console logging (check browser console)
-- Reset writer model state when project changes
-- Load from both `writerModelId` prop and `project.writer_model_id`
-
-**Next Steps:**
-- Check browser console for logs: "Loading writer model: [id]", "Writer model loaded: [name]"
-- Verify project has correct `writer_model_id` in database
-- Check if `writerModelId` prop is being passed from DashboardLayout
-
-### 2. Generate Content Button Fails
-**Problem:** Clicking "Generate Content" shows error: "Failed to generate content, please try again"
-
-**Possible Causes:**
-- Claude API key not set in Vercel environment
-- Missing training content for writer model
-- Brief content not loading correctly
-- API route error
-
-**What's Been Tried:**
-- Added TipTap JSON to text conversion for brief content
-- Improved error handling to show specific error messages
-- Added console logging
-- Added fallback for missing brief content
-
-**Next Steps:**
-- Check browser console for error details
-- Check Vercel function logs for server-side errors
-- Verify Claude API key is set in Vercel
-- Verify writer model has training content
-- Check that brief content loads correctly
-
-### 3. NewsEngine Shows "Open a project to see relevant news"
-**Problem:** NewsEngine tab doesn't show news articles even when project is open
-
-**Possible Causes:**
-- Project not loading correctly in RightSidebar
-- Condition checking for headline/keyword too strict
-- Tavily API key not set or API error
-- News fetch not being called
-
-**What's Been Tried:**
-- Removed strict condition (now checks if project exists)
-- Added topic field to news search
-- Load project data in RightSidebar
-
-**Next Steps:**
-- Check browser console for "Loading project: [id]" and "Project loaded: [headline]"
-- Check if fetchNews() is being called
-- Verify Tavily API key is set in Vercel
-- Check network tab for API request/response
+All previously reported issues have been resolved.
 
 ---
 
