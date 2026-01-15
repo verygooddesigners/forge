@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RotoWrite - Writer Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deepest: #0a0a0b;
+      --bg-deep: #111113;
+      --bg-surface: #18181b;
+      --bg-elevated: #1f1f23;
+      --bg-hover: #27272a;
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-tertiary: #71717a;
+      --text-muted: #52525b;
+      --accent-primary: #f59e0b;
+      --accent-hover: #fbbf24;
+      --accent-muted: rgba(245, 158, 11, 0.15);
+      --accent-glow: rgba(245, 158, 11, 0.3);
+      --ai-accent: #8b5cf6;
+      --ai-muted: rgba(139, 92, 246, 0.15);
+      --success: #22c55e;
+      --success-muted: rgba(34, 197, 94, 0.15);
+      --warning: #eab308;
+      --warning-muted: rgba(234, 179, 8, 0.15);
+      --error: #ef4444;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-default: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --sidebar-width: 260px;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-deepest);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+    
+    .app-shell { display: flex; min-height: 100vh; }
+    
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-deep);
+      border-right: 1px solid var(--border-subtle);
+      display: flex; flex-direction: column;
+      position: fixed; height: 100vh; z-index: 100;
+    }
+    .sidebar-header { padding: 24px 20px; border-bottom: 1px solid var(--border-subtle); }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent-primary), #d97706);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-weight: 700; font-size: 14px; color: var(--bg-deepest);
+    }
+    .logo-text { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+    .logo-text span { color: var(--accent-primary); }
+    .nav-section { padding: 16px 12px; flex: 1; }
+    .nav-label {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--text-tertiary); padding: 8px 12px; margin-bottom: 4px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 8px;
+      color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500;
+      transition: all 0.15s ease; margin-bottom: 2px; cursor: pointer;
+    }
+    .nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .nav-item.active { background: var(--accent-muted); color: var(--accent-primary); }
+    .nav-icon { width: 20px; height: 20px; opacity: 0.7; }
+    .nav-item:hover .nav-icon, .nav-item.active .nav-icon { opacity: 1; }
+    .sidebar-footer { padding: 16px; border-top: 1px solid var(--border-subtle); }
+    .user-card { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; }
+    .user-avatar {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;
+    }
+    .user-info { flex: 1; }
+    .user-name { font-size: 13px; font-weight: 600; }
+    .user-role { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; }
+    
+    /* Main Content */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1; min-height: 100vh; background: var(--bg-deepest);
+    }
+    
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px; border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-deep); position: sticky; top: 0; z-index: 50;
+    }
+    .page-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    .top-actions { display: flex; align-items: center; gap: 12px; }
+    
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; font-family: var(--font-sans);
+      cursor: pointer; transition: all 0.15s ease; border: none;
+    }
+    .btn-primary { background: var(--accent-primary); color: var(--bg-deepest); }
+    .btn-primary:hover {
+      background: var(--accent-hover); transform: translateY(-1px);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    
+    /* Page Layout */
+    .factory-page {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: calc(100vh - 65px);
+    }
+    
+    /* Writer Models List */
+    .models-panel {
+      background: var(--bg-deep);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .models-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    .models-search {
+      position: relative;
+    }
+    
+    .models-search input {
+      width: 100%;
+      padding: 10px 12px 10px 38px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: var(--font-sans);
+    }
+    
+    .models-search input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+    
+    .models-search input::placeholder { color: var(--text-muted); }
+    
+    .models-search svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+    }
+    
+    .models-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+    
+    .model-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: 4px;
+    }
+    
+    .model-item:hover {
+      background: var(--bg-surface);
+    }
+    
+    .model-item.active {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hover);
+    }
+    
+    .model-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    
+    .model-avatar.trained {
+      background: linear-gradient(135deg, var(--accent-primary), #d97706);
+      color: var(--bg-deepest);
+    }
+    
+    .model-avatar.untrained {
+      background: var(--bg-hover);
+      color: var(--text-tertiary);
+    }
+    
+    .model-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .model-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .model-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .model-status {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    
+    .model-status.trained {
+      background: var(--success-muted);
+      color: var(--success);
+    }
+    
+    .model-status.partial {
+      background: var(--warning-muted);
+      color: var(--warning);
+    }
+    
+    .model-status.untrained {
+      background: var(--bg-hover);
+      color: var(--text-muted);
+    }
+    
+    .model-stories {
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+    
+    /* Add Model Button */
+    .add-model-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 12px;
+      padding: 12px;
+      background: transparent;
+      border: 1px dashed var(--border-default);
+      border-radius: 10px;
+      color: var(--text-tertiary);
+      font-size: 13px;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    
+    .add-model-btn:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      background: var(--accent-muted);
+    }
+    
+    /* Training Panel */
+    .training-panel {
+      padding: 32px;
+      overflow-y: auto;
+    }
+    
+    /* Writer Profile Header */
+    .writer-profile {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    .writer-avatar-large {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent-primary), #d97706);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--bg-deepest);
+      flex-shrink: 0;
+    }
+    
+    .writer-details {
+      flex: 1;
+    }
+    
+    .writer-name-large {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .writer-stats {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .writer-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .writer-stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+    
+    .writer-stat-label {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+    
+    .writer-stat-divider {
+      width: 1px;
+      height: 24px;
+      background: var(--border-default);
+    }
+    
+    /* Training Progress */
+    .training-progress {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    
+    .progress-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .progress-value {
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--accent-primary);
+    }
+    
+    .progress-bar {
+      height: 8px;
+      background: var(--bg-hover);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-hover));
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    
+    .progress-hint {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+    
+    /* Training Stories */
+    .stories-section {
+      margin-bottom: 24px;
+    }
+    
+    .stories-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    
+    .stories-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .btn-sm {
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+    
+    .stories-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    
+    .story-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 16px;
+      transition: all 0.15s ease;
+    }
+    
+    .story-card:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-elevated);
+    }
+    
+    .story-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    
+    .story-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .story-source {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+    }
+    
+    .story-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+    
+    /* Add Story Card */
+    .add-story-card {
+      background: transparent;
+      border: 1px dashed var(--border-default);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      min-height: 100px;
+    }
+    
+    .add-story-card:hover {
+      border-color: var(--ai-accent);
+      background: var(--ai-muted);
+    }
+    
+    .add-story-card svg {
+      width: 24px;
+      height: 24px;
+      color: var(--text-muted);
+    }
+    
+    .add-story-card:hover svg {
+      color: var(--ai-accent);
+    }
+    
+    .add-story-card span {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+    
+    .add-story-card:hover span {
+      color: var(--ai-accent);
+    }
+    
+    /* Voice Analysis */
+    .voice-analysis {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    
+    .voice-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .voice-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--ai-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ai-accent);
+    }
+    
+    .voice-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .voice-subtitle {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+    
+    .voice-traits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .voice-trait {
+      padding: 8px 14px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .voice-trait.highlight {
+      background: var(--ai-muted);
+      border-color: rgba(139, 92, 246, 0.3);
+      color: var(--ai-accent);
+    }
+    
+    /* Empty State for Training Panel */
+    .empty-training {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 40px;
+    }
+    
+    .empty-training-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: var(--bg-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    
+    .empty-training-icon svg {
+      width: 32px;
+      height: 32px;
+      color: var(--text-muted);
+    }
+    
+    .empty-training-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .empty-training-desc {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <div class="logo-mark">RW</div>
+          <div class="logo-text">Roto<span>Write</span></div>
+        </div>
+      </div>
+      
+      <nav class="nav-section">
+        <div class="nav-label">Workspace</div>
+        <a class="nav-item" href="#">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          Dashboard
+        </a>
+        <a class="nav-item" href="#">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Projects
+        </a>
+        <a class="nav-item" href="#">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5z"/>
+          </svg>
+          SmartBriefs
+        </a>
+        
+        <div class="nav-label" style="margin-top: 24px;">AI Tools</div>
+        <a class="nav-item active" href="#">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+          </svg>
+          Writer Factory
+        </a>
+        <a class="nav-item" href="#">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z"/>
+          </svg>
+          NFL Odds Extractor
+        </a>
+        
+        <div class="nav-label" style="margin-top: 24px;">System</div>
+        <a class="nav-item" href="#">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          Admin
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="user-avatar">JB</div>
+          <div class="user-info">
+            <div class="user-name">Jeremy Botter</div>
+            <div class="user-role">Admin</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="top-bar">
+        <div class="page-title">Writer Factory</div>
+        <div class="top-actions">
+          <button class="btn btn-primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            New Writer Model
+          </button>
+        </div>
+      </div>
+      
+      <div class="factory-page">
+        <!-- Writer Models List -->
+        <div class="models-panel">
+          <div class="models-header">
+            <div class="models-search">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <input type="text" placeholder="Search writer models...">
+            </div>
+          </div>
+          
+          <div class="models-list">
+            <div class="model-item active">
+              <div class="model-avatar trained">BW</div>
+              <div class="model-info">
+                <div class="model-name">Blake Weishaar</div>
+                <div class="model-meta">
+                  <span class="model-status trained">Trained</span>
+                  <span class="model-stories">25 stories</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="model-item">
+              <div class="model-avatar trained">WR</div>
+              <div class="model-info">
+                <div class="model-name">Wes Roesch</div>
+                <div class="model-meta">
+                  <span class="model-status trained">Trained</span>
+                  <span class="model-stories">22 stories</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="model-item">
+              <div class="model-avatar trained">TH</div>
+              <div class="model-info">
+                <div class="model-name">Tyler Huntington</div>
+                <div class="model-meta">
+                  <span class="model-status partial">4% Trained</span>
+                  <span class="model-stories">1 / 25</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="model-item">
+              <div class="model-avatar untrained">TO</div>
+              <div class="model-info">
+                <div class="model-name">Tyler Olsen</div>
+                <div class="model-meta">
+                  <span class="model-status untrained">Untrained</span>
+                  <span class="model-stories">0 / 25</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="model-item">
+              <div class="model-avatar untrained">JB</div>
+              <div class="model-info">
+                <div class="model-name">Jeremy Botter</div>
+                <div class="model-meta">
+                  <span class="model-status untrained">Untrained</span>
+                  <span class="model-stories">0 / 25</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="model-item">
+              <div class="model-avatar untrained">MS</div>
+              <div class="model-info">
+                <div class="model-name">Max Staley</div>
+                <div class="model-meta">
+                  <span class="model-status untrained">Untrained</span>
+                  <span class="model-stories">0 / 25</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <button class="add-model-btn">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Add Writer Model
+          </button>
+        </div>
+        
+        <!-- Training Panel -->
+        <div class="training-panel">
+          <!-- Writer Profile -->
+          <div class="writer-profile">
+            <div class="writer-avatar-large">BW</div>
+            <div class="writer-details">
+              <h1 class="writer-name-large">Blake Weishaar</h1>
+              <div class="writer-stats">
+                <div class="writer-stat">
+                  <span class="writer-stat-value" style="color: var(--success)">100%</span>
+                  <span class="writer-stat-label">Trained</span>
+                </div>
+                <div class="writer-stat-divider"></div>
+                <div class="writer-stat">
+                  <span class="writer-stat-value">25</span>
+                  <span class="writer-stat-label">Stories</span>
+                </div>
+                <div class="writer-stat-divider"></div>
+                <div class="writer-stat">
+                  <span class="writer-stat-value">48</span>
+                  <span class="writer-stat-label">Projects using</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Training Progress -->
+          <div class="training-progress">
+            <div class="progress-header">
+              <span class="progress-title">Training Progress</span>
+              <span class="progress-value">25 / 25 stories</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 100%;"></div>
+            </div>
+            <p class="progress-hint">Model fully trained. Add more stories to improve voice accuracy.</p>
+          </div>
+          
+          <!-- Training Stories -->
+          <div class="stories-section">
+            <div class="stories-header">
+              <h2 class="stories-title">Training Stories</h2>
+              <button class="btn btn-primary btn-sm">
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Add Story
+              </button>
+            </div>
+            
+            <div class="stories-grid">
+              <div class="story-card">
+                <h3 class="story-title">Eagles vs Cowboys NFC East Showdown: Best Bets & Props</h3>
+                <div class="story-meta">
+                  <span class="story-source">rotowire.com</span>
+                  <div class="story-status"></div>
+                </div>
+              </div>
+              
+              <div class="story-card">
+                <h3 class="story-title">Chiefs vs Bills AFC Championship Preview: Our Top Picks</h3>
+                <div class="story-meta">
+                  <span class="story-source">rotowire.com</span>
+                  <div class="story-status"></div>
+                </div>
+              </div>
+              
+              <div class="story-card">
+                <h3 class="story-title">Super Bowl LVIII Betting Guide: Niners vs Chiefs Analysis</h3>
+                <div class="story-meta">
+                  <span class="story-source">rotowire.com</span>
+                  <div class="story-status"></div>
+                </div>
+              </div>
+              
+              <div class="story-card">
+                <h3 class="story-title">Week 14 NFL Best Bets: Spreads, Totals, and Value Plays</h3>
+                <div class="story-meta">
+                  <span class="story-source">rotowire.com</span>
+                  <div class="story-status"></div>
+                </div>
+              </div>
+              
+              <div class="story-card">
+                <h3 class="story-title">Lions Playoff Push: Why Detroit is a Live Underdog</h3>
+                <div class="story-meta">
+                  <span class="story-source">rotowire.com</span>
+                  <div class="story-status"></div>
+                </div>
+              </div>
+              
+              <div class="add-story-card">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                <span>Add training story</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Voice Analysis -->
+          <div class="voice-analysis">
+            <div class="voice-header">
+              <div class="voice-icon">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="voice-title">Voice Analysis</h3>
+                <p class="voice-subtitle">Detected writing patterns and style traits</p>
+              </div>
+            </div>
+            
+            <div class="voice-traits">
+              <span class="voice-trait highlight">Conversational tone</span>
+              <span class="voice-trait highlight">Data-driven analysis</span>
+              <span class="voice-trait">Short paragraphs</span>
+              <span class="voice-trait">Active voice preference</span>
+              <span class="voice-trait">Direct recommendations</span>
+              <span class="voice-trait highlight">Sports betting jargon</span>
+              <span class="voice-trait">Confident assertions</span>
+              <span class="voice-trait">Statistical backing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

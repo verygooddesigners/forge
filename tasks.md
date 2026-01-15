@@ -1,5 +1,8 @@
 # TASKS
 
+- New tasks are under the #CURRENT ISSUES/FEATURES heading. 
+- When a task is completed, fill the checknox and move the task to #COMPLETED at the bottom of the page. 
+
 ## Current Issues/Features
 
 - [x] On the Brief Builder, when creating a new brief, we need to add a new text input box that will be used like an AI prompt. The user building the brief will be able to write out, in detail, what kind of story the brief is, what the tone is, what kind of information should be contained in the content generated for that type of brief. And there should also be a box where the user can paste multiple URLS linking to that type of story. ✅ COMPLETED

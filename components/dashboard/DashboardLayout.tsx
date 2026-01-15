@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { User, Project } from '@/types';
-import { LeftSidebar } from './LeftSidebar';
+import { AppSidebar } from '../layout/AppSidebar';
 import { RightSidebar } from './RightSidebar';
 import { EditorPanel } from './EditorPanel';
 import { SmartBriefPanel } from './SmartBriefPanel';
@@ -62,23 +62,24 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50 p-2.5 relative">
-        <div className="flex gap-3 h-[calc(100vh-20px)] relative z-10">
-          {/* Left Sidebar */}
-          <LeftSidebar 
-            user={user}
-            projectId={selectedProject}
-            onOpenProjectModal={() => setShowProjectListModal(true)}
-            onOpenWriterFactory={() => setShowWriterFactoryModal(true)}
-            onOpenBriefBuilder={handleOpenSmartBriefs}
-            onOpenNFLOddsExtractor={() => setShowNFLOddsExtractorModal(true)}
-          />
+      <div className="min-h-screen bg-bg-deepest">
+        {/* Fixed Sidebar */}
+        <AppSidebar 
+          user={user}
+          onOpenProjects={() => setShowProjectListModal(true)}
+          onOpenSmartBriefs={handleOpenSmartBriefs}
+          onOpenWriterFactory={() => setShowWriterFactoryModal(true)}
+          onOpenNFLOdds={() => setShowNFLOddsExtractorModal(true)}
+          projectCount={0}
+        />
 
+        {/* Main Content Area with margin for fixed sidebar */}
+        <div className="ml-[260px] min-h-screen">
           {/* Main Content Area - Conditional */}
           {activeView === 'smartbriefs' ? (
             <SmartBriefPanel user={user} onBack={handleBackToEditor} />
           ) : (
-            <>
+            <div className="flex gap-3 p-2.5 h-screen">
               {/* Main Editor */}
               <EditorPanel 
                 projectId={selectedProject}
@@ -94,7 +95,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
                 writerModelId={selectedWriterModel}
                 content={editorContent}
               />
-            </>
+            </div>
           )}
         </div>
       </div>

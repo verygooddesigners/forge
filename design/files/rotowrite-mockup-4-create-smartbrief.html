@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RotoWrite - Create SmartBrief</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deepest: #0a0a0b;
+      --bg-deep: #111113;
+      --bg-surface: #18181b;
+      --bg-elevated: #1f1f23;
+      --bg-hover: #27272a;
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-tertiary: #71717a;
+      --text-muted: #52525b;
+      --accent-primary: #f59e0b;
+      --accent-hover: #fbbf24;
+      --accent-muted: rgba(245, 158, 11, 0.15);
+      --accent-glow: rgba(245, 158, 11, 0.3);
+      --ai-accent: #8b5cf6;
+      --ai-muted: rgba(139, 92, 246, 0.15);
+      --success: #22c55e;
+      --success-muted: rgba(34, 197, 94, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-default: rgba(255, 255, 255, 0.1);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --sidebar-width: 260px;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-deepest);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+    
+    .app-shell { display: flex; min-height: 100vh; }
+    
+    /* Sidebar - condensed for space */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-deep);
+      border-right: 1px solid var(--border-subtle);
+      display: flex; flex-direction: column;
+      position: fixed; height: 100vh; z-index: 100;
+    }
+    .sidebar-header { padding: 24px 20px; border-bottom: 1px solid var(--border-subtle); }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent-primary), #d97706);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-weight: 700; font-size: 14px; color: var(--bg-deepest);
+    }
+    .logo-text { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+    .logo-text span { color: var(--accent-primary); }
+    .nav-section { padding: 16px 12px; flex: 1; }
+    .nav-label {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--text-tertiary); padding: 8px 12px; margin-bottom: 4px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 8px;
+      color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500;
+      transition: all 0.15s ease; margin-bottom: 2px; cursor: pointer;
+    }
+    .nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .nav-item.active { background: var(--accent-muted); color: var(--accent-primary); }
+    .nav-icon { width: 20px; height: 20px; opacity: 0.7; }
+    .nav-item:hover .nav-icon, .nav-item.active .nav-icon { opacity: 1; }
+    .sidebar-footer { padding: 16px; border-top: 1px solid var(--border-subtle); }
+    .user-card { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; }
+    .user-avatar {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;
+    }
+    .user-info { flex: 1; }
+    .user-name { font-size: 13px; font-weight: 600; }
+    .user-role { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; }
+    
+    /* Main Content */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1; min-height: 100vh; background: var(--bg-deepest);
+    }
+    
+    /* Top bar with back nav */
+    .top-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px; border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-deep); position: sticky; top: 0; z-index: 50;
+    }
+    
+    .top-bar-left { display: flex; align-items: center; gap: 16px; }
+    
+    .back-btn {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--text-secondary); font-size: 13px; font-weight: 500;
+      text-decoration: none; padding: 6px 10px; border-radius: 6px;
+      transition: all 0.15s ease; cursor: pointer; background: none; border: none;
+      font-family: var(--font-sans);
+    }
+    .back-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .back-btn svg { width: 16px; height: 16px; }
+    
+    .top-bar-divider { width: 1px; height: 20px; background: var(--border-default); }
+    
+    .page-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    
+    .top-actions { display: flex; align-items: center; gap: 12px; }
+    
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 18px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; font-family: var(--font-sans);
+      cursor: pointer; transition: all 0.15s ease; border: none;
+    }
+    .btn-primary { background: var(--accent-primary); color: var(--bg-deepest); }
+    .btn-primary:hover {
+      background: var(--accent-hover); transform: translateY(-1px);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .btn-ghost {
+      background: transparent; color: var(--text-secondary);
+      border: 1px solid var(--border-default);
+    }
+    .btn-ghost:hover { background: var(--bg-hover); color: var(--text-primary); }
+    
+    /* Page Layout - Two Column */
+    .create-page {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      min-height: calc(100vh - 65px);
+    }
+    
+    /* Main Form Area */
+    .form-main {
+      padding: 32px;
+      border-right: 1px solid var(--border-subtle);
+    }
+    
+    .form-section {
+      margin-bottom: 40px;
+    }
+    
+    .form-section-header {
+      margin-bottom: 20px;
+    }
+    
+    .form-section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .form-section-desc {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+    
+    /* Form Fields */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: var(--font-sans);
+      transition: all 0.15s ease;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      background: var(--bg-elevated);
+    }
+    
+    .form-input::placeholder { color: var(--text-muted); }
+    
+    .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2371717a'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+    }
+    
+    .form-select:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+    
+    /* Scaffold Editor */
+    .scaffold-editor {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .scaffold-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 12px 16px;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    
+    .toolbar-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    
+    .toolbar-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+    
+    .toolbar-btn.active {
+      background: var(--accent-muted);
+      color: var(--accent-primary);
+    }
+    
+    .toolbar-btn svg { width: 18px; height: 18px; }
+    
+    .toolbar-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border-default);
+      margin: 0 8px;
+    }
+    
+    .scaffold-content {
+      min-height: 300px;
+      padding: 20px;
+    }
+    
+    .scaffold-content p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    
+    .scaffold-content h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 24px 0 12px;
+    }
+    
+    .scaffold-content h2:first-child {
+      margin-top: 0;
+    }
+    
+    .scaffold-content ul {
+      margin: 12px 0 12px 24px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    
+    /* AI Configuration Panel */
+    .config-panel {
+      padding: 32px;
+      background: var(--bg-deep);
+    }
+    
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    
+    .panel-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--ai-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ai-accent);
+    }
+    
+    .panel-icon svg { width: 18px; height: 18px; }
+    
+    .panel-title { font-size: 16px; font-weight: 600; }
+    
+    /* Config Cards */
+    .config-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    
+    .config-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    
+    .config-card-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    
+    .config-card-badge {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--ai-muted);
+      color: var(--ai-accent);
+    }
+    
+    .config-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      resize: vertical;
+    }
+    
+    .config-textarea:focus {
+      outline: none;
+      border-color: var(--ai-accent);
+    }
+    
+    .config-textarea::placeholder { color: var(--text-muted); }
+    
+    /* Training URLs */
+    .training-section {
+      margin-top: 24px;
+    }
+    
+    .training-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    
+    .training-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    
+    .training-help {
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+    
+    .url-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .url-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .url-input {
+      flex: 1;
+      padding: 10px 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 12px;
+      font-family: var(--font-mono);
+    }
+    
+    .url-input:focus {
+      outline: none;
+      border-color: var(--ai-accent);
+    }
+    
+    .url-remove {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    
+    .url-remove:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+    }
+    
+    .add-url-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      background: transparent;
+      border: 1px dashed var(--border-default);
+      border-radius: 6px;
+      color: var(--text-tertiary);
+      font-size: 12px;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    
+    .add-url-btn:hover {
+      border-color: var(--ai-accent);
+      color: var(--ai-accent);
+      background: var(--ai-muted);
+    }
+    
+    .analyze-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px;
+      margin-top: 16px;
+      background: var(--ai-muted);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 8px;
+      color: var(--ai-accent);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    
+    .analyze-btn:hover {
+      background: rgba(139, 92, 246, 0.25);
+    }
+    
+    /* Toggle */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 16px;
+    }
+    
+    .toggle-label {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    .toggle-desc {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+    
+    .toggle {
+      width: 44px;
+      height: 24px;
+      background: var(--bg-hover);
+      border-radius: 12px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    
+    .toggle.active {
+      background: var(--accent-primary);
+    }
+    
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s ease;
+    }
+    
+    .toggle.active::after {
+      transform: translateX(20px);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar (collapsed for brevity in display) -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <div class="logo-mark">RW</div>
+          <div class="logo-text">Roto<span>Write</span></div>
+        </div>
+      </div>
+      
+      <nav class="nav-section">
+        <div class="nav-label">Workspace</div>
+        <a class="nav-item" href="#">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          Dashboard
+        </a>
+        <a class="nav-item" href="#">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Projects
+        </a>
+        <a class="nav-item active" href="#">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z"/>
+          </svg>
+          SmartBriefs
+        </a>
+        
+        <div class="nav-label" style="margin-top: 24px;">AI Tools</div>
+        <a class="nav-item" href="#">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+          </svg>
+          Writer Factory
+        </a>
+        <a class="nav-item" href="#">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z"/>
+          </svg>
+          NFL Odds Extractor
+        </a>
+        
+        <div class="nav-label" style="margin-top: 24px;">System</div>
+        <a class="nav-item" href="#">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          Admin
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="user-avatar">JB</div>
+          <div class="user-info">
+            <div class="user-name">Jeremy Botter</div>
+            <div class="user-role">Admin</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="top-bar">
+        <div class="top-bar-left">
+          <button class="back-btn">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            SmartBriefs
+          </button>
+          <div class="top-bar-divider"></div>
+          <div class="page-title">Create New SmartBrief</div>
+        </div>
+        <div class="top-actions">
+          <button class="btn btn-ghost">Save Draft</button>
+          <button class="btn btn-primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Create SmartBrief
+          </button>
+        </div>
+      </div>
+      
+      <div class="create-page">
+        <!-- Main Form -->
+        <div class="form-main">
+          <!-- Basic Info -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <h2 class="form-section-title">Basic Information</h2>
+              <p class="form-section-desc">Name and categorize your SmartBrief for easy discovery.</p>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">SmartBrief Name</label>
+                <input type="text" class="form-input" placeholder="e.g., NFL Team Analysis Template">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Category</label>
+                <select class="form-select">
+                  <option>Select category</option>
+                  <option>NFL</option>
+                  <option>NBA</option>
+                  <option>MLB</option>
+                  <option>Promos</option>
+                  <option>Guides</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Scaffold Section -->
+          <div class="form-section">
+            <div class="form-section-header">
+              <h2 class="form-section-title">Content Scaffold</h2>
+              <p class="form-section-desc">Define your content structure. Use headings, lists, and formatting to create a reusable template.</p>
+            </div>
+            
+            <div class="scaffold-editor">
+              <div class="scaffold-toolbar">
+                <button class="toolbar-btn" title="Undo">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+                  </svg>
+                </button>
+                <button class="toolbar-btn" title="Redo">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2m18-10l-6 6m6-6l-6-6"/>
+                  </svg>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="toolbar-btn" title="Heading 1">H1</button>
+                <button class="toolbar-btn active" title="Heading 2">H2</button>
+                <button class="toolbar-btn" title="Heading 3">H3</button>
+                <div class="toolbar-divider"></div>
+                <button class="toolbar-btn" title="Bold">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"/>
+                  </svg>
+                </button>
+                <button class="toolbar-btn" title="Italic">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 4h4m-2 0v16m-4 0h8"/>
+                  </svg>
+                </button>
+                <div class="toolbar-divider"></div>
+                <button class="toolbar-btn" title="Bullet List">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                  </svg>
+                </button>
+                <button class="toolbar-btn" title="Numbered List">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="scaffold-content" contenteditable="true">
+                <h2>Game Overview & Key Storylines</h2>
+                <p>Brief introduction to the matchup, current standings, and what's at stake for both teams.</p>
+                
+                <h2>Top Player Prop Picks</h2>
+                <ul>
+                  <li>Player prop #1 with odds and analysis</li>
+                  <li>Player prop #2 with odds and analysis</li>
+                  <li>Player prop #3 with odds and analysis</li>
+                </ul>
+                
+                <h2>Betting Insights & Value Plays</h2>
+                <p>Statistical analysis and trends supporting the recommended bets.</p>
+                
+                <h2>Final Verdict</h2>
+                <p>Summary of best bets and confidence levels.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- AI Configuration Panel -->
+        <div class="config-panel">
+          <div class="panel-header">
+            <div class="panel-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+              </svg>
+            </div>
+            <h3 class="panel-title">AI Configuration</h3>
+          </div>
+          
+          <!-- Instructions Card -->
+          <div class="config-card">
+            <div class="config-card-header">
+              <span class="config-card-title">Instructions</span>
+              <span class="config-card-badge">Required</span>
+            </div>
+            <textarea class="config-textarea" placeholder="Describe what kind of story this brief is, the tone, structure, and key information to include...">Single Game Stories are focused on a single upcoming NFL game between two teams. They should include betting odds, game analysis, betting insights, current team performance summaries, and predictions. The tone should be conversational but authoritative.</textarea>
+          </div>
+          
+          <!-- Training Stories -->
+          <div class="training-section">
+            <div class="training-header">
+              <span class="training-title">Training Stories</span>
+              <span class="training-help">URLs to example articles</span>
+            </div>
+            
+            <div class="url-list">
+              <div class="url-item">
+                <input type="text" class="url-input" value="https://www.rotowire.com/football/article/example-1" readonly>
+                <button class="url-remove">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="url-item">
+                <input type="text" class="url-input" value="https://www.rotowire.com/football/article/example-2" readonly>
+                <button class="url-remove">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <button class="add-url-btn">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+              </svg>
+              Add another URL
+            </button>
+            
+            <button class="analyze-btn">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              Analyze Example URLs
+            </button>
+          </div>
+          
+          <!-- Share Toggle -->
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Share with team</div>
+              <div class="toggle-desc">Let others use this SmartBrief</div>
+            </div>
+            <div class="toggle active"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
