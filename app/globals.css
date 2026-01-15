@@ -19,12 +19,13 @@
   --color-text-tertiary: #71717a;
   --color-text-muted: #52525b;
   
-  /* Primary Accent - Amber/Gold for Sports Energy */
-  --color-accent-primary: #f59e0b;
-  --color-accent-hover: #fbbf24;
-  --color-accent-muted: rgba(245, 158, 11, 0.15);
-  --color-accent-glow: rgba(245, 158, 11, 0.3);
-  --color-accent-dark: #d97706;
+  /* Primary Accent - RotoWrite Purple */
+  --color-accent-primary: #7C49E3;
+  --color-accent-hover: #9166e8;
+  --color-accent-muted: rgba(124, 73, 227, 0.15);
+  --color-accent-glow: rgba(124, 73, 227, 0.4);
+  --color-accent-dark: #5b2dcf;
+  --color-accent-light: #a78bfa;
   
   /* Secondary Accent - Violet for AI Features */
   --color-ai-accent: #8b5cf6;

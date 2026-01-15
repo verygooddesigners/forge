@@ -56,10 +56,10 @@ export function AppSidebar({
       {/* Logo */}
       <div className="p-6 border-b border-border-subtle">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-bg-deepest">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-white">
             RW
           </div>
-          <div className="text-xl font-bold tracking-tight">
+          <div className="text-xl font-bold tracking-tight text-text-primary">
             Roto<span className="text-accent-primary">Write</span>
           </div>
         </div>
