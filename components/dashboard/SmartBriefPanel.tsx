@@ -161,9 +161,17 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   };
 
   const analyzeExampleUrls = async () => {
+    console.log('[SmartBrief] Analyze button clicked');
+    
     const urls = exampleUrls.split('\n').map(u => u.trim()).filter(Boolean);
     
-    if (urls.length === 0) return;
+    console.log('[SmartBrief] URLs to analyze:', urls);
+    console.log('[SmartBrief] AI Instructions:', aiInstructions.substring(0, 50) + '...');
+    
+    if (urls.length === 0) {
+      alert('Please add at least one URL in the Training Stories field');
+      return;
+    }
 
     if (!aiInstructions.trim()) {
       alert('Please add AI instructions first to provide context for the URL analysis');
@@ -172,21 +180,27 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
 
     setAnalyzing(true);
     try {
+      console.log('[SmartBrief] Calling API...');
       const response = await fetch('/api/briefs/analyze-urls', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ urls, instructions: aiInstructions }),
       });
 
+      console.log('[SmartBrief] API response status:', response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to analyze URLs');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to analyze URLs');
       }
 
       const result = await response.json();
+      console.log('[SmartBrief] Analysis complete, URLs analyzed:', result.urlsAnalyzed);
       setUrlAnalysis(result.analysis);
+      alert(`✅ Analysis complete! Analyzed ${result.urlsAnalyzed} of ${result.totalUrls} URLs.`);
     } catch (error: any) {
-      console.error('Error analyzing URLs:', error);
-      alert(error.message || 'Failed to analyze example URLs');
+      console.error('[SmartBrief] Error analyzing URLs:', error);
+      alert(`❌ Error: ${error.message || 'Failed to analyze example URLs'}`);
     } finally {
       setAnalyzing(false);
     }
@@ -389,32 +403,41 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
               </div>
 
               {/* Analyze Button */}
-              <div className="flex gap-3">
-                <Button
-                  onClick={analyzeExampleUrls}
-                  disabled={analyzing || !aiInstructions.trim() || !exampleUrls.trim()}
-                  variant="secondary"
-                  className="gap-2"
-                >
-                  {analyzing ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Analyzing URLs...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="h-4 w-4" />
-                      Analyze Example URLs
-                    </>
-                  )}
-                </Button>
-                
-                {urlAnalysis && (
-                  <div className="flex items-center gap-2 text-sm text-green-600">
-                    <CheckCircle2 className="h-4 w-4" />
-                    Analysis Complete
-                  </div>
+              <div className="space-y-3">
+                {/* Helper text */}
+                {(!aiInstructions.trim() || !exampleUrls.trim()) && (
+                  <p className="text-xs text-text-tertiary">
+                    💡 Fill in both Instructions and Training Stories fields above to enable analysis
+                  </p>
                 )}
+                
+                <div className="flex gap-3">
+                  <Button
+                    onClick={analyzeExampleUrls}
+                    disabled={analyzing || !aiInstructions.trim() || !exampleUrls.trim()}
+                    variant="secondary"
+                    className="gap-2"
+                  >
+                    {analyzing ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Analyzing URLs (this may take 30-60 seconds)...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-4 w-4" />
+                        Analyze Example URLs
+                      </>
+                    )}
+                  </Button>
+                  
+                  {urlAnalysis && (
+                    <div className="flex items-center gap-2 text-sm text-success">
+                      <CheckCircle2 className="h-4 w-4" />
+                      Analysis Complete
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* URL Analysis Results */}

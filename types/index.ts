@@ -118,4 +118,40 @@ export interface SEOAnalysis {
   };
 }
 
+export type CursorRemoteCommandStatus =
+  | 'pending'
+  | 'in_progress'
+  | 'completed'
+  | 'failed'
+  | 'canceled';
+
+export interface CursorRemoteCommand {
+  id: string;
+  command_text: string;
+  status: CursorRemoteCommandStatus | string;
+  created_by?: string | null;
+  target_agent_id?: string | null;
+  claimed_by?: string | null;
+  claimed_at?: string | null;
+  started_at?: string | null;
+  completed_at?: string | null;
+  result_text?: string | null;
+  error_text?: string | null;
+  metadata?: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CursorAgentStatus {
+  id: string;
+  agent_id: string;
+  status: string;
+  current_task?: string | null;
+  last_message?: string | null;
+  last_heartbeat?: string | null;
+  metadata?: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+}
+
 
