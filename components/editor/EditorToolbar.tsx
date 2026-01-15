@@ -43,20 +43,22 @@ export function EditorToolbar({ editor, onGenerateContent, generating = false, c
     children: React.ReactNode;
     title: string;
   }) => (
-    <Button
-      variant={active ? 'secondary' : 'ghost'}
-      size="sm"
+    <button
       onClick={onClick}
       type="button"
       title={title}
-      className="h-8 w-8 p-0"
+      className={`h-8 w-8 flex items-center justify-center rounded-md transition-all ${
+        active 
+          ? 'bg-accent-muted text-accent-primary' 
+          : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
+      }`}
     >
       {children}
-    </Button>
+    </button>
   );
 
   return (
-    <div className="border-b px-4 py-2 flex items-center justify-between gap-2">
+    <div className="border-b border-border-subtle bg-bg-elevated px-4 py-2.5 flex items-center justify-between gap-2">
       <div className="flex items-center gap-1 flex-wrap">
         {/* Undo/Redo */}
       <ToolbarButton
