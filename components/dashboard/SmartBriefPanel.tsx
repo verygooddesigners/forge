@@ -198,12 +198,12 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
 
   return (
     <>
-      <div className="flex-1 bg-white rounded-lg shadow-lg overflow-y-auto">
+      <div className="flex-1 bg-bg-deepest overflow-y-auto">
         {!selectedBrief && !isCreating ? (
-          // Welcome state - centered like screenshot
+          // Welcome state - centered matching dark theme
           <div className="flex flex-col items-center justify-center h-full p-12 text-center">
-            <h2 className="text-3xl font-bold text-primary mb-2">SmartBriefs</h2>
-            <p className="text-muted-foreground max-w-md mb-8">
+            <h2 className="text-3xl font-bold text-accent-primary mb-2">SmartBriefs</h2>
+            <p className="text-text-secondary max-w-md mb-8">
               Create smart AI-powered content templates
             </p>
             <Button onClick={startNewBrief} size="lg" className="mb-4">
@@ -211,46 +211,46 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
             </Button>
             <button
               onClick={() => setShowBriefListModal(true)}
-              className="text-primary hover:underline text-sm"
+              className="text-accent-primary hover:underline text-sm"
             >
               Open Existing SmartBrief
             </button>
             
             {/* User Guide Link */}
-            <div className="mt-8 flex items-center gap-2 text-primary text-sm cursor-pointer hover:underline">
+            <div className="mt-8 flex items-center gap-2 text-accent-primary text-sm cursor-pointer hover:underline">
               <BookOpen className="h-4 w-4" />
               SmartBriefs User Guide
             </div>
           </div>
         ) : (
           // SmartBrief editor
-          <div className="p-6 space-y-6">
+          <div className="px-8 py-6 space-y-8">
             {/* Header Section */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <Button size="sm" variant="ghost" onClick={onBack}>
-                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    <ArrowLeft className="h-4 w-4" />
                     Back to Dashboard
                   </Button>
-                  <Separator orientation="vertical" className="h-6" />
+                  <div className="w-px h-5 bg-border-default" />
                   <h2 className="text-2xl font-bold">
                     {selectedBrief ? 'Edit SmartBrief' : 'Create New SmartBrief'}
                   </h2>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   {selectedBrief && canEditBrief(selectedBrief) && (
                     <Button
-                      variant="outline"
+                      variant="destructive"
                       size="sm"
                       onClick={() => deleteBrief(selectedBrief.id)}
                     >
-                      <Trash2 className="h-4 w-4 mr-2" />
+                      <Trash2 className="h-4 w-4" />
                       Delete
                     </Button>
                   )}
-                  <Button onClick={saveBrief} disabled={loading || !briefName.trim()} size="sm">
-                    <Save className="h-4 w-4 mr-2" />
+                  <Button onClick={saveBrief} disabled={loading || !briefName.trim()}>
+                    <Save className="h-4 w-4" />
                     {selectedBrief ? 'Update' : 'Create'} SmartBrief
                   </Button>
                 </div>
