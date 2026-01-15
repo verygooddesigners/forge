@@ -49,7 +49,7 @@ export function TipTapEditor({
     immediatelyRender: false,
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none h-full prose-invert',
+        class: 'prose prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none h-full prose-invert bg-bg-elevated px-6 py-4 rounded-lg',
       },
     },
     onUpdate: ({ editor }) => {
