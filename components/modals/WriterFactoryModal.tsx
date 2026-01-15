@@ -188,13 +188,13 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="!max-w-[70vw] !w-[70vw] sm:!max-w-[70vw] max-h-[90vh] h-[90vh] overflow-hidden flex flex-col p-0">
-        <DialogHeader className="px-6 pt-6 pb-4 border-b">
-          <DialogTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
+      <DialogContent className="!max-w-[70vw] !w-[70vw] sm:!max-w-[70vw] max-h-[90vh] h-[90vh] overflow-hidden flex flex-col p-0 bg-bg-surface border-border-default">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b border-border-subtle">
+          <DialogTitle className="flex items-center gap-2 text-text-primary">
+            <Sparkles className="h-5 w-5 text-ai-accent" />
             Writer Factory
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-text-secondary">
             Create and train AI writer models that emulate specific writing styles
           </DialogDescription>
         </DialogHeader>

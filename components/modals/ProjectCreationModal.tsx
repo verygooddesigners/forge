@@ -192,12 +192,12 @@ export function ProjectCreationModal({
       onOpenChange(open);
       if (!open) resetForm();
     }}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl bg-bg-surface border-border-default">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">
+          <DialogTitle className="text-xl font-semibold text-text-primary">
             New Project - {getStepTitle()}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-text-secondary">
             Step {step} of 9
           </DialogDescription>
         </DialogHeader>

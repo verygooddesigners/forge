@@ -172,10 +172,10 @@ export function NFLOddsExtractorModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] bg-bg-surface border-border-default">
         <DialogHeader>
-          <DialogTitle>NFL Odds Extractor</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-text-primary">NFL Odds Extractor</DialogTitle>
+          <DialogDescription className="text-text-secondary">
             Upload screenshots of ESPN schedule and RotoWire odds to automatically generate your article
           </DialogDescription>
         </DialogHeader>
@@ -261,17 +261,17 @@ export function NFLOddsExtractorModal({
 
           {/* Error Message */}
           {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
+            <Alert variant="destructive" className="bg-error-muted border-error">
+              <AlertCircle className="h-4 w-4 text-error" />
+              <AlertDescription className="text-text-primary">{error}</AlertDescription>
             </Alert>
           )}
 
           {/* Success Message */}
           {success && (
-            <Alert className="border-green-600 bg-green-50">
-              <CheckCircle2 className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-green-800">
+            <Alert className="border-success bg-success-muted">
+              <CheckCircle2 className="h-4 w-4 text-success" />
+              <AlertDescription className="text-text-primary">
                 Article generated successfully! Opening project...
               </AlertDescription>
             </Alert>
