@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react';
 import { User, Project } from '@/types';
 import { AppSidebar } from '../layout/AppSidebar';
 import { DashboardHome } from './DashboardHome';
+import { ProjectsPanel } from './ProjectsPanel';
 import { RightSidebar } from './RightSidebar';
 import { EditorPanel } from './EditorPanel';
 import { SmartBriefPanel } from './SmartBriefPanel';
 import { ProjectCreationModal } from '@/components/modals/ProjectCreationModal';
-import { ProjectListModal } from '@/components/modals/ProjectListModal';
 import { WriterFactoryModal } from '@/components/modals/WriterFactoryModal';
 import { UserGuideModal } from '@/components/modals/UserGuideModal';
 import { NFLOddsExtractorModal } from '@/components/modals/NFLOddsExtractorModal';
@@ -17,17 +17,17 @@ interface DashboardLayoutProps {
   user: User;
 }
 
-type DashboardView = 'home' | 'editor' | 'smartbriefs';
+type DashboardView = 'home' | 'projects' | 'editor' | 'smartbriefs';
 
 export function DashboardLayout({ user }: DashboardLayoutProps) {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [selectedWriterModel, setSelectedWriterModel] = useState<string | null>(null);
   const [editorContent, setEditorContent] = useState<any>(null);
   const [activeView, setActiveView] = useState<DashboardView>('home');
+  const [projectCount, setProjectCount] = useState(0);
   
   // Modal states
   const [showProjectCreationModal, setShowProjectCreationModal] = useState(false);
-  const [showProjectListModal, setShowProjectListModal] = useState(false);
   const [showWriterFactoryModal, setShowWriterFactoryModal] = useState(false);
   const [showUserGuideModal, setShowUserGuideModal] = useState(false);
   const [showNFLOddsExtractorModal, setShowNFLOddsExtractorModal] = useState(false);
@@ -51,12 +51,20 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
     setActiveView('editor');
   };
 
+  const handleOpenProjects = () => {
+    setActiveView('projects');
+  };
+
   const handleOpenSmartBriefs = () => {
     setActiveView('smartbriefs');
   };
 
   const handleBackToEditor = () => {
     setActiveView('editor');
+  };
+  
+  const handleBackToHome = () => {
+    setActiveView('home');
   };
 
   return (
@@ -65,11 +73,11 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
         {/* Fixed Sidebar */}
         <AppSidebar 
           user={user}
-          onOpenProjects={() => setShowProjectListModal(true)}
+          onOpenProjects={handleOpenProjects}
           onOpenSmartBriefs={handleOpenSmartBriefs}
           onOpenWriterFactory={() => setShowWriterFactoryModal(true)}
           onOpenNFLOdds={() => setShowNFLOddsExtractorModal(true)}
-          projectCount={0}
+          projectCount={projectCount}
         />
 
         {/* Main Content Area with margin for fixed sidebar */}
@@ -83,15 +91,21 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
               onOpenNFLOdds={() => setShowNFLOddsExtractorModal(true)}
               onSelectProject={handleSelectProject}
             />
+          ) : activeView === 'projects' ? (
+            <ProjectsPanel 
+              user={user}
+              onSelectProject={handleSelectProject}
+              onCreateProject={() => setShowProjectCreationModal(true)}
+            />
           ) : activeView === 'smartbriefs' ? (
-            <SmartBriefPanel user={user} onBack={handleBackToEditor} />
+            <SmartBriefPanel user={user} onBack={handleBackToHome} />
           ) : (
             <div className="flex gap-3 p-2.5 h-screen">
               {/* Main Editor */}
               <EditorPanel 
                 projectId={selectedProject}
                 writerModelId={selectedWriterModel}
-                onOpenProjectModal={() => setShowProjectListModal(true)}
+                onOpenProjectModal={handleOpenProjects}
                 onNewProject={() => setShowProjectCreationModal(true)}
                 onContentChange={setEditorContent}
               />
@@ -113,13 +127,6 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
         onOpenChange={setShowProjectCreationModal}
         userId={user.id}
         onProjectCreated={handleProjectCreated}
-      />
-
-      <ProjectListModal
-        open={showProjectListModal}
-        onOpenChange={setShowProjectListModal}
-        userId={user.id}
-        onSelectProject={handleSelectProject}
       />
       
       <WriterFactoryModal
