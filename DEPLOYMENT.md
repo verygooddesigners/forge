@@ -30,6 +30,9 @@ TAVILY_API_KEY=your_tavily_api_key
 
 # App Configuration
 NEXT_PUBLIC_APP_URL=http://localhost:5309
+
+# Cursor Remote
+CURSOR_REMOTE_AGENT_TOKEN=your_cursor_remote_agent_token
 ```
 
 ## Local Development

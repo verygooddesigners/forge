@@ -6,7 +6,8 @@
     "dev": "next dev -p 5309",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "cursor:agent": "node scripts/cursor-remote-agent.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

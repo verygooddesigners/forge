@@ -11,6 +11,7 @@ import { UserManagement } from './UserManagement';
 import { APIKeyManagement } from './APIKeyManagement';
 import { AITuner } from './AITuner';
 import { AgentTuner } from './AgentTuner';
+import { CursorRemotePanel } from './CursorRemotePanel';
 
 interface AdminDashboardProps {
   user: User;
@@ -50,6 +51,14 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
               AI Agents
             </TabsTrigger>
           )}
+          {isSuperAdmin && (
+            <TabsTrigger 
+              value="cursor-remote"
+              className="data-[state=active]:bg-bg-elevated data-[state=active]:text-text-primary text-text-secondary text-[13px] font-medium px-5 py-2.5"
+            >
+              Cursor Remote
+            </TabsTrigger>
+          )}
         </TabsList>
 
           <TabsContent value="users">
@@ -67,6 +76,11 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
         {isSuperAdmin && (
           <TabsContent value="agents">
             <AgentTuner adminUser={user} />
+          </TabsContent>
+        )}
+        {isSuperAdmin && (
+          <TabsContent value="cursor-remote">
+            <CursorRemotePanel adminUser={user} />
           </TabsContent>
         )}
       </Tabs>
