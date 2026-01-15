@@ -416,21 +416,21 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
 
   if (!projectId) {
     return (
-      <div className="flex-1 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center p-8">
+      <div className="flex-1 bg-bg-surface border border-border-subtle rounded-xl flex flex-col items-center justify-center p-8">
         <div className="text-center space-y-4">
-          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Plus className="w-8 h-8 text-primary" />
+          <div className="w-16 h-16 bg-accent-muted rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Plus className="w-8 h-8 text-accent-primary" />
           </div>
-          <h2 className="text-2xl font-semibold text-foreground">Welcome to RotoWrite</h2>
-          <p className="text-muted-foreground max-w-md">
+          <h2 className="text-2xl font-bold text-text-primary">Welcome to RotoWrite</h2>
+          <p className="text-text-secondary max-w-md">
             Create a new project or open an existing one to start writing AI-powered content.
           </p>
           <div className="flex gap-3 justify-center pt-4">
             <Button size="lg" onClick={onNewProject || onOpenProjectModal}>
-              <Plus className="mr-2 h-5 w-5" />
+              <Plus className="w-5 h-5" />
               New Project
             </Button>
-            <Button variant="outline" size="lg" onClick={onOpenProjectModal}>
+            <Button variant="ghost" size="lg" onClick={onOpenProjectModal}>
               Open Project
             </Button>
           </div>
@@ -441,7 +441,7 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
 
   return (
     <>
-      <div className="flex-1 bg-white rounded-lg shadow-lg flex flex-col">
+      <div className="flex-1 bg-bg-surface border border-border-subtle rounded-xl flex flex-col">
         <div className="flex-1 overflow-hidden">
           <TipTapEditor
             content={content}
@@ -457,28 +457,28 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
         </div>
 
         {/* Status Bar */}
-        <div className="border-t px-4 py-2 text-xs text-muted-foreground flex justify-between items-center">
-          <span className="flex items-center gap-2">
+        <div className="border-t border-border-subtle bg-bg-deep px-4 py-2.5 text-xs text-text-tertiary flex justify-between items-center">
+          <span className="flex items-center gap-2 font-medium">
             {generating ? (
               <>
-                <Sparkles className="h-3 w-3 animate-spin" />
-                Generating...
+                <Sparkles className="h-3 w-3 animate-spin text-ai-accent" />
+                <span className="text-ai-accent">Generating...</span>
               </>
             ) : saving ? (
               <>
-                <Save className="h-3 w-3 animate-spin" />
-                Saving...
+                <Save className="h-3 w-3 animate-spin text-accent-primary" />
+                <span className="text-accent-primary">Saving...</span>
               </>
             ) : lastSaved ? (
               <>
-                <Save className="h-3 w-3" />
-                Saved {lastSaved.toLocaleTimeString()}
+                <Save className="h-3 w-3 text-success" />
+                <span className="text-text-secondary">Saved {lastSaved.toLocaleTimeString()}</span>
               </>
             ) : (
-              'Ready'
+              <span className="text-text-muted">Ready</span>
             )}
           </span>
-          <span>{wordCount} words</span>
+          <span className="font-mono font-semibold text-text-primary">{wordCount} words</span>
         </div>
       </div>
 

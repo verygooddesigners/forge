@@ -197,7 +197,7 @@ export function RightSidebar({
     <div className="w-80 flex flex-col gap-3">
       {/* Writer Model & Brief Display */}
       {projectId && (
-        <Card className="bg-white shadow-lg">
+        <Card className="bg-bg-surface border-border-subtle shadow-lg hover:translate-y-0">
           <CardContent className="pt-6 space-y-3">
             {/* Writer Model */}
             <div>
