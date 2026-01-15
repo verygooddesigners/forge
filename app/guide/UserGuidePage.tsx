@@ -2200,7 +2200,7 @@ export default function UserGuidePage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50">
+    <div className="guide-theme min-h-screen bg-gradient-to-br from-violet-50 to-purple-50">
       {/* Header */}
       <header className="bg-white border-b sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
@@ -2390,7 +2390,7 @@ export default function UserGuidePage() {
               </h1>
               
               {/* Content */}
-              <div className="prose prose-slate prose-sm sm:prose-lg max-w-none 
+            <div className="prose prose-invert prose-sm sm:prose-lg max-w-none 
                 prose-headings:scroll-mt-20
                 prose-h3:text-lg prose-h3:sm:text-xl
                 prose-p:text-sm prose-p:sm:text-base

@@ -122,7 +122,7 @@ export default function AITeamPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50">
+    <div className="guide-theme min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -231,7 +231,7 @@ export default function AITeamPage() {
                 </p>
               </div>
 
-              <div className="prose prose-slate max-w-none">
+              <div className="prose prose-invert max-w-none">
                 <p className="text-lg leading-relaxed">
                   RotoWrite is powered by a sophisticated{' '}
                   <strong>Multi-Agent AI System</strong> – a team of 7 specialized AI agents
