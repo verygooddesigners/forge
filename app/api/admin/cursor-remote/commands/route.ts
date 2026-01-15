@@ -20,7 +20,8 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
-    const limit = Math.min(Number(searchParams.get('limit') || 50), 200);
+    const limitParam = Number(searchParams.get('limit') || 50);
+    const limit = Number.isFinite(limitParam) ? Math.min(limitParam, 200) : 50;
 
     const supabase = await createClient();
     let query = supabase

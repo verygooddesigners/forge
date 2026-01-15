@@ -89,10 +89,8 @@ export function TipTapEditor({
         canGenerate={canGenerate}
         onExport={onExport}
       />
-      <div className="flex-1 overflow-y-auto bg-[#3a3a44] border border-[#4a4a54] rounded-lg m-4">
-        <div className="px-6 py-4">
-          <EditorContent editor={editor} className="h-full" />
-        </div>
+      <div className="flex-1 overflow-y-auto px-6 py-4">
+        <EditorContent editor={editor} className="h-full" />
       </div>
     </div>
   );

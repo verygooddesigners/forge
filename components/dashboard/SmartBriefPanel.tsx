@@ -337,13 +337,13 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
             {/* Scaffold Section */}
             <div className="space-y-3">
               <div>
-                <h3 className="text-lg font-semibold">Scaffold</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-lg font-semibold text-text-primary">Scaffold</h3>
+                <p className="text-sm text-text-secondary">
                   Define your content structure. Add headings and other notes.
                 </p>
               </div>
               
-              <div className="border rounded-lg overflow-hidden bg-white" style={{ height: '400px' }}>
+              <div className="border border-[#4a4a54] rounded-lg overflow-hidden bg-[#3a3a44]" style={{ height: '400px' }}>
                 <TipTapEditor
                   content={briefContent}
                   onChange={setBriefContent}
@@ -357,16 +357,16 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
             {/* AI Configuration Section */}
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-semibold">AI Configuration</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="text-lg font-semibold text-text-primary">AI Configuration</h3>
+                <p className="text-sm text-text-secondary">
                   Use these instructions to convey anything else the AI should know before generating content.
                 </p>
               </div>
 
               {/* Example */}
-              <div className="bg-violet-50 border border-violet-200 rounded-lg p-4">
-                <p className="text-sm font-medium mb-2">Example:</p>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-[#3a3a44] border border-[#4a4a54] rounded-lg p-4">
+                <p className="text-sm font-semibold mb-2 text-text-primary">Example:</p>
+                <p className="text-sm text-text-secondary leading-relaxed">
                   Single Game Stories are focused on a single upcoming NFL game between two teams. They 
                   should include betting odds, game analysis, betting insights, current team performance 
                   summaries, and predictions. The tone should be conversational but authoritative.
