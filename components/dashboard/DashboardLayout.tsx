@@ -5,19 +5,20 @@ import { User, Project } from '@/types';
 import { AppSidebar } from '../layout/AppSidebar';
 import { DashboardHome } from './DashboardHome';
 import { ProjectsPanel } from './ProjectsPanel';
+import { WriterFactoryPanel } from './WriterFactoryPanel';
+import { NFLOddsPanel } from './NFLOddsPanel';
 import { RightSidebar } from './RightSidebar';
 import { EditorPanel } from './EditorPanel';
 import { SmartBriefPanel } from './SmartBriefPanel';
 import { ProjectCreationModal } from '@/components/modals/ProjectCreationModal';
-import { WriterFactoryModal } from '@/components/modals/WriterFactoryModal';
 import { UserGuideModal } from '@/components/modals/UserGuideModal';
-import { NFLOddsExtractorModal } from '@/components/modals/NFLOddsExtractorModal';
+import { AIHelperWidget } from '@/components/ai/AIHelperWidget';
 
 interface DashboardLayoutProps {
   user: User;
 }
 
-type DashboardView = 'home' | 'projects' | 'editor' | 'smartbriefs';
+type DashboardView = 'home' | 'projects' | 'writer-factory' | 'nfl-odds' | 'editor' | 'smartbriefs';
 
 export function DashboardLayout({ user }: DashboardLayoutProps) {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
@@ -28,9 +29,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
   
   // Modal states
   const [showProjectCreationModal, setShowProjectCreationModal] = useState(false);
-  const [showWriterFactoryModal, setShowWriterFactoryModal] = useState(false);
   const [showUserGuideModal, setShowUserGuideModal] = useState(false);
-  const [showNFLOddsExtractorModal, setShowNFLOddsExtractorModal] = useState(false);
 
   // Don't show initial modal anymore - using new dashboard home
   // useEffect(() => {
@@ -59,6 +58,14 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
     setActiveView('smartbriefs');
   };
 
+  const handleOpenWriterFactory = () => {
+    setActiveView('writer-factory');
+  };
+
+  const handleOpenNFLOdds = () => {
+    setActiveView('nfl-odds');
+  };
+
   const handleBackToEditor = () => {
     setActiveView('editor');
   };
@@ -75,8 +82,8 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
           user={user}
           onOpenProjects={handleOpenProjects}
           onOpenSmartBriefs={handleOpenSmartBriefs}
-          onOpenWriterFactory={() => setShowWriterFactoryModal(true)}
-          onOpenNFLOdds={() => setShowNFLOddsExtractorModal(true)}
+          onOpenWriterFactory={handleOpenWriterFactory}
+          onOpenNFLOdds={handleOpenNFLOdds}
           projectCount={projectCount}
         />
 
@@ -88,7 +95,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
               user={user}
               onCreateProject={() => setShowProjectCreationModal(true)}
               onOpenSmartBriefs={handleOpenSmartBriefs}
-              onOpenNFLOdds={() => setShowNFLOddsExtractorModal(true)}
+              onOpenNFLOdds={handleOpenNFLOdds}
               onSelectProject={handleSelectProject}
             />
           ) : activeView === 'projects' ? (
@@ -96,6 +103,13 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
               user={user}
               onSelectProject={handleSelectProject}
               onCreateProject={() => setShowProjectCreationModal(true)}
+            />
+          ) : activeView === 'writer-factory' ? (
+            <WriterFactoryPanel user={user} />
+          ) : activeView === 'nfl-odds' ? (
+            <NFLOddsPanel 
+              user={user}
+              onProjectCreated={handleSelectProject}
             />
           ) : activeView === 'smartbriefs' ? (
             <SmartBriefPanel user={user} onBack={handleBackToHome} />
@@ -128,24 +142,14 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
         userId={user.id}
         onProjectCreated={handleProjectCreated}
       />
-      
-      <WriterFactoryModal
-        open={showWriterFactoryModal}
-        onOpenChange={setShowWriterFactoryModal}
-        user={user}
-      />
 
       <UserGuideModal
         open={showUserGuideModal}
         onOpenChange={setShowUserGuideModal}
       />
 
-      <NFLOddsExtractorModal
-        open={showNFLOddsExtractorModal}
-        onOpenChange={setShowNFLOddsExtractorModal}
-        userId={user.id}
-        onProjectCreated={handleProjectCreated}
-      />
+      {/* AI Helper Widget */}
+      <AIHelperWidget />
     </>
   );
 }

@@ -118,6 +118,18 @@ export interface SEOAnalysis {
   };
 }
 
+export interface AIHelperEntry {
+  id: string;
+  question: string;
+  answer: string;
+  tags: string[];
+  is_active: boolean;
+  created_by: string;
+  updated_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export type CursorRemoteCommandStatus =
   | 'pending'
   | 'in_progress'

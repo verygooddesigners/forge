@@ -8,7 +8,6 @@ import {
   BookOpen, 
   Wrench, 
   TrendingUp,
-  Newspaper,
   Shield,
   ChevronDown,
 } from 'lucide-react';
@@ -129,12 +128,6 @@ export function AppSidebar({
             NFL Odds Extractor
           </button>
 
-          <button
-            className="w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
-          >
-            <Newspaper className="w-5 h-5 opacity-70" />
-            NewsEngine
-          </button>
         </div>
 
         {/* SYSTEM Section */}
