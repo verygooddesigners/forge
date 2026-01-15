@@ -124,13 +124,13 @@ function ResetPasswordForm() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">
+      <div className="min-h-screen flex items-center justify-center bg-bg-deepest p-4">
+        <Card className="w-full max-w-md hover:translate-y-0">
+          <CardHeader className="space-y-1 text-center">
+            <CardTitle className="text-2xl font-bold">
               Password Reset Successful
             </CardTitle>
-            <CardDescription className="text-center">
+            <CardDescription className="text-text-secondary">
               Your password has been updated. Redirecting to login...
             </CardDescription>
           </CardHeader>
@@ -140,8 +140,8 @@ function ResetPasswordForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-bg-deepest p-4">
+      <Card className="w-full max-w-md hover:translate-y-0">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">
             Reset Password

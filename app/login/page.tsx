@@ -134,13 +134,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-extrabold text-center">
-            RotoWrite
+    <div className="min-h-screen flex items-center justify-center bg-bg-deepest p-4">
+      <Card className="w-full max-w-md border-border-default hover:translate-y-0">
+        <CardHeader className="space-y-3 text-center">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-bg-deepest">
+              RW
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold tracking-tight">
+            Roto<span className="text-accent-primary">Write</span>
           </CardTitle>
-          <CardDescription className="text-center">
+          <CardDescription className="text-text-secondary">
             {activeTab === 'login' ? 'Sign in to your account' : 'Create a new account'}
           </CardDescription>
         </CardHeader>
