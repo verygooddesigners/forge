@@ -21,28 +21,36 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
   const isSuperAdmin = user.email === 'jeremy.botter@gmail.com' || user.email === 'jeremy.botter@gdcgroup.com';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-4 mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => router.push('/dashboard')}
+    <div className="space-y-6">
+      <Tabs defaultValue="users" className="space-y-6">
+        <TabsList className="bg-bg-surface p-1 rounded-[10px] border border-border-subtle">
+          <TabsTrigger 
+            value="users"
+            className="data-[state=active]:bg-bg-elevated data-[state=active]:text-text-primary text-text-secondary text-[13px] font-medium px-5 py-2.5"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Button>
-          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        </div>
-
-        <Tabs defaultValue="users" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="users">User Management</TabsTrigger>
-            <TabsTrigger value="api">API Keys</TabsTrigger>
-            <TabsTrigger value="ai">AI Tuner</TabsTrigger>
-            {isSuperAdmin && (
-              <TabsTrigger value="agents">AI Agents</TabsTrigger>
-            )}
-          </TabsList>
+            User Management
+          </TabsTrigger>
+          <TabsTrigger 
+            value="api"
+            className="data-[state=active]:bg-bg-elevated data-[state=active]:text-text-primary text-text-secondary text-[13px] font-medium px-5 py-2.5"
+          >
+            API Keys
+          </TabsTrigger>
+          <TabsTrigger 
+            value="ai"
+            className="data-[state=active]:bg-bg-elevated data-[state=active]:text-text-primary text-text-secondary text-[13px] font-medium px-5 py-2.5"
+          >
+            AI Tuner
+          </TabsTrigger>
+          {isSuperAdmin && (
+            <TabsTrigger 
+              value="agents"
+              className="data-[state=active]:bg-bg-elevated data-[state=active]:text-text-primary text-text-secondary text-[13px] font-medium px-5 py-2.5"
+            >
+              AI Agents
+            </TabsTrigger>
+          )}
+        </TabsList>
 
           <TabsContent value="users">
             <UserManagement adminUser={user} />
@@ -56,13 +64,12 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
             <AITuner adminUser={user} />
           </TabsContent>
 
-          {isSuperAdmin && (
-            <TabsContent value="agents">
-              <AgentTuner adminUser={user} />
-            </TabsContent>
-          )}
-        </Tabs>
-      </div>
+        {isSuperAdmin && (
+          <TabsContent value="agents">
+            <AgentTuner adminUser={user} />
+          </TabsContent>
+        )}
+      </Tabs>
     </div>
   );
 }
