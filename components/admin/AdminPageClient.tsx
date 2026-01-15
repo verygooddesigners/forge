@@ -1,17 +1,31 @@
 'use client';
 
 import { User } from '@/types';
+import { AppSidebar } from '../layout/AppSidebar';
 import { AdminDashboard } from './AdminDashboard';
 import { AIHelperWidget } from '@/components/ai/AIHelperWidget';
+import { useRouter } from 'next/navigation';
 
 interface AdminPageClientProps {
   user: User;
 }
 
 export function AdminPageClient({ user }: AdminPageClientProps) {
+  const router = useRouter();
+
   return (
     <>
       <div className="min-h-screen bg-bg-deepest">
+        {/* Fixed Sidebar */}
+        <AppSidebar 
+          user={user}
+          onOpenProjects={() => router.push('/dashboard')}
+          onOpenSmartBriefs={() => router.push('/dashboard')}
+          onOpenWriterFactory={() => router.push('/dashboard')}
+          onOpenNFLOdds={() => router.push('/dashboard')}
+          projectCount={0}
+        />
+
         <div className="ml-[260px]">
           {/* Top Bar */}
           <div className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 bg-bg-deep border-b border-border-subtle">
