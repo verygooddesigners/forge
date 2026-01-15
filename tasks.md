@@ -5,7 +5,8 @@
 
 ## Current Issues/Features
 
-(No active tasks - all completed)
+[] Open Project modal window is too narrow. But 40 books You muste be logged into see
+
 
 ## Architectural Refinements (Future Improvements)
 

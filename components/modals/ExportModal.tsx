@@ -79,21 +79,21 @@ export function ExportModal({ open, onOpenChange, editor, projectHeadline }: Exp
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] bg-bg-surface border-border-default">
         <DialogHeader>
-          <DialogTitle>Export Content</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-text-primary">Export Content</DialogTitle>
+          <DialogDescription className="text-text-secondary">
             Choose how you want to export your content.
           </DialogDescription>
         </DialogHeader>
 
         {/* Critical Warning */}
-        <Alert variant="destructive" className="border-2">
-          <AlertTriangle className="h-5 w-5" />
-          <AlertDescription className="ml-2 font-semibold">
+        <Alert variant="destructive" className="border-2 bg-error-muted border-error">
+          <AlertTriangle className="h-5 w-5 text-error" />
+          <AlertDescription className="ml-2 font-semibold text-text-primary">
             <div className="space-y-2">
               <p className="text-base">⚠️ IMPORTANT: DO NOT Copy & Paste Directly into RotoWire CMS!</p>
-              <p className="text-sm font-normal">
+              <p className="text-sm font-normal text-text-secondary">
                 This AI-generated content MUST be reviewed, edited, and fact-checked before publishing. 
                 It may contain inaccuracies, outdated information, or errors that need correction.
               </p>
@@ -102,16 +102,16 @@ export function ExportModal({ open, onOpenChange, editor, projectHeadline }: Exp
         </Alert>
 
         {/* Acknowledgement Checkbox */}
-        <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
+        <div className="flex items-start gap-3 p-4 bg-bg-elevated border border-border-subtle rounded-lg">
           <input
             type="checkbox"
             id="acknowledge"
             checked={acknowledged}
             onChange={(e) => setAcknowledged(e.target.checked)}
-            className="mt-1 h-4 w-4 rounded border-gray-300"
+            className="mt-1 h-4 w-4 rounded border-border-default bg-bg-surface accent-accent-primary"
           />
-          <label htmlFor="acknowledge" className="text-sm cursor-pointer">
-            <span className="font-semibold">I acknowledge</span> that I will review, edit, and fact-check 
+          <label htmlFor="acknowledge" className="text-sm cursor-pointer text-text-secondary">
+            <span className="font-semibold text-text-primary">I acknowledge</span> that I will review, edit, and fact-check 
             this content before publishing it to the RotoWire CMS. I understand that AI-generated content 
             requires human verification.
           </label>
@@ -119,17 +119,17 @@ export function ExportModal({ open, onOpenChange, editor, projectHeadline }: Exp
 
         {/* Export Format */}
         <div className="space-y-2">
-          <label className="text-sm font-medium">Export Format:</label>
+          <label className="text-sm font-medium text-text-primary">Export Format:</label>
           <div className="flex gap-2">
             <Button
-              variant={exportFormat === 'html' ? 'default' : 'outline'}
+              variant={exportFormat === 'html' ? 'default' : 'ghost'}
               onClick={() => setExportFormat('html')}
               className="flex-1"
             >
               HTML
             </Button>
             <Button
-              variant={exportFormat === 'text' ? 'default' : 'outline'}
+              variant={exportFormat === 'text' ? 'default' : 'ghost'}
               onClick={() => setExportFormat('text')}
               className="flex-1"
             >

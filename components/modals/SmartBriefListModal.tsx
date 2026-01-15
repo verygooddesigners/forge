@@ -79,22 +79,22 @@ export function SmartBriefListModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[90vw] max-w-[90vw] max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="w-[90vw] max-w-[90vw] max-h-[90vh] overflow-hidden flex flex-col bg-bg-surface border-border-default">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-extrabold">Open SmartBrief</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-2xl font-bold text-text-primary">Open SmartBrief</DialogTitle>
+          <DialogDescription className="text-text-secondary">
             Select a SmartBrief to edit
           </DialogDescription>
         </DialogHeader>
 
         {/* Search Bar */}
         <div className="relative mb-4">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
           <Input
             placeholder="Search SmartBriefs by name or category..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
+            className="pl-10 bg-bg-elevated border-border-default"
           />
         </div>
 
@@ -102,15 +102,15 @@ export function SmartBriefListModal({
         <div className="flex-1 overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <Loader2 className="h-8 w-8 animate-spin text-accent-primary" />
             </div>
           ) : filteredBriefs.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <BookOpen className="h-12 w-12 text-muted-foreground mb-4" />
-              <p className="text-lg font-medium text-foreground">
+              <BookOpen className="h-12 w-12 text-text-muted mb-4 opacity-30" />
+              <p className="text-lg font-semibold text-text-secondary">
                 {searchQuery ? 'No SmartBriefs found' : 'No SmartBriefs yet'}
               </p>
-              <p className="text-sm text-muted-foreground mt-2">
+              <p className="text-sm text-text-tertiary mt-2">
                 {searchQuery ? 'Try a different search term' : 'Create your first SmartBrief to get started'}
               </p>
             </div>
@@ -119,36 +119,37 @@ export function SmartBriefListModal({
               {filteredBriefs.map((brief) => (
                 <Card
                   key={brief.id}
-                  className="cursor-pointer hover:bg-accent/50 hover:border-primary transition-all"
+                  className="cursor-pointer bg-bg-elevated border-border-subtle hover:border-border-hover transition-all p-5"
                   onClick={() => handleBriefClick(brief)}
                 >
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base line-clamp-2">
-                      {brief.name}
-                    </CardTitle>
-                    {brief.category && (
-                      <CardDescription className="text-xs mt-2">
-                        <Badge variant="outline" className="text-xs">
+                  <div className="mb-3">
+                    <div className="flex items-start justify-between">
+                      <h3 className="text-base font-semibold text-text-primary line-clamp-2 flex-1">
+                        {brief.name}
+                      </h3>
+                      {brief.category && (
+                        <Badge variant="secondary" className="ml-2 flex-shrink-0">
                           {brief.category.name}
                         </Badge>
-                      </CardDescription>
-                    )}
-                  </CardHeader>
-                  <CardContent className="space-y-2">
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 flex-wrap">
                     {brief.is_shared && (
-                      <Badge variant="secondary" className="text-xs">
-                        Shared with Team
+                      <Badge variant="ai" className="text-xs">
+                        Shared
                       </Badge>
                     )}
                     
                     {/* Show if has AI config */}
                     {(brief.seo_config as any)?.ai_instructions && (
-                      <div className="flex items-center gap-1 text-xs text-primary">
+                      <div className="flex items-center gap-1 text-xs text-ai-accent">
                         <Sparkles className="h-3 w-3" />
                         AI Configured
                       </div>
                     )}
-                  </CardContent>
+                  </div>
                 </Card>
               ))}
             </div>

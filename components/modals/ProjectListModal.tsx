@@ -114,22 +114,22 @@ export function ProjectListModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[90vw] max-w-[90vw] max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="w-[90vw] max-w-[90vw] max-h-[90vh] overflow-hidden flex flex-col bg-bg-surface border-border-default">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-extrabold">Open Project</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-2xl font-bold text-text-primary">Open Project</DialogTitle>
+          <DialogDescription className="text-text-secondary">
             Select a project to continue working on it
           </DialogDescription>
         </DialogHeader>
 
         {/* Search Bar */}
         <div className="relative mb-4">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
           <Input
             placeholder="Search projects by headline, keyword, or topic..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
+            className="pl-10 bg-bg-elevated border-border-default text-text-primary"
           />
         </div>
 
@@ -137,15 +137,15 @@ export function ProjectListModal({
         <div className="flex-1 overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <Loader2 className="h-8 w-8 animate-spin text-accent-primary" />
             </div>
           ) : filteredProjects.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-              <p className="text-lg font-medium text-foreground">
+              <FileText className="h-12 w-12 text-text-muted mb-4 opacity-30" />
+              <p className="text-lg font-semibold text-text-secondary">
                 {searchQuery ? 'No projects found' : 'No projects yet'}
               </p>
-              <p className="text-sm text-muted-foreground mt-2">
+              <p className="text-sm text-text-tertiary mt-2">
                 {searchQuery ? 'Try a different search term' : 'Create your first project to get started'}
               </p>
             </div>
@@ -154,47 +154,47 @@ export function ProjectListModal({
               {filteredProjects.map((project) => (
                 <Card
                   key={project.id}
-                  className="cursor-pointer hover:bg-accent/50 hover:border-primary transition-all"
+                  className="cursor-pointer bg-bg-elevated border-border-subtle hover:border-border-hover transition-all p-6"
                   onClick={() => handleProjectClick(project)}
                 >
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base line-clamp-2">
-                      {project.headline}
-                    </CardTitle>
-                    <CardDescription className="text-xs mt-2">
-                      <Badge variant="outline" className="text-xs">
-                        {project.primary_keyword}
+                  <div className="mb-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="text-[15px] font-semibold text-text-primary line-clamp-2 flex-1 mr-2">
+                        {project.headline}
+                      </h3>
+                      <Badge variant="ai" className="flex-shrink-0">
+                        Draft
                       </Badge>
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    {/* Secondary Keywords */}
-                    {project.secondary_keywords && project.secondary_keywords.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {project.secondary_keywords.slice(0, 3).map((keyword, idx) => (
-                          <Badge key={idx} variant="secondary" className="text-xs">
-                            {keyword}
-                          </Badge>
-                        ))}
-                        {project.secondary_keywords.length > 3 && (
-                          <Badge variant="secondary" className="text-xs">
-                            +{project.secondary_keywords.length - 3}
-                          </Badge>
-                        )}
-                      </div>
-                    )}
-                    
-                    {/* Metadata */}
-                    <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {formatDate(project.updated_at)}
-                      </span>
-                      <span className="font-medium">
-                        {getWordCount(project.content)} words
-                      </span>
                     </div>
-                  </CardContent>
+                  </div>
+                  
+                  {/* Metadata */}
+                  <div className="flex items-center gap-3 text-xs text-text-tertiary mb-3">
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {formatDate(project.updated_at)}
+                    </span>
+                    <span className="font-mono font-semibold">
+                      {getWordCount(project.content)} words
+                    </span>
+                  </div>
+                  
+                  {/* Keywords */}
+                  <div className="flex flex-wrap gap-1.5">
+                    <span className="text-[11px] font-mono px-2 py-1 bg-bg-hover rounded text-text-secondary">
+                      {project.primary_keyword}
+                    </span>
+                    {project.secondary_keywords?.slice(0, 2).map((keyword, idx) => (
+                      <span key={idx} className="text-[11px] font-mono px-2 py-1 bg-bg-hover rounded text-text-secondary">
+                        {keyword}
+                      </span>
+                    ))}
+                    {project.secondary_keywords && project.secondary_keywords.length > 2 && (
+                      <span className="text-[11px] text-text-muted px-2 py-1">
+                        +{project.secondary_keywords.length - 2}
+                      </span>
+                    )}
+                  </div>
                 </Card>
               ))}
             </div>
