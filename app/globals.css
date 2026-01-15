@@ -6,12 +6,12 @@
 @theme inline {
   /* Editorial Command Center - Dark Theme */
   
-  /* Background Layers */
-  --color-bg-deepest: #0a0a0b;
-  --color-bg-deep: #111113;
-  --color-bg-surface: #18181b;
-  --color-bg-elevated: #1f1f23;
-  --color-bg-hover: #27272a;
+  /* Background Layers - Lightened for better readability */
+  --color-bg-deepest: #1a1a1f;
+  --color-bg-deep: #222227;
+  --color-bg-surface: #2a2a30;
+  --color-bg-elevated: #32323a;
+  --color-bg-hover: #3a3a44;
   
   /* Text Hierarchy */
   --color-text-primary: #fafafa;

@@ -86,15 +86,15 @@ export default function StyleGuidePage() {
           </div>
 
           <h2 className="text-xs font-semibold uppercase tracking-widest text-text-tertiary mb-6">
-            Background Layers
+            Background Layers (Lightened for Better Readability)
           </h2>
           <div className="grid grid-cols-5 gap-4">
             {[
-              { name: 'Deepest', hex: '#0A0A0B', className: 'bg-bg-deepest' },
-              { name: 'Deep', hex: '#111113', className: 'bg-bg-deep' },
-              { name: 'Surface', hex: '#18181B', className: 'bg-bg-surface' },
-              { name: 'Elevated', hex: '#1F1F23', className: 'bg-bg-elevated' },
-              { name: 'Hover', hex: '#27272A', className: 'bg-bg-hover' },
+              { name: 'Deepest', hex: '#1A1A1F', className: 'bg-bg-deepest' },
+              { name: 'Deep', hex: '#222227', className: 'bg-bg-deep' },
+              { name: 'Surface', hex: '#2A2A30', className: 'bg-bg-surface' },
+              { name: 'Elevated', hex: '#32323A', className: 'bg-bg-elevated' },
+              { name: 'Hover', hex: '#3A3A44', className: 'bg-bg-hover' },
             ].map((bg) => (
               <div 
                 key={bg.name}
