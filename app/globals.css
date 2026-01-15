@@ -226,6 +226,77 @@
   color-scheme: light !important;
   background-color: #ffffff !important;
   color: #0f172a !important;
+  
+  /* Override all CSS variables to light theme values */
+  --color-text-primary: #0f172a !important;
+  --color-text-secondary: #475569 !important;
+  --color-text-tertiary: #64748b !important;
+  --color-text-muted: #94a3b8 !important;
+  --color-foreground: #0f172a !important;
+  --color-muted-foreground: #64748b !important;
+  --color-primary-foreground: #ffffff !important;
+  --color-secondary-foreground: #0f172a !important;
+  --color-background: #ffffff !important;
+}
+
+/* Override all Tailwind text utility classes */
+.guide-theme .text-foreground {
+  color: #0f172a !important;
+}
+
+.guide-theme .text-muted-foreground {
+  color: #64748b !important;
+}
+
+.guide-theme .text-primary {
+  color: #7c49e3 !important;
+}
+
+.guide-theme .text-primary-foreground {
+  color: #ffffff !important;
+}
+
+.guide-theme .text-secondary {
+  color: #64748b !important;
+}
+
+.guide-theme .text-secondary-foreground {
+  color: #0f172a !important;
+}
+
+/* Force all child elements to default to dark text */
+.guide-theme p,
+.guide-theme span:not([class*="text-"]),
+.guide-theme div:not([class*="text-"]):not([class*="bg-"]),
+.guide-theme h1,
+.guide-theme h2,
+.guide-theme h3,
+.guide-theme h4,
+.guide-theme h5,
+.guide-theme h6,
+.guide-theme li,
+.guide-theme label {
+  color: #0f172a;
+}
+
+/* Ensure prose content is dark */
+.guide-theme .prose,
+.guide-theme .prose * {
+  color: #334155;
+}
+
+.guide-theme .prose h1,
+.guide-theme .prose h2,
+.guide-theme .prose h3,
+.guide-theme .prose h4,
+.guide-theme .prose h5,
+.guide-theme .prose h6 {
+  color: #0f172a;
+}
+
+.guide-theme .prose strong,
+.guide-theme .prose b {
+  color: #0f172a;
 }
 
 .guide-theme .bg-white {
