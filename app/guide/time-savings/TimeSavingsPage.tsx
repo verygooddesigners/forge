@@ -171,21 +171,21 @@ export default function TimeSavingsPage() {
   };
 
   return (
-    <div className="guide-theme min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50">
+    <div className="min-h-screen bg-bg-deepest">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+      <header className="sticky top-0 z-50 bg-bg-deep/80 backdrop-blur-md border-b border-border-default">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link
               href="/guide"
-              className="flex items-center gap-2 text-slate-600 hover:text-violet-600 transition-colors"
+              className="flex items-center gap-2 text-text-secondary hover:text-accent-primary transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               <span className="text-sm font-medium">Back to User Guide</span>
             </Link>
             <div className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-violet-600" />
-              <span className="font-semibold text-slate-900">Time Savings Calculator</span>
+              <Clock className="h-5 w-5 text-accent-primary" />
+              <span className="font-semibold text-text-primary">Time Savings Calculator</span>
             </div>
           </div>
         </div>
@@ -196,7 +196,7 @@ export default function TimeSavingsPage() {
           {/* Sticky Table of Contents - Desktop */}
           <aside className="hidden lg:block">
             <nav className="sticky top-24 space-y-1">
-              <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
+              <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-4">
                 On This Page
               </h3>
               {tableOfContents.map((item) => (
@@ -205,8 +205,8 @@ export default function TimeSavingsPage() {
                   onClick={() => scrollToSection(item.id)}
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
                     activeSection === item.id
-                      ? 'bg-violet-100 text-violet-700 font-medium'
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'bg-accent-muted text-accent-primary font-medium'
+                      : 'text-text-secondary hover:bg-slate-100 hover:text-text-primary'
                   }`}
                 >
                   {item.title}
@@ -217,8 +217,8 @@ export default function TimeSavingsPage() {
 
           {/* Mobile TOC */}
           <div className="lg:hidden mb-8">
-            <details className="bg-white rounded-lg border border-slate-200 overflow-hidden">
-              <summary className="px-4 py-3 cursor-pointer font-medium text-slate-700 hover:bg-slate-50">
+            <details className="bg-bg-surface rounded-lg border border-border-default overflow-hidden">
+              <summary className="px-4 py-3 cursor-pointer font-medium text-text-secondary hover:bg-bg-elevated">
                 Table of Contents
               </summary>
               <div className="px-4 pb-4 space-y-2">
@@ -226,7 +226,7 @@ export default function TimeSavingsPage() {
                   <button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className="w-full text-left py-1 text-sm text-slate-600 hover:text-violet-600"
+                    className="w-full text-left py-1 text-sm text-text-secondary hover:text-accent-primary"
                   >
                     {item.title}
                   </button>
@@ -240,10 +240,10 @@ export default function TimeSavingsPage() {
             {/* Hero Section */}
             <section id="hero">
               <div className="mb-8">
-                <h1 className="text-4xl font-bold text-slate-900 mb-4">
+                <h1 className="text-4xl font-bold text-text-primary mb-4">
                   How Much Time Could Your Team Save?
                 </h1>
-                <p className="text-xl text-slate-600 leading-relaxed">
+                <p className="text-xl text-text-secondary leading-relaxed">
                   Calculate the real impact of AI-powered content creation on your workflow
                 </p>
               </div>
@@ -257,31 +257,31 @@ export default function TimeSavingsPage() {
               </div>
 
               <div className="grid md:grid-cols-3 gap-4 mt-8">
-                <div className="bg-white border border-slate-200 rounded-xl p-5 flex items-start gap-4">
-                  <div className="bg-violet-100 rounded-lg p-2.5">
-                    <TrendingDown className="h-5 w-5 text-violet-600" />
+                <div className="bg-bg-surface border border-border-default rounded-xl p-5 flex items-start gap-4">
+                  <div className="bg-accent-muted rounded-lg p-2.5">
+                    <TrendingDown className="h-5 w-5 text-accent-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">58% Faster</h3>
-                    <p className="text-sm text-slate-600">New article creation</p>
+                    <h3 className="font-semibold text-text-primary">58% Faster</h3>
+                    <p className="text-sm text-text-secondary">New article creation</p>
                   </div>
                 </div>
-                <div className="bg-white border border-slate-200 rounded-xl p-5 flex items-start gap-4">
-                  <div className="bg-emerald-100 rounded-lg p-2.5">
-                    <Zap className="h-5 w-5 text-emerald-600" />
+                <div className="bg-bg-surface border border-border-default rounded-xl p-5 flex items-start gap-4">
+                  <div className="bg-success-muted rounded-lg p-2.5">
+                    <Zap className="h-5 w-5 text-success" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">60% Faster</h3>
-                    <p className="text-sm text-slate-600">Article updates & rewrites</p>
+                    <h3 className="font-semibold text-text-primary">60% Faster</h3>
+                    <p className="text-sm text-text-secondary">Article updates & rewrites</p>
                   </div>
                 </div>
-                <div className="bg-white border border-slate-200 rounded-xl p-5 flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-lg p-2.5">
-                    <Sparkles className="h-5 w-5 text-amber-600" />
+                <div className="bg-bg-surface border border-border-default rounded-xl p-5 flex items-start gap-4">
+                  <div className="bg-warning-muted rounded-lg p-2.5">
+                    <Sparkles className="h-5 w-5 text-warning" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">83% Faster</h3>
-                    <p className="text-sm text-slate-600">Complex data-driven content</p>
+                    <h3 className="font-semibold text-text-primary">83% Faster</h3>
+                    <p className="text-sm text-text-secondary">Complex data-driven content</p>
                   </div>
                 </div>
               </div>
@@ -289,41 +289,41 @@ export default function TimeSavingsPage() {
 
             {/* Quick Stats Section */}
             <section id="quick-stats">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <BarChart3 className="h-6 w-6 text-violet-600" />
+              <h2 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-2">
+                <BarChart3 className="h-6 w-6 text-accent-primary" />
                 Real Results
               </h2>
 
-              <div className="bg-gradient-to-r from-violet-100 to-purple-100 border-2 border-violet-300 rounded-xl p-8">
+              <div className="bg-accent-muted border border-accent-primary rounded-xl p-8">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                   <div>
-                    <h3 className="text-xl font-bold text-violet-900 mb-2">
+                    <h3 className="text-xl font-bold text-text-primary mb-2">
                       A 6-person content team saved:
                     </h3>
-                    <p className="text-slate-700">
+                    <p className="text-text-secondary">
                       Based on typical usage of 20 new articles, 30 updates, and 5 complex
                       data-driven pieces per week.
                     </p>
                   </div>
                   <div className="flex gap-6">
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-violet-700">~75</div>
-                      <div className="text-sm text-violet-800 font-medium">hours/week</div>
+                      <div className="text-4xl font-bold text-accent-primary">~75</div>
+                      <div className="text-sm text-text-secondary font-medium">hours/week</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-violet-700">60%</div>
-                      <div className="text-sm text-violet-800 font-medium">time reduction</div>
+                      <div className="text-4xl font-bold text-accent-primary">60%</div>
+                      <div className="text-sm text-text-secondary font-medium">time reduction</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-6">
-                <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+              <div className="mt-6 bg-[rgba(59,130,246,0.15)] border border-[#3b82f6] rounded-lg p-6">
+                <h4 className="font-semibold text-text-primary mb-2 flex items-center gap-2">
                   <Users className="h-5 w-5" />
                   What This Means
                 </h4>
-                <p className="text-blue-800 text-sm leading-relaxed">
+                <p className="text-text-secondary text-sm leading-relaxed">
                   That&apos;s nearly <strong>2 full-time equivalent (FTE) positions</strong> worth
                   of time freed up every week. Your team can reinvest this time into strategy,
                   research, audience engagement, or simply take on more projects without adding
@@ -334,12 +334,12 @@ export default function TimeSavingsPage() {
 
             {/* Calculator Section */}
             <section id="calculator">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <Calculator className="h-6 w-6 text-violet-600" />
+              <h2 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-2">
+                <Calculator className="h-6 w-6 text-accent-primary" />
                 Calculate Your Savings
               </h2>
 
-              <p className="text-slate-600 leading-relaxed mb-8">
+              <p className="text-text-secondary leading-relaxed mb-8">
                 Enter your team&apos;s current content production details to see personalized time
                 savings projections.
               </p>
@@ -353,20 +353,20 @@ export default function TimeSavingsPage() {
 
             {/* Results Section */}
             <section id="results">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <Clock className="h-6 w-6 text-violet-600" />
+              <h2 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-2">
+                <Clock className="h-6 w-6 text-accent-primary" />
                 Your Results
               </h2>
 
               {hasCalculated && results ? (
                 <SavingsResults results={results} inputs={inputs} />
               ) : (
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-12 text-center">
-                  <Calculator className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-slate-700 mb-2">
+                <div className="bg-bg-elevated border border-border-default rounded-xl p-12 text-center">
+                  <Calculator className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-text-secondary mb-2">
                     No results yet
                   </h3>
-                  <p className="text-slate-500">
+                  <p className="text-text-tertiary">
                     Fill out the calculator above and click &quot;Calculate Savings&quot; to see
                     your personalized time savings.
                   </p>
@@ -376,34 +376,34 @@ export default function TimeSavingsPage() {
 
             {/* Breakdown Section */}
             <section id="breakdown">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <BarChart3 className="h-6 w-6 text-violet-600" />
+              <h2 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-2">
+                <BarChart3 className="h-6 w-6 text-accent-primary" />
                 Time Breakdown by Content Type
               </h2>
 
               {hasCalculated && results ? (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full text-sm border border-slate-200 rounded-lg overflow-hidden">
-                    <thead className="bg-slate-50">
+                  <table className="min-w-full text-sm border border-border-default rounded-lg overflow-hidden">
+                    <thead className="bg-bg-elevated">
                       <tr>
-                        <th className="text-left py-3 px-4 font-semibold text-slate-700 border-b">
+                        <th className="text-left py-3 px-4 font-semibold text-text-secondary border-b">
                           Content Type
                         </th>
-                        <th className="text-right py-3 px-4 font-semibold text-slate-700 border-b">
+                        <th className="text-right py-3 px-4 font-semibold text-text-secondary border-b">
                           Current Time (hrs/week)
                         </th>
-                        <th className="text-right py-3 px-4 font-semibold text-slate-700 border-b">
+                        <th className="text-right py-3 px-4 font-semibold text-text-secondary border-b">
                           With RotoWrite
                         </th>
-                        <th className="text-right py-3 px-4 font-semibold text-slate-700 border-b">
+                        <th className="text-right py-3 px-4 font-semibold text-text-secondary border-b">
                           Time Saved
                         </th>
-                        <th className="text-right py-3 px-4 font-semibold text-slate-700 border-b">
+                        <th className="text-right py-3 px-4 font-semibold text-text-secondary border-b">
                           Reduction
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-border-subtle">
                       {results.breakdown.map((row) => (
                         <tr key={row.type}>
                           <td className="py-3 px-4 font-medium">{row.type}</td>
@@ -413,17 +413,17 @@ export default function TimeSavingsPage() {
                           <td className="py-3 px-4 text-right font-mono">
                             {row.newTime.toFixed(1)}
                           </td>
-                          <td className="py-3 px-4 text-right font-mono text-green-600 font-semibold">
+                          <td className="py-3 px-4 text-right font-mono text-success font-semibold">
                             {row.saved.toFixed(1)}
                           </td>
                           <td className="py-3 px-4 text-right">
-                            <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">
+                            <span className="px-2 py-1 bg-success-muted text-success rounded text-xs font-medium">
                               {row.reduction}
                             </span>
                           </td>
                         </tr>
                       ))}
-                      <tr className="bg-violet-50 font-semibold">
+                      <tr className="bg-accent-muted font-semibold">
                         <td className="py-3 px-4">Total</td>
                         <td className="py-3 px-4 text-right font-mono">
                           {results.currentWeeklyHours.toFixed(1)}
@@ -431,11 +431,11 @@ export default function TimeSavingsPage() {
                         <td className="py-3 px-4 text-right font-mono">
                           {results.newWeeklyHours.toFixed(1)}
                         </td>
-                        <td className="py-3 px-4 text-right font-mono text-green-600">
+                        <td className="py-3 px-4 text-right font-mono text-success">
                           {results.weeklySaved.toFixed(1)}
                         </td>
                         <td className="py-3 px-4 text-right">
-                          <span className="px-2 py-1 bg-violet-200 text-violet-700 rounded text-xs font-medium">
+                          <span className="px-2 py-1 bg-violet-200 text-accent-primary rounded text-xs font-medium">
                             {((results.weeklySaved / results.currentWeeklyHours) * 100).toFixed(0)}%
                           </span>
                         </td>
@@ -444,16 +444,16 @@ export default function TimeSavingsPage() {
                   </table>
                 </div>
               ) : (
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-8 text-center">
-                  <p className="text-slate-500">
+                <div className="bg-bg-elevated border border-border-default rounded-xl p-8 text-center">
+                  <p className="text-text-tertiary">
                     Calculate your savings above to see the breakdown by content type.
                   </p>
                 </div>
               )}
 
-              <div className="mt-8 bg-amber-50 border border-amber-200 rounded-lg p-4">
-                <h5 className="font-semibold text-amber-900 mb-2">About These Estimates</h5>
-                <ul className="text-sm text-amber-800 space-y-1">
+              <div className="mt-8 bg-warning-muted border border-warning rounded-lg p-4">
+                <h5 className="font-semibold text-text-primary mb-2">About These Estimates</h5>
+                <ul className="text-sm text-text-secondary space-y-1">
                   <li>
                     • <strong>New Articles (58% reduction):</strong> Standard content generation
                     with SEO optimization and voice matching
@@ -471,16 +471,16 @@ export default function TimeSavingsPage() {
             </section>
 
             {/* Footer */}
-            <footer className="pt-12 border-t border-slate-200">
+            <footer className="pt-12 border-t border-border-default">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <Link
                   href="/guide"
-                  className="flex items-center gap-2 text-violet-600 hover:text-violet-700 font-medium"
+                  className="flex items-center gap-2 text-accent-primary hover:text-accent-primary font-medium"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   Back to User Guide
                 </Link>
-                <p className="text-sm text-slate-500">RotoWrite Time Savings Calculator</p>
+                <p className="text-sm text-text-tertiary">RotoWrite Time Savings Calculator</p>
               </div>
             </footer>
           </main>

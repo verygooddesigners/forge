@@ -64,12 +64,12 @@ export default function UserGuidePage() {
             SEO-optimized content that maintains your unique voice and style.
           </p>
 
-          <div className="bg-violet-50 border-l-4 border-primary p-6 rounded-r-lg">
-            <h3 className="text-lg font-semibold mb-3 text-primary">What Makes RotoWrite Different?</h3>
-            <p className="leading-relaxed">
+          <div className="bg-accent-muted border-l-4 border-accent-primary p-6 rounded-r-lg">
+            <h3 className="text-lg font-semibold mb-3 text-accent-primary">What Makes RotoWrite Different?</h3>
+            <p className="leading-relaxed text-text-secondary">
               RotoWrite combines three powerful elements to create content that's both SEO-optimized 
-              and authentically written in your voice: <strong>Writer Models</strong>, <strong>SEO Packages</strong>, 
-              and <strong>SmartBriefs</strong>. This unique combination ensures your content ranks well while 
+              and authentically written in your voice: <strong className="text-text-primary">Writer Models</strong>, <strong className="text-text-primary">SEO Packages</strong>, 
+              and <strong className="text-text-primary">SmartBriefs</strong>. This unique combination ensures your content ranks well while 
               maintaining your personal style.
             </p>
           </div>
@@ -77,45 +77,45 @@ export default function UserGuidePage() {
           <h3 className="text-xl font-semibold mt-8 mb-4">Core Features Overview</h3>
           
           <div className="grid gap-4">
-            <div className="border border-violet-200 rounded-lg p-5 hover:shadow-md transition-shadow">
+            <div className="border border-border-default rounded-lg p-5 bg-bg-elevated hover:border-border-hover transition-all">
               <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-primary" />
-                Writer Factory
+                <Sparkles className="h-5 w-5 text-accent-primary" />
+                <span className="text-text-primary">Writer Factory</span>
               </h4>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-text-secondary leading-relaxed">
                 Train AI models on your writing samples to capture your unique voice, tone, and style. 
                 The more content you train with, the better the AI becomes at emulating your writing.
               </p>
             </div>
 
-            <div className="border border-violet-200 rounded-lg p-5 hover:shadow-md transition-shadow">
+            <div className="border border-border-default rounded-lg p-5 bg-bg-elevated hover:border-border-hover transition-all">
               <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
-                <FileText className="h-5 w-5 text-primary" />
-                Brief Builder
+                <FileText className="h-5 w-5 text-accent-primary" />
+                <span className="text-text-primary">Brief Builder</span>
               </h4>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-text-secondary leading-relaxed">
                 Create reusable content templates that define structure, required sections, and formatting. 
                 SmartBriefs ensure consistency across all your content while meeting specific requirements.
               </p>
             </div>
 
-            <div className="border border-violet-200 rounded-lg p-5 hover:shadow-md transition-shadow">
+            <div className="border border-border-default rounded-lg p-5 bg-bg-elevated hover:border-border-hover transition-all">
               <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
-                <Zap className="h-5 w-5 text-primary" />
-                SEO Wizard
+                <Zap className="h-5 w-5 text-accent-primary" />
+                <span className="text-text-primary">SEO Wizard</span>
               </h4>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-text-secondary leading-relaxed">
                 Real-time SEO analysis provides instant feedback on content optimization. Track keyword usage, 
                 content structure, and get actionable suggestions to improve your search rankings.
               </p>
             </div>
 
-            <div className="border border-violet-200 rounded-lg p-5 hover:shadow-md transition-shadow">
+            <div className="border border-border-default rounded-lg p-5 bg-bg-elevated hover:border-border-hover transition-all">
               <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
-                <Target className="h-5 w-5 text-primary" />
-                SEO Package
+                <Target className="h-5 w-5 text-accent-primary" />
+                <span className="text-text-primary">SEO Package</span>
               </h4>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-text-secondary leading-relaxed">
                 A comprehensive collection of SEO data (headline, keywords, topic) that guides content generation. 
                 The package is dynamically updated as you select suggested keywords from the SEO Wizard.
               </p>
@@ -158,12 +158,12 @@ export default function UserGuidePage() {
             Each agent has a specific role and expertise, making the whole system more powerful than any single AI could be.
           </p>
 
-          <div className="bg-gradient-to-r from-violet-100 to-purple-100 border-2 border-primary rounded-lg p-8 my-8">
+          <div className="bg-accent-muted border border-accent-primary rounded-lg p-8 my-8">
             <h3 className="text-xl font-bold mb-4 text-center flex items-center justify-center gap-2">
-              <Cpu className="h-6 w-6 text-primary" />
-              The 7-Agent Orchestra
+              <Cpu className="h-6 w-6 text-accent-primary" />
+              <span className="text-text-primary">The 7-Agent Orchestra</span>
             </h3>
-            <p className="text-center text-muted-foreground mb-6">
+            <p className="text-center text-text-secondary mb-6">
               Just like a symphony orchestra has different sections working in harmony, 
               RotoWrite's agents each play their part to create content that ranks and resonates.
             </p>
@@ -173,208 +173,208 @@ export default function UserGuidePage() {
 
           <div className="space-y-6">
             {/* Agent 1 */}
-            <div className="border-l-4 border-violet-500 pl-6 py-4 bg-violet-50/50 rounded-r-lg">
+            <div className="border-l-4 border-accent-primary pl-6 py-4 bg-accent-muted rounded-r-lg">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-violet-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                <div className="w-10 h-10 bg-accent-primary text-white rounded-full flex items-center justify-center font-bold text-lg">
                   1
                 </div>
-                <h4 className="font-bold text-lg text-violet-900">Content Generation Agent</h4>
+                <h4 className="font-bold text-lg text-text-primary">Content Generation Agent</h4>
               </div>
-              <p className="text-muted-foreground leading-relaxed mb-3">
+              <p className="text-text-secondary leading-relaxed mb-3">
                 The primary writer of your team. This agent takes your brief, keywords, and writer model context 
                 to generate complete articles with proper structure, headings, tables, and lists.
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 bg-violet-200 text-violet-800 rounded text-xs font-medium">Article Generation</span>
-                <span className="px-2 py-1 bg-violet-200 text-violet-800 rounded text-xs font-medium">Streaming Output</span>
-                <span className="px-2 py-1 bg-violet-200 text-violet-800 rounded text-xs font-medium">SEO Integration</span>
+                <span className="px-2 py-1 bg-accent-muted border border-accent-primary text-accent-primary rounded text-xs font-medium">Article Generation</span>
+                <span className="px-2 py-1 bg-accent-muted border border-accent-primary text-accent-primary rounded text-xs font-medium">Streaming Output</span>
+                <span className="px-2 py-1 bg-accent-muted border border-accent-primary text-accent-primary rounded text-xs font-medium">SEO Integration</span>
               </div>
             </div>
 
             {/* Agent 2 */}
-            <div className="border-l-4 border-blue-500 pl-6 py-4 bg-blue-50/50 rounded-r-lg">
+            <div className="border-l-4 border-[#3b82f6] pl-6 py-4 bg-[rgba(59,130,246,0.15)] rounded-r-lg">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                <div className="w-10 h-10 bg-[#3b82f6] text-white rounded-full flex items-center justify-center font-bold text-lg">
                   2
                 </div>
-                <h4 className="font-bold text-lg text-blue-900">Writer Training Agent</h4>
+                <h4 className="font-bold text-lg text-text-primary">Writer Training Agent</h4>
               </div>
-              <p className="text-muted-foreground leading-relaxed mb-3">
+              <p className="text-text-secondary leading-relaxed mb-3">
                 Your voice analyst. When you add content to the Writer Factory, this agent analyzes your writing 
                 samples to extract tone, vocabulary patterns, sentence structure, and stylistic elements that make 
                 your writing unique.
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 bg-blue-200 text-blue-800 rounded text-xs font-medium">Style Analysis</span>
-                <span className="px-2 py-1 bg-blue-200 text-blue-800 rounded text-xs font-medium">Voice Extraction</span>
-                <span className="px-2 py-1 bg-blue-200 text-blue-800 rounded text-xs font-medium">Pattern Recognition</span>
+                <span className="px-2 py-1 bg-[rgba(59,130,246,0.2)] border border-[#3b82f6] text-[#60a5fa] rounded text-xs font-medium">Style Analysis</span>
+                <span className="px-2 py-1 bg-[rgba(59,130,246,0.2)] border border-[#3b82f6] text-[#60a5fa] rounded text-xs font-medium">Voice Extraction</span>
+                <span className="px-2 py-1 bg-[rgba(59,130,246,0.2)] border border-[#3b82f6] text-[#60a5fa] rounded text-xs font-medium">Pattern Recognition</span>
               </div>
             </div>
 
             {/* Agent 3 */}
-            <div className="border-l-4 border-green-500 pl-6 py-4 bg-green-50/50 rounded-r-lg">
+            <div className="border-l-4 border-success pl-6 py-4 bg-success-muted rounded-r-lg">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                <div className="w-10 h-10 bg-success text-white rounded-full flex items-center justify-center font-bold text-lg">
                   3
                 </div>
-                <h4 className="font-bold text-lg text-green-900">SEO Optimization Agent</h4>
+                <h4 className="font-bold text-lg text-text-primary">SEO Optimization Agent</h4>
               </div>
-              <p className="text-muted-foreground leading-relaxed mb-3">
+              <p className="text-text-secondary leading-relaxed mb-3">
                 Your search engine strategist. This agent analyzes your content for keyword density, heading 
                 structure, and SEO best practices. It calculates your SEO score and provides specific 
                 recommendations for improvement.
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 bg-green-200 text-green-800 rounded text-xs font-medium">Keyword Analysis</span>
-                <span className="px-2 py-1 bg-green-200 text-green-800 rounded text-xs font-medium">SEO Scoring</span>
-                <span className="px-2 py-1 bg-green-200 text-green-800 rounded text-xs font-medium">Optimization Tips</span>
+                <span className="px-2 py-1 bg-success-muted border border-success text-success rounded text-xs font-medium">Keyword Analysis</span>
+                <span className="px-2 py-1 bg-success-muted border border-success text-success rounded text-xs font-medium">SEO Scoring</span>
+                <span className="px-2 py-1 bg-success-muted border border-success text-success rounded text-xs font-medium">Optimization Tips</span>
               </div>
             </div>
 
             {/* Agent 4 */}
-            <div className="border-l-4 border-orange-500 pl-6 py-4 bg-orange-50/50 rounded-r-lg">
+            <div className="border-l-4 border-warning pl-6 py-4 bg-warning-muted rounded-r-lg">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                <div className="w-10 h-10 bg-warning text-bg-deepest rounded-full flex items-center justify-center font-bold text-lg">
                   4
                 </div>
-                <h4 className="font-bold text-lg text-orange-900">Quality Assurance Agent</h4>
+                <h4 className="font-bold text-lg text-text-primary">Quality Assurance Agent</h4>
               </div>
-              <p className="text-muted-foreground leading-relaxed mb-3">
+              <p className="text-text-secondary leading-relaxed mb-3">
                 Your editor and proofreader. Powered by both AI and LanguageTool, this agent checks grammar, 
                 spelling, readability, and consistency. It ensures your content is polished and professional 
                 before publishing.
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 bg-orange-200 text-orange-800 rounded text-xs font-medium">Grammar Check</span>
-                <span className="px-2 py-1 bg-orange-200 text-orange-800 rounded text-xs font-medium">Readability Score</span>
-                <span className="px-2 py-1 bg-orange-200 text-orange-800 rounded text-xs font-medium">Consistency Review</span>
+                <span className="px-2 py-1 bg-warning-muted border border-warning text-warning rounded text-xs font-medium">Grammar Check</span>
+                <span className="px-2 py-1 bg-warning-muted border border-warning text-warning rounded text-xs font-medium">Readability Score</span>
+                <span className="px-2 py-1 bg-warning-muted border border-warning text-warning rounded text-xs font-medium">Consistency Review</span>
               </div>
             </div>
 
             {/* Agent 5 */}
-            <div className="border-l-4 border-pink-500 pl-6 py-4 bg-pink-50/50 rounded-r-lg">
+            <div className="border-l-4 border-[#ec4899] pl-6 py-4 bg-[rgba(236,72,153,0.15)] rounded-r-lg">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-pink-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                <div className="w-10 h-10 bg-[#ec4899] text-white rounded-full flex items-center justify-center font-bold text-lg">
                   5
                 </div>
-                <h4 className="font-bold text-lg text-pink-900">Persona & Tone Agent</h4>
+                <h4 className="font-bold text-lg text-text-primary">Persona & Tone Agent</h4>
               </div>
-              <p className="text-muted-foreground leading-relaxed mb-3">
+              <p className="text-text-secondary leading-relaxed mb-3">
                 Your voice coach. If content needs tone adjustment – perhaps it's too formal when you write 
                 casually, or vice versa – this agent refines the language to match your writer model's 
                 personality while preserving SEO keywords.
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 bg-pink-200 text-pink-800 rounded text-xs font-medium">Tone Matching</span>
-                <span className="px-2 py-1 bg-pink-200 text-pink-800 rounded text-xs font-medium">Voice Adaptation</span>
-                <span className="px-2 py-1 bg-pink-200 text-pink-800 rounded text-xs font-medium">Style Consistency</span>
+                <span className="px-2 py-1 bg-[rgba(236,72,153,0.2)] border border-[#ec4899] text-[#f9a8d4] rounded text-xs font-medium">Tone Matching</span>
+                <span className="px-2 py-1 bg-[rgba(236,72,153,0.2)] border border-[#ec4899] text-[#f9a8d4] rounded text-xs font-medium">Voice Adaptation</span>
+                <span className="px-2 py-1 bg-[rgba(236,72,153,0.2)] border border-[#ec4899] text-[#f9a8d4] rounded text-xs font-medium">Style Consistency</span>
               </div>
             </div>
 
             {/* Agent 6 */}
-            <div className="border-l-4 border-indigo-500 pl-6 py-4 bg-indigo-50/50 rounded-r-lg">
+            <div className="border-l-4 border-ai-accent pl-6 py-4 bg-ai-muted rounded-r-lg">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-indigo-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                <div className="w-10 h-10 bg-ai-accent text-white rounded-full flex items-center justify-center font-bold text-lg">
                   6
                 </div>
-                <h4 className="font-bold text-lg text-indigo-900">Creative Features Agent</h4>
+                <h4 className="font-bold text-lg text-text-primary">Creative Features Agent</h4>
               </div>
-              <p className="text-muted-foreground leading-relaxed mb-3">
+              <p className="text-text-secondary leading-relaxed mb-3">
                 Your workflow coordinator. When complex tasks require multiple agents working together, 
                 this agent orchestrates the process – routing tasks to the right specialists and combining 
                 their outputs into cohesive results.
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 bg-indigo-200 text-indigo-800 rounded text-xs font-medium">Workflow Management</span>
-                <span className="px-2 py-1 bg-indigo-200 text-indigo-800 rounded text-xs font-medium">Multi-Agent Tasks</span>
-                <span className="px-2 py-1 bg-indigo-200 text-indigo-800 rounded text-xs font-medium">Data Transform</span>
+                <span className="px-2 py-1 bg-ai-muted border border-ai-accent text-ai-accent rounded text-xs font-medium">Workflow Management</span>
+                <span className="px-2 py-1 bg-ai-muted border border-ai-accent text-ai-accent rounded text-xs font-medium">Multi-Agent Tasks</span>
+                <span className="px-2 py-1 bg-ai-muted border border-ai-accent text-ai-accent rounded text-xs font-medium">Data Transform</span>
               </div>
             </div>
 
             {/* Agent 7 */}
-            <div className="border-l-4 border-cyan-500 pl-6 py-4 bg-cyan-50/50 rounded-r-lg">
+            <div className="border-l-4 border-[#06b6d4] pl-6 py-4 bg-[rgba(6,182,212,0.15)] rounded-r-lg">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-cyan-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                <div className="w-10 h-10 bg-[#06b6d4] text-white rounded-full flex items-center justify-center font-bold text-lg">
                   7
                 </div>
-                <h4 className="font-bold text-lg text-cyan-900">Visual Extraction Agent</h4>
+                <h4 className="font-bold text-lg text-text-primary">Visual Extraction Agent</h4>
               </div>
-              <p className="text-muted-foreground leading-relaxed mb-3">
+              <p className="text-text-secondary leading-relaxed mb-3">
                 Your data reader. This agent can extract structured data from images – screenshots of sports 
                 statistics, tables, or any visual content. It turns images into usable data that other agents 
                 can work with.
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 bg-cyan-200 text-cyan-800 rounded text-xs font-medium">Image Analysis</span>
-                <span className="px-2 py-1 bg-cyan-200 text-cyan-800 rounded text-xs font-medium">Data Extraction</span>
-                <span className="px-2 py-1 bg-cyan-200 text-cyan-800 rounded text-xs font-medium">Table Parsing</span>
+                <span className="px-2 py-1 bg-[rgba(6,182,212,0.2)] border border-[#06b6d4] text-[#67e8f9] rounded text-xs font-medium">Image Analysis</span>
+                <span className="px-2 py-1 bg-[rgba(6,182,212,0.2)] border border-[#06b6d4] text-[#67e8f9] rounded text-xs font-medium">Data Extraction</span>
+                <span className="px-2 py-1 bg-[rgba(6,182,212,0.2)] border border-[#06b6d4] text-[#67e8f9] rounded text-xs font-medium">Table Parsing</span>
               </div>
             </div>
           </div>
 
-          <h3 className="text-xl font-semibold mt-12 mb-4">How Agents Work Together</h3>
+          <h3 className="text-xl font-semibold mt-12 mb-4 text-text-primary">How Agents Work Together</h3>
 
-          <p className="leading-relaxed mb-6">
+          <p className="leading-relaxed mb-6 text-text-secondary">
             When you create content in RotoWrite, multiple agents collaborate behind the scenes:
           </p>
 
-          <div className="bg-gradient-to-r from-slate-50 to-slate-100 border border-slate-300 rounded-lg p-6 my-6">
+          <div className="bg-bg-elevated border border-border-default rounded-lg p-6 my-6">
             <div className="space-y-4">
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                <div className="flex-shrink-0 w-8 h-8 bg-[#3b82f6] text-white rounded-full flex items-center justify-center text-sm font-bold">
                   1
                 </div>
                 <div>
-                  <h5 className="font-semibold">Writer Training Analyzes Your Voice</h5>
-                  <p className="text-sm text-muted-foreground">
+                  <h5 className="font-semibold text-text-primary">Writer Training Analyzes Your Voice</h5>
+                  <p className="text-sm text-text-secondary">
                     When you add samples to Writer Factory, Agent #2 extracts your unique writing patterns
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                <div className="flex-shrink-0 w-8 h-8 bg-success text-white rounded-full flex items-center justify-center text-sm font-bold">
                   2
                 </div>
                 <div>
-                  <h5 className="font-semibold">SEO Agent Prepares Keyword Strategy</h5>
-                  <p className="text-sm text-muted-foreground">
+                  <h5 className="font-semibold text-text-primary">SEO Agent Prepares Keyword Strategy</h5>
+                  <p className="text-sm text-text-secondary">
                     When you analyze your SEO Package, Agent #3 generates keyword suggestions and targets
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-violet-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                <div className="flex-shrink-0 w-8 h-8 bg-accent-primary text-white rounded-full flex items-center justify-center text-sm font-bold">
                   3
                 </div>
                 <div>
-                  <h5 className="font-semibold">Content Agent Creates Your Article</h5>
-                  <p className="text-sm text-muted-foreground">
+                  <h5 className="font-semibold text-text-primary">Content Agent Creates Your Article</h5>
+                  <p className="text-sm text-text-secondary">
                     Agent #1 combines your brief, keywords, and writer model to generate content
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-pink-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                <div className="flex-shrink-0 w-8 h-8 bg-[#ec4899] text-white rounded-full flex items-center justify-center text-sm font-bold">
                   4
                 </div>
                 <div>
-                  <h5 className="font-semibold">Persona Agent Fine-Tunes Voice</h5>
-                  <p className="text-sm text-muted-foreground">
+                  <h5 className="font-semibold text-text-primary">Persona Agent Fine-Tunes Voice</h5>
+                  <p className="text-sm text-text-secondary">
                     Agent #5 ensures the content matches your authentic voice and tone
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                <div className="flex-shrink-0 w-8 h-8 bg-warning text-bg-deepest rounded-full flex items-center justify-center text-sm font-bold">
                   5
                 </div>
                 <div>
-                  <h5 className="font-semibold">QA Agent Reviews Quality</h5>
-                  <p className="text-sm text-muted-foreground">
+                  <h5 className="font-semibold text-text-primary">QA Agent Reviews Quality</h5>
+                  <p className="text-sm text-text-secondary">
                     Agent #4 checks grammar, readability, and consistency before final output
                   </p>
                 </div>
@@ -382,19 +382,19 @@ export default function UserGuidePage() {
             </div>
           </div>
 
-          <h3 className="text-xl font-semibold mt-8 mb-4">Agent Guardrails</h3>
+          <h3 className="text-xl font-semibold mt-8 mb-4 text-text-primary">Agent Guardrails</h3>
 
-          <p className="leading-relaxed mb-4">
-            Each agent has built-in <strong>guardrails</strong> that define what it can and cannot do. 
+          <p className="leading-relaxed mb-4 text-text-secondary">
+            Each agent has built-in <strong className="text-text-primary">guardrails</strong> that define what it can and cannot do. 
             This ensures agents stay focused on their specialties and don't overstep their roles:
           </p>
 
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="border border-green-200 bg-green-50 rounded-lg p-4">
-              <h5 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
-                <span className="text-green-600">✓</span> Agents CAN:
+            <div className="border border-success bg-success-muted rounded-lg p-4">
+              <h5 className="font-semibold text-text-primary mb-2 flex items-center gap-2">
+                <span className="text-success">✓</span> Agents CAN:
               </h5>
-              <ul className="text-sm text-green-800 space-y-1">
+              <ul className="text-sm text-text-secondary space-y-1">
                 <li>• Perform their specialized tasks</li>
                 <li>• Access relevant data for their role</li>
                 <li>• Provide recommendations within their expertise</li>
@@ -402,11 +402,11 @@ export default function UserGuidePage() {
               </ul>
             </div>
 
-            <div className="border border-red-200 bg-red-50 rounded-lg p-4">
-              <h5 className="font-semibold text-red-900 mb-2 flex items-center gap-2">
-                <span className="text-red-600">✗</span> Agents CANNOT:
+            <div className="border border-error bg-error-muted rounded-lg p-4">
+              <h5 className="font-semibold text-text-primary mb-2 flex items-center gap-2">
+                <span className="text-error">✗</span> Agents CANNOT:
               </h5>
-              <ul className="text-sm text-red-800 space-y-1">
+              <ul className="text-sm text-text-secondary space-y-1">
                 <li>• Perform tasks outside their specialty</li>
                 <li>• Modify database records directly</li>
                 <li>• Access other users' data</li>
@@ -415,39 +415,39 @@ export default function UserGuidePage() {
             </div>
           </div>
 
-          <div className="bg-violet-50 border-l-4 border-primary p-6 rounded-r-lg mt-8">
+          <div className="bg-accent-muted border-l-4 border-accent-primary p-6 rounded-r-lg mt-8">
             <h4 className="font-semibold mb-3 flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary" />
-              Why Multi-Agent Matters
+              <Sparkles className="h-5 w-5 text-accent-primary" />
+              <span className="text-text-primary">Why Multi-Agent Matters</span>
             </h4>
-            <p className="leading-relaxed text-sm mb-3">
+            <p className="leading-relaxed text-sm mb-3 text-text-secondary">
               Traditional AI systems use a single model for everything, which can lead to inconsistent results. 
               RotoWrite's multi-agent approach means:
             </p>
             <ul className="text-sm space-y-2">
               <li className="flex items-start gap-2">
-                <span className="text-primary mt-1">✓</span>
-                <span><strong>Specialized expertise</strong> – Each agent excels at its specific task</span>
+                <span className="text-accent-primary mt-1">✓</span>
+                <span className="text-text-secondary"><strong className="text-text-primary">Specialized expertise</strong> – Each agent excels at its specific task</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary mt-1">✓</span>
-                <span><strong>Better quality</strong> – Multiple review passes catch more issues</span>
+                <span className="text-accent-primary mt-1">✓</span>
+                <span className="text-text-secondary"><strong className="text-text-primary">Better quality</strong> – Multiple review passes catch more issues</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary mt-1">✓</span>
-                <span><strong>Consistent voice</strong> – Dedicated agents maintain your authentic style</span>
+                <span className="text-accent-primary mt-1">✓</span>
+                <span className="text-text-secondary"><strong className="text-text-primary">Consistent voice</strong> – Dedicated agents maintain your authentic style</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-primary mt-1">✓</span>
-                <span><strong>Scalable power</strong> – Complex tasks are broken down and handled efficiently</span>
+                <span className="text-accent-primary mt-1">✓</span>
+                <span className="text-text-secondary"><strong className="text-text-primary">Scalable power</strong> – Complex tasks are broken down and handled efficiently</span>
               </li>
             </ul>
           </div>
 
-          <div className="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-lg mt-6">
-            <p className="text-sm font-medium text-amber-900 mb-2">🔧 For Administrators</p>
-            <p className="text-sm text-amber-800">
-              Super administrators can fine-tune each agent's behavior through the <strong>AI Agents</strong> tab 
+          <div className="bg-warning-muted border-l-4 border-warning p-5 rounded-r-lg mt-6">
+            <p className="text-sm font-medium text-text-primary mb-2">🔧 For Administrators</p>
+            <p className="text-sm text-text-secondary">
+              Super administrators can fine-tune each agent's behavior through the <strong className="text-text-primary">AI Agents</strong> tab 
               in the Admin Dashboard. Adjust system prompts, temperature settings, and other parameters to 
               optimize agent performance for your specific needs.
             </p>
@@ -457,38 +457,38 @@ export default function UserGuidePage() {
           <div className="mt-10 grid sm:grid-cols-2 gap-4">
             <Link
               href="/guide/time-savings"
-              className="group flex items-center gap-4 p-5 bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-200 rounded-xl hover:border-emerald-400 hover:shadow-md transition-all"
+              className="group flex items-center gap-4 p-5 bg-success-muted border-2 border-success rounded-xl hover:border-success hover:shadow-md transition-all"
             >
-              <div className="bg-emerald-500 rounded-lg p-3 group-hover:bg-emerald-600 transition-colors">
+              <div className="bg-success rounded-lg p-3 group-hover:bg-success/90 transition-colors">
                 <Calculator className="h-5 w-5 text-white" />
               </div>
               <div className="flex-1">
-                <h5 className="font-semibold text-emerald-900 group-hover:text-emerald-700">
+                <h5 className="font-semibold text-text-primary group-hover:text-success">
                   Time Savings Calculator
                 </h5>
-                <p className="text-sm text-emerald-700">
+                <p className="text-sm text-text-secondary">
                   See how much time your team could save
                 </p>
               </div>
-              <ExternalLink className="h-4 w-4 text-emerald-400 group-hover:text-emerald-600" />
+              <ExternalLink className="h-4 w-4 text-success group-hover:text-success" />
             </Link>
 
             <Link
               href="/guide/ai-team"
-              className="group flex items-center gap-4 p-5 bg-gradient-to-r from-violet-50 to-purple-50 border-2 border-violet-200 rounded-xl hover:border-violet-400 hover:shadow-md transition-all"
+              className="group flex items-center gap-4 p-5 bg-accent-muted border-2 border-accent-primary rounded-xl hover:border-accent-hover hover:shadow-md transition-all"
             >
-              <div className="bg-violet-500 rounded-lg p-3 group-hover:bg-violet-600 transition-colors">
+              <div className="bg-accent-primary rounded-lg p-3 group-hover:bg-accent-hover transition-colors">
                 <Cpu className="h-5 w-5 text-white" />
               </div>
               <div className="flex-1">
-                <h5 className="font-semibold text-violet-900 group-hover:text-violet-700">
+                <h5 className="font-semibold text-text-primary group-hover:text-accent-primary">
                   Full AI Team Documentation
                 </h5>
-                <p className="text-sm text-violet-700">
+                <p className="text-sm text-text-secondary">
                   Technical specs, costs & security details
                 </p>
               </div>
-              <ExternalLink className="h-4 w-4 text-violet-400 group-hover:text-violet-600" />
+              <ExternalLink className="h-4 w-4 text-accent-primary group-hover:text-accent-hover" />
             </Link>
           </div>
         </div>
@@ -515,9 +515,9 @@ export default function UserGuidePage() {
             <li className="leading-relaxed">Click <strong>Register</strong></li>
           </ol>
 
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg my-6">
-            <p className="text-sm font-medium text-blue-900 mb-2">📧 Check Your Email</p>
-            <p className="text-sm text-blue-800">
+          <div className="bg-[rgba(59,130,246,0.15)] border-l-4 border-[#3b82f6] p-5 rounded-r-lg my-6">
+            <p className="text-sm font-medium text-text-primary mb-2">📧 Check Your Email</p>
+            <p className="text-sm text-text-secondary">
               You'll receive an email verification link. Click it to confirm your email address.
             </p>
           </div>
@@ -529,8 +529,8 @@ export default function UserGuidePage() {
           </p>
 
           <div className="grid gap-3">
-            <div className="border-l-4 border-violet-500 pl-4 py-2">
-              <strong className="text-violet-700">Strategist</strong>
+            <div className="border-l-4 border-accent-primary pl-4 py-2">
+              <strong className="text-accent-primary">Strategist</strong>
               <p className="text-sm text-muted-foreground">Create and manage your own content, writer models, and briefs</p>
             </div>
             <div className="border-l-4 border-blue-500 pl-4 py-2">
@@ -543,9 +543,9 @@ export default function UserGuidePage() {
             </div>
           </div>
 
-          <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded-r-lg my-6">
-            <p className="text-sm font-medium text-green-900 mb-2">✅ Account Approved</p>
-            <p className="text-sm text-green-800">
+          <div className="bg-success-muted border-l-4 border-success p-5 rounded-r-lg my-6">
+            <p className="text-sm font-medium text-text-primary mb-2">✅ Account Approved</p>
+            <p className="text-sm text-text-secondary">
               Once approved, you'll receive another email with your login link. You can then access the full application.
             </p>
           </div>
@@ -586,7 +586,7 @@ export default function UserGuidePage() {
             The more diverse and representative your samples, the better the model performs.
           </p>
 
-          <div className="bg-violet-50 border border-violet-200 rounded-lg p-6 my-6">
+          <div className="bg-accent-muted border border-border-default rounded-lg p-6 my-6">
             <h4 className="font-semibold mb-3">Training Best Practices</h4>
             <ul className="space-y-2">
               <li className="flex items-start gap-2">
@@ -617,12 +617,12 @@ export default function UserGuidePage() {
             <li className="leading-relaxed">Training percentage updates immediately</li>
           </ol>
 
-          <div className="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-lg my-6">
-            <p className="text-sm font-medium text-amber-900 mb-2">⚡ Training Progress</p>
-            <p className="text-sm text-amber-800 mb-2">
+          <div className="bg-warning-muted border-l-4 border-warning p-5 rounded-r-lg my-6">
+            <p className="text-sm font-medium text-text-primary mb-2">⚡ Training Progress</p>
+            <p className="text-sm text-text-secondary mb-2">
               Each article adds 4% to your training progress (1 of 25 stories).
             </p>
-            <p className="text-sm text-amber-800">
+            <p className="text-sm text-text-secondary">
               Models can be used at any training level, but 100% training produces the best results.
             </p>
           </div>
@@ -672,7 +672,7 @@ export default function UserGuidePage() {
           </p>
 
           <div className="grid gap-4 mb-6">
-            <div className="border border-violet-200 rounded-lg p-5">
+            <div className="border border-border-default rounded-lg p-5">
               <h4 className="font-semibold text-lg mb-2">📄 Content Template Tab</h4>
               <p className="text-muted-foreground leading-relaxed">
                 Use the TipTap editor to define your content structure with headings, lists, and formatting. 
@@ -680,7 +680,7 @@ export default function UserGuidePage() {
               </p>
             </div>
             
-            <div className="border border-violet-200 rounded-lg p-5 bg-violet-50">
+            <div className="border border-border-default rounded-lg p-5 bg-accent-muted">
               <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
                 🤖 AI Configuration Tab (NEW!)
@@ -707,9 +707,9 @@ export default function UserGuidePage() {
 
           <h3 className="text-xl font-semibold mt-8 mb-4">Using AI Configuration (Game Changer!)</h3>
 
-          <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded-r-lg mb-6">
-            <p className="text-sm font-medium text-green-900 mb-2">🚀 Why This Matters</p>
-            <p className="text-sm text-green-800">
+          <div className="bg-success-muted border-l-4 border-success p-5 rounded-r-lg mb-6">
+            <p className="text-sm font-medium text-text-primary mb-2">🚀 Why This Matters</p>
+            <p className="text-sm text-text-secondary">
               Instead of the AI guessing what you want, it learns from real examples. This dramatically 
               improves content quality, accuracy, and brand consistency.
             </p>
@@ -727,7 +727,7 @@ export default function UserGuidePage() {
                 <li>• Key information that should always be included</li>
                 <li>• Any special formatting requirements</li>
               </ul>
-              <div className="bg-slate-100 p-3 rounded mt-3 text-sm font-mono">
+              <div className="bg-bg-hover p-3 rounded mt-3 text-sm font-mono">
                 Example: "NFL Picks: Single Game stories are focused on a single upcoming NFL game. 
                 They should include odds analysis, betting insights, and predictions with a conversational 
                 but authoritative tone. Always include point spreads, moneylines, and over/under analysis."
@@ -739,7 +739,7 @@ export default function UserGuidePage() {
               <p className="text-muted-foreground leading-relaxed mb-2">
                 Paste URLs to similar articles (one per line). The AI will visit these URLs and learn from them.
               </p>
-              <div className="bg-slate-100 p-3 rounded mt-3 text-sm font-mono">
+              <div className="bg-bg-hover p-3 rounded mt-3 text-sm font-mono">
                 https://www.rotowire.com/football/article/nfl-picks-texans-vs-steelers-102538<br/>
                 https://www.rotowire.com/football/article/nfl-picks-ravens-vs-chiefs-103422<br/>
                 https://www.rotowire.com/football/article/nfl-picks-bills-vs-49ers-101234
@@ -784,7 +784,7 @@ export default function UserGuidePage() {
             exactly when generating content.
           </p>
 
-          <div className="bg-slate-100 border border-slate-300 rounded-lg p-5 font-mono text-sm my-6">
+          <div className="bg-bg-hover border border-border-default rounded-lg p-5 font-mono text-sm my-6">
             <div className="space-y-2">
               <div className="font-bold text-lg">## Introduction</div>
               <div className="ml-4 text-muted-foreground">Brief overview of the topic</div>
@@ -798,7 +798,7 @@ export default function UserGuidePage() {
             </div>
           </div>
 
-          <div className="bg-violet-50 border border-violet-200 rounded-lg p-6 my-6">
+          <div className="bg-accent-muted border border-border-default rounded-lg p-6 my-6">
             <h4 className="font-semibold mb-3">Brief Best Practices</h4>
             <ul className="space-y-2">
               <li className="flex items-start gap-2">
@@ -845,9 +845,9 @@ export default function UserGuidePage() {
             </li>
           </ul>
 
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mt-6">
-            <p className="text-sm font-medium text-blue-900 mb-2">💡 Pro Tip</p>
-            <p className="text-sm text-blue-800">
+          <div className="bg-[rgba(59,130,246,0.15)] border-l-4 border-[#3b82f6] p-5 rounded-r-lg mt-6">
+            <p className="text-sm font-medium text-text-primary mb-2">💡 Pro Tip</p>
+            <p className="text-sm text-text-secondary">
               Create multiple brief templates for different content types (team analysis, player profiles, 
               game previews, etc.) to maintain consistency across your content library.
             </p>
@@ -950,9 +950,9 @@ export default function UserGuidePage() {
             </div>
           </div>
 
-          <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded-r-lg mt-8">
-            <p className="text-sm font-medium text-green-900 mb-2">✅ Project Created!</p>
-            <p className="text-sm text-green-800">
+          <div className="bg-success-muted border-l-4 border-success p-5 rounded-r-lg mt-8">
+            <p className="text-sm font-medium text-text-primary mb-2">✅ Project Created!</p>
+            <p className="text-sm text-text-secondary">
               Once you click Start Project, your dashboard loads with all project information displayed 
               in the left sidebar and the editor ready in the center.
             </p>
@@ -984,9 +984,9 @@ export default function UserGuidePage() {
             eliminates transcription errors.
           </p>
 
-          <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded-r-lg">
-            <p className="text-sm font-medium text-green-900 mb-2">⏱️ Time Savings</p>
-            <p className="text-sm text-green-800">
+          <div className="bg-success-muted border-l-4 border-success p-5 rounded-r-lg">
+            <p className="text-sm font-medium text-text-primary mb-2">⏱️ Time Savings</p>
+            <p className="text-sm text-text-secondary">
               <strong>Manual Process:</strong> 30+ minutes per week<br />
               <strong>With NFL Odds Extractor:</strong> 3-5 minutes per week<br />
               <strong>Annual Savings:</strong> ~21.5 hours (52 weeks)
@@ -1043,14 +1043,14 @@ export default function UserGuidePage() {
           <h3 className="text-xl font-semibold mt-8 mb-4">What Gets Generated</h3>
 
           <div className="space-y-3">
-            <div className="border border-violet-200 rounded-lg p-4">
+            <div className="border border-border-default rounded-lg p-4">
               <h4 className="font-semibold mb-2">Matchup List</h4>
               <p className="text-sm text-muted-foreground">
                 A simple list of all matchups (e.g., "Lions vs Packers") for copying into your tracking spreadsheet.
               </p>
             </div>
 
-            <div className="border border-violet-200 rounded-lg p-4">
+            <div className="border border-border-default rounded-lg p-4">
               <h4 className="font-semibold mb-2">Individual Matchup Sections</h4>
               <p className="text-sm text-muted-foreground">
                 For each game, generates an H2 heading, odds table (7 rows with matchup, spread, moneyline, 
@@ -1059,7 +1059,7 @@ export default function UserGuidePage() {
               </p>
             </div>
 
-            <div className="border border-violet-200 rounded-lg p-4">
+            <div className="border border-border-default rounded-lg p-4">
               <h4 className="font-semibold mb-2">Opening Odds Summary Table</h4>
               <p className="text-sm text-muted-foreground">
                 A comprehensive table showing all matchups with opening spreads for tracking line movement.
@@ -1067,9 +1067,9 @@ export default function UserGuidePage() {
             </div>
           </div>
 
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mt-6">
-            <p className="text-sm font-medium text-blue-900 mb-2">💡 Pro Tips</p>
-            <ul className="text-sm text-blue-800 space-y-2">
+          <div className="bg-[rgba(59,130,246,0.15)] border-l-4 border-[#3b82f6] p-5 rounded-r-lg mt-6">
+            <p className="text-sm font-medium text-text-primary mb-2">💡 Pro Tips</p>
+            <ul className="text-sm text-text-secondary space-y-2">
               <li>• Take screenshots at the same size/zoom level each week for consistency</li>
               <li>• Ensure text in screenshots is clear and readable</li>
               <li>• The AI handles various screenshot qualities, but clearer is better</li>
@@ -1093,7 +1093,7 @@ export default function UserGuidePage() {
 
           <h3 className="text-xl font-semibold mt-8 mb-4">What's in the SEO Package?</h3>
 
-          <div className="bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200 rounded-lg p-6 my-6">
+          <div className="bg-accent-muted border border-border-default rounded-lg p-6 my-6">
             <h4 className="font-semibold mb-4 text-lg">Package Components</h4>
             
             <div className="space-y-4">
@@ -1183,7 +1183,7 @@ export default function UserGuidePage() {
             </div>
           </div>
 
-          <div className="bg-violet-50 border-l-4 border-primary p-5 rounded-r-lg mt-8">
+          <div className="bg-accent-muted border-l-4 border-primary p-5 rounded-r-lg mt-8">
             <h4 className="font-semibold mb-3">Why the SEO Package Matters</h4>
             <p className="leading-relaxed text-sm">
               The SEO Package ensures that your content is optimized for search engines from the start. 
@@ -1208,7 +1208,7 @@ export default function UserGuidePage() {
 
           <div className="space-y-6">
             {/* Content Score */}
-            <div className="border border-violet-200 rounded-lg p-6">
+            <div className="border border-border-default rounded-lg p-6">
               <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
                 <Zap className="h-5 w-5 text-primary" />
                 Content Score (0-100)
@@ -1221,11 +1221,11 @@ export default function UserGuidePage() {
                   <div className="font-bold text-red-600">0-40</div>
                   <div className="text-xs text-muted-foreground">Needs Work</div>
                 </div>
-                <div className="text-center p-3 bg-orange-50 rounded">
+                <div className="text-center p-3 bg-warning-muted rounded">
                   <div className="font-bold text-orange-600">40-70</div>
                   <div className="text-xs text-muted-foreground">Good</div>
                 </div>
-                <div className="text-center p-3 bg-green-50 rounded">
+                <div className="text-center p-3 bg-success-muted rounded">
                   <div className="font-bold text-green-600">70-100</div>
                   <div className="text-xs text-muted-foreground">Excellent</div>
                 </div>
@@ -1237,7 +1237,7 @@ export default function UserGuidePage() {
             </div>
 
             {/* Content Structure */}
-            <div className="border border-violet-200 rounded-lg p-6">
+            <div className="border border-border-default rounded-lg p-6">
               <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
                 <FileText className="h-5 w-5 text-primary" />
                 Content Structure Metrics
@@ -1247,7 +1247,7 @@ export default function UserGuidePage() {
               </p>
               
               <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 bg-slate-50 rounded">
+                <div className="flex justify-between items-center p-3 bg-bg-elevated rounded">
                   <div>
                     <div className="font-semibold text-sm">WORDS</div>
                     <div className="text-xs text-muted-foreground">Current vs Target Range</div>
@@ -1255,7 +1255,7 @@ export default function UserGuidePage() {
                   <div className="text-sm">e.g., 2,267 / 3,043-3,499</div>
                 </div>
 
-                <div className="flex justify-between items-center p-3 bg-slate-50 rounded">
+                <div className="flex justify-between items-center p-3 bg-bg-elevated rounded">
                   <div>
                     <div className="font-semibold text-sm">HEADINGS</div>
                     <div className="text-xs text-muted-foreground">H2 + H3 count</div>
@@ -1263,7 +1263,7 @@ export default function UserGuidePage() {
                   <div className="text-sm">e.g., 34 / 27-40</div>
                 </div>
 
-                <div className="flex justify-between items-center p-3 bg-slate-50 rounded">
+                <div className="flex justify-between items-center p-3 bg-bg-elevated rounded">
                   <div>
                     <div className="font-semibold text-sm">PARAGRAPHS</div>
                     <div className="text-xs text-muted-foreground">Minimum target</div>
@@ -1271,7 +1271,7 @@ export default function UserGuidePage() {
                   <div className="text-sm">e.g., 65 / at least 85</div>
                 </div>
 
-                <div className="flex justify-between items-center p-3 bg-slate-50 rounded">
+                <div className="flex justify-between items-center p-3 bg-bg-elevated rounded">
                   <div>
                     <div className="font-semibold text-sm">IMAGES</div>
                     <div className="text-xs text-muted-foreground">Recommended range</div>
@@ -1300,7 +1300,7 @@ export default function UserGuidePage() {
             </div>
 
             {/* Terms Analysis */}
-            <div className="border border-violet-200 rounded-lg p-6">
+            <div className="border border-border-default rounded-lg p-6">
               <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
                 <Search className="h-5 w-5 text-primary" />
                 Terms & Keyword Analysis
@@ -1317,9 +1317,9 @@ export default function UserGuidePage() {
                     Use the search bar to find specific terms. Filter by:
                   </p>
                   <div className="flex gap-2">
-                    <span className="px-3 py-1 bg-violet-100 text-violet-700 rounded text-sm font-medium">All</span>
-                    <span className="px-3 py-1 bg-slate-100 text-slate-700 rounded text-sm">Headings Only</span>
-                    <span className="px-3 py-1 bg-slate-100 text-slate-700 rounded text-sm">NLP Extracted</span>
+                    <span className="px-3 py-1 bg-accent-muted text-accent-primary rounded text-sm font-medium">All</span>
+                    <span className="px-3 py-1 bg-bg-hover text-text-secondary rounded text-sm">Headings Only</span>
+                    <span className="px-3 py-1 bg-bg-hover text-text-secondary rounded text-sm">NLP Extracted</span>
                   </div>
                 </div>
 
@@ -1346,7 +1346,7 @@ export default function UserGuidePage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="border border-violet-200 rounded-lg p-6">
+            <div className="border border-border-default rounded-lg p-6">
               <h4 className="font-semibold text-lg mb-3">Optimization Tools</h4>
               
               <div className="space-y-4">
@@ -1377,9 +1377,9 @@ export default function UserGuidePage() {
             </div>
           </div>
 
-          <div className="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-lg mt-6">
-            <p className="text-sm font-medium text-amber-900 mb-2">⚡ Real-Time Updates</p>
-            <p className="text-sm text-amber-800">
+          <div className="bg-warning-muted border-l-4 border-warning p-5 rounded-r-lg mt-6">
+            <p className="text-sm font-medium text-text-primary mb-2">⚡ Real-Time Updates</p>
+            <p className="text-sm text-text-secondary">
               All metrics update automatically as you edit, with a 2-second delay to optimize performance. 
               This means you get instant feedback without lag while typing.
             </p>
@@ -1455,9 +1455,9 @@ export default function UserGuidePage() {
             </div>
           </div>
 
-          <div className="bg-green-50 border-l-4 border-green-500 p-5 rounded-r-lg mt-8">
-            <h4 className="font-semibold mb-2 text-green-900">🎯 Always Getting Smarter</h4>
-            <p className="text-sm text-green-800 leading-relaxed">
+          <div className="bg-success-muted border-l-4 border-success p-5 rounded-r-lg mt-8">
+            <h4 className="font-semibold mb-2 text-text-primary">🎯 Always Getting Smarter</h4>
+            <p className="text-sm text-text-secondary leading-relaxed">
               The SEO Engine is designed to evolve with the latest SEO best practices and AI capabilities. 
               As search algorithms change and new optimization techniques emerge, the Engine can be updated 
               without changing how you use RotoWrite—your workflow stays the same while the intelligence behind 
@@ -1477,7 +1477,7 @@ export default function UserGuidePage() {
             SEO Package, and Brief to create optimized content that sounds authentically like you.
           </p>
 
-          <div className="bg-gradient-to-r from-violet-50 to-purple-50 border-2 border-primary rounded-lg p-8 my-8">
+          <div className="bg-accent-muted border-2 border-primary rounded-lg p-8 my-8">
             <h3 className="text-xl font-bold mb-6 text-center">The Content Generation Formula</h3>
             
             <div className="grid gap-4">
@@ -1517,7 +1517,7 @@ export default function UserGuidePage() {
 
               <div className="text-center text-2xl font-bold text-primary">=</div>
 
-              <div className="bg-white rounded-lg p-4 border-2 border-primary text-center">
+              <div className="bg-bg-surface rounded-lg p-4 border-2 border-primary text-center">
                 <div className="font-bold text-lg">SEO-Optimized Content</div>
                 <div className="text-sm text-muted-foreground">In Your Authentic Voice</div>
               </div>
@@ -1528,7 +1528,7 @@ export default function UserGuidePage() {
 
           <div className="space-y-6">
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-violet-500 text-white rounded-full flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-muted0 text-white rounded-full flex items-center justify-center font-bold">
                 1
               </div>
               <div>
@@ -1547,7 +1547,7 @@ export default function UserGuidePage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-violet-500 text-white rounded-full flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-muted0 text-white rounded-full flex items-center justify-center font-bold">
                 2
               </div>
               <div>
@@ -1561,7 +1561,7 @@ export default function UserGuidePage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-violet-500 text-white rounded-full flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-muted0 text-white rounded-full flex items-center justify-center font-bold">
                 3
               </div>
               <div>
@@ -1579,7 +1579,7 @@ export default function UserGuidePage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-violet-500 text-white rounded-full flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-muted0 text-white rounded-full flex items-center justify-center font-bold">
                 4
               </div>
               <div>
@@ -1592,7 +1592,7 @@ export default function UserGuidePage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-violet-500 text-white rounded-full flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-muted0 text-white rounded-full flex items-center justify-center font-bold">
                 5
               </div>
               <div>
@@ -1606,7 +1606,7 @@ export default function UserGuidePage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-violet-500 text-white rounded-full flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-muted0 text-white rounded-full flex items-center justify-center font-bold">
                 6
               </div>
               <div>
@@ -1619,7 +1619,7 @@ export default function UserGuidePage() {
             </div>
           </div>
 
-          <div className="bg-violet-50 border-l-4 border-primary p-6 rounded-r-lg mt-8">
+          <div className="bg-accent-muted border-l-4 border-primary p-6 rounded-r-lg mt-8">
             <h4 className="font-semibold mb-3">Why This Approach Works</h4>
             <p className="text-sm leading-relaxed mb-2">
               Traditional AI content often sounds generic and doesn't follow specific structures. RotoWrite 
@@ -1664,7 +1664,7 @@ export default function UserGuidePage() {
           </p>
 
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="border border-slate-200 rounded-lg p-4">
+            <div className="border border-border-default rounded-lg p-4">
               <h4 className="font-semibold mb-2">Text Formatting</h4>
               <ul className="text-sm space-y-1">
                 <li className="text-muted-foreground">• Bold, italic, underline</li>
@@ -1674,7 +1674,7 @@ export default function UserGuidePage() {
               </ul>
             </div>
 
-            <div className="border border-slate-200 rounded-lg p-4">
+            <div className="border border-border-default rounded-lg p-4">
               <h4 className="font-semibold mb-2">Content Management</h4>
               <ul className="text-sm space-y-1">
                 <li className="text-muted-foreground">• Undo/redo</li>
@@ -1692,15 +1692,15 @@ export default function UserGuidePage() {
           </p>
 
           <div className="space-y-4">
-            <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
-              <h4 className="font-semibold text-green-900 mb-2">Adding Content</h4>
-              <p className="text-sm text-green-800">
+            <div className="bg-success-muted border-l-4 border-success p-4 rounded-r-lg">
+              <h4 className="font-semibold text-text-primary mb-2">Adding Content</h4>
+              <p className="text-sm text-text-secondary">
                 When you add paragraphs, headings, or keywords, watch metrics improve in real-time. 
                 Green checkmarks appear when you hit target ranges.
               </p>
             </div>
 
-            <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg">
+            <div className="bg-warning-muted border-l-4 border-orange-500 p-4 rounded-r-lg">
               <h4 className="font-semibold text-orange-900 mb-2">Removing Content</h4>
               <p className="text-sm text-orange-800">
                 If you delete content, metrics update immediately. Orange arrows indicate when you've 
@@ -1708,9 +1708,9 @@ export default function UserGuidePage() {
               </p>
             </div>
 
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
-              <h4 className="font-semibold text-blue-900 mb-2">Keyword Optimization</h4>
-              <p className="text-sm text-blue-800">
+            <div className="bg-[rgba(59,130,246,0.15)] border-l-4 border-[#3b82f6] p-4 rounded-r-lg">
+              <h4 className="font-semibold text-text-primary mb-2">Keyword Optimization</h4>
+              <p className="text-sm text-text-secondary">
                 The Terms section shows exactly how many times each keyword appears vs the target. 
                 Add or remove keywords to stay in the optimal range.
               </p>
@@ -1746,7 +1746,7 @@ export default function UserGuidePage() {
 
           <h3 className="text-xl font-semibold mt-8 mb-4">Best Editing Practices</h3>
 
-          <div className="bg-violet-50 border border-violet-200 rounded-lg p-6">
+          <div className="bg-accent-muted border border-border-default rounded-lg p-6">
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <span className="text-primary font-bold mt-1">1.</span>
@@ -1786,9 +1786,9 @@ export default function UserGuidePage() {
             </ul>
           </div>
 
-          <div className="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-lg mt-6">
-            <p className="text-sm font-medium text-amber-900 mb-2">💡 Pro Tip</p>
-            <p className="text-sm text-amber-800">
+          <div className="bg-warning-muted border-l-4 border-warning p-5 rounded-r-lg mt-6">
+            <p className="text-sm font-medium text-text-primary mb-2">💡 Pro Tip</p>
+            <p className="text-sm text-text-secondary">
               Don't obsess over achieving 100% on every metric. A score of 75-85 with natural, readable 
               content performs better than forcing 100% optimization that makes content sound robotic.
             </p>
@@ -1829,7 +1829,7 @@ export default function UserGuidePage() {
           <h3 className="text-xl font-semibold mt-8 mb-4">Export Formats</h3>
 
           <div className="grid gap-4">
-            <div className="border border-violet-200 rounded-lg p-5">
+            <div className="border border-border-default rounded-lg p-5">
               <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
                 <FileText className="h-5 w-5 text-primary" />
                 HTML Format
@@ -1840,7 +1840,7 @@ export default function UserGuidePage() {
               </p>
             </div>
 
-            <div className="border border-violet-200 rounded-lg p-5">
+            <div className="border border-border-default rounded-lg p-5">
               <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
                 <FileText className="h-5 w-5 text-primary" />
                 Plain Text
@@ -1866,9 +1866,9 @@ export default function UserGuidePage() {
             <li className="leading-relaxed">✓ You understand AI can produce errors or outdated data</li>
           </ul>
 
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg mt-6">
-            <p className="text-sm font-medium text-blue-900 mb-2">💡 Export Best Practices</p>
-            <ul className="text-sm text-blue-800 space-y-2">
+          <div className="bg-[rgba(59,130,246,0.15)] border-l-4 border-[#3b82f6] p-5 rounded-r-lg mt-6">
+            <p className="text-sm font-medium text-text-primary mb-2">💡 Export Best Practices</p>
+            <ul className="text-sm text-text-secondary space-y-2">
               <li>• Always run SEO Wizard before exporting to maximize ranking potential</li>
               <li>• Use Auto-Optimize for last-minute improvements</li>
               <li>• Verify all statistics, dates, and factual claims</li>
@@ -1908,23 +1908,23 @@ export default function UserGuidePage() {
 
           <div className="bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-lg p-6 my-8">
             <h3 className="text-2xl font-bold mb-2">Let's Create Content!</h3>
-            <p className="text-violet-100">
+            <p className="text-accent-light">
               This walkthrough assumes you've registered, been approved, and are logged into RotoWrite.
             </p>
           </div>
 
           {/* Phase 1 */}
-          <div className="border-l-4 border-violet-500 pl-6 py-4 bg-violet-50/50">
+          <div className="border-l-4 border-accent-primary pl-6 py-4 bg-accent-muted/50">
             <h3 className="text-xl font-bold mb-3 text-violet-900">Phase 1: Train Your Writer Model</h3>
             
             <div className="space-y-3">
               <div className="flex gap-3">
-                <div className="font-bold text-violet-600">1.</div>
+                <div className="font-bold text-accent-primary">1.</div>
                 <p className="leading-relaxed">Click <strong>Writer Factory</strong> from the initial dashboard modal</p>
               </div>
               
               <div className="flex gap-3">
-                <div className="font-bold text-violet-600">2.</div>
+                <div className="font-bold text-accent-primary">2.</div>
                 <div>
                   <p className="leading-relaxed">Create a new model named after yourself (or the voice you're training)</p>
                   <p className="text-sm text-muted-foreground mt-1">Admin users can create models for themselves or others</p>
@@ -1932,7 +1932,7 @@ export default function UserGuidePage() {
               </div>
 
               <div className="flex gap-3">
-                <div className="font-bold text-violet-600">3.</div>
+                <div className="font-bold text-accent-primary">3.</div>
                 <div>
                   <p className="leading-relaxed">Add 5-10 complete articles to get started (aim for 25 eventually)</p>
                   <p className="text-sm text-muted-foreground mt-1">Copy/paste each article, then click "Add Training Content"</p>
@@ -1940,7 +1940,7 @@ export default function UserGuidePage() {
               </div>
 
               <div className="flex gap-3">
-                <div className="font-bold text-violet-600">4.</div>
+                <div className="font-bold text-accent-primary">4.</div>
                 <p className="leading-relaxed">Watch your training percentage increase with each article</p>
               </div>
             </div>
@@ -1948,7 +1948,7 @@ export default function UserGuidePage() {
 
           {/* Phase 2 */}
           <div className="border-l-4 border-blue-500 pl-6 py-4 bg-blue-50/50 mt-6">
-            <h3 className="text-xl font-bold mb-3 text-blue-900">Phase 2: Create a Brief Template</h3>
+            <h3 className="text-xl font-bold mb-3 text-text-primary">Phase 2: Create a Brief Template</h3>
             
             <div className="space-y-3">
               <div className="flex gap-3">
@@ -1965,7 +1965,7 @@ export default function UserGuidePage() {
                 <div className="font-bold text-blue-600">3.</div>
                 <div>
                   <p className="leading-relaxed">Create your content structure using headings:</p>
-                  <div className="mt-2 bg-white rounded p-3 text-sm font-mono">
+                  <div className="mt-2 bg-bg-surface rounded p-3 text-sm font-mono">
                     <div>## Introduction</div>
                     <div>## Main Section</div>
                     <div>### Subsection A</div>
@@ -1985,8 +1985,8 @@ export default function UserGuidePage() {
           </div>
 
           {/* Phase 3 */}
-          <div className="border-l-4 border-green-500 pl-6 py-4 bg-green-50/50 mt-6">
-            <h3 className="text-xl font-bold mb-3 text-green-900">Phase 3: Create Your First Project</h3>
+          <div className="border-l-4 border-green-500 pl-6 py-4 bg-success-muted/50 mt-6">
+            <h3 className="text-xl font-bold mb-3 text-text-primary">Phase 3: Create Your First Project</h3>
             
             <div className="space-y-3">
               <div className="flex gap-3">
@@ -2020,7 +2020,7 @@ export default function UserGuidePage() {
           </div>
 
           {/* Phase 4 */}
-          <div className="border-l-4 border-orange-500 pl-6 py-4 bg-orange-50/50 mt-6">
+          <div className="border-l-4 border-orange-500 pl-6 py-4 bg-warning-muted/50 mt-6">
             <h3 className="text-xl font-bold mb-3 text-orange-900">Phase 4: Analyze & Generate</h3>
             
             <div className="space-y-3">
@@ -2100,17 +2100,17 @@ export default function UserGuidePage() {
           </div>
 
           {/* Phase 6 */}
-          <div className="border-l-4 border-pink-500 pl-6 py-4 bg-pink-50/50 mt-6">
-            <h3 className="text-xl font-bold mb-3 text-pink-900">Phase 6: Edit & Optimize</h3>
+          <div className="border-l-4 border-[#ec4899] pl-6 py-4 bg-[rgba(236,72,153,0.15)] mt-6">
+            <h3 className="text-xl font-bold mb-3 text-text-primary">Phase 6: Edit & Optimize</h3>
             
             <div className="space-y-3">
               <div className="flex gap-3">
-                <div className="font-bold text-pink-600">1.</div>
+                <div className="font-bold text-[#ec4899]">1.</div>
                 <p className="leading-relaxed">Read through your generated content</p>
               </div>
               
               <div className="flex gap-3">
-                <div className="font-bold text-pink-600">2.</div>
+                <div className="font-bold text-[#ec4899]">2.</div>
                 <div>
                   <p className="leading-relaxed">Check your SEO Score – aim for 70+</p>
                   <p className="text-sm text-muted-foreground mt-1">The gauge is color-coded: Red (0-40), Orange (40-70), Green (70-100)</p>
@@ -2118,7 +2118,7 @@ export default function UserGuidePage() {
               </div>
 
               <div className="flex gap-3">
-                <div className="font-bold text-pink-600">3.</div>
+                <div className="font-bold text-[#ec4899]">3.</div>
                 <div>
                   <p className="leading-relaxed">Look at orange and red metrics in Content Structure</p>
                   <p className="text-sm text-muted-foreground mt-1">These are furthest from target – focus your editing here</p>
@@ -2126,7 +2126,7 @@ export default function UserGuidePage() {
               </div>
 
               <div className="flex gap-3">
-                <div className="font-bold text-pink-600">4.</div>
+                <div className="font-bold text-[#ec4899]">4.</div>
                 <div>
                   <p className="leading-relaxed">Make edits and watch metrics update in real-time</p>
                   <p className="text-sm text-muted-foreground mt-1">There's a 2-second delay to prevent lag while typing</p>
@@ -2134,7 +2134,7 @@ export default function UserGuidePage() {
               </div>
 
               <div className="flex gap-3">
-                <div className="font-bold text-pink-600">5.</div>
+                <div className="font-bold text-[#ec4899]">5.</div>
                 <div>
                   <p className="leading-relaxed">Use <strong>Auto-Optimize</strong> for AI suggestions</p>
                   <p className="text-sm text-muted-foreground mt-1">Get specific recommendations on where to add keywords, headings, or paragraphs</p>
@@ -2142,34 +2142,34 @@ export default function UserGuidePage() {
               </div>
 
               <div className="flex gap-3">
-                <div className="font-bold text-pink-600">6.</div>
+                <div className="font-bold text-[#ec4899]">6.</div>
                 <p className="leading-relaxed">Continue editing until you reach your target score</p>
               </div>
             </div>
           </div>
 
           {/* Phase 7 */}
-          <div className="border-l-4 border-indigo-500 pl-6 py-4 bg-indigo-50/50 mt-6">
-            <h3 className="text-xl font-bold mb-3 text-indigo-900">Phase 7: Export & Publish</h3>
+          <div className="border-l-4 border-ai-accent pl-6 py-4 bg-ai-muted mt-6">
+            <h3 className="text-xl font-bold mb-3 text-text-primary">Phase 7: Export & Publish</h3>
             
             <div className="space-y-3">
               <div className="flex gap-3">
-                <div className="font-bold text-indigo-600">1.</div>
+                <div className="font-bold text-ai-accent">1.</div>
                 <p className="leading-relaxed">When you're satisfied with your content, find the export icon</p>
               </div>
               
               <div className="flex gap-3">
-                <div className="font-bold text-indigo-600">2.</div>
+                <div className="font-bold text-ai-accent">2.</div>
                 <p className="leading-relaxed">Choose your export format (Rich Text, Word, Plain Text, or Markdown)</p>
               </div>
 
               <div className="flex gap-3">
-                <div className="font-bold text-indigo-600">3.</div>
+                <div className="font-bold text-ai-accent">3.</div>
                 <p className="leading-relaxed">Download and publish to your platform</p>
               </div>
 
               <div className="flex gap-3">
-                <div className="font-bold text-indigo-600">4.</div>
+                <div className="font-bold text-ai-accent">4.</div>
                 <div>
                   <p className="leading-relaxed">Optionally, save a named version of your project</p>
                   <p className="text-sm text-muted-foreground mt-1">Great for keeping "Final Draft" or "Pre-Edit" versions</p>
@@ -2200,24 +2200,24 @@ export default function UserGuidePage() {
   );
 
   return (
-    <div className="guide-theme min-h-screen bg-gradient-to-br from-violet-50 to-purple-50">
+    <div className="min-h-screen bg-bg-deepest">
       {/* Header */}
-      <header className="bg-white border-b sticky top-0 z-50 shadow-sm">
+      <header className="bg-bg-deep border-b border-border-default sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-violet-100 transition-colors"
+            className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-bg-hover transition-colors"
             aria-label="Open menu"
           >
-            <Menu className="h-6 w-6 text-foreground" />
+            <Menu className="h-6 w-6 text-text-primary" />
           </button>
           
           <div className="flex items-center gap-2 sm:gap-3">
-            <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+            <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-accent-primary" />
             <div>
-              <h1 className="text-lg sm:text-2xl font-bold text-foreground">RotoWrite User Guide</h1>
-              <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">Everything you need to master RotoWrite</p>
+              <h1 className="text-lg sm:text-2xl font-bold text-text-primary">RotoWrite User Guide</h1>
+              <p className="text-xs sm:text-sm text-text-secondary hidden sm:block">Everything you need to master RotoWrite</p>
             </div>
           </div>
           
@@ -2254,27 +2254,27 @@ export default function UserGuidePage() {
 
       {/* Mobile Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out lg:hidden
+        fixed inset-y-0 left-0 z-50 w-80 max-w-[85vw] bg-bg-deep shadow-2xl transform transition-transform duration-300 ease-in-out lg:hidden
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="flex flex-col h-full">
           {/* Mobile Sidebar Header */}
-          <div className="flex items-center justify-between px-4 py-4 border-b bg-gradient-to-r from-violet-100 to-purple-100">
+          <div className="flex items-center justify-between px-4 py-4 border-b border-border-default bg-accent-muted">
             <div className="flex items-center gap-2">
-              <BookOpen className="h-6 w-6 text-primary" />
-              <span className="font-semibold text-foreground">Contents</span>
+              <BookOpen className="h-6 w-6 text-accent-primary" />
+              <span className="font-semibold text-text-primary">Contents</span>
             </div>
             <button
               onClick={() => setIsMobileMenuOpen(false)}
-              className="p-2 rounded-lg hover:bg-violet-200 transition-colors"
+              className="p-2 rounded-lg hover:bg-bg-hover transition-colors"
               aria-label="Close menu"
             >
-              <X className="h-5 w-5 text-foreground" />
+              <X className="h-5 w-5 text-text-primary" />
             </button>
           </div>
 
           {/* Mobile Search */}
-          <div className="px-4 py-3 border-b">
+          <div className="px-4 py-3 border-b border-border-subtle">
             <div className="relative">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -2297,8 +2297,8 @@ export default function UserGuidePage() {
                     onClick={() => handleSectionSelect(item.id)}
                     className={`w-full text-left px-4 py-3.5 rounded-lg text-sm transition-all flex items-center gap-3 ${
                       selectedSection === item.id
-                        ? 'bg-primary text-primary-foreground shadow-md font-semibold'
-                        : 'hover:bg-violet-100 text-foreground active:bg-violet-200'
+                        ? 'bg-accent-primary text-bg-deepest shadow-md font-semibold'
+                        : 'hover:bg-bg-hover text-text-secondary active:bg-bg-elevated'
                     }`}
                   >
                     <Icon className="h-5 w-5 flex-shrink-0" />
@@ -2321,12 +2321,12 @@ export default function UserGuidePage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto p-3 sm:p-6">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden lg:flex" style={{ minHeight: 'calc(100vh - 120px)' }}>
+        <div className="bg-bg-surface rounded-lg border border-border-default overflow-hidden lg:flex" style={{ minHeight: 'calc(100vh - 120px)' }}>
           
           {/* Desktop Sidebar - Hidden on Mobile */}
-          <div className="hidden lg:flex lg:w-80 border-r flex-col bg-gradient-to-b from-violet-50 to-white">
+          <div className="hidden lg:flex lg:w-80 border-r border-border-default flex-col bg-bg-deep">
             {/* Sticky Search Bar */}
-            <div className="sticky top-0 bg-white border-b px-4 py-3 z-10">
+            <div className="sticky top-0 bg-bg-surface border-b border-border-subtle px-4 py-3 z-10">
               <div className="relative">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -2349,8 +2349,8 @@ export default function UserGuidePage() {
                       onClick={() => setSelectedSection(item.id)}
                       className={`w-full text-left px-4 py-3 rounded-lg text-sm transition-all flex items-center gap-3 ${
                         selectedSection === item.id
-                          ? 'bg-primary text-primary-foreground shadow-md font-semibold'
-                          : 'hover:bg-violet-100 text-foreground'
+                          ? 'bg-accent-primary text-bg-deepest shadow-md font-semibold'
+                          : 'hover:bg-bg-hover text-text-secondary'
                       }`}
                     >
                       <Icon className="h-4 w-4 flex-shrink-0" />
@@ -2372,20 +2372,20 @@ export default function UserGuidePage() {
           {/* Right Side - Guide Content */}
           <div className="flex-1 overflow-y-auto">
             {/* Mobile Section Indicator */}
-            <div className="lg:hidden sticky top-0 bg-white/95 backdrop-blur-sm border-b px-4 py-3 z-10">
+            <div className="lg:hidden sticky top-0 bg-bg-deep/95 backdrop-blur-sm border-b border-border-subtle px-4 py-3 z-10">
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
               >
                 <BookOpen className="h-4 w-4" />
-                <span className="font-medium text-foreground">{tableOfContents.find(i => i.id === selectedSection)?.title}</span>
+                <span className="font-medium text-text-primary">{tableOfContents.find(i => i.id === selectedSection)?.title}</span>
                 <ChevronRight className="h-4 w-4 rotate-90" />
               </button>
             </div>
 
             <div className="px-4 sm:px-8 lg:px-12 py-6 sm:py-10 max-w-5xl mx-auto">
               {/* Title */}
-              <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-foreground border-b-2 border-primary pb-4">
+              <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-text-primary border-b-2 border-accent-primary pb-4">
                 {guideContent[selectedSection]?.title}
               </h1>
               
