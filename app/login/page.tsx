@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { MicrosoftSignInButton } from '@/components/auth/MicrosoftSignInButton';
+import { isMicrosoftSSOEnabled } from '@/lib/auth-microsoft';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -150,6 +152,23 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Microsoft SSO Option */}
+          {isMicrosoftSSOEnabled() && (
+            <div className="mb-6">
+              <MicrosoftSignInButton />
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border-default" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-bg-deeper px-2 text-text-tertiary">
+                    Or continue with email
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'login' | 'register')}>
             <TabsList className="grid w-full grid-cols-2 mb-4">
               <TabsTrigger value="login">Login</TabsTrigger>

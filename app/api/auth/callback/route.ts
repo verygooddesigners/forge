@@ -69,20 +69,57 @@ export async function GET(request: Request) {
         return NextResponse.redirect(new URL('/login?error=verification_failed', request.url));
       }
 
-      // Check if this is a newly verified user
-      if (data.user && type === 'signup') {
-        // Update user profile to ensure full_name is set if it was provided
-        const fullName = data.user.user_metadata?.full_name;
-        if (fullName) {
-          await supabase
-            .from('users')
-            .update({ full_name: fullName })
-            .eq('id', data.user.id);
+      console.log('[Auth Callback] Session established for user:', {
+        userId: data.user?.id,
+        email: data.user?.email,
+        provider: data.user?.app_metadata?.provider,
+      });
+
+      // Handle user metadata for OAuth providers (Microsoft, etc.)
+      if (data.user) {
+        const provider = data.user.app_metadata?.provider;
+        const isSSOUser = provider === 'azure' || provider === 'google' || provider === 'github';
+        
+        // For SSO users, sync metadata to users table
+        if (isSSOUser) {
+          const fullName = 
+            data.user.user_metadata?.full_name || 
+            data.user.user_metadata?.name ||
+            data.user.user_metadata?.preferred_username?.split('@')[0];
+          
+          const avatarUrl = 
+            data.user.user_metadata?.avatar_url || 
+            data.user.user_metadata?.picture;
+
+          if (fullName) {
+            await supabase
+              .from('users')
+              .update({ 
+                full_name: fullName,
+                ...(avatarUrl && { avatar_url: avatarUrl })
+              })
+              .eq('id', data.user.id);
+          }
+        }
+
+        // Check if this is a newly verified user (email signup)
+        if (type === 'signup') {
+          const fullName = data.user.user_metadata?.full_name;
+          if (fullName) {
+            await supabase
+              .from('users')
+              .update({ full_name: fullName })
+              .eq('id', data.user.id);
+          }
         }
       }
 
-      // Redirect to dashboard after successful authentication
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+      // Check for custom redirect URL
+      const next = requestUrl.searchParams.get('next');
+      const redirectPath = next || '/dashboard';
+      
+      // Redirect to the specified path after successful authentication
+      return NextResponse.redirect(new URL(redirectPath, request.url));
     }
 
     // No valid auth flow detected

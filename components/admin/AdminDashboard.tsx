@@ -13,6 +13,7 @@ import { AITuner } from './AITuner';
 import { AgentTuner } from './AgentTuner';
 import { AIHelperAdmin } from './AIHelperAdmin';
 import { CursorRemotePanel } from './CursorRemotePanel';
+import { SSOConfigStatus } from './SSOConfigStatus';
 
 interface AdminDashboardProps {
   user: User;
@@ -37,6 +38,12 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
             className="data-[state=active]:bg-bg-elevated data-[state=active]:text-text-primary text-text-secondary text-[13px] font-medium px-5 py-2.5"
           >
             API Keys
+          </TabsTrigger>
+          <TabsTrigger 
+            value="sso"
+            className="data-[state=active]:bg-bg-elevated data-[state=active]:text-text-primary text-text-secondary text-[13px] font-medium px-5 py-2.5"
+          >
+            SSO Config
           </TabsTrigger>
           <TabsTrigger 
             value="ai"
@@ -74,6 +81,10 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
 
           <TabsContent value="api">
             <APIKeyManagement adminUser={user} />
+          </TabsContent>
+
+          <TabsContent value="sso">
+            <SSOConfigStatus />
           </TabsContent>
 
           <TabsContent value="ai">

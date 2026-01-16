@@ -10,8 +10,17 @@ export interface User {
   account_status: AccountStatus;
   full_name?: string;
   avatar_url?: string;
+  auth_provider?: 'email' | 'azure' | 'google' | 'github';
   created_at: string;
   updated_at: string;
+}
+
+export interface MicrosoftUserInfo {
+  isMicrosoftUser: boolean;
+  email?: string;
+  fullName?: string;
+  avatarUrl?: string;
+  provider?: string;
 }
 
 export interface WriterModel {
