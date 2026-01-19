@@ -116,7 +116,16 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
   };
 
   const addTrainingContent = async () => {
-    if (!selectedModel || !trainingContent.trim()) return;
+    if (!selectedModel || !trainingContent.trim()) {
+      console.error('[WRITER_FACTORY] Cannot add training - missing model or content:', {
+        hasModel: !!selectedModel,
+        hasContent: !!trainingContent.trim(),
+      });
+      return;
+    }
+
+    console.log('[WRITER_FACTORY] Adding training content for model:', selectedModel.id, selectedModel.name);
+    console.log('[WRITER_FACTORY] Content length:', trainingContent.length);
 
     setLoading(true);
     setShowSuccess(false);
@@ -128,14 +137,21 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
     setTrainingContent('');
     
     try {
+      const payload = {
+        model_id: selectedModel.id,
+        content: contentToSubmit,
+      };
+      
+      console.log('[WRITER_FACTORY] Sending training request with:', {
+        model_id: payload.model_id,
+        content_length: payload.content.length,
+      });
+      
       // Generate embedding and analyze style via API
       const response = await fetch('/api/writer-models/train', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model_id: selectedModel.id,
-          content: contentToSubmit,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
