@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { User } from '@/types';
 import { 
@@ -15,6 +16,8 @@ import {
   UserCircle,
   Settings,
   LogOut,
+  Pin,
+  PinOff,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import {
@@ -49,6 +52,18 @@ export function AppSidebar({
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
+
+  // Determine if sidebar should be expanded
+  const isExpanded = isPinned || isHovered;
+
+  const handleTogglePin = () => {
+    setIsPinned(!isPinned);
+    if (onToggleCollapse) {
+      onToggleCollapse();
+    }
+  };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -67,33 +82,35 @@ export function AppSidebar({
   const isActive = (path: string) => pathname === path;
 
   return (
-    <aside className={`fixed left-0 top-0 h-screen ${collapsed ? 'w-[60px]' : 'w-[260px]'} bg-bg-deep border-r border-border-subtle flex flex-col z-100 transition-all duration-300`}>
-      {/* Logo & Collapse Button */}
+    <aside 
+      className={`fixed left-0 top-0 h-screen ${isExpanded ? 'w-[260px]' : 'w-[60px]'} bg-bg-deep border-r border-border-subtle flex flex-col z-100 transition-all duration-300`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Logo & Pin Button */}
       <div className="p-6 border-b border-border-subtle">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-white">
               RW
             </div>
-            {!collapsed && (
+            {isExpanded && (
               <div className="text-xl font-bold tracking-tight text-text-primary">
                 Roto<span className="text-accent-primary">Write</span>
               </div>
             )}
           </div>
-          {onToggleCollapse && (
-            <button
-              onClick={onToggleCollapse}
-              className="p-1.5 hover:bg-bg-hover rounded-lg transition-colors"
-              title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            >
-              {collapsed ? (
-                <ChevronRight className="h-4 w-4 text-text-secondary" />
-              ) : (
-                <ChevronLeft className="h-4 w-4 text-text-secondary" />
-              )}
-            </button>
-          )}
+          <button
+            onClick={handleTogglePin}
+            className="p-1.5 hover:bg-bg-hover rounded-lg transition-colors"
+            title={isPinned ? 'Unpin sidebar' : 'Pin sidebar open'}
+          >
+            {isPinned ? (
+              <Pin className="h-4 w-4 text-accent-primary" />
+            ) : (
+              <PinOff className="h-4 w-4 text-text-secondary" />
+            )}
+          </button>
         </div>
       </div>
 
@@ -101,7 +118,7 @@ export function AppSidebar({
       <nav className="flex-1 p-3 overflow-y-auto">
         {/* WORKSPACE Section */}
         <div className="mb-6">
-          {!collapsed && (
+          {isExpanded && (
             <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
               Workspace
             </div>
@@ -109,24 +126,24 @@ export function AppSidebar({
           
           <button
             onClick={() => router.push('/dashboard')}
-            className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
+            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
               isActive('/dashboard') && !pathname.includes('/admin')
                 ? 'bg-accent-muted text-accent-primary'
                 : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
             }`}
-            title={collapsed ? 'Dashboard' : ''}
+            title={!isExpanded ? 'Dashboard' : ''}
           >
             <Home className="w-5 h-5 opacity-70" />
-            {!collapsed && 'Dashboard'}
+            {isExpanded && 'Dashboard'}
           </button>
 
           <button
             onClick={onOpenProjects}
-            className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
-            title={collapsed ? 'Projects' : ''}
+            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
+            title={!isExpanded ? 'Projects' : ''}
           >
             <FileText className="w-5 h-5 opacity-70" />
-            {!collapsed && (
+            {isExpanded && (
               <>
                 Projects
                 {projectCount > 0 && (
@@ -140,17 +157,17 @@ export function AppSidebar({
 
           <button
             onClick={onOpenSmartBriefs}
-            className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
-            title={collapsed ? 'SmartBriefs' : ''}
+            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
+            title={!isExpanded ? 'SmartBriefs' : ''}
           >
             <BookOpen className="w-5 h-5 opacity-70" />
-            {!collapsed && 'SmartBriefs'}
+            {isExpanded && 'SmartBriefs'}
           </button>
         </div>
 
         {/* AI TOOLS Section */}
         <div className="mb-6">
-          {!collapsed && (
+          {isExpanded && (
             <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
               AI Tools
             </div>
@@ -158,20 +175,20 @@ export function AppSidebar({
           
           <button
             onClick={onOpenWriterFactory}
-            className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
-            title={collapsed ? 'Writer Factory' : ''}
+            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
+            title={!isExpanded ? 'Writer Factory' : ''}
           >
             <Wrench className="w-5 h-5 opacity-70" />
-            {!collapsed && 'Writer Factory'}
+            {isExpanded && 'Writer Factory'}
           </button>
 
           <button
             onClick={onOpenNFLOdds}
-            className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
-            title={collapsed ? 'NFL Odds Extractor' : ''}
+            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
+            title={!isExpanded ? 'NFL Odds Extractor' : ''}
           >
             <TrendingUp className="w-5 h-5 opacity-70" />
-            {!collapsed && 'NFL Odds Extractor'}
+            {isExpanded && 'NFL Odds Extractor'}
           </button>
 
         </div>
@@ -179,7 +196,7 @@ export function AppSidebar({
         {/* SYSTEM Section - Only for super admin */}
         {user.email === 'jeremy.botter@gdcgroup.com' && (
           <div>
-            {!collapsed && (
+            {isExpanded && (
               <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
                 System
               </div>
@@ -187,22 +204,22 @@ export function AppSidebar({
             
             <button
               onClick={() => router.push('/admin')}
-              className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
+              className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
                 pathname.includes('/admin')
                   ? 'bg-accent-muted text-accent-primary'
                   : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
               }`}
-              title={collapsed ? 'Admin' : ''}
+              title={!isExpanded ? 'Admin' : ''}
             >
               <Shield className="w-5 h-5 opacity-70" />
-              {!collapsed && 'Admin'}
+              {isExpanded && 'Admin'}
             </button>
           </div>
         )}
       </nav>
 
       {/* User Card */}
-      {!collapsed && (
+      {isExpanded && (
         <div className="p-4 border-t border-border-subtle">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

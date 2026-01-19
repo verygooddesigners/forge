@@ -42,7 +42,7 @@ export function SmartBriefGuideModal({ open, onOpenChange }: SmartBriefGuideModa
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="!max-w-[85vw] !w-[85vw] max-h-[90vh] h-[90vh] overflow-hidden flex flex-col p-0">
+      <DialogContent className="!max-w-[85vw] !w-[85vw] max-h-[90vh] h-[90vh] overflow-hidden flex flex-col p-0 z-[9999]">
         <DialogHeader className="px-6 pt-6 pb-4 border-b border-border-default flex flex-row items-center justify-between">
           <DialogTitle className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-accent-primary" />

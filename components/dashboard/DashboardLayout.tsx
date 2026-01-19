@@ -96,8 +96,8 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
           onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
 
-        {/* Main Content Area with margin for fixed sidebar */}
-        <div className={`${sidebarCollapsed ? 'ml-[60px]' : 'ml-[260px]'} min-h-screen transition-all duration-300`}>
+        {/* Main Content Area with margin for fixed sidebar - always start with collapsed margin */}
+        <div className="ml-[60px] min-h-screen transition-all duration-300">
           {/* Main Content Area - Conditional */}
           {activeView === 'home' ? (
             <DashboardHome
