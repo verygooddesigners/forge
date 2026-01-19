@@ -10,8 +10,18 @@ import {
   TrendingUp,
   Shield,
   ChevronDown,
+  UserCircle,
+  Settings,
+  LogOut,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface AppSidebarProps {
   user: User;
@@ -154,20 +164,46 @@ export function AppSidebar({
 
       {/* User Card */}
       <div className="p-4 border-t border-border-subtle">
-        <div className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-bg-hover transition-all cursor-pointer group">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-ai-accent flex items-center justify-center font-semibold text-sm">
-            {getInitials(user.full_name || user.email)}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-[13px] font-semibold truncate">
-              {user.full_name || user.email.split('@')[0]}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-bg-hover transition-all cursor-pointer group">
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-ai-accent flex items-center justify-center font-semibold text-sm">
+                {getInitials(user.full_name || user.email)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[13px] font-semibold truncate">
+                  {user.full_name || user.email.split('@')[0]}
+                </div>
+                <div className="text-[11px] text-text-tertiary uppercase tracking-wide">
+                  {user.role}
+                </div>
+              </div>
+              <ChevronDown className="w-4 h-4 text-text-tertiary group-hover:opacity-100 transition-opacity" />
             </div>
-            <div className="text-[11px] text-text-tertiary uppercase tracking-wide">
-              {user.role}
-            </div>
-          </div>
-          <ChevronDown className="w-4 h-4 text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" />
-        </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuItem onClick={() => router.push('/profile')}>
+              <UserCircle className="mr-2 h-4 w-4" />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push('/settings')}>
+              <Settings className="mr-2 h-4 w-4" />
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem 
+              onClick={async () => {
+                const supabase = createClient();
+                await supabase.auth.signOut();
+                router.push('/login');
+              }}
+              className="text-red-600 focus:text-red-600"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Log Out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </aside>
   );

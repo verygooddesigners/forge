@@ -9,6 +9,7 @@
 [] The SEO Wizard appears to be non-functional. There's supposed to be a "Suggested Keywords" section in that box that shows keywords the SEO suggests using. Each keyword should look like a colored label. Green keywords mean they're important to use, orange keywords mean they are a good idea but not required, and red means you probably want to avoid them. 
 [] We need to optimize the SEO Wizard. For example, under the Headings box, it says the Target should be 5-18 headings. BUt it's a 470 word story. The amount of headings needs to be optimized for the total word count.
 [] Writer Model Training: Need to be able to paste a URL to a story and have the AI extract the text for the story rather than having to copy and paste the story text
+[] 
 
 
 
