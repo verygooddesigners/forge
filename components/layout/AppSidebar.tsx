@@ -100,17 +100,19 @@ export function AppSidebar({
               </div>
             )}
           </div>
-          <button
-            onClick={handleTogglePin}
-            className="p-1.5 hover:bg-bg-hover rounded-lg transition-colors"
-            title={isPinned ? 'Unpin sidebar' : 'Pin sidebar open'}
-          >
-            {isPinned ? (
-              <Pin className="h-4 w-4 text-accent-primary" />
-            ) : (
-              <PinOff className="h-4 w-4 text-text-secondary" />
-            )}
-          </button>
+          {isExpanded && (
+            <button
+              onClick={handleTogglePin}
+              className="p-1.5 hover:bg-bg-hover rounded-lg transition-colors"
+              title={isPinned ? 'Unpin sidebar' : 'Pin sidebar open'}
+            >
+              {isPinned ? (
+                <Pin className="h-5 w-5 text-accent-primary" />
+              ) : (
+                <PinOff className="h-5 w-5 text-text-secondary" />
+              )}
+            </button>
+          )}
         </div>
       </div>
 
@@ -129,20 +131,20 @@ export function AppSidebar({
             className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
               isActive('/dashboard') && !pathname.includes('/admin')
                 ? 'bg-accent-muted text-accent-primary'
-                : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
+                : 'hover:bg-bg-hover'
             }`}
             title={!isExpanded ? 'Dashboard' : ''}
           >
-            <Home className="w-5 h-5 opacity-70" />
+            <Home className={`${isExpanded ? 'w-5 h-5' : 'w-7 h-7'} text-accent-primary`} />
             {isExpanded && 'Dashboard'}
           </button>
 
           <button
             onClick={onOpenProjects}
-            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
+            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all`}
             title={!isExpanded ? 'Projects' : ''}
           >
-            <FileText className="w-5 h-5 opacity-70" />
+            <FileText className={`${isExpanded ? 'w-5 h-5' : 'w-7 h-7'} text-accent-primary`} />
             {isExpanded && (
               <>
                 Projects
@@ -157,10 +159,10 @@ export function AppSidebar({
 
           <button
             onClick={onOpenSmartBriefs}
-            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
+            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all`}
             title={!isExpanded ? 'SmartBriefs' : ''}
           >
-            <BookOpen className="w-5 h-5 opacity-70" />
+            <BookOpen className={`${isExpanded ? 'w-5 h-5' : 'w-7 h-7'} text-accent-primary`} />
             {isExpanded && 'SmartBriefs'}
           </button>
         </div>
@@ -175,19 +177,19 @@ export function AppSidebar({
           
           <button
             onClick={onOpenWriterFactory}
-            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
+            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all`}
             title={!isExpanded ? 'Writer Factory' : ''}
           >
-            <Wrench className="w-5 h-5 opacity-70" />
+            <Wrench className={`${isExpanded ? 'w-5 h-5' : 'w-7 h-7'} text-accent-primary`} />
             {isExpanded && 'Writer Factory'}
           </button>
 
           <button
             onClick={onOpenNFLOdds}
-            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
+            className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all`}
             title={!isExpanded ? 'NFL Odds Extractor' : ''}
           >
-            <TrendingUp className="w-5 h-5 opacity-70" />
+            <TrendingUp className={`${isExpanded ? 'w-5 h-5' : 'w-7 h-7'} text-accent-primary`} />
             {isExpanded && 'NFL Odds Extractor'}
           </button>
 
@@ -207,11 +209,11 @@ export function AppSidebar({
               className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
                 pathname.includes('/admin')
                   ? 'bg-accent-muted text-accent-primary'
-                  : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
+                  : 'hover:bg-bg-hover'
               }`}
               title={!isExpanded ? 'Admin' : ''}
             >
-              <Shield className="w-5 h-5 opacity-70" />
+              <Shield className={`${isExpanded ? 'w-5 h-5' : 'w-7 h-7'} text-accent-primary`} />
               {isExpanded && 'Admin'}
             </button>
           </div>
