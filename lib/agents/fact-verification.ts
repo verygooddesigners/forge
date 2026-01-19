@@ -1,4 +1,4 @@
-import { callClaude } from '../ai';
+import { callClaude } from './base';
 import { ResearchArticle, VerifiedFact, DisputedFact } from '@/types';
 
 export interface FactVerificationResult {

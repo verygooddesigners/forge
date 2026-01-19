@@ -3,8 +3,10 @@
 ## Active Tasks
 
 [PENDING] 1. Debug URL extraction in Writer Factory (UI complete, extraction logic needs fixing)
-[PENDING] 2. Run database migrations for trusted_sources and research_feedback tables
+[DONE] 2. Run database migrations for trusted_sources and research_feedback tables
 [PENDING] 3. Test Research Story workflow end-to-end
+[DONE] 4. Implement Research Story feature with Fact Verification Agent (#8)
+[DONE] 5. Deploy Research Story to production (https://rotowrite.vercel.app)
 
 ---
 
