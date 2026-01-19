@@ -31,6 +31,7 @@ function calculateTrainingPercentage(trainingCount: number): number {
 }
 
 export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryModalProps) {
+  // Writer Factory Modal - v2
   const [writerModels, setWriterModels] = useState<WriterModel[]>([]);
   const [selectedModel, setSelectedModel] = useState<WriterModel | null>(null);
   const [newModelName, setNewModelName] = useState('');

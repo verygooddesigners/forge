@@ -45,7 +45,9 @@ export function WriterFactoryPanel({ user }: WriterFactoryPanelProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [newModelName, setNewModelName] = useState('');
   const [trainingText, setTrainingText] = useState('');
+  const [trainingUrl, setTrainingUrl] = useState('');
   const [training, setTraining] = useState(false);
+  const [extracting, setExtracting] = useState(false);
   const [creating, setCreating] = useState(false);
   const supabase = createClient();
 
@@ -66,6 +68,11 @@ export function WriterFactoryPanel({ user }: WriterFactoryPanelProps) {
       .order('name');
 
     if (data) {
+      console.log('[WRITER_FACTORY_PANEL] Loaded models:', data.map(m => ({
+        name: m.name,
+        id: m.id,
+        training_count: m.metadata?.total_training_pieces || 0
+      })));
       setModels(data);
       if (data.length > 0 && !selectedModel) {
         setSelectedModel(data[0]);
@@ -82,6 +89,41 @@ export function WriterFactoryPanel({ user }: WriterFactoryPanelProps) {
 
     if (data) {
       setTrainingContent(data);
+    }
+  };
+
+  const extractContentFromUrl = async () => {
+    if (!trainingUrl.trim()) return;
+    
+    setExtracting(true);
+    try {
+      const response = await fetch('/api/assistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: `Extract the main article content from this URL: ${trainingUrl}\n\nReturn ONLY the article text, no metadata, no formatting.`,
+          context: '',
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const extractedContent = data.response || '';
+        
+        if (extractedContent.trim()) {
+          setTrainingText(extractedContent);
+          setTrainingUrl('');
+        } else {
+          alert('No content could be extracted from that URL. Please try copy/pasting the text manually.');
+        }
+      } else {
+        alert('Failed to extract content from URL. Please try copy/pasting the text manually.');
+      }
+    } catch (error) {
+      console.error('URL extraction error:', error);
+      alert('Failed to extract content from URL. Please try copy/pasting the text manually.');
+    } finally {
+      setExtracting(false);
     }
   };
 
@@ -117,13 +159,14 @@ export function WriterFactoryPanel({ user }: WriterFactoryPanelProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          modelId: selectedModel.id,
+          model_id: selectedModel.id,
           content: trainingText,
         }),
       });
 
       if (response.ok) {
         await loadTrainingContent(selectedModel.id);
+        await loadModels(); // Reload models to update badge counts
         setTrainingText('');
         alert('✅ Training story added successfully!');
       } else {
@@ -164,38 +207,43 @@ export function WriterFactoryPanel({ user }: WriterFactoryPanelProps) {
         </div>
 
         <div className="flex-1 overflow-y-auto p-3">
-          {filteredModels.map((model) => (
-            <button
-              key={model.id}
-              onClick={() => setSelectedModel(model)}
-              className={`w-full flex items-center gap-3 p-3.5 rounded-lg mb-1 transition-all ${
-                selectedModel?.id === model.id
-                  ? 'bg-bg-surface border border-border-hover'
-                  : 'hover:bg-bg-surface'
-              }`}
-            >
-              <div className={`w-[42px] h-[42px] rounded-lg flex items-center justify-center font-bold text-sm ${
-                trainingContent.length >= 25
-                  ? 'bg-gradient-to-br from-accent-primary to-accent-dark text-white'
-                  : 'bg-bg-hover text-text-tertiary'
-              }`}>
-                {getInitials(model.name)}
-              </div>
-              <div className="flex-1 text-left min-w-0">
-                <div className="text-sm font-semibold text-text-primary truncate">{model.name}</div>
-                <div className="flex items-center gap-2 mt-1">
-                  {trainingContent.length >= 25 ? (
-                    <Badge variant="success" className="text-[10px]">Trained</Badge>
-                  ) : trainingContent.length > 0 ? (
-                    <Badge variant="warning" className="text-[10px]">{trainingPercent}% Trained</Badge>
-                  ) : (
-                    <Badge variant="secondary" className="text-[10px]">Untrained</Badge>
-                  )}
-                  <span className="text-[11px] text-text-tertiary">{trainingContent.length} / 25</span>
+          {filteredModels.map((model) => {
+            const modelTrainingCount = model.metadata?.total_training_pieces || 0;
+            const modelTrainingPercent = Math.round((modelTrainingCount / 25) * 100);
+            
+            return (
+              <button
+                key={model.id}
+                onClick={() => setSelectedModel(model)}
+                className={`w-full flex items-center gap-3 p-3.5 rounded-lg mb-1 transition-all ${
+                  selectedModel?.id === model.id
+                    ? 'bg-bg-surface border border-border-hover'
+                    : 'hover:bg-bg-surface'
+                }`}
+              >
+                <div className={`w-[42px] h-[42px] rounded-lg flex items-center justify-center font-bold text-sm ${
+                  modelTrainingCount >= 25
+                    ? 'bg-gradient-to-br from-accent-primary to-accent-dark text-white'
+                    : 'bg-bg-hover text-text-tertiary'
+                }`}>
+                  {getInitials(model.name)}
                 </div>
-              </div>
-            </button>
-          ))}
+                <div className="flex-1 text-left min-w-0">
+                  <div className="text-sm font-semibold text-text-primary truncate">{model.name}</div>
+                  <div className="flex items-center gap-2 mt-1">
+                    {modelTrainingCount >= 25 ? (
+                      <Badge variant="success" className="text-[10px]">Trained</Badge>
+                    ) : modelTrainingCount > 0 ? (
+                      <Badge variant="warning" className="text-[10px]">{modelTrainingPercent}% Trained</Badge>
+                    ) : (
+                      <Badge variant="secondary" className="text-[10px]">Untrained</Badge>
+                    )}
+                    <span className="text-[11px] text-text-tertiary">{modelTrainingCount} / 25</span>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
         </div>
 
         {/* Add Model Button */}
@@ -283,16 +331,52 @@ export function WriterFactoryPanel({ user }: WriterFactoryPanelProps) {
             {/* Add Training Story */}
             <Card className="p-6 mb-6 hover:translate-y-0">
               <h3 className="text-base font-semibold text-text-primary mb-4">Add Training Story</h3>
-              <Textarea
-                value={trainingText}
-                onChange={(e) => setTrainingText(e.target.value)}
-                placeholder="Paste an article written in this writer's style..."
-                rows={8}
-                className="mb-4"
-              />
+              
+              {/* URL Extraction */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-text-secondary mb-2">
+                  Extract from URL (Optional)
+                </label>
+                <div className="flex gap-2">
+                  <Input
+                    type="url"
+                    placeholder="https://example.com/article"
+                    value={trainingUrl}
+                    onChange={(e) => setTrainingUrl(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && extractContentFromUrl()}
+                    disabled={extracting}
+                    className="flex-1"
+                  />
+                  <Button
+                    onClick={extractContentFromUrl}
+                    disabled={extracting || !trainingUrl.trim()}
+                    variant="secondary"
+                  >
+                    {extracting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Extract'}
+                  </Button>
+                </div>
+                <p className="text-xs text-text-tertiary mt-1">
+                  Paste a URL to automatically extract the article content
+                </p>
+              </div>
+
+              {/* Manual Content Entry */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-text-secondary mb-2">
+                  Article Content
+                </label>
+                <Textarea
+                  value={trainingText}
+                  onChange={(e) => setTrainingText(e.target.value)}
+                  placeholder="Or paste an article written in this writer's style..."
+                  rows={8}
+                  disabled={extracting}
+                />
+              </div>
+
               <Button 
                 onClick={addTrainingStory} 
-                disabled={training || !trainingText.trim()}
+                disabled={training || !trainingText.trim() || extracting}
                 className="w-full"
               >
                 {training ? (
