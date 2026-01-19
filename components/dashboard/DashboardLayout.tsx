@@ -26,6 +26,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
   const [editorContent, setEditorContent] = useState<any>(null);
   const [activeView, setActiveView] = useState<DashboardView>('home');
   const [projectCount, setProjectCount] = useState(0);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   // Modal states
   const [showProjectCreationModal, setShowProjectCreationModal] = useState(false);
@@ -85,10 +86,12 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
           onOpenWriterFactory={handleOpenWriterFactory}
           onOpenNFLOdds={handleOpenNFLOdds}
           projectCount={projectCount}
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
 
         {/* Main Content Area with margin for fixed sidebar */}
-        <div className="ml-[260px] min-h-screen">
+        <div className={`${sidebarCollapsed ? 'ml-[60px]' : 'ml-[260px]'} min-h-screen transition-all duration-300`}>
           {/* Main Content Area - Conditional */}
           {activeView === 'home' ? (
             <DashboardHome

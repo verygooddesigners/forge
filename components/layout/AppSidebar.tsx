@@ -10,6 +10,8 @@ import {
   TrendingUp,
   Shield,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   UserCircle,
   Settings,
   LogOut,
@@ -30,6 +32,8 @@ interface AppSidebarProps {
   onOpenWriterFactory: () => void;
   onOpenNFLOdds: () => void;
   projectCount?: number;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 export function AppSidebar({ 
@@ -38,7 +42,9 @@ export function AppSidebar({
   onOpenSmartBriefs,
   onOpenWriterFactory,
   onOpenNFLOdds,
-  projectCount = 0 
+  projectCount = 0,
+  collapsed = false,
+  onToggleCollapse
 }: AppSidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -61,16 +67,33 @@ export function AppSidebar({
   const isActive = (path: string) => pathname === path;
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[260px] bg-bg-deep border-r border-border-subtle flex flex-col z-100">
-      {/* Logo */}
+    <aside className={`fixed left-0 top-0 h-screen ${collapsed ? 'w-[60px]' : 'w-[260px]'} bg-bg-deep border-r border-border-subtle flex flex-col z-100 transition-all duration-300`}>
+      {/* Logo & Collapse Button */}
       <div className="p-6 border-b border-border-subtle">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-white">
-            RW
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-white">
+              RW
+            </div>
+            {!collapsed && (
+              <div className="text-xl font-bold tracking-tight text-text-primary">
+                Roto<span className="text-accent-primary">Write</span>
+              </div>
+            )}
           </div>
-          <div className="text-xl font-bold tracking-tight text-text-primary">
-            Roto<span className="text-accent-primary">Write</span>
-          </div>
+          {onToggleCollapse && (
+            <button
+              onClick={onToggleCollapse}
+              className="p-1.5 hover:bg-bg-hover rounded-lg transition-colors"
+              title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {collapsed ? (
+                <ChevronRight className="h-4 w-4 text-text-secondary" />
+              ) : (
+                <ChevronLeft className="h-4 w-4 text-text-secondary" />
+              )}
+            </button>
+          )}
         </div>
       </div>
 
@@ -78,64 +101,77 @@ export function AppSidebar({
       <nav className="flex-1 p-3 overflow-y-auto">
         {/* WORKSPACE Section */}
         <div className="mb-6">
-          <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
-            Workspace
-          </div>
+          {!collapsed && (
+            <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
+              Workspace
+            </div>
+          )}
           
           <button
             onClick={() => router.push('/dashboard')}
-            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
+            className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
               isActive('/dashboard') && !pathname.includes('/admin')
                 ? 'bg-accent-muted text-accent-primary'
                 : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
             }`}
+            title={collapsed ? 'Dashboard' : ''}
           >
             <Home className="w-5 h-5 opacity-70" />
-            Dashboard
+            {!collapsed && 'Dashboard'}
           </button>
 
           <button
             onClick={onOpenProjects}
-            className="w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
+            className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
+            title={collapsed ? 'Projects' : ''}
           >
             <FileText className="w-5 h-5 opacity-70" />
-            Projects
-            {projectCount > 0 && (
-              <span className="ml-auto bg-ai-muted text-ai-accent text-[10px] font-semibold px-2 py-0.5 rounded-full font-mono">
-                {projectCount}
-              </span>
+            {!collapsed && (
+              <>
+                Projects
+                {projectCount > 0 && (
+                  <span className="ml-auto bg-ai-muted text-ai-accent text-[10px] font-semibold px-2 py-0.5 rounded-full font-mono">
+                    {projectCount}
+                  </span>
+                )}
+              </>
             )}
           </button>
 
           <button
             onClick={onOpenSmartBriefs}
-            className="w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
+            className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
+            title={collapsed ? 'SmartBriefs' : ''}
           >
             <BookOpen className="w-5 h-5 opacity-70" />
-            SmartBriefs
+            {!collapsed && 'SmartBriefs'}
           </button>
         </div>
 
         {/* AI TOOLS Section */}
         <div className="mb-6">
-          <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
-            AI Tools
-          </div>
+          {!collapsed && (
+            <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
+              AI Tools
+            </div>
+          )}
           
           <button
             onClick={onOpenWriterFactory}
-            className="w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
+            className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
+            title={collapsed ? 'Writer Factory' : ''}
           >
             <Wrench className="w-5 h-5 opacity-70" />
-            Writer Factory
+            {!collapsed && 'Writer Factory'}
           </button>
 
           <button
             onClick={onOpenNFLOdds}
-            className="w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
+            className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3.5 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all`}
+            title={collapsed ? 'NFL Odds Extractor' : ''}
           >
             <TrendingUp className="w-5 h-5 opacity-70" />
-            NFL Odds Extractor
+            {!collapsed && 'NFL Odds Extractor'}
           </button>
 
         </div>
@@ -143,45 +179,49 @@ export function AppSidebar({
         {/* SYSTEM Section - Only for super admin */}
         {user.email === 'jeremy.botter@gdcgroup.com' && (
           <div>
-            <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
-              System
-            </div>
+            {!collapsed && (
+              <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
+                System
+              </div>
+            )}
             
             <button
               onClick={() => router.push('/admin')}
-              className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
+              className={`w-full flex items-center ${collapsed ? 'justify-center' : 'gap-3'} px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
                 pathname.includes('/admin')
                   ? 'bg-accent-muted text-accent-primary'
                   : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
               }`}
+              title={collapsed ? 'Admin' : ''}
             >
               <Shield className="w-5 h-5 opacity-70" />
-              Admin
+              {!collapsed && 'Admin'}
             </button>
           </div>
         )}
       </nav>
 
       {/* User Card */}
-      <div className="p-4 border-t border-border-subtle">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <div className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-bg-hover transition-all cursor-pointer group">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-ai-accent flex items-center justify-center font-semibold text-sm">
-                {getInitials(user.full_name || user.email)}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-[13px] font-semibold truncate">
-                  {user.full_name || user.email.split('@')[0]}
+      {!collapsed && (
+        <div className="p-4 border-t border-border-subtle">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-bg-hover transition-all cursor-pointer group">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-ai-accent flex items-center justify-center font-semibold text-sm">
+                  {getInitials(user.full_name || user.email)}
                 </div>
-                <div className="text-[11px] text-text-tertiary uppercase tracking-wide">
-                  {user.role}
+                <div className="flex-1 min-w-0">
+                  <div className="text-[13px] font-semibold truncate">
+                    {user.full_name || user.email.split('@')[0]}
+                  </div>
+                  <div className="text-[11px] text-text-tertiary uppercase tracking-wide">
+                    {user.role}
+                  </div>
                 </div>
+                <ChevronDown className="w-4 h-4 text-text-tertiary group-hover:opacity-100 transition-opacity" />
               </div>
-              <ChevronDown className="w-4 h-4 text-text-tertiary group-hover:opacity-100 transition-opacity" />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuItem onClick={() => router.push('/profile')}>
               <UserCircle className="mr-2 h-4 w-4" />
               Profile
@@ -204,7 +244,8 @@ export function AppSidebar({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+        </div>
+      )}
     </aside>
   );
 }
