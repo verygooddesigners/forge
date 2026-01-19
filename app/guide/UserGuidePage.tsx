@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, BookOpen, Sparkles, FileText, Target, Zap, Download, Home, ArrowLeft, Cpu, Bot, Menu, X, ChevronRight, Clock, Calculator, ExternalLink } from 'lucide-react';
+import { Search, BookOpen, Sparkles, FileText, Target, Zap, Download, Home, ArrowLeft, Cpu, Bot, Menu, X, ChevronRight, Clock, Calculator, ExternalLink, Shield, ShieldCheck, AlertTriangle } from 'lucide-react';
 
 export default function UserGuidePage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,6 +47,7 @@ export default function UserGuidePage() {
     { id: 'creating-projects', title: 'Creating Projects', icon: Target },
     { id: 'nfl-odds-extractor', title: 'NFL Odds Extractor', icon: Target },
     { id: 'seo-package', title: 'Understanding SEO Package', icon: Target },
+    { id: 'research-story', title: 'Research Story & Fact Verification', icon: Search },
     { id: 'seo-wizard', title: 'SEO Wizard Tools', icon: Zap },
     { id: 'content-generation', title: 'Content Generation', icon: Sparkles },
     { id: 'editing', title: 'Editing & Real-time Analysis', icon: FileText },
@@ -1215,6 +1216,204 @@ export default function UserGuidePage() {
       ),
     },
 
+    'research-story': {
+      title: 'Research Story & Fact Verification',
+      content: (
+        <div className="space-y-6">
+          <p className="text-lg leading-relaxed">
+            The Research Story feature ensures content accuracy by gathering news from trusted sources 
+            and using AI to verify facts before content generation. This mandatory step guarantees that 
+            all generated content is based on verified, up-to-date information.
+          </p>
+
+          <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
+            <h3 className="text-lg font-semibold mb-3 text-green-800">Why Research Story Matters</h3>
+            <p className="leading-relaxed text-green-900">
+              <strong>Accuracy is non-negotiable.</strong> The Research Story workflow prevents the generation 
+              of content with outdated stats, incorrect facts, or unreliable information. By requiring research 
+              before generation, RotoWrite ensures every article is built on a foundation of verified facts.
+            </p>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">The 5-Step Research Workflow</h3>
+
+          <div className="space-y-6">
+            {/* Step 1 */}
+            <div className="border-l-4 border-green-500 pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 1: Click "Research Story"</h4>
+              <p className="text-muted-foreground leading-relaxed">
+                In the SEO Wizard (right sidebar), before generating content, click the <strong>"Research Story"</strong> button. 
+                This triggers an AI-powered news search using Tavily API.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="border-l-4 border-green-500 pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 2: Review Research Results</h4>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                A full-screen modal displays 15 articles from the past 3 weeks. Each article card shows:
+              </p>
+              <ul className="text-sm space-y-2 ml-4">
+                <li className="text-muted-foreground">
+                  <strong>Trust Badge:</strong> Green "Trusted" (ESPN, NFL.com), Blue "Verified" (CBS Sports), 
+                  Orange "Unverified" (unknown sources)
+                </li>
+                <li className="text-muted-foreground">
+                  <strong>Relevance Score:</strong> Percentage showing how relevant the article is to your topic
+                </li>
+                <li className="text-muted-foreground">
+                  <strong>Source & Date:</strong> Publication name and date (e.g., "2 days ago")
+                </li>
+                <li className="text-muted-foreground">
+                  <strong>Article Snippet:</strong> Expandable preview with "Read more" option
+                </li>
+                <li className="text-muted-foreground">
+                  <strong>Thumbs Up/Down:</strong> Buttons to flag inaccurate articles
+                </li>
+              </ul>
+            </div>
+
+            {/* Step 3 */}
+            <div className="border-l-4 border-green-500 pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 3: Flag Inaccurate Sources</h4>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Click the <strong>thumbs down button</strong> on any article that contains:
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-bg-elevated border border-border-default rounded p-3">
+                  <div className="font-medium text-sm mb-1">Inaccurate Information</div>
+                  <div className="text-xs text-muted-foreground">Contains factual errors or false claims</div>
+                </div>
+                <div className="bg-bg-elevated border border-border-default rounded p-3">
+                  <div className="font-medium text-sm mb-1">Outdated Information</div>
+                  <div className="text-xs text-muted-foreground">No longer current or relevant</div>
+                </div>
+                <div className="bg-bg-elevated border border-border-default rounded p-3">
+                  <div className="font-medium text-sm mb-1">Unreliable Source</div>
+                  <div className="text-xs text-muted-foreground">Lacks credibility or trustworthiness</div>
+                </div>
+                <div className="bg-bg-elevated border border-border-default rounded p-3">
+                  <div className="font-medium text-sm mb-1">Off-Topic</div>
+                  <div className="text-xs text-muted-foreground">Doesn't relate to story topic</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 4 */}
+            <div className="border-l-4 border-green-500 pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 4: AI Verifies Facts</h4>
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                Click <strong>"Verify Facts"</strong> to trigger the Fact Verification Agent (#8). This AI agent:
+              </p>
+              <ul className="text-sm space-y-1 ml-4">
+                <li className="text-muted-foreground">• Extracts factual claims from unflagged articles</li>
+                <li className="text-muted-foreground">• Cross-references facts across multiple sources</li>
+                <li className="text-muted-foreground">• Assigns confidence levels (HIGH/MEDIUM/LOW)</li>
+                <li className="text-muted-foreground">• Flags disputed or single-source facts</li>
+                <li className="text-muted-foreground">• Calculates overall confidence score (0-100%)</li>
+              </ul>
+            </div>
+
+            {/* Step 5 */}
+            <div className="border-l-4 border-green-500 pl-6 py-2">
+              <h4 className="font-semibold text-lg mb-2">Step 5: Research Complete</h4>
+              <p className="text-muted-foreground leading-relaxed">
+                The modal displays verification results showing verified facts count, disputed facts count, 
+                and confidence score. Click <strong>"Use Research for Content Generation"</strong> to close 
+                the modal. The Generate Content button is now enabled.
+              </p>
+            </div>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">Trust Badges Explained</h3>
+
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="px-3 py-1 bg-green-500 text-white rounded font-medium text-sm flex items-center gap-1">
+                <ShieldCheck className="h-4 w-4" />
+                TRUSTED
+              </div>
+              <div className="flex-1">
+                <div className="font-semibold text-green-800">High Trust Sources</div>
+                <div className="text-sm text-green-700">
+                  Official league sites (NFL.com, NBA.com), major sports networks (ESPN), 
+                  established publications (The Athletic, Sports Illustrated)
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="px-3 py-1 bg-blue-500 text-white rounded font-medium text-sm flex items-center gap-1">
+                <Shield className="h-4 w-4" />
+                VERIFIED
+              </div>
+              <div className="flex-1">
+                <div className="font-semibold text-blue-800">Medium Trust Sources</div>
+                <div className="text-sm text-blue-700">
+                  Reputable sports media (CBS Sports, FOX Sports, Bleacher Report) - generally reliable 
+                  but fact-check important claims
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+              <div className="px-3 py-1 bg-orange-500 text-white rounded font-medium text-sm flex items-center gap-1">
+                <AlertTriangle className="h-4 w-4" />
+                UNVERIFIED
+              </div>
+              <div className="flex-1">
+                <div className="font-semibold text-orange-800">Unknown or Low Trust Sources</div>
+                <div className="text-sm text-orange-700">
+                  Social media (Twitter/X, Reddit), blogs, or sources not in trusted database - 
+                  use with extra caution
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">Managing Trusted Sources (Admin)</h3>
+
+          <p className="leading-relaxed mb-4">
+            Administrators can manage the trusted sources list by going to <strong>Admin → Trusted Sources</strong>:
+          </p>
+
+          <div className="bg-bg-elevated border border-border-default rounded-lg p-6">
+            <h4 className="font-semibold mb-3">Admin Capabilities</h4>
+            <ul className="space-y-2">
+              <li className="flex items-start gap-2">
+                <span className="text-primary">•</span>
+                <span className="leading-relaxed">Add new sources with custom trust levels</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-primary">•</span>
+                <span className="leading-relaxed">Edit existing source trust levels</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-primary">•</span>
+                <span className="leading-relaxed">Delete unreliable sources</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-primary">•</span>
+                <span className="leading-relaxed">Assign categories (sports, nfl, nba, mlb, etc.)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-primary">•</span>
+                <span className="leading-relaxed">Search and filter by trust level</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="bg-warning-muted border-l-4 border-warning p-5 rounded-r-lg mt-6">
+            <p className="text-sm font-medium text-text-primary mb-2">⚡ Research is Mandatory</p>
+            <p className="text-sm text-text-secondary">
+              The "Generate Content" button remains disabled until you complete the Research Story workflow. 
+              This ensures every article is built on verified facts from trusted sources.
+            </p>
+          </div>
+        </div>
+      ),
+    },
+
     'seo-wizard': {
       title: 'SEO Wizard: Real-Time Optimization',
       content: (
@@ -1580,10 +1779,22 @@ export default function UserGuidePage() {
                 </div>
               </div>
 
+              <div className="text-center text-2xl font-bold text-primary">+</div>
+
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                  <Search className="h-6 w-6" />
+                </div>
+                <div>
+                  <div className="font-semibold">Verified Research</div>
+                  <div className="text-sm text-muted-foreground">AI-verified facts from trusted sources</div>
+                </div>
+              </div>
+
               <div className="text-center text-2xl font-bold text-primary">=</div>
 
               <div className="bg-bg-surface rounded-lg p-4 border-2 border-primary text-center">
-                <div className="font-bold text-lg">SEO-Optimized Content</div>
+                <div className="font-bold text-lg">SEO-Optimized, Fact-Checked Content</div>
                 <div className="text-sm text-muted-foreground">In Your Authentic Voice</div>
               </div>
             </div>
@@ -1593,21 +1804,37 @@ export default function UserGuidePage() {
 
           <div className="space-y-6">
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-accent-muted0 text-white rounded-full flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">
                 1
               </div>
               <div>
-                <h4 className="font-semibold mb-2">Analyze SEO Package (First Time Only)</h4>
-                <p className="text-muted-foreground leading-relaxed">
-                  Click <strong>"Analyze SEO Package"</strong> in the SEO Wizard. The AI examines your 
-                  headline, keywords, and topic, then generates keyword suggestions based on:
+                <h4 className="font-semibold mb-2">Research Story (Required First)</h4>
+                <p className="text-muted-foreground leading-relaxed mb-3">
+                  Click <strong>"Research Story"</strong> in the SEO Wizard to gather and verify information:
                 </p>
-                <ul className="text-sm space-y-1 mt-2 ml-4">
-                  <li className="text-muted-foreground">• Current search trends</li>
-                  <li className="text-muted-foreground">• Competitor analysis</li>
-                  <li className="text-muted-foreground">• NLP keyword extraction</li>
-                  <li className="text-muted-foreground">• Your brief requirements</li>
-                </ul>
+                <div className="bg-bg-elevated border border-border-default rounded-lg p-4 space-y-3">
+                  <div className="text-sm">
+                    <strong className="text-green-600">Step 1:</strong> AI searches 15 news articles from past 3 weeks using Tavily
+                  </div>
+                  <div className="text-sm">
+                    <strong className="text-green-600">Step 2:</strong> Modal displays articles with trust badges (ESPN, NFL.com = High Trust)
+                  </div>
+                  <div className="text-sm">
+                    <strong className="text-green-600">Step 3:</strong> You review and flag inaccurate/outdated articles (thumbs down)
+                  </div>
+                  <div className="text-sm">
+                    <strong className="text-green-600">Step 4:</strong> Click "Verify Facts" - AI Agent #8 cross-references remaining articles
+                  </div>
+                  <div className="text-sm">
+                    <strong className="text-green-600">Step 5:</strong> Verified facts stored in research brief, ready for generation
+                  </div>
+                </div>
+                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
+                  <p className="text-sm font-medium text-blue-900">
+                    🛡️ <strong>Accuracy First:</strong> Content generation is disabled until research is complete. 
+                    This ensures all generated content uses verified, fact-checked information.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -1616,28 +1843,16 @@ export default function UserGuidePage() {
                 2
               </div>
               <div>
-                <h4 className="font-semibold mb-2">Select Keywords</h4>
-                <p className="text-muted-foreground leading-relaxed">
-                  Review the suggested keywords in the Terms section. Click to select relevant keywords 
-                  – they're immediately added to your SEO Package. The package updates in real-time as 
-                  you select and deselect keywords.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-accent-muted0 text-white rounded-full flex items-center justify-center font-bold">
-                3
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">Generate Content</h4>
+                <h4 className="font-semibold mb-2">Generate Content with Verified Facts</h4>
                 <p className="text-muted-foreground leading-relaxed mb-2">
-                  Click <strong>"Create Content"</strong> (below the SEO Meter). The AI begins generating:
+                  After research is complete, click <strong>"Create Content"</strong>. The AI generates using:
                 </p>
                 <ul className="text-sm space-y-1 ml-4">
                   <li className="text-muted-foreground">• Loads your Writer Model's training data</li>
                   <li className="text-muted-foreground">• Analyzes your Brief structure</li>
                   <li className="text-muted-foreground">• Incorporates all SEO Package keywords</li>
+                  <li className="text-muted-foreground">• <strong className="text-green-600">Uses only verified facts from research</strong></li>
+                  <li className="text-muted-foreground">• Cites sources naturally in the text</li>
                   <li className="text-muted-foreground">• Generates content matching your voice and structure</li>
                 </ul>
               </div>
@@ -2086,7 +2301,7 @@ export default function UserGuidePage() {
 
           {/* Phase 4 */}
           <div className="border-l-4 border-orange-500 pl-6 py-4 bg-warning-muted/50 mt-6">
-            <h3 className="text-xl font-bold mb-3 text-orange-900">Phase 4: Analyze & Generate</h3>
+            <h3 className="text-xl font-bold mb-3 text-orange-900">Phase 4: Research & Verify Facts</h3>
             
             <div className="space-y-3">
               <div className="flex gap-3">
@@ -2099,30 +2314,41 @@ export default function UserGuidePage() {
               
               <div className="flex gap-3">
                 <div className="font-bold text-orange-600">2.</div>
-                <p className="leading-relaxed">Click <strong>"Analyze SEO Package"</strong></p>
+                <div>
+                  <p className="leading-relaxed">Click <strong>"Research Story"</strong> button</p>
+                  <p className="text-sm text-muted-foreground mt-1">⚠️ This is REQUIRED before generating content</p>
+                </div>
               </div>
 
               <div className="flex gap-3">
                 <div className="font-bold text-orange-600">3.</div>
                 <div>
-                  <p className="leading-relaxed">Watch the wizard populate with keyword suggestions</p>
-                  <p className="text-sm text-muted-foreground mt-1">The Terms section fills with suggested keywords and target ranges</p>
+                  <p className="leading-relaxed">A modal opens showing 15 research articles with trust badges</p>
+                  <p className="text-sm text-muted-foreground mt-1">Green "Trusted" badges = ESPN, NFL.com, official sources</p>
                 </div>
               </div>
 
               <div className="flex gap-3">
                 <div className="font-bold text-orange-600">4.</div>
                 <div>
-                  <p className="leading-relaxed">Click keywords in the Terms section to select them</p>
-                  <p className="text-sm text-muted-foreground mt-1">Selected keywords are added to your SEO Package automatically</p>
+                  <p className="leading-relaxed">Review articles and click thumbs down on any inaccurate/outdated ones</p>
+                  <p className="text-sm text-muted-foreground mt-1">Select a reason (Inaccurate Information, Outdated, etc.)</p>
                 </div>
               </div>
 
               <div className="flex gap-3">
                 <div className="font-bold text-orange-600">5.</div>
                 <div>
-                  <p className="leading-relaxed">Once you're happy with your keyword selection, click <strong>"Create Content"</strong></p>
-                  <p className="text-sm text-muted-foreground mt-1">The button appears below the SEO Meter (currently grayed out)</p>
+                  <p className="leading-relaxed">Click <strong>"Verify Facts"</strong> - AI Agent #8 cross-checks remaining articles</p>
+                  <p className="text-sm text-muted-foreground mt-1">Takes 10-20 seconds to verify facts across sources</p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <div className="font-bold text-orange-600">6.</div>
+                <div>
+                  <p className="leading-relaxed">See verification results (verified facts, confidence score)</p>
+                  <p className="text-sm text-muted-foreground mt-1">Click "Use Research for Content Generation" to close modal</p>
                 </div>
               </div>
             </div>
