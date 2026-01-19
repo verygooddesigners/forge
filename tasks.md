@@ -2,9 +2,9 @@
 
 ## Active Tasks
 
-[PENDING] 1. Fix Writer Model Training: Cannot add new training stories to any models - getting "Error: Failed to Add Training Story" error
+[DONE] 1. Fix Writer Model Training: Cannot add new training stories to any models - getting "Error: Failed to Add Training Story" error
 [DONE] 2. Fix Writer Factory badge display bug: When clicking Blake Weishaar's model (2/25 stories), all models show 2/25. Clicking different model makes them all show 0/25
-[DONE] 3. Add URL-based training story extraction: Allow pasting URL to a story and have AI extract the text instead of copy/paste
+[PENDING] 3. Add URL-based training story extraction: Allow pasting URL to a story and have AI extract the text instead of copy/paste (UI added, extraction logic needs debugging)
 [DONE] 4. Add Suggested Keywords section to SEO Wizard with color-coded labels (green=important, orange=good idea, red=avoid)
 [DONE] 5. Optimize SEO Wizard heading targets based on word count (e.g., 470 word story shouldn't require 5-18 headings)
 
