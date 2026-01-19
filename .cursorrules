@@ -1,0 +1,98 @@
+# Cursor AI Rules for RotoWrite Project
+
+## File Editing Protocol
+
+### CRITICAL: Verify Correct File Before Editing
+Before making ANY changes to a component or module:
+
+1. **Search for ALL files with similar names** - Use glob search to find all variations (e.g., `ComponentModal.tsx` vs `ComponentPanel.tsx`)
+2. **Trace the actual import chain** - Find where the component is ACTUALLY imported and used in the application
+3. **Verify which file is being displayed** - Check the parent component/page to confirm which version is rendered
+4. **Test in the running application** - After changes, verify they appear in the browser
+5. **If changes don't appear**: STOP and re-verify you edited the correct file before making further changes
+
+### Example Problem Scenario
+- `WriterFactoryModal.tsx` exists (modal version - NOT USED)
+- `WriterFactoryPanel.tsx` exists (panel version - ACTUALLY DISPLAYED)
+- Editing the Modal when the Panel is what's shown = wasted time and frustration
+
+### File Discovery Process
+```bash
+# Step 1: Find all similar files
+glob_file_search: "**/WriterFactory*.tsx"
+
+# Step 2: Search for imports
+grep: "from.*WriterFactory" 
+
+# Step 3: Verify which component is imported in the page/parent
+read_file: <parent_component>
+
+# Step 4: Only then make changes to the CORRECT file
+```
+
+### Before Committing
+- Verify changes appear in the browser
+- Check browser console for errors
+- Confirm functionality works as expected
+
+## Component Architecture
+
+### Dashboard Components
+- `components/dashboard/` contains panel components used in the dashboard layout
+- `components/modals/` contains modal components (pop-ups)
+- Always verify which version is being used before editing
+
+## Development Workflow
+
+### Testing Changes
+1. Dev server runs on port 5309: `http://localhost:5309`
+2. After changes, do a hard refresh: `Cmd+Shift+R` (Mac) or `Ctrl+Shift+R` (Windows)
+3. Check browser console for logs/errors
+4. If changes don't appear, verify you edited the correct file
+
+### Common Issues
+- **Changes not appearing**: You might be editing a different file than what's being used
+- **Multiple similar components**: Search for all variations before editing
+- **Cached builds**: Hard refresh the browser or clear .next directory
+
+## Task Management
+
+### Active Task File
+- All tasks are tracked in `tasks.md`
+- Use status prefixes: `[PENDING]`, `[IN PROGRESS]`, `[DONE]`, `[BLOCKED]`
+- Update status as work progresses
+- Add new tasks at the top of the Active Tasks section
+
+### Task Workflow
+1. Check `tasks.md` for pending tasks
+2. Update status to `[IN PROGRESS]` when starting
+3. Update to `[DONE]` when completed
+4. Reload models/data after database changes to reflect updates in UI
+
+## API Conventions
+
+### Database Field Names
+- Backend uses **snake_case**: `model_id`, `user_id`, `total_training_pieces`
+- Frontend can use **camelCase** but must convert when calling APIs
+- Always use correct field names in API payloads
+
+### Supabase
+- Row Level Security (RLS) policies control access
+- Super admin: `jeremy.botter@gdcgroup.com`
+- Always reload data after mutations to reflect changes in UI
+
+## Error Prevention
+
+### Before Making Changes
+- [ ] Found ALL files with similar names
+- [ ] Verified which file is actually imported/used
+- [ ] Checked parent component to confirm correct file
+- [ ] Tested changes appear in browser
+- [ ] Verified functionality works as expected
+
+### If Something Doesn't Work
+1. Check browser console for errors
+2. Verify you edited the correct file
+3. Hard refresh the browser
+4. Check dev server logs for compilation errors
+5. Verify API field names match backend expectations
