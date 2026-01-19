@@ -135,7 +135,7 @@ export function AppSidebar({
             }`}
             title={!isExpanded ? 'Dashboard' : ''}
           >
-            <Home className={`${isExpanded ? 'w-5 h-5' : 'w-[25px] h-[25px]'} text-accent-primary`} />
+            <Home className={`${isExpanded ? 'w-5 h-5' : 'w-9 h-9'} text-accent-primary`} />
             {isExpanded && 'Dashboard'}
           </button>
 
@@ -144,7 +144,7 @@ export function AppSidebar({
             className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all`}
             title={!isExpanded ? 'Projects' : ''}
           >
-            <FileText className={`${isExpanded ? 'w-5 h-5' : 'w-[25px] h-[25px]'} text-accent-primary`} />
+            <FileText className={`${isExpanded ? 'w-5 h-5' : 'w-9 h-9'} text-accent-primary`} />
             {isExpanded && (
               <>
                 Projects
@@ -162,7 +162,7 @@ export function AppSidebar({
             className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all`}
             title={!isExpanded ? 'SmartBriefs' : ''}
           >
-            <BookOpen className={`${isExpanded ? 'w-5 h-5' : 'w-[25px] h-[25px]'} text-accent-primary`} />
+            <BookOpen className={`${isExpanded ? 'w-5 h-5' : 'w-9 h-9'} text-accent-primary`} />
             {isExpanded && 'SmartBriefs'}
           </button>
         </div>
@@ -180,7 +180,7 @@ export function AppSidebar({
             className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all`}
             title={!isExpanded ? 'Writer Factory' : ''}
           >
-            <Wrench className={`${isExpanded ? 'w-5 h-5' : 'w-[25px] h-[25px]'} text-accent-primary`} />
+            <Wrench className={`${isExpanded ? 'w-5 h-5' : 'w-9 h-9'} text-accent-primary`} />
             {isExpanded && 'Writer Factory'}
           </button>
 
@@ -189,7 +189,7 @@ export function AppSidebar({
             className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all`}
             title={!isExpanded ? 'NFL Odds Extractor' : ''}
           >
-            <TrendingUp className={`${isExpanded ? 'w-5 h-5' : 'w-[25px] h-[25px]'} text-accent-primary`} />
+            <TrendingUp className={`${isExpanded ? 'w-5 h-5' : 'w-9 h-9'} text-accent-primary`} />
             {isExpanded && 'NFL Odds Extractor'}
           </button>
 
@@ -213,7 +213,7 @@ export function AppSidebar({
               }`}
               title={!isExpanded ? 'Admin' : ''}
             >
-              <Shield className={`${isExpanded ? 'w-5 h-5' : 'w-[25px] h-[25px]'} text-accent-primary`} />
+              <Shield className={`${isExpanded ? 'w-5 h-5' : 'w-9 h-9'} text-accent-primary`} />
               {isExpanded && 'Admin'}
             </button>
           </div>
