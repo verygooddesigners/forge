@@ -308,6 +308,9 @@ export function SEOOptimizationSidebar({
       const keywords = extractKeywordsFromFacts(researchBrief.verified_facts);
       setSuggestedKeywords(keywords);
     }
+    
+    // Trigger a page reload to refresh project with research_brief
+    window.location.reload();
   };
 
   const extractKeywordsFromFacts = (facts: any[]): SuggestedKeyword[] => {
