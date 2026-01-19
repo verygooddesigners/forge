@@ -35,7 +35,9 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
   const [selectedModel, setSelectedModel] = useState<WriterModel | null>(null);
   const [newModelName, setNewModelName] = useState('');
   const [trainingContent, setTrainingContent] = useState('');
+  const [trainingUrl, setTrainingUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [extracting, setExtracting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [trainingPercentage, setTrainingPercentage] = useState(0);
   const supabase = createClient();
@@ -115,8 +117,52 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
     setLoading(false);
   };
 
+  const extractContentFromUrl = async () => {
+    if (!trainingUrl.trim()) return;
+    
+    setExtracting(true);
+    try {
+      const response = await fetch('/api/assistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: `Extract the main article content from this URL: ${trainingUrl}\n\nReturn ONLY the article text, no metadata, no formatting.`,
+          context: '',
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const extractedContent = data.response || '';
+        
+        if (extractedContent.trim()) {
+          setTrainingContent(extractedContent);
+          setTrainingUrl('');
+        } else {
+          alert('No content could be extracted from that URL. Please try copy/pasting the text manually.');
+        }
+      } else {
+        alert('Failed to extract content from URL. Please try copy/pasting the text manually.');
+      }
+    } catch (error) {
+      console.error('URL extraction error:', error);
+      alert('Failed to extract content from URL. Please try copy/pasting the text manually.');
+    } finally {
+      setExtracting(false);
+    }
+  };
+
   const addTrainingContent = async () => {
-    if (!selectedModel || !trainingContent.trim()) return;
+    if (!selectedModel || !trainingContent.trim()) {
+      console.error('[WRITER_FACTORY] Cannot add training - missing model or content:', {
+        hasModel: !!selectedModel,
+        hasContent: !!trainingContent.trim(),
+      });
+      return;
+    }
+
+    console.log('[WRITER_FACTORY] Adding training content for model:', selectedModel.id, selectedModel.name);
+    console.log('[WRITER_FACTORY] Content length:', trainingContent.length);
 
     setLoading(true);
     setShowSuccess(false);
@@ -128,14 +174,22 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
     setTrainingContent('');
     
     try {
+      const payload = {
+        model_id: selectedModel.id,
+        content: contentToSubmit,
+      };
+      
+      console.log('[WRITER_FACTORY] Sending training request with:', {
+        model_id: payload.model_id,
+        content_length: payload.content.length,
+        payload_keys: Object.keys(payload),
+      });
+      
       // Generate embedding and analyze style via API
       const response = await fetch('/api/writer-models/train', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model_id: selectedModel.id,
-          content: contentToSubmit,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
@@ -224,8 +278,9 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
             <div className="flex-1 overflow-y-auto p-4 space-y-2">
               {writerModels.map((model) => {
                 const editable = canEditModel(model);
-                const trainingCount = model.metadata?.total_training_pieces || 0;
-                const percentage = calculateTrainingPercentage(trainingCount);
+                // Each model calculates its own count and percentage from its own metadata
+                const modelTrainingCount = model.metadata?.total_training_pieces || 0;
+                const modelPercentage = calculateTrainingPercentage(modelTrainingCount);
                 
                 return (
                   <Card
@@ -244,18 +299,18 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
                           <div className="flex items-center gap-2 mt-1">
                             <Badge 
                               variant={
-                                percentage === 100 ? 'default' : 
-                                percentage >= 50 ? 'secondary' : 
+                                modelPercentage === 100 ? 'default' : 
+                                modelPercentage >= 50 ? 'secondary' : 
                                 'outline'
                               }
                               className="text-xs"
                             >
-                              {percentage}% Trained
+                              {modelTrainingCount}/{MAX_TRAINING_STORIES}
                             </Badge>
                             {!editable && <Badge variant="outline" className="text-xs">Locked</Badge>}
                           </div>
                           <CardDescription className="text-xs mt-1">
-                            {trainingCount} / {MAX_TRAINING_STORIES} stories
+                            {modelPercentage}% trained
                           </CardDescription>
                         </div>
                         {user.role === 'admin' && editable && (
@@ -369,24 +424,52 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
                     <CardHeader>
                       <CardTitle className="text-base">Add Training Content</CardTitle>
                       <CardDescription>
-                        Paste a complete article or content piece to train this writer model. The AI will analyze the style, tone, and voice.
+                        Extract content from a URL or paste it directly. The AI will analyze the style, tone, and voice.
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
+                      {/* URL Extraction */}
+                      <div className="space-y-2">
+                        <Label htmlFor="training-url">Extract from URL (Optional)</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="training-url"
+                            type="url"
+                            placeholder="https://example.com/article"
+                            value={trainingUrl}
+                            onChange={(e) => setTrainingUrl(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && extractContentFromUrl()}
+                            disabled={extracting}
+                          />
+                          <Button
+                            onClick={extractContentFromUrl}
+                            disabled={extracting || !trainingUrl.trim()}
+                            variant="secondary"
+                          >
+                            {extracting ? 'Extracting...' : 'Extract'}
+                          </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Paste a URL and click Extract to automatically pull the article content
+                        </p>
+                      </div>
+
+                      {/* Manual Content Entry */}
                       <div className="space-y-2">
                         <Label htmlFor="training-content">Article Content</Label>
                         <Textarea
                           id="training-content"
-                          placeholder="Paste the complete article or content here..."
+                          placeholder="Or paste the complete article or content here..."
                           rows={15}
                           value={trainingContent}
                           onChange={(e) => setTrainingContent(e.target.value)}
                           className="resize-none font-mono text-sm"
+                          disabled={extracting}
                         />
                       </div>
                       <Button
                         onClick={addTrainingContent}
-                        disabled={loading || !trainingContent.trim()}
+                        disabled={loading || !trainingContent.trim() || extracting}
                         className="w-full"
                         size="lg"
                       >
