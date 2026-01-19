@@ -79,6 +79,7 @@ export interface Project {
   id: string;
   user_id: string;
   headline: string;
+  file_name?: string;
   primary_keyword: string;
   secondary_keywords: string[];
   topic?: string;
