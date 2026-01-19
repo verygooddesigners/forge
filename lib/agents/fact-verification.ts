@@ -1,5 +1,6 @@
-import { callClaude } from './base';
+import { callClaude, loadAgentConfig } from './base';
 import { ResearchArticle, VerifiedFact, DisputedFact } from '@/types';
+import { AgentConfig } from './types';
 
 export interface FactVerificationResult {
   verified_facts: VerifiedFact[];
@@ -92,16 +93,14 @@ Please analyze these articles and return a JSON object with the following struct
 }`;
 
   try {
+    // Load agent config for fact verification
+    const config = await loadFactVerificationConfig();
+    
     const response = await callClaude(
       [
         { role: 'user', content: userPrompt }
       ],
-      {
-        systemPrompt: SYSTEM_PROMPT,
-        model: 'claude-sonnet-4-20250514',
-        temperature: 0.2,
-        maxTokens: 3000,
-      }
+      config
     );
 
     // Parse the JSON response
@@ -142,13 +141,27 @@ Please analyze these articles and return a JSON object with the following struct
 }
 
 // Helper function to load agent configuration from database
-export async function loadFactVerificationConfig() {
-  // This would load from agent_configs table
-  // For now, return defaults
-  return {
-    model: 'claude-sonnet-4-20250514',
-    temperature: 0.2,
-    maxTokens: 3000,
-    systemPrompt: SYSTEM_PROMPT,
-  };
+export async function loadFactVerificationConfig(): Promise<AgentConfig> {
+  try {
+    // Try to load from database
+    const config = await loadAgentConfig('fact_verification' as any);
+    return config;
+  } catch (error) {
+    // Return default config with all required properties
+    return {
+      id: 'fact-verification-default',
+      agentKey: 'fact_verification' as any,
+      displayName: 'Fact Verification Agent',
+      description: 'Verifies facts across multiple sources',
+      systemPrompt: SYSTEM_PROMPT,
+      temperature: 0.2,
+      maxTokens: 3000,
+      model: 'claude-sonnet-4-20250514',
+      enabled: true,
+      guardrails: [],
+      specialConfig: {},
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+  }
 }
