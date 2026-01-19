@@ -88,6 +88,46 @@
     font-weight: 400;
   }
   
+  /* TipTap Editor Override - Light theme for editor */
+  .ProseMirror {
+    color: #18181b !important;
+    background: white;
+  }
+  
+  .ProseMirror h1,
+  .ProseMirror h2,
+  .ProseMirror h3,
+  .ProseMirror h4,
+  .ProseMirror h5,
+  .ProseMirror h6 {
+    color: #09090b !important;
+  }
+  
+  .ProseMirror p {
+    color: #18181b !important;
+  }
+  
+  .ProseMirror strong {
+    color: #09090b !important;
+  }
+  
+  .ProseMirror ul,
+  .ProseMirror ol {
+    color: #18181b !important;
+  }
+  
+  .ProseMirror li {
+    color: #18181b !important;
+  }
+  
+  .ProseMirror::placeholder {
+    color: #a1a1aa !important;
+  }
+  
+  .ProseMirror p.is-editor-empty:first-child::before {
+    color: #a1a1aa !important;
+  }
+  
   /* Typography Hierarchy */
   h1 {
     font-weight: 700;
