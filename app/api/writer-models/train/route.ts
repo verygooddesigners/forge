@@ -4,14 +4,18 @@ import { analyzeWritingStyle, generateWriterEmbeddings } from '@/lib/agents';
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('[TRAIN] Training request received');
     const { model_id, content } = await request.json();
 
     if (!model_id || !content) {
+      console.error('[TRAIN] Missing required fields:', { hasModelId: !!model_id, hasContent: !!content });
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing required fields', details: 'model_id and content are required' },
         { status: 400 }
       );
     }
+
+    console.log('[TRAIN] Model ID:', model_id, 'Content length:', content.length);
 
     const supabase = await createClient();
 
@@ -104,12 +108,14 @@ export async function POST(request: NextRequest) {
       });
 
     if (insertError) {
-      console.error('Error saving training content:', insertError);
+      console.error('[TRAIN] Error saving training content:', insertError);
       return NextResponse.json(
-        { error: 'Failed to save training content' },
+        { error: 'Failed to save training content', details: insertError.message },
         { status: 500 }
       );
     }
+
+    console.log('[TRAIN] Training content saved successfully');
 
     // Update model metadata with new count
     const { count: contentCount, error: countError } = await supabase
@@ -148,12 +154,13 @@ export async function POST(request: NextRequest) {
       training_count: newCount,
     });
   } catch (error: any) {
-    console.error('Error in train route:', error);
+    console.error('[TRAIN] Fatal error in train route:', error);
+    console.error('[TRAIN] Error stack:', error?.stack);
     const errorMessage = error?.message || 'Unknown error occurred';
     return NextResponse.json(
       { 
-        error: 'Internal server error',
-        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+        error: 'Failed to add training content',
+        details: errorMessage
       },
       { status: 500 }
     );

@@ -158,7 +158,7 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
         const errorData = await response.json().catch(() => ({}));
         const errorMessage = errorData.details || errorData.error || 'Unknown error';
         console.error('Training error:', errorData);
-        alert(`Failed to add training content: ${errorMessage}`);
+        alert(`Error: Failed to add training story\n\n${errorMessage}\n\nPlease check the browser console for more details.`);
       }
     } catch (error) {
       // If there was an error, restore the content
