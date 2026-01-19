@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartBrief Creation Guide</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #000000;
+            background: #ffffff;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Page Setup for Print */
+        @page {
+            margin: 1in;
+            size: letter;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }
+            
+            .no-break {
+                page-break-inside: avoid;
+            }
+            
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+            
+            .callout-box, .example-box, .tip-box, .warning-box {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Screen View Container */
+        @media screen {
+            body {
+                max-width: 8.5in;
+                margin: 0 auto;
+                padding: 1in;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-weight: 700;
+            color: #000000;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+        }
+
+        h1 {
+            font-size: 24pt;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 24pt;
+            border-bottom: 3px solid #000000;
+            padding-bottom: 12pt;
+        }
+
+        h2 {
+            font-size: 18pt;
+            margin-top: 30pt;
+            border-bottom: 2px solid #666666;
+            padding-bottom: 6pt;
+        }
+
+        h3 {
+            font-size: 14pt;
+            margin-top: 18pt;
+        }
+
+        h4 {
+            font-size: 12pt;
+            margin-top: 12pt;
+        }
+
+        p {
+            margin-bottom: 10pt;
+            text-align: justify;
+        }
+
+        strong {
+            font-weight: 700;
+            color: #000000;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-left: 24pt;
+            margin-bottom: 10pt;
+        }
+
+        li {
+            margin-bottom: 6pt;
+        }
+
+        ul ul, ol ul, ul ol, ol ol {
+            margin-top: 6pt;
+        }
+
+        /* Code Blocks */
+        pre {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            border: 1px solid #cccccc;
+            padding: 12pt;
+            margin: 12pt 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 9pt;
+            background: #f5f5f5;
+            padding: 2pt 4pt;
+            border: 1px solid #cccccc;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12pt 0;
+        }
+
+        th, td {
+            border: 1px solid #000000;
+            padding: 8pt;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f0f0;
+            font-weight: 700;
+        }
+
+        /* Callout Boxes */
+        .callout-box {
+            border: 2px solid #000000;
+            padding: 12pt;
+            margin: 12pt 0;
+            background: #ffffff;
+        }
+
+        .example-box {
+            border-left: 4px solid #666666;
+            padding: 12pt;
+            margin: 12pt 0;
+            background: #f9f9f9;
+        }
+
+        .tip-box {
+            border: 2px solid #4a90e2;
+            padding: 12pt;
+            margin: 12pt 0;
+            background: #f0f7ff;
+        }
+
+        .warning-box {
+            border: 2px solid #e24a4a;
+            padding: 12pt;
+            margin: 12pt 0;
+            background: #fff0f0;
+        }
+
+        .success-box {
+            border: 2px solid #4ae24a;
+            padding: 12pt;
+            margin: 12pt 0;
+            background: #f0fff0;
+        }
+
+        .box-title {
+            font-weight: 700;
+            margin-bottom: 8pt;
+            font-size: 11pt;
+        }
+
+        /* Grid Layouts */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20pt;
+            margin: 12pt 0;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20pt;
+            margin: 12pt 0;
+        }
+
+        .card {
+            border: 1px solid #666666;
+            padding: 12pt;
+            background: #fafafa;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 11pt;
+            margin-bottom: 8pt;
+            border-bottom: 1px solid #999999;
+            padding-bottom: 4pt;
+        }
+
+        /* Step Boxes */
+        .step-box {
+            border-left: 4px solid #000000;
+            padding-left: 16pt;
+            margin: 16pt 0;
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: 12pt;
+            margin-bottom: 6pt;
+        }
+
+        /* Icon substitutes */
+        .icon {
+            font-weight: 700;
+            margin-right: 4pt;
+        }
+
+        /* Troubleshooting boxes */
+        .troubleshoot-item {
+            border: 1px solid #999999;
+            padding: 10pt;
+            margin: 10pt 0;
+        }
+
+        .troubleshoot-title {
+            font-weight: 700;
+            margin-bottom: 6pt;
+        }
+    </style>
+</head>
+<body>
+    <h1>SmartBrief Creation Guide</h1>
+
+    <!-- Section 1: What is a SmartBrief -->
+    <section class="no-break">
+        <h2>What is a SmartBrief?</h2>
+        <p>
+            A <strong>SmartBrief</strong> is an AI-powered content template that defines structure, style, context, 
+            and provides real examples for the AI to learn from. SmartBriefs ensure consistency across all your content 
+            while allowing the AI to adapt to different topics.
+        </p>
+
+        <div class="callout-box">
+            <div class="box-title">A SmartBrief Defines:</div>
+            <ul>
+                <li><strong>📐 Structure:</strong> Heading hierarchy and required sections</li>
+                <li><strong>🎨 Style:</strong> Tone, voice, and formatting preferences</li>
+                <li><strong>📝 Context:</strong> What information should be included</li>
+                <li><strong>📚 Examples:</strong> Real-world articles the AI learns from</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Section 2: Two-Tab System -->
+    <section class="no-break">
+        <h2>Two-Tab System</h2>
+        
+        <div class="two-column">
+            <div class="card">
+                <div class="card-title">Tab 1: Content Template</div>
+                <p>
+                    The <strong>scaffold</strong> - Define structure and sections using the TipTap editor. 
+                    Use headings, lists, and placeholders to show the AI what your content should look like.
+                </p>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Tab 2: AI Configuration</div>
+                <p>
+                    The <strong>intelligence</strong> - Teach the AI about your content type using detailed 
+                    instructions and example URLs that it analyzes to learn your patterns.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Tab 1 - Content Template -->
+    <section>
+        <h2>Tab 1: Content Template (The Scaffold)</h2>
+        <p>
+            This is where you define the exact structure the AI should follow when generating content.
+        </p>
+
+        <div class="example-box">
+            <div class="box-title">Example Game Preview Template:</div>
+            <pre>## [Game Title]: [Team A] vs [Team B]
+
+[Opening paragraph establishing why this game matters]
+
+## Team Analysis
+
+### [Home Team Name]
+- Current Record: [X-Y]
+- Last 5 Games: [performance summary]
+- Key Players: [names and stats]
+
+### [Away Team Name]
+- Current Record: [X-Y]  
+- Last 5 Games: [performance summary]
+- Key Players: [names and stats]
+
+## Betting Analysis
+| Market | Line | Analysis |
+|--------|------|----------|
+| Spread | [X.X] | [reasoning] |
+| Total | [XX.X] | [reasoning] |
+
+## Prediction
+[Final prediction with confidence level]</pre>
+        </div>
+
+        <div class="tip-box">
+            <div class="box-title">💡 Pro Tip: Use Descriptive Placeholders</div>
+            <p>
+                Instead of "[content here]", write "[Analyze offensive rating, pace of play, and recent 
+                lineup changes. Compare to league average.]" - This tells the AI exactly what to write about.
+            </p>
+        </div>
+    </section>
+
+    <!-- Section 4: Tab 2 - AI Configuration -->
+    <section class="page-break">
+        <h2>Tab 2: AI Configuration (The Intelligence)</h2>
+        <p>
+            This is where you teach the AI about your content type. It has two parts:
+        </p>
+
+        <h3>AI Configuration Instructions</h3>
+        <p>
+            A detailed prompt explaining what kind of content this brief represents, what tone to use, 
+            what information to include/avoid, and any special requirements.
+        </p>
+
+        <div class="example-box">
+            <div class="box-title">What to Include:</div>
+            <ul>
+                <li>
+                    <strong>Content Type:</strong><br>
+                    <em style="font-size: 9pt; margin-left: 20pt; display: block;">"This is a game preview article for NBA betting analysis"</em>
+                </li>
+                <li>
+                    <strong>Tone &amp; Voice:</strong><br>
+                    <em style="font-size: 9pt; margin-left: 20pt; display: block;">"Professional but accessible. Conversational without being casual. Data-driven analysis."</em>
+                </li>
+                <li>
+                    <strong>Target Audience:</strong><br>
+                    <em style="font-size: 9pt; margin-left: 20pt; display: block;">"NBA fans who bet recreationally. Mix of hardcore fans and casual bettors."</em>
+                </li>
+                <li>
+                    <strong>Required Information:</strong><br>
+                    <em style="font-size: 9pt; margin-left: 20pt; display: block;">"Current records, recent form, injury reports, betting lines, ATS records, prediction with reasoning"</em>
+                </li>
+                <li>
+                    <strong>What to Avoid:</strong><br>
+                    <em style="font-size: 9pt; margin-left: 20pt; display: block;">"Generic analysis, outdated stats, vague predictions, content filler"</em>
+                </li>
+                <li>
+                    <strong>Length Guidelines:</strong><br>
+                    <em style="font-size: 9pt; margin-left: 20pt; display: block;">"Total: 1200-1500 words. Introduction: 150-200 words. Each team: 300-400 words."</em>
+                </li>
+            </ul>
+        </div>
+
+        <h3>Example URLs for Analysis</h3>
+        <p>
+            Provide 1-3 URLs to articles that perfectly represent your desired format. The AI analyzes 
+            these to learn your patterns.
+        </p>
+
+        <div class="example-box">
+            <div class="box-title">How to Choose Examples:</div>
+            <ul>
+                <li>✓ Use your best published work</li>
+                <li>✓ Choose recent articles (current style)</li>
+                <li>✓ Ensure all examples follow similar structure</li>
+                <li>✓ Pick articles you're proud of</li>
+                <li>✓ Make sure URLs are publicly accessible</li>
+                <li>✗ Don't use drafts or unfinished work</li>
+                <li>✗ Avoid paywalled content</li>
+                <li>✗ Don't mix different content types</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <div class="box-title">📍 Click "Analyze Example URLs"</div>
+            <p>
+                After adding URLs, click the button to trigger AI analysis. The AI will extract patterns 
+                from your examples and store them with the brief. This analysis guides content generation.
+            </p>
+        </div>
+    </section>
+
+    <!-- Section 5: Step-by-Step Creation -->
+    <section class="page-break">
+        <h2>Step-by-Step Creation</h2>
+
+        <div class="step-box">
+            <div class="step-title">Step 1: Name Your SmartBrief</div>
+            <p>Use descriptive names: "NBA Game Preview", "NFL Player Profile", "Weekly Odds Roundup"</p>
+        </div>
+
+        <div class="step-box">
+            <div class="step-title">Step 2: Build Structure (Tab 1)</div>
+            <p>Create your content scaffold with headings, sections, and descriptive placeholders</p>
+            <ul style="font-size: 9pt; color: #333333;">
+                <li>Use ## for H2 headings, ### for H3</li>
+                <li>Add tables if needed</li>
+                <li>Use [brackets] for placeholder guidance</li>
+                <li>Be specific about what goes in each section</li>
+            </ul>
+        </div>
+
+        <div class="step-box">
+            <div class="step-title">Step 3: Write AI Instructions (Tab 2)</div>
+            <p>Detailed instructions about content type, tone, audience, requirements, and guidelines</p>
+            <ul style="font-size: 9pt; color: #333333;">
+                <li>Describe the content type and purpose</li>
+                <li>Specify tone and voice</li>
+                <li>List required information</li>
+                <li>Explain what to avoid</li>
+                <li>Set length guidelines</li>
+            </ul>
+        </div>
+
+        <div class="step-box">
+            <div class="step-title">Step 4: Add Example URLs (Tab 2)</div>
+            <p>Paste 1-3 URLs to published articles (one per line), then click "Analyze Example URLs"</p>
+        </div>
+
+        <div class="step-box">
+            <div class="step-title">Step 5: Configure Settings</div>
+            <p>Set share settings (Shared/Private), add categories, then click Save</p>
+        </div>
+
+        <div class="step-box">
+            <div class="step-title">Step 6: Test It</div>
+            <p>Create a project using your new SmartBrief and generate content to see how it performs</p>
+        </div>
+    </section>
+
+    <!-- Section 6: Writing Effective AI Instructions -->
+    <section class="page-break">
+        <h2>Writing Effective AI Instructions</h2>
+
+        <div class="example-box">
+            <div class="box-title">Complete Example:</div>
+            <pre>CONTENT TYPE: NBA Game Preview for betting analysis
+
+TONE: Professional sports analysis with betting insights. 
+Engaging, confident voice that balances entertainment with 
+data-driven analysis.
+
+TARGET AUDIENCE: Sports bettors - mix of hardcore NBA fans 
+and casual bettors looking for an edge.
+
+REQUIRED INFORMATION:
+✓ Both teams' last 5-10 games form
+✓ Key player stats and injury status
+✓ Current betting lines (spread, total, moneyline)
+✓ ATS records and trends
+✓ Specific betting recommendations with reasoning
+
+STRUCTURE REQUIREMENTS:
+- Compelling intro establishing game stakes (150-200 words)
+- Equal length team sections (300-400 words each)
+- Betting analysis with table (400-500 words)
+- Clear prediction with confidence level
+- 2-3 "Best Bets" with specific reasoning
+
+AVOID:
+✗ Generic analysis
+✗ Outdated statistics
+✗ Predictions without data backing
+✗ Filler content
+
+LENGTH: 1200-1500 words total</pre>
+        </div>
+    </section>
+
+    <!-- Section 7: Using Example URLs -->
+    <section>
+        <h2>Using Example URLs</h2>
+        <p>
+            Example URLs are powerful because the AI learns from actual execution, not just instructions.
+        </p>
+
+        <div class="three-column">
+            <div class="card">
+                <div class="card-title">What AI Learns</div>
+                <ul style="font-size: 9pt;">
+                    <li>Structure patterns</li>
+                    <li>Tone indicators</li>
+                    <li>Information density</li>
+                    <li>Heading hierarchy</li>
+                    <li>SEO patterns</li>
+                    <li>Typical length</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">How to Format</div>
+                <ul style="font-size: 9pt;">
+                    <li>One URL per line</li>
+                    <li>1-3 URLs recommended</li>
+                    <li>Full URLs required</li>
+                    <li>Publicly accessible only</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">After Analysis</div>
+                <ul style="font-size: 9pt;">
+                    <li>Review analysis results</li>
+                    <li>Verify patterns match intent</li>
+                    <li>Replace URLs if needed</li>
+                    <li>Re-analyze after changes</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 8: SmartBrief Templates -->
+    <section class="page-break">
+        <h2>SmartBrief Templates</h2>
+
+        <div class="card" style="margin-bottom: 12pt;">
+            <div class="card-title">Game Preview</div>
+            <p style="font-size: 10pt;">
+                <strong>Structure:</strong> Introduction → Team Analysis → Matchups → Betting Insights → Prediction<br>
+                <strong>Tone:</strong> Professional analysis with betting focus<br>
+                <strong>Length:</strong> 1200-1500 words
+            </p>
+        </div>
+
+        <div class="card" style="margin-bottom: 12pt;">
+            <div class="card-title">Player Profile</div>
+            <p style="font-size: 10pt;">
+                <strong>Structure:</strong> Stats → Career Highlights → Current Season → Fantasy Value<br>
+                <strong>Tone:</strong> Informative and engaging<br>
+                <strong>Length:</strong> 800-1000 words
+            </p>
+        </div>
+
+        <div class="card" style="margin-bottom: 12pt;">
+            <div class="card-title">Injury Report Analysis</div>
+            <p style="font-size: 10pt;">
+                <strong>Structure:</strong> Injury Details → Team Impact → Betting Implications<br>
+                <strong>Tone:</strong> Factual with strategic insights<br>
+                <strong>Length:</strong> 600-800 words
+            </p>
+        </div>
+    </section>
+
+    <!-- Section 9: Best Practices -->
+    <section>
+        <h2>Best Practices</h2>
+
+        <div class="two-column">
+            <div class="success-box">
+                <div class="box-title">✓ DO:</div>
+                <ul style="font-size: 10pt;">
+                    <li>Be specific in instructions</li>
+                    <li>Use 2-3 example URLs</li>
+                    <li>Keep structure consistent</li>
+                    <li>Update regularly</li>
+                    <li>Test and refine</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">✗ DON'T:</div>
+                <ul style="font-size: 10pt;">
+                    <li>Make templates too rigid</li>
+                    <li>Use outdated examples</li>
+                    <li>Provide conflicting examples</li>
+                    <li>Forget AI Configuration tab</li>
+                    <li>Create one brief for everything</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 10: Troubleshooting -->
+    <section class="page-break">
+        <h2>Troubleshooting</h2>
+
+        <div class="troubleshoot-item">
+            <div class="troubleshoot-title">AI isn't following structure</div>
+            <p style="font-size: 10pt;">
+                ✓ Check if headings are clear and hierarchical<br>
+                ✓ Make sure example URLs follow same structure<br>
+                ✓ Add more specific guidance in AI Instructions
+            </p>
+        </div>
+
+        <div class="troubleshoot-item">
+            <div class="troubleshoot-title">Content is too generic</div>
+            <p style="font-size: 10pt;">
+                ✓ Add more detail to AI Instructions<br>
+                ✓ Provide more specific examples<br>
+                ✓ Use detailed placeholders with requirements
+            </p>
+        </div>
+
+        <div class="troubleshoot-item">
+            <div class="troubleshoot-title">Tone doesn't match</div>
+            <p style="font-size: 10pt;">
+                ✓ Be more explicit in tone description<br>
+                ✓ Verify example URLs reflect desired tone<br>
+                ✓ Train Writer Model separately for voice control
+            </p>
+        </div>
+
+        <div class="troubleshoot-item">
+            <div class="troubleshoot-title">Example URL analysis failed</div>
+            <p style="font-size: 10pt;">
+                ✓ Verify URL is publicly accessible<br>
+                ✓ Check if content is behind paywall<br>
+                ✓ Try different URLs<br>
+                ✓ Use manual instructions if URL analysis doesn't work
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <div style="margin-top: 48pt; padding-top: 12pt; border-top: 1px solid #cccccc; text-align: center; font-size: 9pt; color: #666666;">
+        <p>SmartBrief Creation Guide | RotoWrite Editorial Command Center</p>
+    </div>
+</body>
+</html>

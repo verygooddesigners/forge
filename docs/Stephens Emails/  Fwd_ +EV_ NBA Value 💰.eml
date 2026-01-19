@@ -1,0 +1,1399 @@
+Received: from VI0PR10MB9379.EURPRD10.PROD.OUTLOOK.COM (::1) by
+ GV1PR10MB8028.EURPRD10.PROD.OUTLOOK.COM with HTTPS; Thu, 15 Jan 2026 22:59:34
+ +0000
+Received: from CWLP265CA0453.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:1b7::22)
+ by VI0PR10MB9379.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:2b4::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.6; Thu, 15 Jan
+ 2026 22:58:56 +0000
+Received: from AMS1EPF00000042.eurprd04.prod.outlook.com
+ (2603:10a6:400:1b7:cafe::e8) by CWLP265CA0453.outlook.office365.com
+ (2603:10a6:400:1b7::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.6 via Frontend Transport; Thu,
+ 15 Jan 2026 22:58:52 +0000
+Authentication-Results: spf=pass (sender IP is 2607:f8b0:4864:20::732)
+ smtp.mailfrom=oddsjam.com; dkim=pass (signature was verified)
+ header.d=oddsjam.com;dmarc=pass action=none
+ header.from=oddsjam.com;compauth=pass reason=100
+Received-SPF: Pass (protection.outlook.com: domain of oddsjam.com designates
+ 2607:f8b0:4864:20::732 as permitted sender) receiver=protection.outlook.com;
+ client-ip=2607:f8b0:4864:20::732; helo=mail-qk1-x732.google.com; pr=C
+Received: from mail-qk1-x732.google.com (2607:f8b0:4864:20::732) by
+ AMS1EPF00000042.mail.protection.outlook.com (2603:10a6:20f:fff4:0:2:0:7) with
+ Microsoft SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id
+ 15.20.9520.1 via Frontend Transport; Thu, 15 Jan 2026 22:58:55 +0000
+Received: by mail-qk1-x732.google.com with SMTP id af79cd13be357-8c5349ba802so136921285a.1
+        for <jeremy.botter@gdcgroup.com>; Thu, 15 Jan 2026 14:58:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oddsjam.com; s=google; t=1768517934; x=1769122734; darn=gdcgroup.com;
+        h=mime-version:date:message-id:subject:to:from:delivered-to
+         :references:in-reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZLzHSuJDWeQDdOC40Uaogge2ar56dH0ofhmFuYefqDo=;
+        b=IeKHB8a9ETGO4dit0CVTPKmIm2Ctwk39zIZMzuqmMruJMRj8zruurn0z2iq/TSMVwA
+         gkP7vOoyaUfDdqgNRuqysNHaZq9b2Y06OqoqruenoVtepjGZRfyKme19NUK2jEe36ZH3
+         +w8LYDBH/6rMmo99FQASQCXg6Hz3yA7ZF4OBLRTLlrNhHEZXrhH4nGbM5vE8g8e+xvkz
+         pJDJICpIMyaag3TKP5tHVATjVEBskqh7tMoriwgV6n/v/YinlppBuBHJBmebBLozAmiw
+         M+rh2sYFF0quKFRPe/Q/QltHwwTYVnGkHUWyQdpLfvjbWOo7lAQs942muKJxOzEvbboB
+         3Xtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768517934; x=1769122734;
+        h=mime-version:date:message-id:subject:to:from:delivered-to
+         :references:in-reply-to:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZLzHSuJDWeQDdOC40Uaogge2ar56dH0ofhmFuYefqDo=;
+        b=hYeaP7UNBtCCl/9KnZ0hLfxjvaIhkJ/Zyg5KRer2UfvEbcXeS5+RmhWmyf3IBQSBxr
+         Vvk1zfPgdtghTDTlKk6yC+vAXlgbIlMSpUC8AO6hmp8kimbXQsltYD9B8cwecbg0ekDK
+         ilWJzKcXE4rTBT/6d9RF2i/6r9D5jTPBybTNUC2ZeUDJ1unR0VUeq+Twbd2OWDxzwr/y
+         5HVlLbiPTO7tuG5ZLU11OZzsKM7URGxAsF5IK0aJj7vUp38rRCIWg9Ff7m7XN7a++jAN
+         qw/CJ3CYzmpnulpSFnhWh+xCSGY6q9mzG+BtpgwzbFcUEIw9sC4e2BDJ6y6cB7RKWKmh
+         thMA==
+X-Gm-Message-State: AOJu0Yycw3Tisy5EhOGJgGIJEw7NJF3WVW2y6e59aeQzCJSTt1un56o6
+	amBduEemzxZ3rIpKGsveDYSh9By3/2H+WGLX1+oW8xH5GKxDU3WWS2mxjy75FCgxukioFpt2SIw
+	VYacK
+X-Gm-Gg: AY/fxX4bbePofHf069VbWda/iQWZAxjmVRvz78Wmp9gDDr37aiR98jocEGIaMSDbg8O
+	d50gkIg0NgOfDyud701I7RKg5H78Xx0NUq+bBh9rpfPGaDlTNAxpzrWCQ78wxMHUe+9SRtpfHVp
+	StzfWPEps9ncqlv2KAmaqvipD1ADpYTTZ4W1X/i8LJf/g8JMfL7fvIOtxR42GVY8gK3AO3ssqLW
+	oTNYcgagzmTxmPEcfWeJtNOlyGuW5C9JsgCMuN8p8tB7cHcmEI/JWR+L/CdkXT/X9WRl1M7+gTo
+	3wejj0e3Hkx9z2HqQ2M6+HVRqvZ1e9QUWVE43qD7pHDHN2hIP2xYlzS2ay5PbZxeMjWweKJydKU
+	A9zk8c4wADE9RfHP6Hoiu4oLzjh3ph6ts1Jo9dHYVV7Z2QxFGHtlRrliX8+yPL6fITtjJ7pbmYe
+	3oWZLNiZ4Nc9wy04RdbRKb+GBLsxaVCEx6Q38GCJQbq4i168mc18Vrv7Qp+NqCHaCA5R2Ogeht/
+	BHA0oh7/wg=
+X-Received: by 2002:a05:620a:472c:b0:8b2:d30c:a30e with SMTP id af79cd13be357-8c6a676da84mr154259985a.46.1768517933992;
+        Thu, 15 Jan 2026 14:58:53 -0800 (PST)
+Return-Path: brian.stephens@oddsjam.com
+Received: from send-23.prod.mixmax-mailer.com (send-23.prod.mixmax-mailer.com. [52.206.110.60])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c6a725eb16sm68454585a.36.2026.01.15.14.58.53
+        for <jeremy.botter@gdcgroup.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jan 2026 14:58:53 -0800 (PST)
+In-Reply-To: <1c9d37a9-b8bba255-1768424948-215472679676965-1737008@outbound.intercom.oddsjam.com>
+References: <1c9d37a9-b8bba255-1768424948-215472679676965-1737008@outbound.intercom.oddsjam.com>
+Delivered-To: rsm@mixmax.com
+From: Brian Stephens <brian.stephens@oddsjam.com>
+To: jeremy.botter@gdcgroup.com
+Subject: =?utf-8?B?ICBGd2Q6ICtFVjogTkJBIFZhbHVlIPCfkrA=?=
+Message-ID: <v1-MXBjtIfmexTc8PfLv-c19df751261f6c67d5c13dd06db61cad@oddsjam.com>
+Date: Thu, 15 Jan 2026 22:58:50 +0000
+Content-Type: multipart/alternative;
+	boundary="--_NmP-797c56d22e62e159-Part_1"
+X-MS-Exchange-Organization-ExpirationStartTime: 15 Jan 2026 22:58:55.7363
+ (UTC)
+X-MS-Exchange-Organization-ExpirationStartTimeReason: OriginalSubmit
+X-MS-Exchange-Organization-ExpirationInterval: 1:00:00:00.0000000
+X-MS-Exchange-Organization-ExpirationIntervalReason: OriginalSubmit
+X-MS-Exchange-Organization-Network-Message-Id: b41c826c-6817-49b0-fcfc-08de5489a917
+X-EOPAttributedMessage: 0
+X-EOPTenantAttributedMessage: 52c3448d-59b9-4e94-8fd9-d97a2128c819:0
+X-MS-Exchange-Organization-MessageDirectionality: Incoming
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS1EPF00000042:EE_|VI0PR10MB9379:EE_|GV1PR10MB8028:EE_
+X-MS-Exchange-Organization-AuthSource: AMS1EPF00000042.eurprd04.prod.outlook.com
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Office365-Filtering-Correlation-Id: b41c826c-6817-49b0-fcfc-08de5489a917
+X-MS-Exchange-AtpMessageProperties: SA|SL
+X-Egress-Defend-Domain: gdcgroup.com
+X-MS-Exchange-Organization-SCL: 5
+X-Forefront-Antispam-Report: CIP:2607:f8b0:4864:20::732;CTRY:;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:mail-qk1-x732.google.com;PTR:mail-qk1-x732.google.com;CAT:SPM;SFTY:9.25;SFS:(13230040)(4123199012)(5073199012)(39142699007)(31052699007)(69100299015)(43022699015)(4022899009)(1032899013)(5063199012)(30052699003)(8096899003)(2066899003)(54012099003)(13003099007);DIR:INB;SFTY:9.25;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|4123199012|5073199012|39142699007|31052699007|69100299015|43022699015|4022899009|1032899013|5063199012|30052699003|8096899003|2066899003|54012099003|13003099007;
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2026 22:58:55.6258
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b41c826c-6817-49b0-fcfc-08de5489a917
+X-MS-Exchange-CrossTenant-Id: 52c3448d-59b9-4e94-8fd9-d97a2128c819
+X-MS-Exchange-CrossTenant-AuthSource: AMS1EPF00000042.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR10MB9379
+X-MS-Exchange-Transport-EndToEndLatency: 00:00:38.8849229
+X-MS-Exchange-Processed-By-BccFoldering: 15.20.9520.004
+X-Microsoft-Antispam-Mailbox-Delivery:
+	ucf:0;jmr:0;auth:0;dest:J;OFR:SpamFilterAuthJ;ENG:(910005)(944506478)(944626604)(4710137)(4715077)(4999163)(920097)(930201)(3100021)(140003)(1420198);RF:JunkEmail;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S3ZUbXN6bUxGc3ZnV29PUDZZbVFycDlJcnhwNDZWMkJ4S3JoSFhNeEFNY01j?=
+ =?utf-8?B?N0xWcFRHVnZYYVdXMFJaVDZDaHROdkpmRG9HWkNtT0JYVjZkNGtmYlhNUWtW?=
+ =?utf-8?B?Sk9LR3lscDJYL1BvRWluV3QvVEk2L2VUNEVPdGJkWDQ1ZzQ0d3ZpTXJUOENI?=
+ =?utf-8?B?ZlNrWDZYOXNpeDZvcDQ5YVJQSldNK1dpdEJMQXNjdmx4QnZtdGVUMDVKQzZx?=
+ =?utf-8?B?L0toR3F5ckdWTDdqeUtSS2lUVnFLR1BYZU1ncGFKWkhCZWFDZEI0dlB5Wlhk?=
+ =?utf-8?B?Y1dLWEo1UStQYUl0bXdBQnZna0lXQkdlTE5NTWFJTC81Y2VLck4yVnFTM2hX?=
+ =?utf-8?B?NFU0TG8rVDFSTDljb2lxV04zTEdoWTRwckJmZHFQU1JNR3hlaHRQT1lLVEds?=
+ =?utf-8?B?Y3JHY25jRy9JWlc3M1V2dXg4em1EVGp1M3AxNkw4bHRhWUVRNTZCalQ4bk83?=
+ =?utf-8?B?S2xNZ1lvWGpFdGhiR0NGUHp1M0VzdFZCRytHQUVhVGE3aElTeTllcDNkNS96?=
+ =?utf-8?B?M3hKTkFFQ2laZTV3Tm0wWWNlSE02OVBtWVFrR25pQ2ZCQ1RtT0FLMG9hRk9N?=
+ =?utf-8?B?b3JnZHR5a1dURWVDVVFNcXNXZTlZRkE3WCtuRTBIVXlGZ09wZ0V0SG0xYW1O?=
+ =?utf-8?B?aTFxR2pNeHpHWTFYNTI0TEtzaFVaOEJlUU1iWmx1YnNmV1hSaHdiZ085dFJM?=
+ =?utf-8?B?MnQyaXBNUnBqSHdhQzZHUUM0a2FEMkFmVWsyUW1UVktOR3JwdVhmZmtLcEMr?=
+ =?utf-8?B?dERkSGVUd1p2cFZyeWJiTTFlSTRoRlVmNUNkRHpoeC94Z0k2S2dXZzFmaXlL?=
+ =?utf-8?B?SjNGZi8rdSt6d1pwRjRUZWF0bWJiUzRRM2Y1NDVQN3Nqd0c5UUlreXZRTzRs?=
+ =?utf-8?B?dVVETVE3LzhER1M5K0lFekNqaWkxMjNnTk45WkdWekNrMFphT0kyeVh3MVp2?=
+ =?utf-8?B?QkYwcG1vWnpwcThlc2VxUCtkVGpYek4yV1pjcGNjbHhiaWVhdHZLc013M3dH?=
+ =?utf-8?B?SkEvaHZIWEZtTEJaMld0Ymsva2lDaGJTTjRobXFMZWtnK2hZMmVZWmg3NHNW?=
+ =?utf-8?B?VVJDaFAyS3YxZGFJVElJTXdlSFNrVDFQQk1oRXEzYmNwQ3JZZ0lVeW5iM3N1?=
+ =?utf-8?B?MVBuQjZiVTArQ29RSE5walkvWklpejZQUW4vU1U3NjhjSDk2NFRiMXNtdnpt?=
+ =?utf-8?B?WW1qbzZlUzVBL3NBdHJJY2gwcjRTVE5kdEF2N0w4SWxwNzZMeVp2U3lCRVBP?=
+ =?utf-8?B?bFJzSnh6aFRHL1dlektBa3E4c0g0T0JLMUJOOHl6bE83SWwrZFYwYzA3NGc0?=
+ =?utf-8?B?UmhlVzdxZDlEd3VDRzduaFpwOWEwbDNjYy9TV0tqRjVsMk1XdC9lUFdOZm9a?=
+ =?utf-8?B?T1l4MUF4RE1YSHJMcTlobDRnNjE1b2hwK0U0ZlBIdVNrRWU1K2ZpbFpWbjFX?=
+ =?utf-8?B?QUpUc2JKZ2hqY3NGQVRFN00wM2pRdEpldnVHVmlXcVR5Ny9FeGpXRzhRdGti?=
+ =?utf-8?B?Y3grNUE0cmZCQm9CRDBVcXlHSHA3WlZNdjBsc3lQdGFHR0hRTGk3eWk5Vjg1?=
+ =?utf-8?B?L3ZCTGxiOEsvbW1uWk5KSm1qUjdlckRKQjhvYW5Va3d3a29FTUM3cGVWUmcv?=
+ =?utf-8?B?UWY3bkcxS2xodUZTV3l0QU1JMkZHaFpqOGtka2dEd1Z1Mm1NZTJidHBjOXJX?=
+ =?utf-8?B?WlM3UVFxZnB1dVNoZ2pDZ3FITzVDaGpWVzJ1Z04rMEU0YnZtVXU2YXh1bEhF?=
+ =?utf-8?B?VWdNUVdLKzhNWGtsZXJYU25kblNmYXB5djNZNmUvMUpKQmovOGx1dzYvaDRx?=
+ =?utf-8?B?QUF2ZFF0a1lCQUxYRk1hdUFYeUNOQ1dwKzIzK3BiNkxVTEhwU0Z5S0hBWW5S?=
+ =?utf-8?B?YXdzWmI4blpXajBic2NkOGRQNE5JOUZ1L1doRE1vRVVGcWQ0eldDWWNFQ0ov?=
+ =?utf-8?B?RVZWbFQwcVpEUm5qK2ZsdzA0R05HRHdNYlZ4NUZOaUxGZThUTTBqekNFOXNi?=
+ =?utf-8?B?RFlCRFpITktGTGxTTHJaWFhPQlZ0c0JDcnpPT0pUSlRqOGo1cmxLVXlXSlBm?=
+ =?utf-8?B?NTJEMHByWU1pNm9nUk1wTnJhUkp0NGxTRGhibU9Fby9wakNHcm5VUm9Kdzlo?=
+ =?utf-8?B?WFZodk5la3lsTm1tR2pnS1NvUTZ5MDJLNEFtR1Z6OWpqTTUyZjNITFQ4NEFJ?=
+ =?utf-8?B?MkFlOHhEb3lMMEZSS1NiSTVsbUh0YW0rVjhaN0tnbklKZjUxSmIrV1FTcVp5?=
+ =?utf-8?B?aHlvUGVEdFJsZ1Y2YWFnM3dHTDFqS28xRlM5OG9qVnNxaEN3SUUwUGNxSDFO?=
+ =?utf-8?B?NDUzVCtmc3VFdVIwalZvS1RtbVZiVnUvU2NxeG8zUVU3L0x6ZWE1V3hHSHlK?=
+ =?utf-8?B?TjFCRk44a0xNNk50U1NuMlNFbjJMbnk4cTl0UnVKZU1HUk9FY2ZEelByVE9y?=
+ =?utf-8?B?L0xwSGtSc2hLRFRkbC9tWEVaVitDNWlMNG9SeGpKa1ZXaC9SQ2YzcTdvQ0hS?=
+ =?utf-8?B?WjNka2p1cGFqUXovUmxmcnJrRm5oOStkdzZESnByRldXTkxiY2dvemtBZE5r?=
+ =?utf-8?B?cHpXZ3RacitlNlhhQ1JGdWJ4MlNnSmZBOHhWeXZac2Y1cng0bm5xcEVaL2hL?=
+ =?utf-8?B?Z1UyOFEyV3FlU1lHTVpHci8rbjdBbXFDVWZxWHcyWUVvWk1WNXNyUTJZNXkz?=
+ =?utf-8?B?eUhRbktUK3EvdUc1RTJIdFBaZE12ajNTclBLVDUrSFlhcHQ5NEdoTWM4TGtt?=
+ =?utf-8?B?anpVRnZrOEJlWG5XMm9tSWV5M1RUMUFyT2FhZFk3WXkzZnFBSnB6Y2FLaUNy?=
+ =?utf-8?B?M21xdHZJeE5Eb3JSbVBHZ0F0ajBNdENzYUpxdTF0L0xJT01FVGV4aXEvQkNa?=
+ =?utf-8?B?YlE4cWJHcU1VRXdQL29kUEp1VklDZVBKVDRBdk9LY214SVI1QTRadEJZa2Ux?=
+ =?utf-8?B?TFFXN1JOMFpNcldXYVU3MEQ1aGdSVU5IQlBPQ3ZvWWgwUzByeHZTeGcrTmhV?=
+ =?utf-8?B?UE83R0E3eEhvUUdmSE5WOUZLTVRSOUV0QzhsM05TUEdDTVZ6VUxIQ2M4eFo5?=
+ =?utf-8?B?Y0RWL01Sd3R1TFdVUUR6N2RvNGJSNlArblFKVHFzYS93clRYcEVOU1FVMWpt?=
+ =?utf-8?B?RUYzbzE5MUJXNDNHUUV5SkdUdkR5dDRQbjBlN1hHN2YwblcxajVRd0JTOHFv?=
+ =?utf-8?B?ZkF1Vk5hNHkwR05qbmZMc2IrYndzaHVENGQwSUFyeERtUER6eUl4eUUvSXFC?=
+ =?utf-8?B?VUlwRG5ENEQxR2dtNVM0Ly9ZOU1sQzJZaW9lMmR1R1Rwem15aHhlOGhvak53?=
+ =?utf-8?B?WGM3THY1VTRkbExHSHZBK0Y0cXFkOTFjTXFZYjQrOUxYZC8zQnlSaytBSkVa?=
+ =?utf-8?B?Ym51S2lZSGlHZjlRQ0N6K3ZMSjVTY3pwVVNlai9JV0JtT3BCYmRXdE1hWTds?=
+ =?utf-8?B?ZXpOT3NzMExCbEp2VTJWVnFuc0lCdmUwek1Fb2h6T2RackpnQ1loTWF6Y1VP?=
+ =?utf-8?B?aWN4WWZUR1VmalM2VFAySmNkSnFqcHpYMUdhOWM5eG5xdkdWdXNINUZKMU4x?=
+ =?utf-8?B?TWpwRU1sVzV3cjZvRVRZTmxUNG1PdFVYbXNRVUdJWjJMSWg1TUp6L0NvNk92?=
+ =?utf-8?B?S2JwODZHbURmcGptbkYrRVVESFdTbnBUY1J4d0JuQU9TdWU4MFBJWTF5L0Mw?=
+ =?utf-8?B?ejRHUC8xWktNdkhaV2FiOFRSR3F1NUl2VjFIbTMwRTJOSm9CVVIyMFYxQmdC?=
+ =?utf-8?B?dHdjMGdLMGVjR2J4VVBDRmtRY283OFRUd3FubStMNG1sNlJKRGNpOHJXNFFL?=
+ =?utf-8?B?ZkVyQmcxdWROUjlmZGFJa3FUYUFySk9mM2VDUklpamlGMmZ6VytER0FHVDdz?=
+ =?utf-8?B?Wm9hdDViSm1OYU1HYmZpUkVhbCt2MGV3NkRiWGc2WkdPMzlBSlNONm45ZlZU?=
+ =?utf-8?B?aTdsZmc3RkM4aHZKa1kwamJMVjFhT3RkSGRTcmpHeEk0aDBHdHdlOHVNZkF1?=
+ =?utf-8?B?b2k4N2NndFdERHBFQWNHS0pwQWUxcVBwN0wrN1FNV1ZzcDFsQllwZkxWc3VE?=
+ =?utf-8?B?eFRTSDRlbUZyaXBxMG9GbWhOakVCNTNwekwrMTlvYzh6MlpPQy9Jd0J4ZCt1?=
+ =?utf-8?B?ZkphT0pKL3JidVJYRFhqR2VIc0M1eHFHdlk4OG91VEM1eGFFT3hXVWZVbjJk?=
+ =?utf-8?B?VkFlSTRBRFZOcGZSUUFRWFppQ2ZKR3RmbUtPTm5yZjc3YUk4Z3RGWXoyNFd2?=
+ =?utf-8?B?V0tvenNwcWZOUm5pQlZwbWVMTUZ3dlF1eHI3a1Y5Tmx2MWV4YjF4a0Vmandl?=
+ =?utf-8?B?L2k3eUZ1VVRVZ0YyT1ZhNWhtMXNtVUFlaWZveHVoSnR1UVhJeWJMOTUzQjlz?=
+ =?utf-8?B?UkhRL003eEhWdTR2NzROSkN4WVZIYUtuakZFVk9vWnBBcE9TeDMzQXRZaXls?=
+ =?utf-8?B?ZkxNV3BFQVp2UXpxSTJUb2M4Q0NXK21QZENCaW4rRS85QVVSenVlOWN2S05O?=
+ =?utf-8?Q?3dQrT+/XFYN3mbJDq6uw6OKY6TAOLmayaPVBzJAWZBC?=
+MIME-Version: 1.0
+
+----_NmP-797c56d22e62e159-Part_1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+You don't often get email from brian.stephens@oddsjam.com. Learn why this i=
+s important<https://aka.ms/LearnAboutSenderIdentification>
+
+CAUTION: This email originated from outside the organization. Be careful wi=
+th attachments.
+
+
+
+---------- Forwarded message ---------
+From: Randall from OddsJam <randall@oddsjam.com>
+Date: Wed, Jan 14, 2026 at 4:09 PM
+Subject: +EV: NBA Value =F0=9F=92=B0
+To: <brian.stephens+1040@oddsjam.com>
+
+
+
+[https://ci3.googleusercontent.com/meips/ADKq_NZuM2tMmtLJrzKFGLnMhCAbwztac5=
+7bI0cVymtezoOZBj28ZbHYSW2KpAPASAP0YI_aodMkPYjueWxBETf9RDvC7p7n2wc3M_oXpStL7=
+AsIPFkK_sc9eBXPVraQk7zde04g2OejmvDaNg4t4uBF-EpWpL1qG9WNrQyLG2x7UZcAoOnn1iHo=
+-3RQoRZd70D21WdYKRbdjDrERT6N78TOPL1nnqn4vzdzbYRQwtO9nA-GZrYHrkGfYM3fHkIJQIS=
+Iuz-E9fyUnuRx9zDY12wccvev6UcPEnLn9006ZVmjMkxKDGByj1DgYOTtTWg48m8oB6G5SQzmS1=
+on_YNRrZxuM_vuAh_o8qrZNEU=3Ds0-d-e1-ft#https://oddsjam.intercom-mail.com/i/=
+o/779433800/e9ac4ecc55542b1b2e53947c/oj_dark.png?expires=3D1782967788&signa=
+ture=3Df0f321cc13640acc03b59d97b7741c1ebbeb0177466e619be15c08394da6ccdb&req=
+=3DcycuEsp9lYFfFb4S23SwhcDaHXKV7RZv6Wv0lrbdJPjd10xuZg%3D%3D%0A]
+
+Hi there,
+
+Market inefficiencies between sportsbooks create situations where value is =
+left on the board. These discrepancies lead to profitable betting opportuni=
+ties. Positive Expected Value (+EV) betting<https://oddsjam.intercom-clicks=
+.com/via/e?ob=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%2BjnW=
+0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%3D%3D&h=3Dad9e890ef9b456eca0cf84b78e8988852=
+694127e-xgkfzdmt_215472679676965&l=3Ddc96dc6e3697c7e2f9da4a79d82dee2af33e30=
+d6-194530027> is a data-driven strategy that identifies and takes advantage=
+ of this value within the market. It is one of the few proven methods to ac=
+hieve long-term profitability in sports betting.
+
+There is MASSIVE value on PrizePicks =F0=9F=9A=A8
+[https://ci3.googleusercontent.com/meips/ADKq_NbNeAJNiJiCMVEPz1AMwNwGSnx5DL=
+jm9XZNTyQryhVY_Mt0jT0EwdZpd9-YzlKs7lkxNZ5dcmv_C5YYbmJ6QEIHdZyHLB6GOsb2LEVZV=
+ZfgC5cSRL3d-SX9cw4L1f3oib13JWd0xoPPNMaBrIa_mOvdGztMaeJ4rjV244PsVHZOZUHXeKMk=
+8SlQ9MK-7rnS4U0p1yQU9ItifEzNbeCD0pxK8uTY-kseFTe6A_-Vl5sFkVGZ4nQBApTveQtYTHt=
+_ux5EYUkFkSiGOANvM69_bAvfgEOa3IGCai4DpF7cVg-ZM5PHOJJ9sYkL4skiGsdpm2kdXgX1gI=
+McVQp2x1YgVipSv9d9-Pqa1rjgp7MlcQARIeaC1Kus83EZtqBbFpjaGt47I-Z9VJjcCXkEuUUjR=
+fi8w_7S62zRpB4Guw=3Ds0-d-e1-ft#https://oddsjam.intercom-mail.com/i/o/xgkfzd=
+mt/1941844930/12011c4919dfd2948518e29e5795/Screenshot+2026-01-14+at+1_38_44=
+%E2%80%AFPM.png?expires=3D1782967788&signature=3D6959081097d833eb286ffb85e5=
+db90f1dd13b52f7229378e7c5f68f280a0e5c0&req=3DdSkjF8F6mYhcWfMW2XS%2FiSRckLso=
+fzQUlg5hpxAID4qmaluXHYw%3D%0A]<https://oddsjam.intercom-clicks.com/via/e?ob=
+=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%2BjnW0xO98sGtwZGzG=
+JYtWf8a6lwVINdWPLg%3D%3D&h=3Dad9e890ef9b456eca0cf84b78e8988852694127e-xgkfz=
+dmt_215472679676965&l=3D04b1834618cf9266ab75d8ad6504318f0378dde1-194530028>
+[https://ci3.googleusercontent.com/meips/ADKq_Na0w13t4Uqt30TWOlpLLzA1BxMbGE=
+DDEaxbMxvktPK9cjU6_XylAaYTBel-t52h7zjltCzgMXyiA8Oes3ysq_P5zMlguMccfRUMcyni1=
+3i1AI77-5uT9zvAejyDi2lAgfV_8wvBrU_y4_21EiHC5fO6hQIKEyy2cNwl_u_1FN11a2Ip4K7s=
+UWB98A6Pi61ShHE-yH2YjS8i0oGzcODH1mQ5UVg9JYyp-QY_dhkGFoKYOCVPHSt_hAGSEwDa7Dl=
+VsyjFECVmmaBJFVVql05vUIA84WeTydl7hhYyqihtiMjmB5yKnagKrf_xa8ByLHmZYY7StMQp9P=
+VZDgk4K7db0DF-zpGOyEPTpDP2MRJMFhaiL-rW1AgB-BD2dJ5MsDQ9jBXZTMsLj5ag2EbXmbzL3=
+P7SkbnP_CeYe7_DxB69=3Ds0-d-e1-ft#https://oddsjam.intercom-mail.com/i/o/xgkf=
+zdmt/1941845447/bab69b382db4c214815444f4e4a0/Screenshot+2026-01-14+at+1_38_=
+19%E2%80%AFPM.png?expires=3D1782967788&signature=3De63df7c9d84370e8c1725a71=
+c927e167b31da0bceb671a81e94f5848667a3ac8&req=3DdSkjF8F6mIVbXvMW2XS%2FiR2SHK=
+dcpn1%2BewwcZD7VZMAtrr8dtsg%3D%0A]<https://oddsjam.intercom-clicks.com/via/=
+e?ob=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%2BjnW0xO98sGtw=
+ZGzGJYtWf8a6lwVINdWPLg%3D%3D&h=3Dad9e890ef9b456eca0cf84b78e8988852694127e-x=
+gkfzdmt_215472679676965&l=3D04b1834618cf9266ab75d8ad6504318f0378dde1-194530=
+028>
+Click Here To Try +EV Betting<https://oddsjam.intercom-clicks.com/via/e?ob=
+=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%2BjnW0xO98sGtwZGzG=
+JYtWf8a6lwVINdWPLg%3D%3D&h=3Dad9e890ef9b456eca0cf84b78e8988852694127e-xgkfz=
+dmt_215472679676965&l=3Db81340b81afce3199c3b7c5eb10d44bcb3d39adf-194530029>
+
+The Toronto Raptors are facing off against the Indiana Pacers and PrizePick=
+s set Jamal Shead's total points line at 10.5. Due to the way PrizePicks se=
+ts their odds (fixed), we know we're getting this play at -119 odds. The Od=
+dsJam Sharp Money Tool<https://oddsjam.intercom-clicks.com/via/e?ob=3DMT36H=
+wbZS1hNA8hcx4N%2FjFk44vx9cO1nLHAZTbXSK0ppDfMRwcB1DaC74dVblFSSP4FzXpFJP3Qt%2=
+BVcv6Wbnmw%3D%3D&h=3Df72c643aa7e00b0221235ff8122f7b6494f9ebf3-xgkfzdmt_2154=
+72679676965&l=3D4e46990012d03d1c7f0bc44ca9b5bfddf6b75eb0-194530030> identif=
+ied this play as one being taken by the sharpest bettors/syndicates in the =
+world. They're looking to be on the same side of this play as us but at wor=
+se odds. Which makes this play extremely valuable.
+
+[https://ci3.googleusercontent.com/meips/ADKq_NbFrU72DaELghWCR8rijUi7TqIiH0=
+8H0Y983YfCGvNNfjFhgPKDiR-QoYLBld9755SniPK2ePovVhuYfUbUhOK5ywgMgGYOSYlbo9zW9=
+zc7JJHOU64v5P4tHdtPDCDCy1hyJ3C6E04mBV6wZfPn_SbMFjWKU5rmRcmcLJlMg38OKo08YgCJ=
+YhRZIZUbyBYyQVM0pvqJ1wXKfSljHrdfZSUHdu_KeIbjwx3oNW-Be1w77Tdnqbfglep4wziQUbq=
+Sr4OZkI4d9mR1wBYkRM7pXSK-TOuebOm8lAs0BRfGmCBODqPs0Tbj4Da0jC2TbMpcg9u3uhPGRu=
+AlgyNZSSB6bW1rQ_HU4Vrql6NOL7l5jq-A09NN4zKeOC8413g-Mnwdt87wTcVXxN01FLyPaKGaY=
+5eM8R_dGdxAGk-IyQ=3Ds0-d-e1-ft#https://oddsjam.intercom-mail.com/i/o/xgkfzd=
+mt/1941849174/c61d2679a6373891b21fa38e2190/Screenshot+2026-01-14+at+1_36_08=
+%E2%80%AFPM.png?expires=3D1782967788&signature=3D44b881e79b906d2ff2f1c20276=
+e1345a22a7eb0aed0e8184c400d0a7318ade5b&req=3DdSkjF8F6lIBYXfMW2XS%2FiYYQWzbM=
+oet8LQ1ipKLDkQ0Z3iDiMRc%3D%0A]<https://oddsjam.intercom-clicks.com/via/e?ob=
+=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%2BjnW0xO98sGtwZGzG=
+JYtWf8a6lwVINdWPLg%3D%3D&h=3Dad9e890ef9b456eca0cf84b78e8988852694127e-xgkfz=
+dmt_215472679676965&l=3D04b1834618cf9266ab75d8ad6504318f0378dde1-194530028>
+
+This subscriber is using the OddsJam Platinum plan and made $25,400 in the =
+month of December. They recently released a full-guide<https://oddsjam.inte=
+rcom-clicks.com/via/e?ob=3DQF%2Bby0lYaEOLhMsEocmTAslXTHJMeG0GBd0zFL8MGIXIzg=
+5Yv2lkqfHbzA19dVjInNCMXmvcFbclyt%2BIm4ySFQ%3D%3D&h=3D7210a422ec38b65acc11a0=
+f48f2db3732a769fc1-xgkfzdmt_215472679676965&l=3D00002c54a9832848692af92433d=
+78a63c532469b-194530031> on how you can do exactly what they are. The Footb=
+all and Basketball seasons are the busiest times of the year to start arbit=
+rage betting. There is no better time to get started than now!
+
+[https://ci3.googleusercontent.com/meips/ADKq_NbvI1mybl_VTIH7KC9W85NDoUMdRx=
+_WaebB1Kk3eugpSMZPcTiLERlnoOokbGo8hi_NRhwGQQcFclpp9YMWMUp1o1W0cCIyA44ysb5gd=
+xdBzj6kc0OPmI_MS7bcilKAp8YGs8mueUNIKFuLXwbQLJfmJ-sbyF4iBr1ZMGi4uV1aXSiA0GK0=
+QEdqvL0sR9owGtTMjFsgfwLtqVbUcD6i50t3oltis8GFRG42B2s2r3nKV01Z4IxxeKbHTqH1e6_=
+PQYOCYoVAgiO7MkI3ibIRZN9RUIEqliEZxW43MMMbPmbr6DhKV47z4qorlUGC2sdhRV8BoVuu0E=
+9PEZ_6QRrCOPqeDvfIVyUaChCBWLlT5XPjjMh3mfIUuyaOYSE6OTfxdTeJnw74S71lcnmg2r16v=
+zD-Dkf8MavK3Bk7n3p6=3Ds0-d-e1-ft#https://oddsjam.intercom-mail.com/i/o/xgkf=
+zdmt/1941855552/fcbd7a1557e2c6e85e35acbe3224/Screenshot+2026-01-14+at+4_00_=
+27%E2%80%AFPM.png?expires=3D1782967788&signature=3D32365bb5dead05061a10242a=
+e7ab0684a6860e68f661075db7e8778c60b740ab&req=3DdSkjF8F7mIRaW%2FMW2XS%2FiSMz=
+Kp16nv0uID9DgXp3LhDb16UibnQ%3D%0A]<https://oddsjam.intercom-clicks.com/via/=
+e?ob=3Dkk6B0%2FKjD%2BZl51VCGWrnATfVBTnufLUjHEO%2ByX3XgBbjGOx%2Baeifc7i9uzSC=
+54hWltGqNe3isVCN5%2B1vJoaVpw%3D%3D&h=3D22b99f840f28f372beef9969a2ff18ae2f5f=
+8efe-xgkfzdmt_215472679676965&l=3D696660329023d300de4bc89944ce441905148584-=
+194530032>
+Click Here To Try The Fantasy Optimizer<https://oddsjam.intercom-clicks.com=
+/via/e?ob=3Dkk6B0%2FKjD%2BZl51VCGWrnATfVBTnufLUjHEO%2ByX3XgBbjGOx%2Baeifc7i=
+9uzSC54hWltGqNe3isVCN5%2B1vJoaVpw%3D%3D&h=3D22b99f840f28f372beef9969a2ff18a=
+e2f5f8efe-xgkfzdmt_215472679676965&l=3Ddd0df8e0a8020222c7ce3be0c487004f8f86=
+58ef-194530033>
+
+Not only are there profitable opportunities on sportsbooks but the DFS (Dai=
+ly Fantasy Sports) platforms are FILLED with these opportunities. As seen i=
+n the photo above PrizePicks is filled with +EV plays. The OddsJam Fantasy =
+Optimizer<https://oddsjam.intercom-clicks.com/via/e?ob=3Dkk6B0%2FKjD%2BZl51=
+VCGWrnATfVBTnufLUjHEO%2ByX3XgBbjGOx%2Baeifc7i9uzSC54hWltGqNe3isVCN5%2B1vJoa=
+Vpw%3D%3D&h=3D22b99f840f28f372beef9969a2ff18ae2f5f8efe-xgkfzdmt_21547267967=
+6965&l=3D696660329023d300de4bc89944ce441905148584-194530032> displays all o=
+f the profitable player prop opportunities available across every DFS platf=
+orm. The plays in the GREEN category are profitable and you can expect to s=
+ee make profit on these plays in the long-term.
+
+If you have any questions on how to become a profitable sports bettor send =
+me a message. I will personally coach you 1:1 to make sure this happens!
+
+Best,
+
+Randall
+
+[https://ci3.googleusercontent.com/meips/ADKq_NaKeZUiDGUqC8EbOcu8BFI_TY6unQ=
+Q-1l2dgP3hB6-kT0w9kJRlPT02YTsIiTwTj6DNcR87fxJzpvUb0H8ux92eDS866crLWJp4DZj-p=
+aajjkmcRX3I0ME_GLLr94ASfiqf9W6EpfxBGJhetwSXEm5S-ErskUhi76xl-Bx091uhuQ9LPN30=
+M1Qt9VupHY3G6Sdc8xyo-qHmlmChy0FE7Zd9h-gTfdd2ktK6bIMSJbvo1h31RSo0YJWczMkU2KR=
+l-WtfYwMrdBPW1ge8QcUSX-bQ1XKwfCMC9E4XK64s1gqapbQyrAn7s573VCIIk2vSx2s4tD1vPS=
+_t0NLBIH8lNKc4njDHDtIE3DHoYu129zvX4PH-NM8vSXdnDa6cXhY7APj2lqDU2snlJTarZFWq1=
+RKm42opOOn8MiO3GoTI=3Ds0-d-e1-ft#https://oddsjam.intercom-mail.com/i/o/xgkf=
+zdmt/1941856734/5b8d8ca232b360e70ea48b0e59ba/Screenshot+2026-01-14+at+3_54_=
+00%E2%80%AFPM.png?expires=3D1782967788&signature=3D5ef41d83f86f67415eab05a4=
+66ea420d575b1c136419e8d1f9e22182e74b082b&req=3DdSkjF8F7m4ZcXfMW2XS%2FiTsaVK=
+gMrdGgSDdbj%2BSKYN6IlwIc4rI%3D%0A]<https://oddsjam.intercom-clicks.com/via/=
+e?ob=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%2BjnW0xO98sGtw=
+ZGzGJYtWf8a6lwVINdWPLg%3D%3D&h=3Dad9e890ef9b456eca0cf84b78e8988852694127e-x=
+gkfzdmt_215472679676965&l=3D04b1834618cf9266ab75d8ad6504318f0378dde1-194530=
+028>
+[https://ci3.googleusercontent.com/meips/ADKq_Na9KCwTovw2oU_xxKYYN-jRfWIo7z=
+KK_FTAsw_reKTGatGj0P7p8vlOT8l6njUUmotg2eaab_os6yj9JtvDfVCjAuRVFxNNr9HkuQppA=
+8T1fl7KfWTw2_Di6gX8WbV1vsTACYhu5gVNbKWUiteYYLJOHLtHsiCzuJafhFNwlyU8Y5eIFa_E=
+G8r54Nk89nSnUtCgVPQUcidTWdjCw4zJStFx0UG8NE0qsMNrrDd1mLg2spVAObEY5ChCSuGtVJd=
+3me7ja8ZMQ8pnV3nlNlkksG0NM9kTWugAlg5kcLude9quMRug6FqcA3nctaBtxbq0o7hwPgu6uj=
+KXUC66dSUO3dPOSDH8GlREzMSnz5GTlJl4S7rcZPWw5gqOP2V1Fa-GBtthKpQ6A1tSKLU-QdJtv=
+GMcqqGuFIoGT2jIrxrqy_o=3Ds0-d-e1-ft#https://oddsjam.intercom-mail.com/i/o/x=
+gkfzdmt/1941857252/946ac83c3cd2f7248835f8f589e8/Screenshot+2026-01-14+at+3_=
+53_49%E2%80%AFPM.png?expires=3D1782967788&signature=3D3c090daa659879778fe8a=
+db20165c0d848d88cc953db328d036b4f934a960572&req=3DdSkjF8F7moNaW%2FMW2XS%2Fi=
+WzRvPPgq3Y%2BPGoZHCXryfUORiAufPU%3D%0A]<https://oddsjam.intercom-clicks.com=
+/via/e?ob=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%2BjnW0xO9=
+8sGtwZGzGJYtWf8a6lwVINdWPLg%3D%3D&h=3Dad9e890ef9b456eca0cf84b78e89888526941=
+27e-xgkfzdmt_215472679676965&l=3D04b1834618cf9266ab75d8ad6504318f0378dde1-1=
+94530028>
+[https://ci3.googleusercontent.com/meips/ADKq_NarnXjzIBO8z1kW4s05s0Wjuy-BpP=
+-ArcNJ6znYsdonMhLhyfi_ey2nNxN8vdfGTpapW5g5AvAXrTr1GyLwS6Xz_pxjy2wpHFaOkaDSO=
+8HNRwH2l-cc0Xh3VIV1vJKmrl5ggTW90zyaQtkB7sM0B2SZepYxOl-vq9fmBiJa5cHmVOeSDleR=
+H_h4WtL2IXI7-7nq5eSIbmZnfFrWbRr9jSGSQUyu9InHU-39qUSLIf7FIF4hOg6JDrlePk-kpR4=
+XtNhc8WE9-XbgbBIyjEhIbknvQrnub1CrAzCi-uaE3eN-V9UUCAnSWC0TYQwEV6E3TEkctIgV0U=
+xUJ97uCKgmg30tg0EylxYvKQikEAiuB7wABcYfTiIQmcCd-WQPNcGMPLKGGecNacfnb5HJglcNj=
+xZexEJ51ZPCF0oooA=3Ds0-d-e1-ft#https://oddsjam.intercom-mail.com/i/o/xgkfzd=
+mt/1941857617/29d037f1e92ea2197d94a73dc952/Screenshot+2026-01-14+at+1_39_03=
+%E2%80%AFPM.png?expires=3D1782967788&signature=3Dfc1b11ad32a6577c237b53ecb1=
+059373a828d0bf6c6755a6a7ad895808d9157a&req=3DdSkjF8F7modeXvMW2XS%2FiVFRAT75=
+jqHVkWvxKTM7kEMP4X2QH3k%3D%0A]<https://oddsjam.intercom-clicks.com/via/e?ob=
+=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%2BjnW0xO98sGtwZGzG=
+JYtWf8a6lwVINdWPLg%3D%3D&h=3Dad9e890ef9b456eca0cf84b78e8988852694127e-xgkfz=
+dmt_215472679676965&l=3D04b1834618cf9266ab75d8ad6504318f0378dde1-194530028>
+Click Here For A 7-Day Free Trial!<https://oddsjam.intercom-clicks.com/via/=
+e?ob=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%2BjnW0xO98sGtw=
+ZGzGJYtWf8a6lwVINdWPLg%3D%3D&h=3Dad9e890ef9b456eca0cf84b78e8988852694127e-x=
+gkfzdmt_215472679676965&l=3Db81340b81afce3199c3b7c5eb10d44bcb3d39adf-194530=
+029>
+OddsJam Inc. 2021.
+
+Unsubscribe from our emails<https://oddsjam.intercom-mail.com/subscriptions=
+/unsubscribe?app_id=3Dxgkfzdmt&conversation_id=3D215472679676965&user_id=3D=
+677c43b144cdca4986c89755&source=3Dbody>
+
+Powered by Intercom<https://oddsjam.intercom-clicks.com/via/e?ob=3DtXUIVcL8=
+ieS0KdoTiNOWKyPFGHbfdR%2BmoakPdlZvsiKakudet7b1E8tIN3amBP5cOg7qrM9uBCCETaxM1=
+3PVmNL8a8s4dOXjlEHR2FE1bcY%3D&h=3D888b5898099559c34703ae32fde741d079ee131c-=
+xgkfzdmt_215472679676965>
+
+
+
+
+----_NmP-797c56d22e62e159-Part_1
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8"></=
+head>
+<body>
+<table border=3D"0" cellspacing=3D"0" cellpadding=3D"0" width=3D"100%" styl=
+e=3D" aspect-ratio: revert !important; background: revert !important; block=
+-size: revert !important; border: revert !important; bottom: revert !import=
+ant; color: revert !important; color-scheme: revert !important; content-vis=
+ibility: revert !important; cursor: revert !important; direction: revert !i=
+mportant; display: revert !important; font-size: revert !important; height:=
+ revert !important; hyphens: revert !important; letter-spacing: revert !imp=
+ortant; line-height: revert !important; margin: revert !important; opacity:=
+ revert !important; order: revert !important; outline: revert !important; o=
+verflow: revert !important; padding: revert !important; position: revert !i=
+mportant; resize: revert !important; rotate: revert !important; scale: reve=
+rt !important; tab-size: revert !important; table-layout: revert !important=
+; text-align: revert !important; text-indent: revert !important; text-orien=
+tation: revert !important; text-overflow: revert !important; text-shadow: r=
+evert !important; text-transform: revert !important; text-wrap: revert !imp=
+ortant; top: revert !important; transition: revert !important; user-select:=
+ revert !important; vertical-align: revert !important; visibility: revert !=
+important; white-space: revert !important; width: revert !important; word-b=
+reak: revert !important; word-spacing: revert !important; writing-mode: rev=
+ert !important; zoom: revert !important; cellpadding: 0 !important; border:=
+ 0 !important; cellspacing: 0 !important; display: table !important; width:=
+ 100% !important; table-layout: fixed !important; border-collapse: seperate=
+ !important; float: none !important; border-spacing: 0px 0px !important; " =
+align=3D"left">
+<tbody style=3D" aspect-ratio: revert !important; background: revert !impor=
+tant; block-size: revert !important; border: revert !important; bottom: rev=
+ert !important; color: revert !important; color-scheme: revert !important; =
+content-visibility: revert !important; cursor: revert !important; direction=
+: revert !important; display: revert !important; font-size: revert !importa=
+nt; height: revert !important; hyphens: revert !important; letter-spacing: =
+revert !important; line-height: revert !important; margin: revert !importan=
+t; opacity: revert !important; order: revert !important; outline: revert !i=
+mportant; overflow: revert !important; padding: revert !important; position=
+: revert !important; resize: revert !important; rotate: revert !important; =
+scale: revert !important; tab-size: revert !important; table-layout: revert=
+ !important; text-align: revert !important; text-indent: revert !important;=
+ text-orientation: revert !important; text-overflow: revert !important; tex=
+t-shadow: revert !important; text-transform: revert !important; text-wrap: =
+revert !important; top: revert !important; transition: revert !important; u=
+ser-select: revert !important; vertical-align: revert !important; visibilit=
+y: revert !important; white-space: revert !important; width: revert !import=
+ant; word-break: revert !important; word-spacing: revert !important; writin=
+g-mode: revert !important; zoom: revert !important; display: block !importa=
+nt; ">
+<tr style=3D" aspect-ratio: revert !important; background: revert !importan=
+t; block-size: revert !important; border: revert !important; bottom: revert=
+ !important; color: revert !important; color-scheme: revert !important; con=
+tent-visibility: revert !important; cursor: revert !important; direction: r=
+evert !important; display: revert !important; font-size: revert !important;=
+ height: revert !important; hyphens: revert !important; letter-spacing: rev=
+ert !important; line-height: revert !important; margin: revert !important; =
+opacity: revert !important; order: revert !important; outline: revert !impo=
+rtant; overflow: revert !important; padding: revert !important; position: r=
+evert !important; resize: revert !important; rotate: revert !important; sca=
+le: revert !important; tab-size: revert !important; table-layout: revert !i=
+mportant; text-align: revert !important; text-indent: revert !important; te=
+xt-orientation: revert !important; text-overflow: revert !important; text-s=
+hadow: revert !important; text-transform: revert !important; text-wrap: rev=
+ert !important; top: revert !important; transition: revert !important; user=
+-select: revert !important; vertical-align: revert !important; visibility: =
+revert !important; white-space: revert !important; width: revert !important=
+; word-break: revert !important; word-spacing: revert !important; writing-m=
+ode: revert !important; zoom: revert !important; ">
+<td valign=3D"middle" width=3D"1px" bgcolor=3D"#A6A6A6" cellpadding=3D"7px =
+2px 7px 2px" style=3D" aspect-ratio: revert !important; background: revert =
+!important; block-size: revert !important; border: revert !important; botto=
+m: revert !important; color: revert !important; color-scheme: revert !impor=
+tant; content-visibility: revert !important; cursor: revert !important; dir=
+ection: revert !important; display: revert !important; font-size: revert !i=
+mportant; height: revert !important; hyphens: revert !important; letter-spa=
+cing: revert !important; line-height: revert !important; margin: revert !im=
+portant; opacity: revert !important; order: revert !important; outline: rev=
+ert !important; overflow: revert !important; padding: revert !important; po=
+sition: revert !important; resize: revert !important; rotate: revert !impor=
+tant; scale: revert !important; tab-size: revert !important; table-layout: =
+revert !important; text-align: revert !important; text-indent: revert !impo=
+rtant; text-orientation: revert !important; text-overflow: revert !importan=
+t; text-shadow: revert !important; text-transform: revert !important; text-=
+wrap: revert !important; top: revert !important; transition: revert !import=
+ant; user-select: revert !important; vertical-align: revert !important; vis=
+ibility: revert !important; white-space: revert !important; width: revert !=
+important; word-break: revert !important; word-spacing: revert !important; =
+writing-mode: revert !important; zoom: revert !important; padding: 7px 2px =
+7px 2px !important; background-color: #A6A6A6 !important; valign: middle !i=
+mportant; width: 0px !important; ">
+</td>
+<td valign=3D"middle" width=3D"100%" bgcolor=3D"#EAEAEA" cellpadding=3D"7px=
+ 5px 7px 15px" color=3D"#212121" style=3D" aspect-ratio: revert !important;=
+ background: revert !important; block-size: revert !important; border: reve=
+rt !important; bottom: revert !important; color: revert !important; color-s=
+cheme: revert !important; content-visibility: revert !important; cursor: re=
+vert !important; direction: revert !important; display: revert !important; =
+font-size: revert !important; height: revert !important; hyphens: revert !i=
+mportant; letter-spacing: revert !important; line-height: revert !important=
+; margin: revert !important; opacity: revert !important; order: revert !imp=
+ortant; outline: revert !important; overflow: revert !important; padding: r=
+evert !important; position: revert !important; resize: revert !important; r=
+otate: revert !important; scale: revert !important; tab-size: revert !impor=
+tant; table-layout: revert !important; text-align: revert !important; text-=
+indent: revert !important; text-orientation: revert !important; text-overfl=
+ow: revert !important; text-shadow: revert !important; text-transform: reve=
+rt !important; text-wrap: revert !important; top: revert !important; transi=
+tion: revert !important; user-select: revert !important; vertical-align: re=
+vert !important; visibility: revert !important; white-space: revert !import=
+ant; width: revert !important; word-break: revert !important; word-spacing:=
+ revert !important; writing-mode: revert !important; zoom: revert !importan=
+t; width: 100% !important; background-color: #EAEAEA !important; padding: 7=
+px 5px 7px 15px !important; font-family: wf_segoe-ui_normal, Segoe UI, Sego=
+e WP, Tahoma, Arial, sans-serif !important; font-size: 12px !important; fon=
+t-weight: normal !important; color: #212121 !important; text-align: left !i=
+mportant; word-wrap: break-word !important; ">
+<div style=3D" aspect-ratio: revert !important; background: revert !importa=
+nt; block-size: revert !important; border: revert !important; bottom: rever=
+t !important; color: revert !important; color-scheme: revert !important; co=
+ntent-visibility: revert !important; cursor: revert !important; direction: =
+revert !important; display: revert !important; font-size: revert !important=
+; height: revert !important; hyphens: revert !important; letter-spacing: re=
+vert !important; line-height: revert !important; margin: revert !important;=
+ opacity: revert !important; order: revert !important; outline: revert !imp=
+ortant; overflow: revert !important; padding: revert !important; position: =
+revert !important; resize: revert !important; rotate: revert !important; sc=
+ale: revert !important; tab-size: revert !important; table-layout: revert !=
+important; text-align: revert !important; text-indent: revert !important; t=
+ext-orientation: revert !important; text-overflow: revert !important; text-=
+shadow: revert !important; text-transform: revert !important; text-wrap: re=
+vert !important; top: revert !important; transition: revert !important; use=
+r-select: revert !important; vertical-align: revert !important; visibility:=
+ revert !important; white-space: revert !important; width: revert !importan=
+t; word-break: revert !important; word-spacing: revert !important; writing-=
+mode: revert !important; zoom: revert !important; ">
+You don't often get email from brian.stephens@oddsjam.com. <a href=3D"https=
+://aka.ms/LearnAboutSenderIdentification" style=3D"background: revert !impo=
+rtant;color: revert !important;content-visibility: revert !important;direct=
+ion: revert !important;display: revert !important;font-size: revert !import=
+ant;opacity: revert !important;rotate: revert !important;scale: revert !imp=
+ortant;visibility: revert !important;">
+Learn why this is important</a> </div>
+</td>
+<td valign=3D"middle" align=3D"left" width=3D"75px" bgcolor=3D"#EAEAEA" cel=
+lpadding=3D"7px 5px 7px 5px" color=3D"#212121" style=3D" aspect-ratio: reve=
+rt !important; background: revert !important; block-size: revert !important=
+; border: revert !important; bottom: revert !important; color: revert !impo=
+rtant; color-scheme: revert !important; content-visibility: revert !importa=
+nt; cursor: revert !important; direction: revert !important; display: rever=
+t !important; font-size: revert !important; height: revert !important; hyph=
+ens: revert !important; letter-spacing: revert !important; line-height: rev=
+ert !important; margin: revert !important; opacity: revert !important; orde=
+r: revert !important; outline: revert !important; overflow: revert !importa=
+nt; padding: revert !important; position: revert !important; resize: revert=
+ !important; rotate: revert !important; scale: revert !important; tab-size:=
+ revert !important; table-layout: revert !important; text-align: revert !im=
+portant; text-indent: revert !important; text-orientation: revert !importan=
+t; text-overflow: revert !important; text-shadow: revert !important; text-t=
+ransform: revert !important; text-wrap: revert !important; top: revert !imp=
+ortant; transition: revert !important; user-select: revert !important; vert=
+ical-align: revert !important; visibility: revert !important; white-space: =
+revert !important; width: revert !important; word-break: revert !important;=
+ word-spacing: revert !important; writing-mode: revert !important; zoom: re=
+vert !important; width: 75px !important; background-color: #EAEAEA !importa=
+nt; padding: 7px 5px 7px 5px !important; font-family: wf_segoe-ui_normal, S=
+egoe UI, Segoe WP, Tahoma, Arial, sans-serif !important; font-size: 12px !i=
+mportant; font-weight: normal !important; color: #212121 !important; text-a=
+lign: left !important; word-wrap: break-word !important; align: left !impor=
+tant; ">
+</td>
+</tr>
+</tbody>
+</table>
+<div>
+<p></p>
+<div style=3D"background-color:#FFEB9C; width:100%; border-style: solid; bo=
+rder-color:#9C6500; border-width:1pt; padding:2pt; font-size:10pt; line-hei=
+ght:12pt; font-family:'Calibri'; color:Black; text-align: left;">
+<span style=3D"color:#9C6500" ;=3D"" font-weight:bold;=3D"">CAUTION:</span>=
+ This email originated from outside the organization. Be careful with attac=
+hments.</div>
+<br>
+<p></p>
+<div>
+<div dir=3D"ltr"><br>
+<br>
+<div class=3D"gmail_quote gmail_quote_container">
+<div dir=3D"ltr" class=3D"gmail_attr">---------- Forwarded message --------=
+-<br>
+From: <strong class=3D"gmail_sendername" dir=3D"auto">Randall from OddsJam<=
+/strong> <span dir=3D"auto">
+&lt;randall@oddsjam.com&gt;</span><br>
+Date: Wed, Jan 14, 2026 at 4:09 PM<br>
+Subject: +EV: NBA Value =F0=9F=92=B0<br>
+To: &lt;brian.stephens+1040@oddsjam.com&gt;<br>
+</div>
+<br>
+<br>
+<div class=3D"msg1714446513927361864"><u></u>
+<div style=3D"width:100%!important;min-width:100%;box-sizing:border-box;col=
+or:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-weight:normal;text-a=
+lign:left;line-height:130%;font-size:16px;margin:0;padding:0">
+<div style=3D"color:transparent;opacity:0;font-size:0px;border:0;max-height=
+:1px;width:1px;margin:0px;padding:0px;border-width:0px!important;display:no=
+ne!important;line-height:0px!important">
+<img border=3D"0" width=3D"1" height=3D"1" src=3D"https://ci3.googleusercon=
+tent.com/meips/ADKq_Nbch9cG6eyRy_p_r5_I_LMxTy3H3Gc_SBfdEj9m1SvnCMKGujPheRFX=
+R3lCx7goM6XI0LjZ5I55KKNdyEC_n2EJRTOxjlroI_SqSxZWQBLDvKRmOE_nXhz4J8hR-SgEWLA=
+60OhebaF58wxmqlcJJqAP_ypMvaDSCLj8utix659fPB40RNmdaaPf-XvpdjOaQem80UdZCz7_sW=
+HHHkLeCsq7XK-YPG0W0SpAKG2eKq9dUhR_1GmfDKrlZAZHbY5_UT_88G4wgpCYrWCzclHiTJpTo=
+k3A10--=3Ds0-d-e1-ft#https://arbshark-efb610e41a18.intercom-mail.com/q/J08g=
+xVcyQYpI8RfP_XGvpQ~~/AAAAARA~/9jh7_clhGHzbGPvcCsxKOQrLxWBR3k-soL6IaaPP23myF=
+L_liq3l0nlwCRJBISpOC-tmBlilUMWEMWjU-MPTGehYx_y24u18gkMNCFK-f34~" alt=3D""><=
+/div>
+<table class=3D"m_1714446513927361864body m_1714446513927361864intercom-tem=
+plate-body" role=3D"presentation" style=3D"width:100%;border-spacing:0;bord=
+er-collapse:collapse;vertical-align:top;text-align:left;background-color:#f=
+9f9f9;height:100%;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font=
+-weight:normal;line-height:130%;font-size:16px;margin:0;padding:0" bgcolor=
+=3D"#f9f9f9">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td class=3D"m_1714446513927361864center" valign=3D"top" style=3D"text-alig=
+n:center!important;word-wrap:break-word;border-collapse:collapse!important;=
+vertical-align:top;color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;fon=
+t-weight:normal;line-height:130%;font-size:16px;margin:0;padding:0" align=
+=3D"center">
+<table role=3D"presentation" style=3D"text-align:left!important;border-spac=
+ing:0;border-collapse:collapse;vertical-align:top;margin:0 auto;padding:0" =
+class=3D"m_1714446513927361864content-wrapper">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td style=3D"word-wrap:break-word;border-collapse:collapse!important;vertic=
+al-align:top;text-align:left;color:#0a0a0a;font-family:Helvetica,Arial,sans=
+-serif;font-weight:normal;line-height:130%;font-size:16px;margin:0;padding:=
+0" align=3D"left" valign=3D"top">
+<center style=3D"width:100%;min-width:580px">
+<table class=3D"m_1714446513927361864container" role=3D"presentation" style=
+=3D"border-spacing:0;border-collapse:collapse;vertical-align:top;text-align=
+:inherit;background-color:#fefefe;width:580px;margin:0 auto;padding:0" bgco=
+lor=3D"#fefefe">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td style=3D"word-wrap:break-word;border-collapse:collapse!important;vertic=
+al-align:top;text-align:left;color:#0a0a0a;font-family:Helvetica,Arial,sans=
+-serif;font-weight:normal;line-height:130%;font-size:16px;margin:0;padding:=
+45px 60px 0px" align=3D"left" valign=3D"top">
+<table width=3D"100%" role=3D"presentation" style=3D"border-spacing:0;borde=
+r-collapse:collapse;vertical-align:top;text-align:left;padding:0">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td style=3D"word-wrap:break-word;border-collapse:collapse!important;vertic=
+al-align:top;text-align:left;color:#0a0a0a;font-family:Helvetica,Arial,sans=
+-serif;font-weight:normal;line-height:130%;font-size:16px;margin:0;padding:=
+0" align=3D"left" valign=3D"top">
+<img src=3D"https://ci3.googleusercontent.com/meips/ADKq_NZuM2tMmtLJrzKFGLn=
+MhCAbwztac57bI0cVymtezoOZBj28ZbHYSW2KpAPASAP0YI_aodMkPYjueWxBETf9RDvC7p7n2w=
+c3M_oXpStL7AsIPFkK_sc9eBXPVraQk7zde04g2OejmvDaNg4t4uBF-EpWpL1qG9WNrQyLG2x7U=
+ZcAoOnn1iHo-3RQoRZd70D21WdYKRbdjDrERT6N78TOPL1nnqn4vzdzbYRQwtO9nA-GZrYHrkGf=
+YM3fHkIJQISIuz-E9fyUnuRx9zDY12wccvev6UcPEnLn9006ZVmjMkxKDGByj1DgYOTtTWg48m8=
+oB6G5SQzmS1on_YNRrZxuM_vuAh_o8qrZNEU=3Ds0-d-e1-ft#https://oddsjam.intercom-=
+mail.com/i/o/779433800/e9ac4ecc55542b1b2e53947c/oj_dark.png?expires=3D17829=
+67788&amp;signature=3Df0f321cc13640acc03b59d97b7741c1ebbeb0177466e619be15c0=
+8394da6ccdb&amp;req=3DcycuEsp9lYFfFb4S23SwhcDaHXKV7RZv6Wv0lrbdJPjd10xuZg%3D=
+%3D%0A" width=3D"165" height=3D"" style=3D"width:165px;height:px;outline:no=
+ne;text-decoration:none;max-width:100%;clear:both;display:block;text-align:=
+left;padding:15px 0 30px" alt=3D"">
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</center>
+<center style=3D"width:100%;min-width:580px">
+<table class=3D"m_1714446513927361864container" role=3D"presentation" style=
+=3D"border-spacing:0;border-collapse:collapse;vertical-align:top;text-align=
+:inherit;background-color:#fefefe;width:580px;margin:0 auto;padding:0" bgco=
+lor=3D"#fefefe">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td style=3D"word-wrap:break-word;border-collapse:collapse!important;vertic=
+al-align:top;text-align:left;color:#0a0a0a;font-family:Helvetica,Arial,sans=
+-serif;font-weight:normal;line-height:130%;font-size:16px;margin:0;padding:=
+0px 60px 45px" align=3D"left" valign=3D"top">
+<p style=3D"color:#525252;font-family:Helvetica,Arial,sans-serif;font-weigh=
+t:normal;text-align:left;line-height:1.5;font-size:15px;margin:0 0 17px;pad=
+ding:0" align=3D"left">
+Hi there,</p>
+<p style=3D"color:#525252;font-family:Helvetica,Arial,sans-serif;font-weigh=
+t:normal;text-align:left;line-height:1.5;font-size:15px;margin:0 0 17px;pad=
+ding:0" align=3D"left">
+Market inefficiencies between sportsbooks create situations where value is =
+left on the board. These discrepancies lead to profitable betting opportuni=
+ties.
+<a href=3D"https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2=
+F%2Foddsjam.intercom-clicks.com%2Fvia%2Fe%3Fob%3Dy7RS5JiachdUCl9loBCkRtdJLr=
+MXbLCGukmvd1Y7i1WJ%252BA4rmyj%252BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%253D%2=
+53D%26h%3Dad9e890ef9b456eca0cf84b78e8988852694127e-xgkfzdmt_215472679676965=
+%26l%3Ddc96dc6e3697c7e2f9da4a79d82dee2af33e30d6-194530027&amp;data=3D05%7C0=
+2%7Cjeremy.botter%40gdcgroup.com%7Cb41c826c681749b0fcfc08de5489a917%7C52c34=
+48d59b94e948fd9d97a2128c819%7C0%7C0%7C639041147746719612%7CUnknown%7CTWFpbG=
+Zsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiT=
+WFpbCIsIldUIjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;sdata=3DVf9Uhf7nyLBxoZKxKpubXJ=
+n9vImAJviqiUMlfhykfuM%3D&amp;reserved=3D0" originalsrc=3D"https://oddsjam.i=
+ntercom-clicks.com/via/e?ob=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%=
+2BA4rmyj%2BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%3D%3D&amp;h=3Dad9e890ef9b456e=
+ca0cf84b78e8988852694127e-xgkfzdmt_215472679676965&amp;l=3Ddc96dc6e3697c7e2=
+f9da4a79d82dee2af33e30d6-194530027" class=3D"m_1714446513927361864intercom-=
+content-link" style=3D"color:#1251ba!important;font-family:Helvetica,Arial,=
+sans-serif;font-weight:normal;text-align:left;line-height:130%;text-decorat=
+ion:underline;margin:0;padding:0" target=3D"_blank" data-saferedirecturl=3D=
+"https://www.google.com/url?q=3Dhttps://oddsjam.intercom-clicks.com/via/e?o=
+b%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%252BA4rmyj%252BjnW0xO98sGt=
+wZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Dad9e890ef9b456eca0cf84b78e898885269=
+4127e-xgkfzdmt_215472679676965%26l%3Ddc96dc6e3697c7e2f9da4a79d82dee2af33e30=
+d6-194530027&amp;source=3Dgmail&amp;ust=3D1768511876844000&amp;usg=3DAOvVaw=
+2ofLRHZv7D0uS_zz3IISq0">
+Positive Expected Value (+EV) betting</a> is a data-driven strategy that id=
+entifies and takes advantage of this value within the market. It is one of =
+the few proven methods to achieve long-term profitability in sports betting=
+.</p>
+<h2 id=3D"m_1714446513927361864h_80492bd532" style=3D"color:#1d364b;font-fa=
+mily:Helvetica,Arial,sans-serif;font-weight:normal;text-align:left;line-hei=
+ght:130%;word-wrap:normal;font-size:18px;margin:0 0 10px;padding:0" align=
+=3D"left">
+There is <b>MASSIVE</b> value on PrizePicks =F0=9F=9A=A8</h2>
+<div style=3D"margin-bottom:17px;margin-top:17px;line-height:0"><a href=3D"=
+https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Foddsjam=
+.intercom-clicks.com%2Fvia%2Fe%3Fob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd=
+1Y7i1WJ%252BA4rmyj%252BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Da=
+d9e890ef9b456eca0cf84b78e8988852694127e-xgkfzdmt_215472679676965%26l%3D04b1=
+834618cf9266ab75d8ad6504318f0378dde1-194530028&amp;data=3D05%7C02%7Cjeremy.=
+botter%40gdcgroup.com%7Cb41c826c681749b0fcfc08de5489a917%7C52c3448d59b94e94=
+8fd9d97a2128c819%7C0%7C0%7C639041147746750599%7CUnknown%7CTWFpbGZsb3d8eyJFb=
+XB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldU=
+IjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;sdata=3Drty7S0HG%2BX4C5J3HxKtgVefVlyyFgv0=
+U4TxHVK4Ca4M%3D&amp;reserved=3D0" originalsrc=3D"https://oddsjam.intercom-c=
+licks.com/via/e?ob=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%=
+2BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%3D%3D&amp;h=3Dad9e890ef9b456eca0cf84b7=
+8e8988852694127e-xgkfzdmt_215472679676965&amp;l=3D04b1834618cf9266ab75d8ad6=
+504318f0378dde1-194530028" style=3D"color:#165fc6;font-family:Helvetica,Ari=
+al,sans-serif;font-weight:normal;text-align:left;line-height:130%;text-deco=
+ration:underline;margin:0;padding:0" target=3D"_blank" data-saferedirecturl=
+=3D"https://www.google.com/url?q=3Dhttps://oddsjam.intercom-clicks.com/via/=
+e?ob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%252BA4rmyj%252BjnW0xO98=
+sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Dad9e890ef9b456eca0cf84b78e898885=
+2694127e-xgkfzdmt_215472679676965%26l%3D04b1834618cf9266ab75d8ad6504318f037=
+8dde1-194530028&amp;source=3Dgmail&amp;ust=3D1768511876844000&amp;usg=3DAOv=
+Vaw33mh1sd7b_H9IYli9g8Vbz"><img src=3D"https://ci3.googleusercontent.com/me=
+ips/ADKq_NbNeAJNiJiCMVEPz1AMwNwGSnx5DLjm9XZNTyQryhVY_Mt0jT0EwdZpd9-YzlKs7lk=
+xNZ5dcmv_C5YYbmJ6QEIHdZyHLB6GOsb2LEVZVZfgC5cSRL3d-SX9cw4L1f3oib13JWd0xoPPNM=
+aBrIa_mOvdGztMaeJ4rjV244PsVHZOZUHXeKMk8SlQ9MK-7rnS4U0p1yQU9ItifEzNbeCD0pxK8=
+uTY-kseFTe6A_-Vl5sFkVGZ4nQBApTveQtYTHt_ux5EYUkFkSiGOANvM69_bAvfgEOa3IGCai4D=
+pF7cVg-ZM5PHOJJ9sYkL4skiGsdpm2kdXgX1gIMcVQp2x1YgVipSv9d9-Pqa1rjgp7MlcQARIea=
+C1Kus83EZtqBbFpjaGt47I-Z9VJjcCXkEuUUjRfi8w_7S62zRpB4Guw=3Ds0-d-e1-ft#https:=
+//oddsjam.intercom-mail.com/i/o/xgkfzdmt/1941844930/12011c4919dfd2948518e29=
+e5795/Screenshot+2026-01-14+at+1_38_44%E2%80%AFPM.png?expires=3D1782967788&=
+amp;signature=3D6959081097d833eb286ffb85e5db90f1dd13b52f7229378e7c5f68f280a=
+0e5c0&amp;req=3DdSkjF8F6mYhcWfMW2XS%2FiSRckLsofzQUlg5hpxAID4qmaluXHYw%3D%0A=
+" width=3D"580" style=3D"outline:none;text-decoration:none;width:auto;max-w=
+idth:100%;clear:both;display:block;border-style:none"></a></div>
+<div style=3D"margin-bottom:17px;margin-top:17px;line-height:0"><a href=3D"=
+https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Foddsjam=
+.intercom-clicks.com%2Fvia%2Fe%3Fob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd=
+1Y7i1WJ%252BA4rmyj%252BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Da=
+d9e890ef9b456eca0cf84b78e8988852694127e-xgkfzdmt_215472679676965%26l%3D04b1=
+834618cf9266ab75d8ad6504318f0378dde1-194530028&amp;data=3D05%7C02%7Cjeremy.=
+botter%40gdcgroup.com%7Cb41c826c681749b0fcfc08de5489a917%7C52c3448d59b94e94=
+8fd9d97a2128c819%7C0%7C0%7C639041147746779501%7CUnknown%7CTWFpbGZsb3d8eyJFb=
+XB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldU=
+IjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;sdata=3DuswHRUPf9Aw%2Fz1qrmZVKB0OoksVKKO%=
+2B196MLdRVzcPA%3D&amp;reserved=3D0" originalsrc=3D"https://oddsjam.intercom=
+-clicks.com/via/e?ob=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmy=
+j%2BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%3D%3D&amp;h=3Dad9e890ef9b456eca0cf84=
+b78e8988852694127e-xgkfzdmt_215472679676965&amp;l=3D04b1834618cf9266ab75d8a=
+d6504318f0378dde1-194530028" style=3D"color:#165fc6;font-family:Helvetica,A=
+rial,sans-serif;font-weight:normal;text-align:left;line-height:130%;text-de=
+coration:underline;margin:0;padding:0" target=3D"_blank" data-saferedirectu=
+rl=3D"https://www.google.com/url?q=3Dhttps://oddsjam.intercom-clicks.com/vi=
+a/e?ob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%252BA4rmyj%252BjnW0xO=
+98sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Dad9e890ef9b456eca0cf84b78e8988=
+852694127e-xgkfzdmt_215472679676965%26l%3D04b1834618cf9266ab75d8ad6504318f0=
+378dde1-194530028&amp;source=3Dgmail&amp;ust=3D1768511876844000&amp;usg=3DA=
+OvVaw33mh1sd7b_H9IYli9g8Vbz"><img src=3D"https://ci3.googleusercontent.com/=
+meips/ADKq_Na0w13t4Uqt30TWOlpLLzA1BxMbGEDDEaxbMxvktPK9cjU6_XylAaYTBel-t52h7=
+zjltCzgMXyiA8Oes3ysq_P5zMlguMccfRUMcyni13i1AI77-5uT9zvAejyDi2lAgfV_8wvBrU_y=
+4_21EiHC5fO6hQIKEyy2cNwl_u_1FN11a2Ip4K7sUWB98A6Pi61ShHE-yH2YjS8i0oGzcODH1mQ=
+5UVg9JYyp-QY_dhkGFoKYOCVPHSt_hAGSEwDa7DlVsyjFECVmmaBJFVVql05vUIA84WeTydl7hh=
+YyqihtiMjmB5yKnagKrf_xa8ByLHmZYY7StMQp9PVZDgk4K7db0DF-zpGOyEPTpDP2MRJMFhaiL=
+-rW1AgB-BD2dJ5MsDQ9jBXZTMsLj5ag2EbXmbzL3P7SkbnP_CeYe7_DxB69=3Ds0-d-e1-ft#ht=
+tps://oddsjam.intercom-mail.com/i/o/xgkfzdmt/1941845447/bab69b382db4c214815=
+444f4e4a0/Screenshot+2026-01-14+at+1_38_19%E2%80%AFPM.png?expires=3D1782967=
+788&amp;signature=3De63df7c9d84370e8c1725a71c927e167b31da0bceb671a81e94f584=
+8667a3ac8&amp;req=3DdSkjF8F6mIVbXvMW2XS%2FiR2SHKdcpn1%2BewwcZD7VZMAtrr8dtsg=
+%3D%0A" width=3D"580" style=3D"outline:none;text-decoration:none;width:auto=
+;max-width:100%;clear:both;display:block;border-style:none"></a></div>
+<div>
+<table class=3D"m_1714446513927361864button m_1714446513927361864intercom-a=
+lign-center" align=3D"center" role=3D"presentation" style=3D"border-spacing=
+:0;border-collapse:collapse;vertical-align:top;text-align:center!important;=
+width:auto;margin:0 auto 16px;padding:0">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td style=3D"word-wrap:break-word;border-collapse:collapse!important;vertic=
+al-align:top;text-align:left;color:#0a0a0a;font-family:Helvetica,Arial,sans=
+-serif;font-weight:normal;line-height:130%;font-size:16px;margin:0;padding:=
+0" align=3D"left" valign=3D"top">
+<table role=3D"presentation" style=3D"border-spacing:0;border-collapse:coll=
+apse;vertical-align:top;text-align:left;padding:0">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td style=3D"color:#ffffff;word-wrap:break-word;border-collapse:collapse!im=
+portant;vertical-align:top;text-align:left;font-family:Helvetica,Arial,sans=
+-serif;font-weight:normal;line-height:100%;font-size:16px;background-color:=
+transparent;border-radius:3px;margin:0;padding:0;border:1px none rgba(0,0,0=
+,0.2)" align=3D"left" bgcolor=3D"transparent" valign=3D"top">
+<a class=3D"m_1714446513927361864intercom-foundation-button" style=3D"color=
+:#ffffff;font-family:Helvetica,Arial,sans-serif;font-weight:bold;text-align=
+:left;line-height:130%;text-decoration:none;font-size:14px;display:inline-b=
+lock;border-radius:3px;background-color:#00a8e8;margin:0 0 8px;padding:12px=
+ 35px;border:2px solid #00a8e8" href=3D"https://eur03.safelinks.protection.=
+outlook.com/?url=3Dhttps%3A%2F%2Foddsjam.intercom-clicks.com%2Fvia%2Fe%3Fob=
+%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%252BA4rmyj%252BjnW0xO98sGtw=
+ZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Dad9e890ef9b456eca0cf84b78e8988852694=
+127e-xgkfzdmt_215472679676965%26l%3Db81340b81afce3199c3b7c5eb10d44bcb3d39ad=
+f-194530029&amp;data=3D05%7C02%7Cjeremy.botter%40gdcgroup.com%7Cb41c826c681=
+749b0fcfc08de5489a917%7C52c3448d59b94e948fd9d97a2128c819%7C0%7C0%7C63904114=
+7746810314%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAw=
+MCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;s=
+data=3DN3OnSP6pNhKHc31%2B%2Fo9z3JRXIHHcW8s30pGtbY0H86I%3D&amp;reserved=3D0"=
+ originalsrc=3D"https://oddsjam.intercom-clicks.com/via/e?ob=3Dy7RS5JiachdU=
+Cl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%2BjnW0xO98sGtwZGzGJYtWf8a6lwVINdW=
+PLg%3D%3D&amp;h=3Dad9e890ef9b456eca0cf84b78e8988852694127e-xgkfzdmt_2154726=
+79676965&amp;l=3Db81340b81afce3199c3b7c5eb10d44bcb3d39adf-194530029" target=
+=3D"_blank" data-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://=
+oddsjam.intercom-clicks.com/via/e?ob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmv=
+d1Y7i1WJ%252BA4rmyj%252BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3D=
+ad9e890ef9b456eca0cf84b78e8988852694127e-xgkfzdmt_215472679676965%26l%3Db81=
+340b81afce3199c3b7c5eb10d44bcb3d39adf-194530029&amp;source=3Dgmail&amp;ust=
+=3D1768511876844000&amp;usg=3DAOvVaw1A8KdVyV9xPAN_1tmd70M_">Click
+ Here To Try +EV Betting</a></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p style=3D"color:#525252;font-family:Helvetica,Arial,sans-serif;font-weigh=
+t:normal;text-align:left;line-height:1.5;font-size:15px;margin:0 0 17px;pad=
+ding:0" align=3D"left">
+The Toronto Raptors are facing off against the Indiana Pacers and PrizePick=
+s set Jamal Shead's total points line at 10.5. Due to the way PrizePicks se=
+ts their odds (fixed), we know we're getting this play at -119 odds.
+<b>The <a href=3D"https://eur03.safelinks.protection.outlook.com/?url=3Dhtt=
+ps%3A%2F%2Foddsjam.intercom-clicks.com%2Fvia%2Fe%3Fob%3DMT36HwbZS1hNA8hcx4N=
+%252FjFk44vx9cO1nLHAZTbXSK0ppDfMRwcB1DaC74dVblFSSP4FzXpFJP3Qt%252BVcv6Wbnmw=
+%253D%253D%26h%3Df72c643aa7e00b0221235ff8122f7b6494f9ebf3-xgkfzdmt_21547267=
+9676965%26l%3D4e46990012d03d1c7f0bc44ca9b5bfddf6b75eb0-194530030&amp;data=
+=3D05%7C02%7Cjeremy.botter%40gdcgroup.com%7Cb41c826c681749b0fcfc08de5489a91=
+7%7C52c3448d59b94e948fd9d97a2128c819%7C0%7C0%7C639041147746838933%7CUnknown=
+%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIs=
+IkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;sdata=3DkDHFsw3w1l6Bq=
+qVVmtAdEQyHsRqkO3kLDO%2FvPU4brtM%3D&amp;reserved=3D0" originalsrc=3D"https:=
+//oddsjam.intercom-clicks.com/via/e?ob=3DMT36HwbZS1hNA8hcx4N%2FjFk44vx9cO1n=
+LHAZTbXSK0ppDfMRwcB1DaC74dVblFSSP4FzXpFJP3Qt%2BVcv6Wbnmw%3D%3D&amp;h=3Df72c=
+643aa7e00b0221235ff8122f7b6494f9ebf3-xgkfzdmt_215472679676965&amp;l=3D4e469=
+90012d03d1c7f0bc44ca9b5bfddf6b75eb0-194530030" class=3D"m_17144465139273618=
+64intercom-content-link" style=3D"color:#1251ba!important;font-family:Helve=
+tica,Arial,sans-serif;font-weight:normal;text-align:left;line-height:130%;t=
+ext-decoration:underline;margin:0;padding:0" target=3D"_blank" data-safered=
+irecturl=3D"https://www.google.com/url?q=3Dhttps://oddsjam.intercom-clicks.=
+com/via/e?ob%3DMT36HwbZS1hNA8hcx4N%252FjFk44vx9cO1nLHAZTbXSK0ppDfMRwcB1DaC7=
+4dVblFSSP4FzXpFJP3Qt%252BVcv6Wbnmw%253D%253D%26h%3Df72c643aa7e00b0221235ff8=
+122f7b6494f9ebf3-xgkfzdmt_215472679676965%26l%3D4e46990012d03d1c7f0bc44ca9b=
+5bfddf6b75eb0-194530030&amp;source=3Dgmail&amp;ust=3D1768511876844000&amp;u=
+sg=3DAOvVaw3CnZFWj_wyBLYq-AYoxviy">
+OddsJam Sharp Money Tool</a> identified this play as one being taken by the=
+ sharpest bettors/syndicates in the world.
+</b>They're looking to be on the same side of this play as us but at worse =
+odds. Which makes this play extremely valuable.
+</p>
+<div style=3D"margin-bottom:17px;margin-top:17px;line-height:0"><a href=3D"=
+https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Foddsjam=
+.intercom-clicks.com%2Fvia%2Fe%3Fob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd=
+1Y7i1WJ%252BA4rmyj%252BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Da=
+d9e890ef9b456eca0cf84b78e8988852694127e-xgkfzdmt_215472679676965%26l%3D04b1=
+834618cf9266ab75d8ad6504318f0378dde1-194530028&amp;data=3D05%7C02%7Cjeremy.=
+botter%40gdcgroup.com%7Cb41c826c681749b0fcfc08de5489a917%7C52c3448d59b94e94=
+8fd9d97a2128c819%7C0%7C0%7C639041147746866311%7CUnknown%7CTWFpbGZsb3d8eyJFb=
+XB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldU=
+IjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;sdata=3DcTaEIrwRM5V5H4cc9dHzI4fvc5RVO%2FN=
+5v1YQdB37M4A%3D&amp;reserved=3D0" originalsrc=3D"https://oddsjam.intercom-c=
+licks.com/via/e?ob=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%=
+2BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%3D%3D&amp;h=3Dad9e890ef9b456eca0cf84b7=
+8e8988852694127e-xgkfzdmt_215472679676965&amp;l=3D04b1834618cf9266ab75d8ad6=
+504318f0378dde1-194530028" style=3D"color:#165fc6;font-family:Helvetica,Ari=
+al,sans-serif;font-weight:normal;text-align:left;line-height:130%;text-deco=
+ration:underline;margin:0;padding:0" target=3D"_blank" data-saferedirecturl=
+=3D"https://www.google.com/url?q=3Dhttps://oddsjam.intercom-clicks.com/via/=
+e?ob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%252BA4rmyj%252BjnW0xO98=
+sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Dad9e890ef9b456eca0cf84b78e898885=
+2694127e-xgkfzdmt_215472679676965%26l%3D04b1834618cf9266ab75d8ad6504318f037=
+8dde1-194530028&amp;source=3Dgmail&amp;ust=3D1768511876844000&amp;usg=3DAOv=
+Vaw33mh1sd7b_H9IYli9g8Vbz"><img src=3D"https://ci3.googleusercontent.com/me=
+ips/ADKq_NbFrU72DaELghWCR8rijUi7TqIiH08H0Y983YfCGvNNfjFhgPKDiR-QoYLBld9755S=
+niPK2ePovVhuYfUbUhOK5ywgMgGYOSYlbo9zW9zc7JJHOU64v5P4tHdtPDCDCy1hyJ3C6E04mBV=
+6wZfPn_SbMFjWKU5rmRcmcLJlMg38OKo08YgCJYhRZIZUbyBYyQVM0pvqJ1wXKfSljHrdfZSUHd=
+u_KeIbjwx3oNW-Be1w77Tdnqbfglep4wziQUbqSr4OZkI4d9mR1wBYkRM7pXSK-TOuebOm8lAs0=
+BRfGmCBODqPs0Tbj4Da0jC2TbMpcg9u3uhPGRuAlgyNZSSB6bW1rQ_HU4Vrql6NOL7l5jq-A09N=
+N4zKeOC8413g-Mnwdt87wTcVXxN01FLyPaKGaY5eM8R_dGdxAGk-IyQ=3Ds0-d-e1-ft#https:=
+//oddsjam.intercom-mail.com/i/o/xgkfzdmt/1941849174/c61d2679a6373891b21fa38=
+e2190/Screenshot+2026-01-14+at+1_36_08%E2%80%AFPM.png?expires=3D1782967788&=
+amp;signature=3D44b881e79b906d2ff2f1c20276e1345a22a7eb0aed0e8184c400d0a7318=
+ade5b&amp;req=3DdSkjF8F6lIBYXfMW2XS%2FiYYQWzbMoet8LQ1ipKLDkQ0Z3iDiMRc%3D%0A=
+" width=3D"580" style=3D"outline:none;text-decoration:none;width:auto;max-w=
+idth:100%;clear:both;display:block;border-style:none"></a></div>
+<div>
+<table role=3D"presentation" style=3D"border-spacing:0;border-collapse:coll=
+apse;vertical-align:top;text-align:left;width:100%;padding:0">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td height=3D"20" style=3D"font-size:20px;line-height:20px;word-wrap:break-=
+word;border-collapse:collapse!important;vertical-align:top;text-align:left;=
+color:#0a0a0a;font-family:Helvetica,Arial,sans-serif;font-weight:normal;mar=
+gin:0;padding:0" align=3D"left" valign=3D"top">
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p style=3D"color:#525252;font-family:Helvetica,Arial,sans-serif;font-weigh=
+t:normal;text-align:left;line-height:1.5;font-size:15px;margin:0 0 17px;pad=
+ding:0" align=3D"left">
+This subscriber is using the OddsJam Platinum plan and made $25,400 in the =
+month of December.
+<b>They recently released a <a href=3D"https://eur03.safelinks.protection.o=
+utlook.com/?url=3Dhttps%3A%2F%2Foddsjam.intercom-clicks.com%2Fvia%2Fe%3Fob%=
+3DQF%252Bby0lYaEOLhMsEocmTAslXTHJMeG0GBd0zFL8MGIXIzg5Yv2lkqfHbzA19dVjInNCMX=
+mvcFbclyt%252BIm4ySFQ%253D%253D%26h%3D7210a422ec38b65acc11a0f48f2db3732a769=
+fc1-xgkfzdmt_215472679676965%26l%3D00002c54a9832848692af92433d78a63c532469b=
+-194530031&amp;data=3D05%7C02%7Cjeremy.botter%40gdcgroup.com%7Cb41c826c6817=
+49b0fcfc08de5489a917%7C52c3448d59b94e948fd9d97a2128c819%7C0%7C0%7C639041147=
+746895270%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwM=
+CIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;sd=
+ata=3D%2BP4wNF62%2F0LlBT5RnUEhaG4H7MsBVXD%2Bco%2FT3nelqLw%3D&amp;reserved=
+=3D0" originalsrc=3D"https://oddsjam.intercom-clicks.com/via/e?ob=3DQF%2Bby=
+0lYaEOLhMsEocmTAslXTHJMeG0GBd0zFL8MGIXIzg5Yv2lkqfHbzA19dVjInNCMXmvcFbclyt%2=
+BIm4ySFQ%3D%3D&amp;h=3D7210a422ec38b65acc11a0f48f2db3732a769fc1-xgkfzdmt_21=
+5472679676965&amp;l=3D00002c54a9832848692af92433d78a63c532469b-194530031" c=
+lass=3D"m_1714446513927361864intercom-content-link" style=3D"color:#1251ba!=
+important;font-family:Helvetica,Arial,sans-serif;font-weight:normal;text-al=
+ign:left;line-height:130%;text-decoration:underline;margin:0;padding:0" tar=
+get=3D"_blank" data-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps=
+://oddsjam.intercom-clicks.com/via/e?ob%3DQF%252Bby0lYaEOLhMsEocmTAslXTHJMe=
+G0GBd0zFL8MGIXIzg5Yv2lkqfHbzA19dVjInNCMXmvcFbclyt%252BIm4ySFQ%253D%253D%26h=
+%3D7210a422ec38b65acc11a0f48f2db3732a769fc1-xgkfzdmt_215472679676965%26l%3D=
+00002c54a9832848692af92433d78a63c532469b-194530031&amp;source=3Dgmail&amp;u=
+st=3D1768511876844000&amp;usg=3DAOvVaw3L7OnPlPvJJ5pJY6DQB8GM">
+full-guide</a> on how you can do exactly what they are. </b>The Football an=
+d Basketball seasons are the busiest times of the year to start arbitrage b=
+etting. There is no better time to get started than now!</p>
+<div style=3D"margin-bottom:17px;margin-top:17px;line-height:0"><a href=3D"=
+https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Foddsjam=
+.intercom-clicks.com%2Fvia%2Fe%3Fob%3Dkk6B0%252FKjD%252BZl51VCGWrnATfVBTnuf=
+LUjHEO%252ByX3XgBbjGOx%252Baeifc7i9uzSC54hWltGqNe3isVCN5%252B1vJoaVpw%253D%=
+253D%26h%3D22b99f840f28f372beef9969a2ff18ae2f5f8efe-xgkfzdmt_21547267967696=
+5%26l%3D696660329023d300de4bc89944ce441905148584-194530032&amp;data=3D05%7C=
+02%7Cjeremy.botter%40gdcgroup.com%7Cb41c826c681749b0fcfc08de5489a917%7C52c3=
+448d59b94e948fd9d97a2128c819%7C0%7C0%7C639041147746932335%7CUnknown%7CTWFpb=
+GZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoi=
+TWFpbCIsIldUIjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;sdata=3DtezmtyA%2F3QrC26BDJoZ=
+PSRea8FCJBFi%2BJnWvlMtSJvg%3D&amp;reserved=3D0" originalsrc=3D"https://odds=
+jam.intercom-clicks.com/via/e?ob=3Dkk6B0%2FKjD%2BZl51VCGWrnATfVBTnufLUjHEO%=
+2ByX3XgBbjGOx%2Baeifc7i9uzSC54hWltGqNe3isVCN5%2B1vJoaVpw%3D%3D&amp;h=3D22b9=
+9f840f28f372beef9969a2ff18ae2f5f8efe-xgkfzdmt_215472679676965&amp;l=3D69666=
+0329023d300de4bc89944ce441905148584-194530032" style=3D"color:#165fc6;font-=
+family:Helvetica,Arial,sans-serif;font-weight:normal;text-align:left;line-h=
+eight:130%;text-decoration:underline;margin:0;padding:0" target=3D"_blank" =
+data-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://oddsjam.inte=
+rcom-clicks.com/via/e?ob%3Dkk6B0%252FKjD%252BZl51VCGWrnATfVBTnufLUjHEO%252B=
+yX3XgBbjGOx%252Baeifc7i9uzSC54hWltGqNe3isVCN5%252B1vJoaVpw%253D%253D%26h%3D=
+22b99f840f28f372beef9969a2ff18ae2f5f8efe-xgkfzdmt_215472679676965%26l%3D696=
+660329023d300de4bc89944ce441905148584-194530032&amp;source=3Dgmail&amp;ust=
+=3D1768511876844000&amp;usg=3DAOvVaw0pxkmiqLm6e8ZZrkG33TVi"><img src=3D"htt=
+ps://ci3.googleusercontent.com/meips/ADKq_NbvI1mybl_VTIH7KC9W85NDoUMdRx_Wae=
+bB1Kk3eugpSMZPcTiLERlnoOokbGo8hi_NRhwGQQcFclpp9YMWMUp1o1W0cCIyA44ysb5gdxdBz=
+j6kc0OPmI_MS7bcilKAp8YGs8mueUNIKFuLXwbQLJfmJ-sbyF4iBr1ZMGi4uV1aXSiA0GK0QEdq=
+vL0sR9owGtTMjFsgfwLtqVbUcD6i50t3oltis8GFRG42B2s2r3nKV01Z4IxxeKbHTqH1e6_PQYO=
+CYoVAgiO7MkI3ibIRZN9RUIEqliEZxW43MMMbPmbr6DhKV47z4qorlUGC2sdhRV8BoVuu0E9PEZ=
+_6QRrCOPqeDvfIVyUaChCBWLlT5XPjjMh3mfIUuyaOYSE6OTfxdTeJnw74S71lcnmg2r16vzD-D=
+kf8MavK3Bk7n3p6=3Ds0-d-e1-ft#https://oddsjam.intercom-mail.com/i/o/xgkfzdmt=
+/1941855552/fcbd7a1557e2c6e85e35acbe3224/Screenshot+2026-01-14+at+4_00_27%E=
+2%80%AFPM.png?expires=3D1782967788&amp;signature=3D32365bb5dead05061a10242a=
+e7ab0684a6860e68f661075db7e8778c60b740ab&amp;req=3DdSkjF8F7mIRaW%2FMW2XS%2F=
+iSMzKp16nv0uID9DgXp3LhDb16UibnQ%3D%0A" width=3D"580" style=3D"outline:none;=
+text-decoration:none;width:auto;max-width:100%;clear:both;display:block;bor=
+der-style:none"></a></div>
+<div>
+<table class=3D"m_1714446513927361864button m_1714446513927361864intercom-a=
+lign-center" align=3D"center" role=3D"presentation" style=3D"border-spacing=
+:0;border-collapse:collapse;vertical-align:top;text-align:center!important;=
+width:auto;margin:0 auto 16px;padding:0">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td style=3D"word-wrap:break-word;border-collapse:collapse!important;vertic=
+al-align:top;text-align:left;color:#0a0a0a;font-family:Helvetica,Arial,sans=
+-serif;font-weight:normal;line-height:130%;font-size:16px;margin:0;padding:=
+0" align=3D"left" valign=3D"top">
+<table role=3D"presentation" style=3D"border-spacing:0;border-collapse:coll=
+apse;vertical-align:top;text-align:left;padding:0">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td style=3D"color:#ffffff;word-wrap:break-word;border-collapse:collapse!im=
+portant;vertical-align:top;text-align:left;font-family:Helvetica,Arial,sans=
+-serif;font-weight:normal;line-height:100%;font-size:16px;background-color:=
+transparent;border-radius:3px;margin:0;padding:0;border:1px none rgba(0,0,0=
+,0.2)" align=3D"left" bgcolor=3D"transparent" valign=3D"top">
+<a class=3D"m_1714446513927361864intercom-foundation-button" style=3D"color=
+:#ffffff;font-family:Helvetica,Arial,sans-serif;font-weight:bold;text-align=
+:left;line-height:130%;text-decoration:none;font-size:14px;display:inline-b=
+lock;border-radius:3px;background-color:#00a8e8;margin:0 0 8px;padding:12px=
+ 35px;border:2px solid #00a8e8" href=3D"https://eur03.safelinks.protection.=
+outlook.com/?url=3Dhttps%3A%2F%2Foddsjam.intercom-clicks.com%2Fvia%2Fe%3Fob=
+%3Dkk6B0%252FKjD%252BZl51VCGWrnATfVBTnufLUjHEO%252ByX3XgBbjGOx%252Baeifc7i9=
+uzSC54hWltGqNe3isVCN5%252B1vJoaVpw%253D%253D%26h%3D22b99f840f28f372beef9969=
+a2ff18ae2f5f8efe-xgkfzdmt_215472679676965%26l%3Ddd0df8e0a8020222c7ce3be0c48=
+7004f8f8658ef-194530033&amp;data=3D05%7C02%7Cjeremy.botter%40gdcgroup.com%7=
+Cb41c826c681749b0fcfc08de5489a917%7C52c3448d59b94e948fd9d97a2128c819%7C0%7C=
+0%7C639041147746968952%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYi=
+OiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C40000%7C=
+%7C%7C&amp;sdata=3Dq7Re%2FBaxjqktrZDUU3UVzji2GrYJ9OPFEQTb7lk1FNU%3D&amp;res=
+erved=3D0" originalsrc=3D"https://oddsjam.intercom-clicks.com/via/e?ob=3Dkk=
+6B0%2FKjD%2BZl51VCGWrnATfVBTnufLUjHEO%2ByX3XgBbjGOx%2Baeifc7i9uzSC54hWltGqN=
+e3isVCN5%2B1vJoaVpw%3D%3D&amp;h=3D22b99f840f28f372beef9969a2ff18ae2f5f8efe-=
+xgkfzdmt_215472679676965&amp;l=3Ddd0df8e0a8020222c7ce3be0c487004f8f8658ef-1=
+94530033" target=3D"_blank" data-saferedirecturl=3D"https://www.google.com/=
+url?q=3Dhttps://oddsjam.intercom-clicks.com/via/e?ob%3Dkk6B0%252FKjD%252BZl=
+51VCGWrnATfVBTnufLUjHEO%252ByX3XgBbjGOx%252Baeifc7i9uzSC54hWltGqNe3isVCN5%2=
+52B1vJoaVpw%253D%253D%26h%3D22b99f840f28f372beef9969a2ff18ae2f5f8efe-xgkfzd=
+mt_215472679676965%26l%3Ddd0df8e0a8020222c7ce3be0c487004f8f8658ef-194530033=
+&amp;source=3Dgmail&amp;ust=3D1768511876844000&amp;usg=3DAOvVaw0DV1LfFYDUig=
+SBq4LxMFTr">Click
+ Here To Try The Fantasy Optimizer</a></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p style=3D"color:#525252;font-family:Helvetica,Arial,sans-serif;font-weigh=
+t:normal;text-align:left;line-height:1.5;font-size:15px;margin:0 0 17px;pad=
+ding:0" align=3D"left">
+Not only are there profitable opportunities on sportsbooks but the DFS (Dai=
+ly Fantasy Sports) platforms are FILLED with these opportunities. As seen i=
+n the photo above PrizePicks is filled with +EV plays. The
+<a href=3D"https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2=
+F%2Foddsjam.intercom-clicks.com%2Fvia%2Fe%3Fob%3Dkk6B0%252FKjD%252BZl51VCGW=
+rnATfVBTnufLUjHEO%252ByX3XgBbjGOx%252Baeifc7i9uzSC54hWltGqNe3isVCN5%252B1vJ=
+oaVpw%253D%253D%26h%3D22b99f840f28f372beef9969a2ff18ae2f5f8efe-xgkfzdmt_215=
+472679676965%26l%3D696660329023d300de4bc89944ce441905148584-194530032&amp;d=
+ata=3D05%7C02%7Cjeremy.botter%40gdcgroup.com%7Cb41c826c681749b0fcfc08de5489=
+a917%7C52c3448d59b94e948fd9d97a2128c819%7C0%7C0%7C639041147747182933%7CUnkn=
+own%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zM=
+iIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;sdata=3Dd3F%2FuYWI=
+EFLl9P1xkG2haT%2B%2BWwCHzumzeIaYLD47rRY%3D&amp;reserved=3D0" originalsrc=3D=
+"https://oddsjam.intercom-clicks.com/via/e?ob=3Dkk6B0%2FKjD%2BZl51VCGWrnATf=
+VBTnufLUjHEO%2ByX3XgBbjGOx%2Baeifc7i9uzSC54hWltGqNe3isVCN5%2B1vJoaVpw%3D%3D=
+&amp;h=3D22b99f840f28f372beef9969a2ff18ae2f5f8efe-xgkfzdmt_215472679676965&=
+amp;l=3D696660329023d300de4bc89944ce441905148584-194530032" class=3D"m_1714=
+446513927361864intercom-content-link" style=3D"color:#1251ba!important;font=
+-family:Helvetica,Arial,sans-serif;font-weight:normal;text-align:left;line-=
+height:130%;text-decoration:underline;margin:0;padding:0" target=3D"_blank"=
+ data-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://oddsjam.int=
+ercom-clicks.com/via/e?ob%3Dkk6B0%252FKjD%252BZl51VCGWrnATfVBTnufLUjHEO%252=
+ByX3XgBbjGOx%252Baeifc7i9uzSC54hWltGqNe3isVCN5%252B1vJoaVpw%253D%253D%26h%3=
+D22b99f840f28f372beef9969a2ff18ae2f5f8efe-xgkfzdmt_215472679676965%26l%3D69=
+6660329023d300de4bc89944ce441905148584-194530032&amp;source=3Dgmail&amp;ust=
+=3D1768511876844000&amp;usg=3DAOvVaw0pxkmiqLm6e8ZZrkG33TVi">
+OddsJam Fantasy Optimizer</a> displays all of the profitable player prop op=
+portunities available across every DFS platform. The plays in the
+<b>GREEN</b> category are profitable and you can expect to see make profit =
+on these plays in the long-term.
+</p>
+<p style=3D"color:#525252;font-family:Helvetica,Arial,sans-serif;font-weigh=
+t:normal;text-align:left;line-height:1.5;font-size:15px;margin:0 0 17px;pad=
+ding:0" align=3D"left">
+If you have any questions on how to become a profitable sports bettor send =
+me a message. I will personally coach you 1:1 to make sure this happens!</p=
+>
+<p style=3D"color:#525252;font-family:Helvetica,Arial,sans-serif;font-weigh=
+t:normal;text-align:left;line-height:1.5;font-size:15px;margin:0 0 17px;pad=
+ding:0" align=3D"left">
+Best,</p>
+<p style=3D"color:#525252;font-family:Helvetica,Arial,sans-serif;font-weigh=
+t:normal;text-align:left;line-height:1.5;font-size:15px;margin:0 0 17px;pad=
+ding:0" align=3D"left">
+Randall</p>
+<div style=3D"margin-bottom:17px;margin-top:17px;line-height:0"><a href=3D"=
+https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Foddsjam=
+.intercom-clicks.com%2Fvia%2Fe%3Fob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd=
+1Y7i1WJ%252BA4rmyj%252BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Da=
+d9e890ef9b456eca0cf84b78e8988852694127e-xgkfzdmt_215472679676965%26l%3D04b1=
+834618cf9266ab75d8ad6504318f0378dde1-194530028&amp;data=3D05%7C02%7Cjeremy.=
+botter%40gdcgroup.com%7Cb41c826c681749b0fcfc08de5489a917%7C52c3448d59b94e94=
+8fd9d97a2128c819%7C0%7C0%7C639041147747203723%7CUnknown%7CTWFpbGZsb3d8eyJFb=
+XB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldU=
+IjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;sdata=3DoIop04%2Fp82k9XkSmX%2BV8mNwqdlOn%=
+2F32i1%2FTX4j2t%2Bl0%3D&amp;reserved=3D0" originalsrc=3D"https://oddsjam.in=
+tercom-clicks.com/via/e?ob=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2=
+BA4rmyj%2BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%3D%3D&amp;h=3Dad9e890ef9b456ec=
+a0cf84b78e8988852694127e-xgkfzdmt_215472679676965&amp;l=3D04b1834618cf9266a=
+b75d8ad6504318f0378dde1-194530028" style=3D"color:#165fc6;font-family:Helve=
+tica,Arial,sans-serif;font-weight:normal;text-align:left;line-height:130%;t=
+ext-decoration:underline;margin:0;padding:0" target=3D"_blank" data-safered=
+irecturl=3D"https://www.google.com/url?q=3Dhttps://oddsjam.intercom-clicks.=
+com/via/e?ob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%252BA4rmyj%252B=
+jnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Dad9e890ef9b456eca0cf84b7=
+8e8988852694127e-xgkfzdmt_215472679676965%26l%3D04b1834618cf9266ab75d8ad650=
+4318f0378dde1-194530028&amp;source=3Dgmail&amp;ust=3D1768511876844000&amp;u=
+sg=3DAOvVaw33mh1sd7b_H9IYli9g8Vbz"><img src=3D"https://ci3.googleuserconten=
+t.com/meips/ADKq_NaKeZUiDGUqC8EbOcu8BFI_TY6unQQ-1l2dgP3hB6-kT0w9kJRlPT02YTs=
+IiTwTj6DNcR87fxJzpvUb0H8ux92eDS866crLWJp4DZj-paajjkmcRX3I0ME_GLLr94ASfiqf9W=
+6EpfxBGJhetwSXEm5S-ErskUhi76xl-Bx091uhuQ9LPN30M1Qt9VupHY3G6Sdc8xyo-qHmlmChy=
+0FE7Zd9h-gTfdd2ktK6bIMSJbvo1h31RSo0YJWczMkU2KRl-WtfYwMrdBPW1ge8QcUSX-bQ1XKw=
+fCMC9E4XK64s1gqapbQyrAn7s573VCIIk2vSx2s4tD1vPS_t0NLBIH8lNKc4njDHDtIE3DHoYu1=
+29zvX4PH-NM8vSXdnDa6cXhY7APj2lqDU2snlJTarZFWq1RKm42opOOn8MiO3GoTI=3Ds0-d-e1=
+-ft#https://oddsjam.intercom-mail.com/i/o/xgkfzdmt/1941856734/5b8d8ca232b36=
+0e70ea48b0e59ba/Screenshot+2026-01-14+at+3_54_00%E2%80%AFPM.png?expires=3D1=
+782967788&amp;signature=3D5ef41d83f86f67415eab05a466ea420d575b1c136419e8d1f=
+9e22182e74b082b&amp;req=3DdSkjF8F7m4ZcXfMW2XS%2FiTsaVKgMrdGgSDdbj%2BSKYN6Il=
+wIc4rI%3D%0A" width=3D"580" style=3D"outline:none;text-decoration:none;widt=
+h:auto;max-width:100%;clear:both;display:block;border-style:none"></a></div=
+>
+<div style=3D"margin-bottom:17px;margin-top:17px;line-height:0"><a href=3D"=
+https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Foddsjam=
+.intercom-clicks.com%2Fvia%2Fe%3Fob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd=
+1Y7i1WJ%252BA4rmyj%252BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Da=
+d9e890ef9b456eca0cf84b78e8988852694127e-xgkfzdmt_215472679676965%26l%3D04b1=
+834618cf9266ab75d8ad6504318f0378dde1-194530028&amp;data=3D05%7C02%7Cjeremy.=
+botter%40gdcgroup.com%7Cb41c826c681749b0fcfc08de5489a917%7C52c3448d59b94e94=
+8fd9d97a2128c819%7C0%7C0%7C639041147747222384%7CUnknown%7CTWFpbGZsb3d8eyJFb=
+XB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldU=
+IjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;sdata=3DP6x3dIOOJIrqVDiXZGfqJoP6HahCGkaJC=
+%2F6IDP7KjMo%3D&amp;reserved=3D0" originalsrc=3D"https://oddsjam.intercom-c=
+licks.com/via/e?ob=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%=
+2BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%3D%3D&amp;h=3Dad9e890ef9b456eca0cf84b7=
+8e8988852694127e-xgkfzdmt_215472679676965&amp;l=3D04b1834618cf9266ab75d8ad6=
+504318f0378dde1-194530028" style=3D"color:#165fc6;font-family:Helvetica,Ari=
+al,sans-serif;font-weight:normal;text-align:left;line-height:130%;text-deco=
+ration:underline;margin:0;padding:0" target=3D"_blank" data-saferedirecturl=
+=3D"https://www.google.com/url?q=3Dhttps://oddsjam.intercom-clicks.com/via/=
+e?ob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%252BA4rmyj%252BjnW0xO98=
+sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Dad9e890ef9b456eca0cf84b78e898885=
+2694127e-xgkfzdmt_215472679676965%26l%3D04b1834618cf9266ab75d8ad6504318f037=
+8dde1-194530028&amp;source=3Dgmail&amp;ust=3D1768511876845000&amp;usg=3DAOv=
+Vaw2ZL2uWPOT_6iiQQGkR0nSy"><img src=3D"https://ci3.googleusercontent.com/me=
+ips/ADKq_Na9KCwTovw2oU_xxKYYN-jRfWIo7zKK_FTAsw_reKTGatGj0P7p8vlOT8l6njUUmot=
+g2eaab_os6yj9JtvDfVCjAuRVFxNNr9HkuQppA8T1fl7KfWTw2_Di6gX8WbV1vsTACYhu5gVNbK=
+WUiteYYLJOHLtHsiCzuJafhFNwlyU8Y5eIFa_EG8r54Nk89nSnUtCgVPQUcidTWdjCw4zJStFx0=
+UG8NE0qsMNrrDd1mLg2spVAObEY5ChCSuGtVJd3me7ja8ZMQ8pnV3nlNlkksG0NM9kTWugAlg5k=
+cLude9quMRug6FqcA3nctaBtxbq0o7hwPgu6ujKXUC66dSUO3dPOSDH8GlREzMSnz5GTlJl4S7r=
+cZPWw5gqOP2V1Fa-GBtthKpQ6A1tSKLU-QdJtvGMcqqGuFIoGT2jIrxrqy_o=3Ds0-d-e1-ft#h=
+ttps://oddsjam.intercom-mail.com/i/o/xgkfzdmt/1941857252/946ac83c3cd2f72488=
+35f8f589e8/Screenshot+2026-01-14+at+3_53_49%E2%80%AFPM.png?expires=3D178296=
+7788&amp;signature=3D3c090daa659879778fe8adb20165c0d848d88cc953db328d036b4f=
+934a960572&amp;req=3DdSkjF8F7moNaW%2FMW2XS%2FiWzRvPPgq3Y%2BPGoZHCXryfUORiAu=
+fPU%3D%0A" width=3D"580" style=3D"outline:none;text-decoration:none;width:a=
+uto;max-width:100%;clear:both;display:block;border-style:none"></a></div>
+<div style=3D"margin-bottom:17px;margin-top:17px;line-height:0"><a href=3D"=
+https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Foddsjam=
+.intercom-clicks.com%2Fvia%2Fe%3Fob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd=
+1Y7i1WJ%252BA4rmyj%252BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Da=
+d9e890ef9b456eca0cf84b78e8988852694127e-xgkfzdmt_215472679676965%26l%3D04b1=
+834618cf9266ab75d8ad6504318f0378dde1-194530028&amp;data=3D05%7C02%7Cjeremy.=
+botter%40gdcgroup.com%7Cb41c826c681749b0fcfc08de5489a917%7C52c3448d59b94e94=
+8fd9d97a2128c819%7C0%7C0%7C639041147747243014%7CUnknown%7CTWFpbGZsb3d8eyJFb=
+XB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldU=
+IjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;sdata=3DTbDRCJvBEP8J1OlMLLONLCS6Dw9dmlVXr=
+E9YB9sJxHQ%3D&amp;reserved=3D0" originalsrc=3D"https://oddsjam.intercom-cli=
+cks.com/via/e?ob=3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%2B=
+jnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%3D%3D&amp;h=3Dad9e890ef9b456eca0cf84b78e=
+8988852694127e-xgkfzdmt_215472679676965&amp;l=3D04b1834618cf9266ab75d8ad650=
+4318f0378dde1-194530028" style=3D"color:#165fc6;font-family:Helvetica,Arial=
+,sans-serif;font-weight:normal;text-align:left;line-height:130%;text-decora=
+tion:underline;margin:0;padding:0" target=3D"_blank" data-saferedirecturl=
+=3D"https://www.google.com/url?q=3Dhttps://oddsjam.intercom-clicks.com/via/=
+e?ob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%252BA4rmyj%252BjnW0xO98=
+sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Dad9e890ef9b456eca0cf84b78e898885=
+2694127e-xgkfzdmt_215472679676965%26l%3D04b1834618cf9266ab75d8ad6504318f037=
+8dde1-194530028&amp;source=3Dgmail&amp;ust=3D1768511876845000&amp;usg=3DAOv=
+Vaw2ZL2uWPOT_6iiQQGkR0nSy"><img src=3D"https://ci3.googleusercontent.com/me=
+ips/ADKq_NarnXjzIBO8z1kW4s05s0Wjuy-BpP-ArcNJ6znYsdonMhLhyfi_ey2nNxN8vdfGTpa=
+pW5g5AvAXrTr1GyLwS6Xz_pxjy2wpHFaOkaDSO8HNRwH2l-cc0Xh3VIV1vJKmrl5ggTW90zyaQt=
+kB7sM0B2SZepYxOl-vq9fmBiJa5cHmVOeSDleRH_h4WtL2IXI7-7nq5eSIbmZnfFrWbRr9jSGSQ=
+Uyu9InHU-39qUSLIf7FIF4hOg6JDrlePk-kpR4XtNhc8WE9-XbgbBIyjEhIbknvQrnub1CrAzCi=
+-uaE3eN-V9UUCAnSWC0TYQwEV6E3TEkctIgV0UxUJ97uCKgmg30tg0EylxYvKQikEAiuB7wABcY=
+fTiIQmcCd-WQPNcGMPLKGGecNacfnb5HJglcNjxZexEJ51ZPCF0oooA=3Ds0-d-e1-ft#https:=
+//oddsjam.intercom-mail.com/i/o/xgkfzdmt/1941857617/29d037f1e92ea2197d94a73=
+dc952/Screenshot+2026-01-14+at+1_39_03%E2%80%AFPM.png?expires=3D1782967788&=
+amp;signature=3Dfc1b11ad32a6577c237b53ecb1059373a828d0bf6c6755a6a7ad895808d=
+9157a&amp;req=3DdSkjF8F7modeXvMW2XS%2FiVFRAT75jqHVkWvxKTM7kEMP4X2QH3k%3D%0A=
+" width=3D"580" style=3D"outline:none;text-decoration:none;width:auto;max-w=
+idth:100%;clear:both;display:block;border-style:none"></a></div>
+<div>
+<table class=3D"m_1714446513927361864button m_1714446513927361864intercom-a=
+lign-center" align=3D"center" role=3D"presentation" style=3D"border-spacing=
+:0;border-collapse:collapse;vertical-align:top;text-align:center!important;=
+width:auto;margin:0 auto 16px;padding:0">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td style=3D"word-wrap:break-word;border-collapse:collapse!important;vertic=
+al-align:top;text-align:left;color:#0a0a0a;font-family:Helvetica,Arial,sans=
+-serif;font-weight:normal;line-height:130%;font-size:16px;margin:0;padding:=
+0" align=3D"left" valign=3D"top">
+<table role=3D"presentation" style=3D"border-spacing:0;border-collapse:coll=
+apse;vertical-align:top;text-align:left;padding:0">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td style=3D"color:#ffffff;word-wrap:break-word;border-collapse:collapse!im=
+portant;vertical-align:top;text-align:left;font-family:Helvetica,Arial,sans=
+-serif;font-weight:normal;line-height:100%;font-size:16px;background-color:=
+transparent;border-radius:3px;margin:0;padding:0;border:1px none rgba(0,0,0=
+,0.2)" align=3D"left" bgcolor=3D"transparent" valign=3D"top">
+<a class=3D"m_1714446513927361864intercom-foundation-button" style=3D"color=
+:#ffffff;font-family:Helvetica,Arial,sans-serif;font-weight:bold;text-align=
+:left;line-height:130%;text-decoration:none;font-size:14px;display:inline-b=
+lock;border-radius:3px;background-color:#00a8e8;margin:0 0 8px;padding:12px=
+ 35px;border:2px solid #00a8e8" href=3D"https://eur03.safelinks.protection.=
+outlook.com/?url=3Dhttps%3A%2F%2Foddsjam.intercom-clicks.com%2Fvia%2Fe%3Fob=
+%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%252BA4rmyj%252BjnW0xO98sGtw=
+ZGzGJYtWf8a6lwVINdWPLg%253D%253D%26h%3Dad9e890ef9b456eca0cf84b78e8988852694=
+127e-xgkfzdmt_215472679676965%26l%3Db81340b81afce3199c3b7c5eb10d44bcb3d39ad=
+f-194530029&amp;data=3D05%7C02%7Cjeremy.botter%40gdcgroup.com%7Cb41c826c681=
+749b0fcfc08de5489a917%7C52c3448d59b94e948fd9d97a2128c819%7C0%7C0%7C63904114=
+7747271786%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAw=
+MCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;s=
+data=3DRVQLWhWK%2FTZ%2FNPw%2BHm%2BPaTySrB8IAQTi6fh40U89avk%3D&amp;reserved=
+=3D0" originalsrc=3D"https://oddsjam.intercom-clicks.com/via/e?ob=3Dy7RS5Ji=
+achdUCl9loBCkRtdJLrMXbLCGukmvd1Y7i1WJ%2BA4rmyj%2BjnW0xO98sGtwZGzGJYtWf8a6lw=
+VINdWPLg%3D%3D&amp;h=3Dad9e890ef9b456eca0cf84b78e8988852694127e-xgkfzdmt_21=
+5472679676965&amp;l=3Db81340b81afce3199c3b7c5eb10d44bcb3d39adf-194530029" t=
+arget=3D"_blank" data-saferedirecturl=3D"https://www.google.com/url?q=3Dhtt=
+ps://oddsjam.intercom-clicks.com/via/e?ob%3Dy7RS5JiachdUCl9loBCkRtdJLrMXbLC=
+Gukmvd1Y7i1WJ%252BA4rmyj%252BjnW0xO98sGtwZGzGJYtWf8a6lwVINdWPLg%253D%253D%2=
+6h%3Dad9e890ef9b456eca0cf84b78e8988852694127e-xgkfzdmt_215472679676965%26l%=
+3Db81340b81afce3199c3b7c5eb10d44bcb3d39adf-194530029&amp;source=3Dgmail&amp=
+;ust=3D1768511876845000&amp;usg=3DAOvVaw3CHV3_zDGqG24eD5iq0EAE">Click
+ Here For A 7-Day Free Trial!</a></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</center>
+<center style=3D"width:100%;min-width:580px">
+<table class=3D"m_1714446513927361864container" role=3D"presentation" style=
+=3D"background-color:#f9f9f9;border-spacing:0;border-collapse:collapse;vert=
+ical-align:top;text-align:inherit;width:580px;margin:0 auto;padding:0" bgco=
+lor=3D"#f9f9f9">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td style=3D"word-wrap:break-word;border-collapse:collapse!important;vertic=
+al-align:top;text-align:left;color:#0a0a0a;font-family:Helvetica,Arial,sans=
+-serif;font-weight:normal;line-height:130%;font-size:16px;margin:0;padding:=
+16px" align=3D"left" valign=3D"top">
+<table role=3D"presentation" cellspacing=3D"0" border=3D"0" cellpadding=3D"=
+0" align=3D"center" width=3D"100%" style=3D"border-spacing:0;border-collaps=
+e:collapse;vertical-align:top;text-align:left;padding:0">
+<tbody>
+<tr style=3D"vertical-align:top;text-align:left;padding:0" align=3D"left">
+<td style=3D"text-align:center;word-wrap:break-word;border-collapse:collaps=
+e!important;vertical-align:top;color:#646462;font-family:Helvetica,Arial,sa=
+ns-serif;font-weight:300;line-height:1.5em;font-size:12px;text-decoration:n=
+one;margin:9px 0 0;padding:0" align=3D"center" valign=3D"top">
+<address style=3D"font-style:normal;text-align:center;font-size:12px;color:=
+#646462;line-height:1.5em;font-weight:300;margin:0">
+OddsJam Inc. 2021. </address>
+</td>
+</tr>
+</tbody>
+</table>
+<p class=3D"m_1714446513927361864intercom-align-center" style=3D"text-decor=
+ation:underline;text-align:center!important;color:#525252;font-family:Helve=
+tica,Arial,sans-serif;font-weight:normal;line-height:1.5;font-size:15px;mar=
+gin:0;padding:0" align=3D"center">
+<small style=3D"font-size:12px;color:#525252"><a href=3D"https://eur03.safe=
+links.protection.outlook.com/?url=3Dhttps%3A%2F%2Foddsjam.intercom-mail.com=
+%2Fsubscriptions%2Funsubscribe%3Fapp_id%3Dxgkfzdmt%26conversation_id%3D2154=
+72679676965%26user_id%3D677c43b144cdca4986c89755%26source%3Dbody&amp;data=
+=3D05%7C02%7Cjeremy.botter%40gdcgroup.com%7Cb41c826c681749b0fcfc08de5489a91=
+7%7C52c3448d59b94e948fd9d97a2128c819%7C0%7C0%7C639041147747299494%7CUnknown=
+%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIs=
+IkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C40000%7C%7C%7C&amp;sdata=3Djt0J%2BM4WOom=
+SxP0PHINik3kBLJF1Z6mbEwRMMR%2Fbh%2BY%3D&amp;reserved=3D0" originalsrc=3D"ht=
+tps://oddsjam.intercom-mail.com/subscriptions/unsubscribe?app_id=3Dxgkfzdmt=
+&amp;conversation_id=3D215472679676965&amp;user_id=3D677c43b144cdca4986c897=
+55&amp;source=3Dbody" class=3D"m_1714446513927361864intercom-content-link m=
+_1714446513927361864intercom-footer-link" style=3D"color:#646462!important;=
+font-family:Helvetica,Arial,sans-serif;font-weight:normal;text-align:left;l=
+ine-height:130%;text-decoration:underline;margin:0;padding:0" target=3D"_bl=
+ank" data-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://oddsjam=
+.intercom-mail.com/subscriptions/unsubscribe?app_id%3Dxgkfzdmt%26conversati=
+on_id%3D215472679676965%26user_id%3D677c43b144cdca4986c89755%26source%3Dbod=
+y&amp;source=3Dgmail&amp;ust=3D1768511876845000&amp;usg=3DAOvVaw21r6pvk-FmI=
+YtopLXknN18">Unsubscribe
+ from our emails</a></small> </p>
+<p class=3D"m_1714446513927361864text-center" style=3D"text-align:center;co=
+lor:#525252;font-family:Helvetica,Arial,sans-serif;font-weight:normal;line-=
+height:1.5;font-size:15px;margin:0 0 17px;padding:0" align=3D"center">
+</p>
+<p style=3D"font-size:12px;color:#646462;text-decoration:none;font-weight:3=
+00;text-align:center!important;font-family:Helvetica,Arial,sans-serif;line-=
+height:1.5;margin:18px 0 17px;padding:0" class=3D"m_1714446513927361864inte=
+rcom-align-center" align=3D"center">
+Powered by <a href=3D"https://eur03.safelinks.protection.outlook.com/?url=
+=3Dhttps%3A%2F%2Foddsjam.intercom-clicks.com%2Fvia%2Fe%3Fob%3DtXUIVcL8ieS0K=
+doTiNOWKyPFGHbfdR%252BmoakPdlZvsiKakudet7b1E8tIN3amBP5cOg7qrM9uBCCETaxM13PV=
+mNL8a8s4dOXjlEHR2FE1bcY%253D%26h%3D888b5898099559c34703ae32fde741d079ee131c=
+-xgkfzdmt_215472679676965&amp;data=3D05%7C02%7Cjeremy.botter%40gdcgroup.com=
+%7Cb41c826c681749b0fcfc08de5489a917%7C52c3448d59b94e948fd9d97a2128c819%7C0%=
+7C0%7C639041147747324304%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIl=
+YiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C40000%=
+7C%7C%7C&amp;sdata=3DGv4o614NCOROKeaDemOgW8nKslfbgw5lTwoUSjkrxPg%3D&amp;res=
+erved=3D0" originalsrc=3D"https://oddsjam.intercom-clicks.com/via/e?ob=3DtX=
+UIVcL8ieS0KdoTiNOWKyPFGHbfdR%2BmoakPdlZvsiKakudet7b1E8tIN3amBP5cOg7qrM9uBCC=
+ETaxM13PVmNL8a8s4dOXjlEHR2FE1bcY%3D&amp;h=3D888b5898099559c34703ae32fde741d=
+079ee131c-xgkfzdmt_215472679676965" class=3D"m_1714446513927361864intercom-=
+content-link m_1714446513927361864intercom-footer-link" style=3D"color:#646=
+462!important;font-family:Helvetica,Arial,sans-serif;font-weight:bold;text-=
+align:left;line-height:130%;text-decoration:none;margin:0;padding:0" target=
+=3D"_blank" data-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://=
+oddsjam.intercom-clicks.com/via/e?ob%3DtXUIVcL8ieS0KdoTiNOWKyPFGHbfdR%252Bm=
+oakPdlZvsiKakudet7b1E8tIN3amBP5cOg7qrM9uBCCETaxM13PVmNL8a8s4dOXjlEHR2FE1bcY=
+%253D%26h%3D888b5898099559c34703ae32fde741d079ee131c-xgkfzdmt_2154726796769=
+65&amp;source=3Dgmail&amp;ust=3D1768511876845000&amp;usg=3DAOvVaw01Co7AH6AX=
+pJdEqOP3zPEh">
+Intercom</a> </p>
+</td>
+</tr>
+</tbody>
+</table>
+</center>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p style=3D"text-align:center;font-size:12px;color:#646462;text-decoration:=
+none;font-weight:300;line-height:1.5em;font-family:Helvetica,Arial,sans-ser=
+if;margin:9px 0 0;padding:0" align=3D"center">
+</p>
+<img src=3D"https://ci3.googleusercontent.com/meips/ADKq_NbN3OEaH3i60XiAFJK=
+NIIF42vPXwxtEkYO0MUodiP_fb7O0gjDHfJ4vyxLhclAfwx4gZksNhEyf91lLF5qSNv9BGJmIE5=
+FQ3bGWqz9ccZQy6WvueIn2I28M1F0pw_ai9OuwVQSCV9_2g-VANK1ATjJyZbMAueRr5ojANe0NI=
+iU2Rg=3Ds0-d-e1-ft#https://oddsjam.intercom-mail.com/via/o?h=3D5df2c628165e=
+29bbef61093f93f55b1dcd38c84e-xgkfzdmt_215472679676965" width=3D"1" height=
+=3D"1" style=3D"display:block" alt=3D"intercom">
+<img border=3D"0" width=3D"1" height=3D"1" alt=3D"" src=3D"https://ci3.goog=
+leusercontent.com/meips/ADKq_Na58-I6LwWj3H34txFtv3lu8848RipxUhRvLqh_isMKniu=
+r8x6DBNf9qrR_xMhPx5L3nLzUsIl2WUDGRn20W7_pDwFG6CZg0zQlNV2oyVW4FLSW3oAsP1qUtq=
+kSWvctD6gCYHIbXLxs4YOeH0wH3_hL1llqY2h0yZ3EWSBpTqFgtAR2tawi2-RlrIU__LsX3y-_6=
+crgv_QQkgyj_dMJUvqBUc9_crSCfz8lC8hInk2l72q_esBCqd9EB0_PB2FBOqZ-_ll2oVPho_11=
+8sjzgZ5fzIPANqkR=3Ds0-d-e1-ft#https://arbshark-efb610e41a18.intercom-mail.c=
+om/q/VNi-ZBAjDdpymltaD806tw~~/AAAAARA~/wVdyYKXojyBojZDYlD4OrTl3Q0Jme7YEGr6A=
+9xF8lGOlr9s70tjn3ZPqxkFRYsy8u_1ymlG9K33X0EBQcl11PaWdG3oOe4L7K54o4IAJido~">
+</div>
+</div>
+</div>
+</div>
+<img align=3D"left" width=3D"0" height=3D"0" style=3D"border:0;width:0px;he=
+ight:0px" src=3D"https://oddsjam.mxspruce.com/api/track/v2/MXBjtIfmexTc8PfL=
+v/gIt92Yu0WYqNHZk9GQz5WZoBXZ0NnLuFWayJmI/gIt92YuAXdvJ3ZjR2ZAJXZ0R3bi5SetVmc=
+lpmI/?sc=3Dfalse" alt=3D"">
+</div>
+</div>
+</body>
+</html>
+
+----_NmP-797c56d22e62e159-Part_1--

@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { InlineEdit } from '@/components/ui/inline-edit';
 import { Search, Clock, FileText, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { Project } from '@/types';
@@ -48,6 +49,7 @@ export function ProjectListModal({
       const query = searchQuery.toLowerCase();
       const filtered = projects.filter(
         (project) =>
+          (project.file_name || project.headline).toLowerCase().includes(query) ||
           project.headline.toLowerCase().includes(query) ||
           project.primary_keyword.toLowerCase().includes(query) ||
           project.topic?.toLowerCase().includes(query)
@@ -66,13 +68,44 @@ export function ProjectListModal({
         .order('updated_at', { ascending: false });
 
       if (!error && data) {
-        setProjects(data);
-        setFilteredProjects(data);
+        // Set file_name to headline if not set
+        const projectsWithFileName = data.map(project => ({
+          ...project,
+          file_name: project.file_name || project.headline
+        }));
+        setProjects(projectsWithFileName);
+        setFilteredProjects(projectsWithFileName);
       }
     } catch (error) {
       console.error('Error loading projects:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const updateFileName = async (projectId: string, newFileName: string) => {
+    try {
+      const { error } = await supabase
+        .from('projects')
+        .update({ file_name: newFileName })
+        .eq('id', projectId);
+
+      if (error) throw error;
+
+      // Update local state
+      setProjects(prev =>
+        prev.map(p =>
+          p.id === projectId ? { ...p, file_name: newFileName } : p
+        )
+      );
+      setFilteredProjects(prev =>
+        prev.map(p =>
+          p.id === projectId ? { ...p, file_name: newFileName } : p
+        )
+      );
+    } catch (error) {
+      console.error('Error updating file name:', error);
+      throw error;
     }
   };
 
@@ -159,9 +192,14 @@ export function ProjectListModal({
                 >
                   <div className="mb-4">
                     <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-[15px] font-semibold text-text-primary line-clamp-2 flex-1 mr-2">
-                        {project.headline}
-                      </h3>
+                      <div className="flex-1 mr-2">
+                        <InlineEdit
+                          value={project.file_name || project.headline}
+                          onSave={(newValue) => updateFileName(project.id, newValue)}
+                          className="text-[15px] font-semibold text-text-primary line-clamp-2"
+                          inputClassName="text-[15px] font-semibold"
+                        />
+                      </div>
                       <Badge variant="ai" className="flex-shrink-0">
                         Draft
                       </Badge>

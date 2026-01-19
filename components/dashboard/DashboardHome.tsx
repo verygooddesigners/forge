@@ -5,6 +5,7 @@ import { User, Project } from '@/types';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { InlineEdit } from '@/components/ui/inline-edit';
 import { 
   Plus,
   FileText,
@@ -54,7 +55,33 @@ export function DashboardHome({
       .limit(4);
 
     if (data) {
-      setRecentProjects(data);
+      // Set file_name to headline if not set
+      const projectsWithFileName = data.map(project => ({
+        ...project,
+        file_name: project.file_name || project.headline
+      }));
+      setRecentProjects(projectsWithFileName);
+    }
+  };
+
+  const updateFileName = async (projectId: string, newFileName: string) => {
+    try {
+      const { error } = await supabase
+        .from('projects')
+        .update({ file_name: newFileName })
+        .eq('id', projectId);
+
+      if (error) throw error;
+
+      // Update local state
+      setRecentProjects(prev =>
+        prev.map(p =>
+          p.id === projectId ? { ...p, file_name: newFileName } : p
+        )
+      );
+    } catch (error) {
+      console.error('Error updating file name:', error);
+      throw error;
     }
   };
 
@@ -272,9 +299,14 @@ export function DashboardHome({
                 onClick={() => onSelectProject(project.id, project.writer_model_id)}
               >
                 <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-[15px] font-semibold leading-snug flex-1 mr-3">
-                    {project.headline}
-                  </h3>
+                  <div className="flex-1 mr-3">
+                    <InlineEdit
+                      value={project.file_name || project.headline}
+                      onSave={(newValue) => updateFileName(project.id, newValue)}
+                      className="text-[15px] font-semibold leading-snug"
+                      inputClassName="text-[15px] font-semibold"
+                    />
+                  </div>
                   <Badge variant="ai" className="flex-shrink-0">
                     Draft
                   </Badge>

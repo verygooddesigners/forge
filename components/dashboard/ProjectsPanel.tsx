@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { InlineEdit } from '@/components/ui/inline-edit';
 import { 
   Search,
   Calendar,
@@ -48,12 +49,38 @@ export function ProjectsPanel({ user, onSelectProject, onCreateProject }: Projec
         .order('updated_at', { ascending: false });
 
       if (!error && data) {
-        setProjects(data);
+        // Set file_name to headline if not set
+        const projectsWithFileName = data.map(project => ({
+          ...project,
+          file_name: project.file_name || project.headline
+        }));
+        setProjects(projectsWithFileName);
       }
     } catch (error) {
       console.error('Error loading projects:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const updateFileName = async (projectId: string, newFileName: string) => {
+    try {
+      const { error } = await supabase
+        .from('projects')
+        .update({ file_name: newFileName })
+        .eq('id', projectId);
+
+      if (error) throw error;
+
+      // Update local state
+      setProjects(prev =>
+        prev.map(p =>
+          p.id === projectId ? { ...p, file_name: newFileName } : p
+        )
+      );
+    } catch (error) {
+      console.error('Error updating file name:', error);
+      throw error;
     }
   };
 
@@ -65,6 +92,7 @@ export function ProjectsPanel({ user, onSelectProject, onCreateProject }: Projec
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (project) =>
+          (project.file_name || project.headline).toLowerCase().includes(query) ||
           project.headline.toLowerCase().includes(query) ||
           project.primary_keyword.toLowerCase().includes(query) ||
           project.topic?.toLowerCase().includes(query)
@@ -221,9 +249,14 @@ export function ProjectsPanel({ user, onSelectProject, onCreateProject }: Projec
                 <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                 
                 <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-base font-semibold text-text-primary leading-snug flex-1 mr-3">
-                    {project.headline}
-                  </h3>
+                  <div className="flex-1 mr-3">
+                    <InlineEdit
+                      value={project.file_name || project.headline}
+                      onSave={(newValue) => updateFileName(project.id, newValue)}
+                      className="text-base font-semibold text-text-primary leading-snug"
+                      inputClassName="text-base font-semibold"
+                    />
+                  </div>
                   <Badge variant="ai" className="flex-shrink-0">
                     Draft
                   </Badge>

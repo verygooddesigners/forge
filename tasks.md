@@ -1,5 +1,11 @@
 # TASKS
 
+## NEW TASKS
+Instructions: I will add new tasks here as bullet points. You ingest them into your system and schedule them for building/fixing.
+
+- On the Research Results screen. need to be able to click anywhere on a card to select it. The selected cards are the ones that are used as research. 
+
+
 - On the New Article setup modal screens, on the secondary keywords screen, add a button for the AI to suggest some secondary keywords
 - Add a tuning panel in the Admin section for the Fact Checking AI agent
 
