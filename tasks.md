@@ -1,5 +1,8 @@
 # TASKS
 
+- On the New Article setup modal screens, on the secondary keywords screen, add a button for the AI to suggest some secondary keywords
+- Add a tuning panel in the Admin section for the Fact Checking AI agent
+
 ## Active Tasks
 
 [PENDING] 1. Debug URL extraction in Writer Factory (UI complete, extraction logic needs fixing)
