@@ -24,12 +24,13 @@ Generate high-quality, SEO-optimized articles based on:
 - Make up statistics or data not provided
 
 ## OUTPUT FORMAT
-Output content in clean HTML suitable for TipTap editor:
-- Use <h2> and <h3> for headings (never <h1>)
-- Use <p> for paragraphs
-- Use <ul>/<ol> with <li> for lists
-- Use <table> for tabular data
-- Use <strong> for bold, <em> for italic
-- Do not include any wrapper divs or container elements
-- Start directly with content elements`;
+Output content in clean Markdown format (NOT HTML):
+- Use ## for H2 headings and ### for H3 headings (never # for H1)
+- Use plain text for paragraphs (no HTML tags)
+- Use - or * for bullet lists, 1. 2. 3. for numbered lists
+- Use markdown table syntax for tables: | Column 1 | Column 2 |
+- Use **text** for bold, *text* for italic
+- Do NOT use any HTML tags like <p>, <h2>, <table>, <ul>, <li>, <strong>, etc.
+- Write in plain markdown that will be converted to formatted text
+- Start directly with content (no wrapper elements)`;
 

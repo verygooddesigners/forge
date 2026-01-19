@@ -203,38 +203,59 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
         }
       }
 
-      // Helper function to strip HTML tags and convert to plain text
+      // Helper function to strip HTML tags and convert to markdown
       const stripHtmlTags = (html: string): string => {
-        return html
-          // Convert HTML tags to markdown equivalents
-          .replace(/<strong>(.*?)<\/strong>/gi, '**$1**')
+        let text = html;
+        
+        // Convert HTML tables to markdown tables
+        text = text.replace(/<table[^>]*>/gi, '\n');
+        text = text.replace(/<\/table>/gi, '\n');
+        text = text.replace(/<thead[^>]*>/gi, '');
+        text = text.replace(/<\/thead>/gi, '');
+        text = text.replace(/<tbody[^>]*>/gi, '');
+        text = text.replace(/<\/tbody>/gi, '');
+        text = text.replace(/<tr[^>]*>/gi, '');
+        text = text.replace(/<\/tr>/gi, '|\n');
+        text = text.replace(/<th[^>]*>(.*?)<\/th>/gi, '| $1 ');
+        text = text.replace(/<td[^>]*>(.*?)<\/td>/gi, '| $1 ');
+        
+        // Convert HTML formatting to markdown
+        text = text.replace(/<strong>(.*?)<\/strong>/gi, '**$1**')
           .replace(/<b>(.*?)<\/b>/gi, '**$1**')
           .replace(/<em>(.*?)<\/em>/gi, '*$1*')
           .replace(/<i>(.*?)<\/i>/gi, '*$1*')
-          .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1')
-          .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1')
-          .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1')
-          .replace(/<h4[^>]*>(.*?)<\/h4>/gi, '### $1')
-          .replace(/<h5[^>]*>(.*?)<\/h5>/gi, '### $1')
-          .replace(/<h6[^>]*>(.*?)<\/h6>/gi, '### $1')
+          .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1\n\n')
+          .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1\n\n')
+          .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1\n\n')
+          .replace(/<h4[^>]*>(.*?)<\/h4>/gi, '### $1\n\n')
+          .replace(/<h5[^>]*>(.*?)<\/h5>/gi, '### $1\n\n')
+          .replace(/<h6[^>]*>(.*?)<\/h6>/gi, '### $1\n\n')
           .replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n\n')
           .replace(/<br\s*\/?>/gi, '\n')
           .replace(/<li[^>]*>(.*?)<\/li>/gi, '- $1\n')
-          .replace(/<ul[^>]*>(.*?)<\/ul>/gis, '$1')
-          .replace(/<ol[^>]*>(.*?)<\/ol>/gis, '$1')
-          // Remove any remaining HTML tags
-          .replace(/<[^>]+>/g, '')
-          // Decode HTML entities
-          .replace(/&nbsp;/g, ' ')
+          .replace(/<ul[^>]*>/gi, '\n')
+          .replace(/<\/ul>/gi, '\n')
+          .replace(/<ol[^>]*>/gi, '\n')
+          .replace(/<\/ol>/gi, '\n');
+        
+        // Remove any remaining HTML tags (aggressive cleanup)
+        text = text.replace(/<[^>]+>/g, '');
+        
+        // Decode HTML entities
+        text = text.replace(/&nbsp;/g, ' ')
           .replace(/&amp;/g, '&')
           .replace(/&lt;/g, '<')
           .replace(/&gt;/g, '>')
           .replace(/&quot;/g, '"')
           .replace(/&#39;/g, "'")
-          .replace(/&apos;/g, "'")
-          // Clean up extra whitespace
-          .replace(/\n\s*\n\s*\n/g, '\n\n')
+          .replace(/&apos;/g, "'");
+        
+        // Clean up extra whitespace and empty lines
+        text = text.replace(/\n\s*\n\s*\n+/g, '\n\n')
+          .replace(/^\s+|\s+$/g, '')
           .trim();
+        
+        return text;
       };
 
       // Strip HTML tags from generated text before processing

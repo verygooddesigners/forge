@@ -47,6 +47,8 @@ export async function generateContent(
     userMessage += `\nADDITIONAL INSTRUCTIONS:\n${request.additionalInstructions}\n`;
   }
   
+  userMessage += `\nIMPORTANT: Output ONLY markdown format (## for headings, ** for bold, - for lists). Do NOT use HTML tags like <p>, <h2>, <table>, etc.`;
+  
   const messages: AgentMessage[] = [
     {
       role: 'system',
@@ -93,6 +95,8 @@ export async function generateContentStream(
   if (request.additionalInstructions) {
     userMessage += `\nADDITIONAL INSTRUCTIONS:\n${request.additionalInstructions}\n`;
   }
+  
+  userMessage += `\nIMPORTANT: Output ONLY markdown format (## for headings, ** for bold, - for lists). Do NOT use HTML tags like <p>, <h2>, <table>, etc.`;
   
   const messages: AgentMessage[] = [
     {
