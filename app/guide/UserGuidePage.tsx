@@ -609,21 +609,41 @@ export default function UserGuidePage() {
           </div>
 
           <h4 className="font-semibold text-lg mt-6 mb-3">Adding Training Content</h4>
-          <ol className="list-decimal list-inside space-y-2 ml-4">
-            <li className="leading-relaxed">Select a model from the sidebar</li>
-            <li className="leading-relaxed">Paste a complete article into the training content area</li>
-            <li className="leading-relaxed">Click <strong>Add Training Content</strong></li>
-            <li className="leading-relaxed">The AI analyzes the style, tone, and voice automatically</li>
-            <li className="leading-relaxed">Training percentage updates immediately</li>
-          </ol>
+          
+          <div className="bg-bg-elevated border border-border-default rounded-lg p-5 my-4">
+            <h5 className="font-semibold mb-3 text-accent-primary">Two Ways to Add Content</h5>
+            
+            <div className="space-y-4">
+              <div>
+                <h6 className="font-medium mb-2">Option 1: Extract from URL</h6>
+                <ol className="list-decimal list-inside space-y-1 ml-4 text-sm">
+                  <li className="leading-relaxed">Paste an article URL into the "Extract from URL" field</li>
+                  <li className="leading-relaxed">Click <strong>Extract</strong> to automatically pull the article content</li>
+                  <li className="leading-relaxed">Review the extracted text in the textarea</li>
+                  <li className="leading-relaxed">Click <strong>Add Story</strong> to train the model</li>
+                </ol>
+              </div>
+
+              <div>
+                <h6 className="font-medium mb-2">Option 2: Paste Manually</h6>
+                <ol className="list-decimal list-inside space-y-1 ml-4 text-sm">
+                  <li className="leading-relaxed">Select a model from the sidebar</li>
+                  <li className="leading-relaxed">Paste a complete article into the "Article Content" textarea</li>
+                  <li className="leading-relaxed">Click <strong>Add Story</strong></li>
+                  <li className="leading-relaxed">The AI analyzes the style, tone, and voice automatically</li>
+                </ol>
+              </div>
+            </div>
+          </div>
 
           <div className="bg-warning-muted border-l-4 border-warning p-5 rounded-r-lg my-6">
             <p className="text-sm font-medium text-text-primary mb-2">⚡ Training Progress</p>
             <p className="text-sm text-text-secondary mb-2">
-              Each article adds 4% to your training progress (1 of 25 stories).
+              Each article adds 4% to your training progress (1 of 25 stories). The sidebar badge shows 
+              each model's progress (e.g., "2/25" means 2 stories added, 8% trained).
             </p>
             <p className="text-sm text-text-secondary">
-              Models can be used at any training level, but 100% training produces the best results.
+              Models can be used at any training level, but 100% training (25 stories) produces the best results.
             </p>
           </div>
 
@@ -1342,6 +1362,51 @@ export default function UserGuidePage() {
                     <li className="text-muted-foreground">• Color-coded status (green=optimal, yellow=close, red=off target)</li>
                   </ul>
                 </div>
+              </div>
+            </div>
+
+            {/* Suggested Keywords */}
+            <div className="border border-border-default rounded-lg p-6">
+              <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+                Suggested Keywords
+              </h4>
+              
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                After analyzing your SEO Package, the AI suggests keywords with color-coded priority levels:
+              </p>
+
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded">
+                  <div className="px-3 py-1 bg-green-500 text-white rounded font-medium text-sm">HIGH</div>
+                  <div className="text-sm">
+                    <strong className="text-green-800">Green Keywords:</strong> Critical for SEO success. Use these prominently in your content.
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 bg-orange-50 border border-orange-200 rounded">
+                  <div className="px-3 py-1 bg-orange-500 text-white rounded font-medium text-sm">MED</div>
+                  <div className="text-sm">
+                    <strong className="text-orange-800">Orange Keywords:</strong> Good to include but not required. Strengthens relevance.
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 bg-red-50 border border-red-200 rounded">
+                  <div className="px-3 py-1 bg-red-500 text-white rounded font-medium text-sm">LOW</div>
+                  <div className="text-sm">
+                    <strong className="text-red-800">Red Keywords:</strong> Consider avoiding. May dilute focus or attract wrong audience.
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 p-4 bg-bg-elevated border border-border-default rounded">
+                <p className="text-sm font-medium mb-2">💡 Using Suggested Keywords</p>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• Click a keyword to add it to your SEO Package</li>
+                  <li>• Selected keywords are automatically tracked in Terms Analysis</li>
+                  <li>• Keywords dynamically update the SEO Package for content generation</li>
+                  <li>• Target density is calculated based on your word count</li>
+                </ul>
               </div>
             </div>
 
