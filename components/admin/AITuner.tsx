@@ -45,6 +45,9 @@ export function AITuner({ adminUser }: AITunerProps) {
   const saveMasterInstructions = async () => {
     setSaving(true);
     try {
+      console.log('[AI_TUNER] Attempting to save master instructions');
+      console.log('[AI_TUNER] Admin user:', adminUser.id, adminUser.email, adminUser.role);
+      
       const { error } = await supabase
         .from('ai_settings')
         .upsert({
@@ -54,13 +57,16 @@ export function AITuner({ adminUser }: AITunerProps) {
         });
 
       if (!error) {
+        console.log('[AI_TUNER] Save successful');
         alert('Master instructions saved successfully');
       } else {
+        console.error('[AI_TUNER] Save error:', error);
         throw error;
       }
-    } catch (error) {
-      console.error('Error saving master instructions:', error);
-      alert('Failed to save master instructions');
+    } catch (error: any) {
+      console.error('[AI_TUNER] Error saving master instructions:', error);
+      const errorMsg = error?.message || error?.details || 'Unknown error';
+      alert(`Failed to save master instructions\n\nError: ${errorMsg}\n\nPlease check your user role in the database.`);
     } finally {
       setSaving(false);
     }
