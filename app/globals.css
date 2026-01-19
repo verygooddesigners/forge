@@ -145,6 +145,38 @@
 }
 
 /* TipTap Editor Styles */
+.ProseMirror {
+  color: #1f2937 !important;
+  background: white !important;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+  color: #111827 !important;
+}
+
+.ProseMirror p {
+  color: #1f2937 !important;
+}
+
+.ProseMirror strong {
+  color: #111827 !important;
+  font-weight: 700;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  color: #1f2937 !important;
+}
+
+.ProseMirror li {
+  color: #1f2937 !important;
+}
+
 .tiptap {
   > * + * {
     margin-top: 0.75em;

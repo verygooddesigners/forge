@@ -166,7 +166,7 @@ export function AppSidebar({
       <div className="p-4 border-t border-border-subtle">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-bg-hover transition-all cursor-pointer group">
+            <button type="button" className="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-bg-hover transition-all cursor-pointer group text-left border-none bg-transparent">
               <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-ai-accent flex items-center justify-center font-semibold text-sm">
                 {getInitials(user.full_name || user.email)}
               </div>
@@ -178,10 +178,10 @@ export function AppSidebar({
                   {user.role}
                 </div>
               </div>
-              <ChevronDown className="w-4 h-4 text-text-tertiary group-hover:opacity-100 transition-opacity" />
-            </div>
+              <ChevronDown className="w-4 h-4 text-text-tertiary transition-opacity" />
+            </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent align="end" side="top" className="w-56 z-[100]">
             <DropdownMenuItem onClick={() => router.push('/profile')}>
               <UserCircle className="mr-2 h-4 w-4" />
               Profile
