@@ -10,7 +10,7 @@
 [] We need to optimize the SEO Wizard. For example, under the Headings box, it says the Target should be 5-18 headings. BUt it's a 470 word story. The amount of headings needs to be optimized for the total word count.
 [] Writer Model Training: Need to be able to paste a URL to  a story and have the AI extract the text for the story rather than having to copy and paste the story text
 [] On the Writer Factory, when I click Blake Weishaar's model - which has 2/25 stories trained - every other writer model changes to show 2/25. If i click a different model, they all revert to 0/25 - even Blake's model, which is supposed to have 2. Also, I cannot add new training stories to any models - it says Error: Failed to Add Training Story
-[] The SEO Wizard container 
+[] The SEO Wizard container has a white background, but when you mouse over it, it turns gray. That needs to stay 
 
 
 
