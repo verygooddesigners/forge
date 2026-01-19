@@ -7,6 +7,8 @@
 [PENDING] 3. Add URL-based training story extraction: Allow pasting URL to a story and have AI extract the text instead of copy/paste (UI added, extraction logic needs debugging)
 [DONE] 4. Add Suggested Keywords section to SEO Wizard with color-coded labels (green=important, orange=good idea, red=avoid)
 [DONE] 5. Optimize SEO Wizard heading targets based on word count (e.g., 470 word story shouldn't require 5-18 headings)
+[DONE] 6. Update User Guide with latest features (Writer Factory URL extraction, Suggested Keywords, training badges)
+[DONE] 7. Push all changes to production (https://rotowrite.vercel.app)
 
 ---
 

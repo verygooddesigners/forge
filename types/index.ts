@@ -89,6 +89,7 @@ export interface Project {
   brief?: Brief;
   content: any; // TipTap JSON
   seo_score?: number;
+  research_brief?: ResearchBrief;
   created_at: string;
   updated_at: string;
 }
@@ -110,6 +111,66 @@ export interface NewsArticle {
   published_date: string;
   image_url?: string;
   relevance_score: number;
+}
+
+export interface ResearchArticle extends NewsArticle {
+  id: string;
+  trust_score: number;
+  is_trusted: boolean;
+  is_flagged: boolean;
+  feedback_reason?: string;
+  full_content?: string;
+}
+
+export interface VerifiedFact {
+  fact: string;
+  confidence: 'high' | 'medium' | 'low';
+  sources: string[];
+  verification_date: string;
+}
+
+export interface DisputedFact {
+  fact: string;
+  conflicting_sources: string[];
+  explanation: string;
+}
+
+export interface ArticleFeedback {
+  article_id: string;
+  reason: FeedbackReason;
+  notes?: string;
+}
+
+export type FeedbackReason = 
+  | 'inaccurate_information'
+  | 'outdated_information'
+  | 'unreliable_source'
+  | 'off_topic'
+  | 'duplicate_content'
+  | 'misleading_headline'
+  | 'other';
+
+export interface ResearchBrief {
+  articles: ResearchArticle[];
+  verified_facts: VerifiedFact[];
+  disputed_facts: DisputedFact[];
+  user_feedback: ArticleFeedback[];
+  fact_check_complete: boolean;
+  fact_check_timestamp?: string;
+  research_timestamp: string;
+  confidence_score: number;
+}
+
+export interface TrustedSource {
+  id: string;
+  domain: string;
+  name: string;
+  trust_level: 'high' | 'medium' | 'low' | 'untrusted';
+  category: string[];
+  notes?: string;
+  created_by?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface SEOAnalysis {

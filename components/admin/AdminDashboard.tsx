@@ -14,6 +14,7 @@ import { AgentTuner } from './AgentTuner';
 import { AIHelperAdmin } from './AIHelperAdmin';
 import { CursorRemotePanel } from './CursorRemotePanel';
 import { SSOConfigStatus } from './SSOConfigStatus';
+import { TrustedSourcesAdmin } from './TrustedSourcesAdmin';
 
 interface AdminDashboardProps {
   user: User;
@@ -73,6 +74,12 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
               Cursor Remote
             </TabsTrigger>
           )}
+          <TabsTrigger 
+            value="trusted-sources"
+            className="data-[state=active]:bg-bg-elevated data-[state=active]:text-text-primary text-text-secondary text-[13px] font-medium px-5 py-2.5"
+          >
+            Trusted Sources
+          </TabsTrigger>
         </TabsList>
 
           <TabsContent value="users">
@@ -105,6 +112,10 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
             <CursorRemotePanel adminUser={user} />
           </TabsContent>
         )}
+
+          <TabsContent value="trusted-sources">
+            <TrustedSourcesAdmin />
+          </TabsContent>
       </Tabs>
     </div>
   );
