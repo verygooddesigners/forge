@@ -58,7 +58,7 @@ export function EditorToolbar({ editor, onGenerateContent, generating = false, c
   );
 
   return (
-    <div className="border-b border-border-subtle bg-bg-elevated px-4 py-2.5 flex items-center justify-between gap-2">
+    <div className="border-b border-border-subtle bg-gray-50 px-4 py-2.5 flex items-center justify-between gap-2">
       <div className="flex items-center gap-1 flex-wrap">
         {/* Undo/Redo */}
       <ToolbarButton

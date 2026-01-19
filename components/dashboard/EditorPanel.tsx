@@ -429,6 +429,10 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
         content: tipTapNodes.filter((node) => node.content && (node.content.length > 0 || node.type === 'bulletList' || node.type === 'orderedList')),
       };
 
+      console.log('[GENERATE] TipTap content structure:', JSON.stringify(tipTapContent, null, 2));
+      console.log('[GENERATE] Total nodes:', tipTapContent.content.length);
+      console.log('[GENERATE] Node types:', tipTapContent.content.map((n: any) => n.type));
+
       setContent(tipTapContent);
       
       // Save the generated content

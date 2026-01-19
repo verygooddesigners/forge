@@ -49,7 +49,7 @@ export function TipTapEditor({
     immediatelyRender: false,
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none h-full prose-invert',
+        class: 'prose prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none h-full prose-gray',
       },
     },
     onUpdate: ({ editor }) => {
@@ -81,7 +81,7 @@ export function TipTapEditor({
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-white">
       <EditorToolbar 
         editor={editor}
         onGenerateContent={onGenerateContent}
@@ -89,7 +89,7 @@ export function TipTapEditor({
         canGenerate={canGenerate}
         onExport={onExport}
       />
-      <div className="flex-1 overflow-y-auto px-6 py-4">
+      <div className="flex-1 overflow-y-auto px-6 py-4 bg-white">
         <EditorContent editor={editor} className="h-full" />
       </div>
     </div>
