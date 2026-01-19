@@ -2,11 +2,13 @@
 
 ## Active Tasks
 
-[PENDING] 1. Debug URL extraction in Writer Factory (UI complete, extraction logic needs fixing)
-[DONE] 2. Run database migrations for trusted_sources and research_feedback tables
-[PENDING] 3. Test Research Story workflow end-to-end
-[DONE] 4. Implement Research Story feature with Fact Verification Agent (#8)
-[DONE] 5. Deploy Research Story to production (https://rotowrite.vercel.app)
+[PENDING] 1. On the new project setup modal screens, on the Secondary Keywords screen, add an AI-powered Suggest Keywords button that uses the H1 and primary keywords to come up with secondary keyword suggestions
+[PENDING] 2. Add a tuning panel in the Admin section for the Fact Checking AI agent
+[PENDING] 3. Debug URL extraction in Writer Factory (UI complete, extraction logic needs fixing)
+[DONE] 4. Run database migrations for trusted_sources and research_feedback tables
+[PENDING] 5. Test Research Story workflow end-to-end
+[DONE] 6. Implement Research Story feature with Fact Verification Agent (#8)
+[DONE] 7. Deploy Research Story to production (https://rotowrite.vercel.app)
 
 ---
 
