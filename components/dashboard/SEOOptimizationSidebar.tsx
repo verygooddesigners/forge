@@ -16,6 +16,7 @@ interface SEOOptimizationSidebarProps {
   content: any; // TipTap JSON content
   project: Project | null;
   onContentUpdate?: (content: any) => void;
+  onProjectUpdate?: () => void;
 }
 
 interface ContentMetrics {
@@ -44,6 +45,7 @@ export function SEOOptimizationSidebar({
   content,
   project,
   onContentUpdate,
+  onProjectUpdate,
 }: SEOOptimizationSidebarProps) {
   const [activeTab, setActiveTab] = useState('guidelines');
   const [seoScore, setSeoScore] = useState(0);
@@ -309,8 +311,10 @@ export function SEOOptimizationSidebar({
       setSuggestedKeywords(keywords);
     }
     
-    // Trigger a page reload to refresh project with research_brief
-    window.location.reload();
+    // Trigger project reload in parent component
+    if (onProjectUpdate) {
+      onProjectUpdate();
+    }
   };
 
   const extractKeywordsFromFacts = (facts: any[]): SuggestedKeyword[] => {
