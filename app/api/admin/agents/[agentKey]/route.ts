@@ -24,7 +24,10 @@ export async function GET(
     
     // Check super admin access
     const user = await getCurrentUser();
-    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || user?.email === 'jeremy.botter@gdcgroup.com';
+    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || 
+                         user?.email === 'jeremy.botter@gdcgroup.com' ||
+                         user?.role === 'admin';
+    
     if (!user || !isSuperAdmin) {
       return NextResponse.json(
         { error: 'Unauthorized. Super admin access required.' },
@@ -94,10 +97,18 @@ export async function PUT(
   try {
     const { agentKey } = await params;
     
+    console.log('[AGENT_UPDATE] Request received for agent:', agentKey);
+    
     // Check super admin access
     const user = await getCurrentUser();
-    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || user?.email === 'jeremy.botter@gdcgroup.com';
+    console.log('[AGENT_UPDATE] User:', user?.email, 'Role:', user?.role);
+    
+    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || 
+                         user?.email === 'jeremy.botter@gdcgroup.com' ||
+                         user?.role === 'admin';
+    
     if (!user || !isSuperAdmin) {
+      console.error('[AGENT_UPDATE] Unauthorized access attempt by:', user?.email);
       return NextResponse.json(
         { error: 'Unauthorized. Super admin access required.' },
         { status: 403 }
@@ -113,6 +124,8 @@ export async function PUT(
     
     const body = await request.json();
     const supabase = await createClient();
+    
+    console.log('[AGENT_UPDATE] Updating agent config in database');
     
     const { data, error } = await supabase
       .from('agent_configs')
@@ -133,8 +146,11 @@ export async function PUT(
       .single();
     
     if (error) {
+      console.error('[AGENT_UPDATE] Database error:', error);
       throw error;
     }
+    
+    console.log('[AGENT_UPDATE] Successfully updated agent');
     
     // Transform response
     const agentConfig: AgentConfig = {
@@ -155,10 +171,11 @@ export async function PUT(
     };
     
     return NextResponse.json({ agent: agentConfig });
-  } catch (error) {
-    console.error('Error updating agent config:', error);
+  } catch (error: any) {
+    console.error('[AGENT_UPDATE] Error updating agent config:', error);
+    const errorMessage = error?.message || 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to update agent configuration' },
+      { error: 'Failed to update agent configuration', details: errorMessage },
       { status: 500 }
     );
   }

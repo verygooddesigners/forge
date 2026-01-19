@@ -12,7 +12,10 @@ export async function GET(request: NextRequest) {
   try {
     // Check super admin access
     const user = await getCurrentUser();
-    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || user?.email === 'jeremy.botter@gdcgroup.com';
+    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || 
+                         user?.email === 'jeremy.botter@gdcgroup.com' ||
+                         user?.role === 'admin';
+    
     if (!user || !isSuperAdmin) {
       return NextResponse.json(
         { error: 'Unauthorized. Super admin access required.' },
@@ -68,7 +71,10 @@ export async function PUT(request: NextRequest) {
   try {
     // Check super admin access
     const user = await getCurrentUser();
-    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || user?.email === 'jeremy.botter@gdcgroup.com';
+    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || 
+                         user?.email === 'jeremy.botter@gdcgroup.com' ||
+                         user?.role === 'admin';
+    
     if (!user || !isSuperAdmin) {
       return NextResponse.json(
         { error: 'Unauthorized. Super admin access required.' },
