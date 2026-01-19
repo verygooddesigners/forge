@@ -14,8 +14,9 @@ import { Separator } from '@/components/ui/separator';
 import { createClient } from '@/lib/supabase/client';
 import { Brief, Category, User } from '@/types';
 import { TipTapEditor } from '@/components/editor/TipTapEditor';
-import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft, HelpCircle } from 'lucide-react';
 import { SmartBriefListModal } from '@/components/modals/SmartBriefListModal';
+import { SmartBriefGuideModal } from '@/components/modals/SmartBriefGuideModal';
 
 interface SmartBriefPanelProps {
   user: User;
@@ -31,6 +32,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   const [isShared, setIsShared] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showBriefListModal, setShowBriefListModal] = useState(false);
+  const [showGuideModal, setShowGuideModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false); // Track create mode
   
   // AI Configuration fields
@@ -217,28 +219,71 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
           // Welcome state - centered matching dark theme
           <div className="flex flex-col items-center justify-center h-full p-12 text-center">
             <h2 className="text-3xl font-bold text-accent-primary mb-2">SmartBriefs</h2>
-            <p className="text-text-secondary max-w-md mb-8">
+            <p className="text-text-secondary max-w-md mb-6">
               Create smart AI-powered content templates
             </p>
-            <Button onClick={startNewBrief} size="lg" className="mb-4">
-              Create New SmartBrief
-            </Button>
+
+            {/* Prominent Guide Callout */}
+            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-2 border-accent-primary rounded-xl p-6 mb-6 max-w-2xl">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-12 h-12 bg-accent-primary rounded-lg flex items-center justify-center">
+                  <HelpCircle className="h-6 w-6 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-text-primary mb-2">
+                    New to SmartBriefs?
+                  </h3>
+                  <p className="text-sm text-text-secondary mb-4">
+                    Learn how to create effective SmartBriefs with our comprehensive guide covering structure, 
+                    AI configuration, examples, and best practices.
+                  </p>
+                  <Button onClick={() => setShowGuideModal(true)} size="lg" className="w-full sm:w-auto">
+                    <BookOpen className="h-4 w-4 mr-2" />
+                    How to Create SmartBriefs
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3 mb-4">
+              <Button onClick={startNewBrief} size="lg">
+                <Plus className="h-4 w-4 mr-2" />
+                Create New SmartBrief
+              </Button>
+            </div>
             <button
               onClick={() => setShowBriefListModal(true)}
               className="text-accent-primary hover:underline text-sm"
             >
-              Open Existing SmartBrief
+              Or browse existing SmartBriefs
             </button>
-            
-            {/* User Guide Link */}
-            <div className="mt-8 flex items-center gap-2 text-accent-primary text-sm cursor-pointer hover:underline">
-              <BookOpen className="h-4 w-4" />
-              SmartBriefs User Guide
-            </div>
           </div>
         ) : (
           // SmartBrief editor
           <div className="px-8 py-6 space-y-8">
+            {/* Guide Callout at Top of Editor */}
+            {!selectedBrief && (
+              <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-2 border-accent-primary rounded-xl p-5">
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-accent-primary rounded-lg flex items-center justify-center">
+                    <HelpCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-text-primary mb-1">
+                      Need help creating your SmartBrief?
+                    </h3>
+                    <p className="text-xs text-text-secondary">
+                      Check out our step-by-step guide with examples and best practices
+                    </p>
+                  </div>
+                  <Button onClick={() => setShowGuideModal(true)} variant="outline" size="sm">
+                    <BookOpen className="h-4 w-4 mr-2" />
+                    View Guide
+                  </Button>
+                </div>
+              </div>
+            )}
+
             {/* Header Section */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -465,6 +510,12 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
           setSelectedBrief(brief);
           setIsCreating(true);
         }}
+      />
+
+      {/* SmartBrief Guide Modal */}
+      <SmartBriefGuideModal
+        open={showGuideModal}
+        onOpenChange={setShowGuideModal}
       />
     </>
   );
