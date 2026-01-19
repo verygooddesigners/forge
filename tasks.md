@@ -2,13 +2,9 @@
 
 ## Active Tasks
 
-[DONE] 1. Fix Writer Model Training: Cannot add new training stories to any models - getting "Error: Failed to Add Training Story" error
-[DONE] 2. Fix Writer Factory badge display bug: When clicking Blake Weishaar's model (2/25 stories), all models show 2/25. Clicking different model makes them all show 0/25
-[PENDING] 3. Add URL-based training story extraction: Allow pasting URL to a story and have AI extract the text instead of copy/paste (UI added, extraction logic needs debugging)
-[DONE] 4. Add Suggested Keywords section to SEO Wizard with color-coded labels (green=important, orange=good idea, red=avoid)
-[DONE] 5. Optimize SEO Wizard heading targets based on word count (e.g., 470 word story shouldn't require 5-18 headings)
-[DONE] 6. Update User Guide with latest features (Writer Factory URL extraction, Suggested Keywords, training badges)
-[DONE] 7. Push all changes to production (https://rotowrite.vercel.app)
+[PENDING] 1. Debug URL extraction in Writer Factory (UI complete, extraction logic needs fixing)
+[PENDING] 2. Run database migrations for trusted_sources and research_feedback tables
+[PENDING] 3. Test Research Story workflow end-to-end
 
 ---
 
