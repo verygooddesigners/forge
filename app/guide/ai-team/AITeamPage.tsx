@@ -234,7 +234,7 @@ export default function AITeamPage() {
               <div className="prose prose-invert max-w-none">
                 <p className="text-lg leading-relaxed text-text-secondary">
                   RotoWrite is powered by a sophisticated{' '}
-                  <strong>Multi-Agent AI System</strong> – a team of 7 specialized AI agents
+                  <strong>Multi-Agent AI System</strong> – a team of 8 specialized AI agents
                   that work together to produce high-quality, SEO-optimized content in your
                   unique voice. Each agent has a specific role and expertise, making the whole
                   system more powerful than any single AI could be.
@@ -244,7 +244,7 @@ export default function AITeamPage() {
               <div className="bg-accent-muted border border-accent-primary rounded-xl p-8 my-8">
                 <h3 className="text-xl font-bold mb-4 text-center flex items-center justify-center gap-2">
                   <Cpu className="h-6 w-6 text-accent-primary" />
-                  <span className="text-text-primary">The 7-Agent Orchestra</span>
+                  <span className="text-text-primary">The 8-Agent Orchestra</span>
                 </h3>
                 <p className="text-center text-text-secondary mb-0">
                   Just like a symphony orchestra has different sections working in harmony,
@@ -487,6 +487,34 @@ export default function AITeamPage() {
                   <div className="text-xs text-text-tertiary font-mono bg-bg-hover px-3 py-2 rounded">
                     Model: claude-sonnet-4-20250514 (Vision) | Temperature: 0.2 | Max Tokens:
                     4000 | Confidence: 85%
+                  </div>
+                </div>
+
+                {/* Agent 8 - NEW */}
+                <div className="border-l-4 border-[#10b981] pl-6 py-4 bg-[rgba(16,185,129,0.15)] rounded-r-lg">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                      8
+                    </div>
+                    <h4 className="font-bold text-lg text-text-primary">Fact Verification Agent</h4>
+                  </div>
+                  <p className="text-text-secondary leading-relaxed mb-3">
+                    Your accuracy guardian. This agent cross-references factual claims across multiple sources,
+                    verifies statistics and dates, flags discrepancies, and ensures content accuracy before publication.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <span className="px-2 py-1 bg-[rgba(16,185,129,0.2)] border border-[#10b981] text-[#34d399] rounded text-xs font-medium">
+                      Fact Checking
+                    </span>
+                    <span className="px-2 py-1 bg-[rgba(16,185,129,0.2)] border border-[#10b981] text-[#34d399] rounded text-xs font-medium">
+                      Cross-Referencing
+                    </span>
+                    <span className="px-2 py-1 bg-[rgba(16,185,129,0.2)] border border-[#10b981] text-[#34d399] rounded text-xs font-medium">
+                      Source Verification
+                    </span>
+                  </div>
+                  <div className="text-xs text-text-tertiary font-mono bg-bg-hover px-3 py-2 rounded">
+                    Model: claude-sonnet-4-20250514 | Temperature: 0.2 | Max Tokens: 3000
                   </div>
                 </div>
               </div>

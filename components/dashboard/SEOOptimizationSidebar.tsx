@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Link as LinkIcon, Settings, Search, ChevronDown, ArrowUp, ArrowDown, Check, Info, HelpCircle } from 'lucide-react';
-import { Project } from '@/types';
+import { Project, ResearchBrief } from '@/types';
 import { useDebounce } from '@/hooks/use-debounce';
+import { ResearchResultsModal } from '@/components/modals/ResearchResultsModal';
 
 interface SEOOptimizationSidebarProps {
   projectId: string | null;
@@ -51,6 +52,8 @@ export function SEOOptimizationSidebar({
   const [showDetails, setShowDetails] = useState(false);
   const [analyzed, setAnalyzed] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+  const [researchModalOpen, setResearchModalOpen] = useState(false);
+  const [researchComplete, setResearchComplete] = useState(false);
   
   const [metrics, setMetrics] = useState<ContentMetrics>({
     words: 0,
@@ -290,6 +293,40 @@ export function SEOOptimizationSidebar({
     return 'bg-red-100 text-red-800 border-red-300';
   };
 
+  const handleResearchStory = () => {
+    if (!project || !projectId) return;
+    setResearchModalOpen(true);
+  };
+
+  const handleResearchComplete = (researchBrief: ResearchBrief) => {
+    setResearchComplete(true);
+    setAnalyzed(true);
+    setResearchModalOpen(false);
+    
+    // Populate suggested keywords from research
+    if (researchBrief.verified_facts && researchBrief.verified_facts.length > 0) {
+      const keywords = extractKeywordsFromFacts(researchBrief.verified_facts);
+      setSuggestedKeywords(keywords);
+    }
+  };
+
+  const extractKeywordsFromFacts = (facts: any[]): SuggestedKeyword[] => {
+    // Extract key terms from verified facts
+    const keywordSet = new Set<string>();
+    
+    facts.forEach(fact => {
+      const words = fact.fact.split(/\s+/).filter((w: string) => w.length > 4);
+      words.forEach((w: string) => keywordSet.add(w.toLowerCase()));
+    });
+    
+    // Convert to suggested keywords (simple implementation)
+    return Array.from(keywordSet).slice(0, 20).map(keyword => ({
+      keyword,
+      importance: 'medium' as const,
+      selected: false,
+    }));
+  };
+
   const handleAnalyzeSEOPackage = async () => {
     if (!project || !projectId) return;
     
@@ -478,15 +515,15 @@ export function SEOOptimizationSidebar({
                   </div>
                 )}
 
-                {/* Analyze SEO Package Button (before content) */}
-                {!analyzed && metrics.words === 0 && (
+                {/* Research Story Button (before content) */}
+                {!researchComplete && metrics.words === 0 && (
                   <Button 
                     className="w-full gap-2" 
-                    onClick={handleAnalyzeSEOPackage}
-                    disabled={analyzing || !project}
+                    onClick={handleResearchStory}
+                    disabled={!project}
                   >
-                    <Sparkles className="h-4 w-4" />
-                    {analyzing ? 'Analyzing...' : 'Analyze SEO Package'}
+                    <Search className="h-4 w-4" />
+                    Research Story
                   </Button>
                 )}
               </div>
@@ -724,6 +761,17 @@ export function SEOOptimizationSidebar({
       >
         <HelpCircle className="h-5 w-5" />
       </Button>
+
+      {/* Research Results Modal */}
+      {project && projectId && (
+        <ResearchResultsModal
+          open={researchModalOpen}
+          onOpenChange={setResearchModalOpen}
+          projectId={projectId}
+          project={project}
+          onResearchComplete={handleResearchComplete}
+        />
+      )}
     </div>
   );
 }
