@@ -104,6 +104,10 @@ Please analyze these articles and return a JSON object with the following struct
     );
 
     // Parse the JSON response
+    if (!response.content) {
+      throw new Error('No content returned from fact verification');
+    }
+    
     const jsonMatch = response.content.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('Failed to parse fact verification response');
