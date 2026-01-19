@@ -56,22 +56,34 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
   }, [selectedModel]);
 
   const loadWriterModels = async () => {
+    console.log('[WRITER_FACTORY] Loading writer models...');
     const { data, error } = await supabase
       .from('writer_models')
       .select('*')
       .order('created_at', { ascending: false });
 
     if (!error && data) {
-      setWriterModels(data);
+      console.log('[WRITER_FACTORY] Loaded models:', data.map(m => ({
+        id: m.id,
+        name: m.name,
+        training_count: m.metadata?.total_training_pieces || 0
+      })));
+      
+      // Force a new array reference to trigger React re-render
+      setWriterModels([...data]);
+      
       // Update selected model if it exists
       if (selectedModel) {
         const updated = data.find(m => m.id === selectedModel.id);
         if (updated) {
+          console.log('[WRITER_FACTORY] Updating selected model:', updated.name, 'count:', updated.metadata?.total_training_pieces);
           setSelectedModel(updated);
           const count = updated.metadata?.total_training_pieces || 0;
           setTrainingPercentage(calculateTrainingPercentage(count));
         }
       }
+    } else {
+      console.error('[WRITER_FACTORY] Error loading models:', error);
     }
   };
 
@@ -281,6 +293,13 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
                 // Each model calculates its own count and percentage from its own metadata
                 const modelTrainingCount = model.metadata?.total_training_pieces || 0;
                 const modelPercentage = calculateTrainingPercentage(modelTrainingCount);
+                
+                console.log('[BADGE_RENDER]', model.name, ':', {
+                  id: model.id,
+                  metadata: model.metadata,
+                  count: modelTrainingCount,
+                  percentage: modelPercentage
+                });
                 
                 return (
                   <Card
