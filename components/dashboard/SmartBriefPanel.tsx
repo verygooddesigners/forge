@@ -409,7 +409,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
               </div>
 
               {/* Example */}
-              <div className="bg-[#3a3a44] border border-[#4a4a54] rounded-lg p-4">
+              <div className="bg-bg-elevated border border-border-default rounded-lg p-4">
                 <p className="text-sm font-semibold mb-2 text-text-primary">Example:</p>
                 <p className="text-sm text-text-secondary leading-relaxed">
                   Single Game Stories are focused on a single upcoming NFL game between two teams. They 

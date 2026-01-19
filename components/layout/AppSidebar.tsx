@@ -88,10 +88,10 @@ export function AppSidebar({
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Logo & Pin Button */}
-      <div className="p-6 border-b border-border-subtle">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-white">
+      <div className={`${isExpanded ? 'p-6' : 'p-3'} border-b border-border-subtle`}>
+        <div className={`flex items-center ${isExpanded ? 'justify-between gap-3' : 'justify-center'}`}>
+          <div className={`flex items-center ${isExpanded ? 'gap-3' : ''}`}>
+            <div className={`${isExpanded ? 'w-9 h-9' : 'w-8 h-8'} rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-white`}>
               RW
             </div>
             {isExpanded && (
@@ -135,7 +135,7 @@ export function AppSidebar({
             }`}
             title={!isExpanded ? 'Dashboard' : ''}
           >
-            <Home className={`${isExpanded ? 'w-5 h-5' : 'w-7 h-7'} text-accent-primary`} />
+            <Home className={`${isExpanded ? 'w-5 h-5' : 'w-[25px] h-[25px]'} text-accent-primary`} />
             {isExpanded && 'Dashboard'}
           </button>
 
@@ -144,7 +144,7 @@ export function AppSidebar({
             className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all`}
             title={!isExpanded ? 'Projects' : ''}
           >
-            <FileText className={`${isExpanded ? 'w-5 h-5' : 'w-7 h-7'} text-accent-primary`} />
+            <FileText className={`${isExpanded ? 'w-5 h-5' : 'w-[25px] h-[25px]'} text-accent-primary`} />
             {isExpanded && (
               <>
                 Projects
@@ -162,7 +162,7 @@ export function AppSidebar({
             className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all`}
             title={!isExpanded ? 'SmartBriefs' : ''}
           >
-            <BookOpen className={`${isExpanded ? 'w-5 h-5' : 'w-7 h-7'} text-accent-primary`} />
+            <BookOpen className={`${isExpanded ? 'w-5 h-5' : 'w-[25px] h-[25px]'} text-accent-primary`} />
             {isExpanded && 'SmartBriefs'}
           </button>
         </div>
@@ -180,7 +180,7 @@ export function AppSidebar({
             className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all`}
             title={!isExpanded ? 'Writer Factory' : ''}
           >
-            <Wrench className={`${isExpanded ? 'w-5 h-5' : 'w-7 h-7'} text-accent-primary`} />
+            <Wrench className={`${isExpanded ? 'w-5 h-5' : 'w-[25px] h-[25px]'} text-accent-primary`} />
             {isExpanded && 'Writer Factory'}
           </button>
 
@@ -189,7 +189,7 @@ export function AppSidebar({
             className={`w-full flex items-center ${isExpanded ? 'gap-3' : 'justify-center'} px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all`}
             title={!isExpanded ? 'NFL Odds Extractor' : ''}
           >
-            <TrendingUp className={`${isExpanded ? 'w-5 h-5' : 'w-7 h-7'} text-accent-primary`} />
+            <TrendingUp className={`${isExpanded ? 'w-5 h-5' : 'w-[25px] h-[25px]'} text-accent-primary`} />
             {isExpanded && 'NFL Odds Extractor'}
           </button>
 
@@ -213,7 +213,7 @@ export function AppSidebar({
               }`}
               title={!isExpanded ? 'Admin' : ''}
             >
-              <Shield className={`${isExpanded ? 'w-5 h-5' : 'w-7 h-7'} text-accent-primary`} />
+              <Shield className={`${isExpanded ? 'w-5 h-5' : 'w-[25px] h-[25px]'} text-accent-primary`} />
               {isExpanded && 'Admin'}
             </button>
           </div>
