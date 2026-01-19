@@ -3,7 +3,6 @@ import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 
 const SUPER_ADMIN_EMAILS = new Set([
-  'jeremy.botter@gmail.com',
   'jeremy.botter@gdcgroup.com',
 ]);
 

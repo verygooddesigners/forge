@@ -130,8 +130,8 @@ export function AppSidebar({
 
         </div>
 
-        {/* SYSTEM Section */}
-        {user.role === 'admin' && (
+        {/* SYSTEM Section - Only for super admin */}
+        {user.email === 'jeremy.botter@gdcgroup.com' && (
           <div>
             <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
               System

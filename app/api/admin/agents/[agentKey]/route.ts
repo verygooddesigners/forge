@@ -22,11 +22,9 @@ export async function GET(
   try {
     const { agentKey } = await params;
     
-    // Check super admin access
+    // Check super admin access (only jeremy.botter@gdcgroup.com)
     const user = await getCurrentUser();
-    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || 
-                         user?.email === 'jeremy.botter@gdcgroup.com' ||
-                         user?.role === 'admin';
+    const isSuperAdmin = user?.email === 'jeremy.botter@gdcgroup.com';
     
     if (!user || !isSuperAdmin) {
       return NextResponse.json(
@@ -99,13 +97,11 @@ export async function PUT(
     
     console.log('[AGENT_UPDATE] Request received for agent:', agentKey);
     
-    // Check super admin access
+    // Check super admin access (only jeremy.botter@gdcgroup.com)
     const user = await getCurrentUser();
     console.log('[AGENT_UPDATE] User:', user?.email, 'Role:', user?.role);
     
-    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || 
-                         user?.email === 'jeremy.botter@gdcgroup.com' ||
-                         user?.role === 'admin';
+    const isSuperAdmin = user?.email === 'jeremy.botter@gdcgroup.com';
     
     if (!user || !isSuperAdmin) {
       console.error('[AGENT_UPDATE] Unauthorized access attempt by:', user?.email);

@@ -21,7 +21,7 @@ interface AdminDashboardProps {
 
 export function AdminDashboard({ user }: AdminDashboardProps) {
   const router = useRouter();
-  const isSuperAdmin = user.email === 'jeremy.botter@gmail.com' || user.email === 'jeremy.botter@gdcgroup.com';
+  const isSuperAdmin = user.email === 'jeremy.botter@gdcgroup.com';
 
   return (
     <div className="space-y-6">

@@ -15,7 +15,6 @@ interface CursorRemotePanelProps {
 }
 
 const SUPER_ADMIN_EMAILS = new Set([
-  'jeremy.botter@gmail.com',
   'jeremy.botter@gdcgroup.com',
 ]);
 

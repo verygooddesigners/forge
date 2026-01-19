@@ -10,11 +10,9 @@ import { AgentConfig } from '@/lib/agents/types';
  */
 export async function GET(request: NextRequest) {
   try {
-    // Check super admin access
+    // Check super admin access (only jeremy.botter@gdcgroup.com)
     const user = await getCurrentUser();
-    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || 
-                         user?.email === 'jeremy.botter@gdcgroup.com' ||
-                         user?.role === 'admin';
+    const isSuperAdmin = user?.email === 'jeremy.botter@gdcgroup.com';
     
     if (!user || !isSuperAdmin) {
       return NextResponse.json(
@@ -69,11 +67,9 @@ export async function GET(request: NextRequest) {
  */
 export async function PUT(request: NextRequest) {
   try {
-    // Check super admin access
+    // Check super admin access (only jeremy.botter@gdcgroup.com)
     const user = await getCurrentUser();
-    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || 
-                         user?.email === 'jeremy.botter@gdcgroup.com' ||
-                         user?.role === 'admin';
+    const isSuperAdmin = user?.email === 'jeremy.botter@gdcgroup.com';
     
     if (!user || !isSuperAdmin) {
       return NextResponse.json(

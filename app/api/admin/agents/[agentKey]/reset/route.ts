@@ -22,9 +22,9 @@ export async function POST(
   try {
     const { agentKey } = await params;
     
-    // Check super admin access
+    // Check super admin access (only jeremy.botter@gdcgroup.com)
     const user = await getCurrentUser();
-    const isSuperAdmin = user?.email === 'jeremy.botter@gmail.com' || user?.email === 'jeremy.botter@gdcgroup.com';
+    const isSuperAdmin = user?.email === 'jeremy.botter@gdcgroup.com';
     if (!user || !isSuperAdmin) {
       return NextResponse.json(
         { error: 'Unauthorized. Super admin access required.' },
