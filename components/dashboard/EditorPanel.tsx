@@ -193,21 +193,8 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
               const parsed = JSON.parse(data);
               if (parsed.content) {
                 generatedText += parsed.content;
-                // Update content in real-time as it streams
-                // Convert plain text to TipTap JSON format
-                const tipTapContent = {
-                  type: 'doc',
-                  content: [
-                    {
-                      type: 'paragraph',
-                      content: generatedText.split('\n\n').map((para) => ({
-                        type: 'text',
-                        text: para.trim(),
-                      })).filter((p) => p.text),
-                    },
-                  ],
-                };
-                setContent(tipTapContent);
+                // Don't display during streaming - wait for final formatted conversion
+                // This prevents raw HTML/markdown from showing in the editor
               }
             } catch (e) {
               // Skip invalid JSON
@@ -216,8 +203,45 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
         }
       }
 
+      // Helper function to strip HTML tags and convert to plain text
+      const stripHtmlTags = (html: string): string => {
+        return html
+          // Convert HTML tags to markdown equivalents
+          .replace(/<strong>(.*?)<\/strong>/gi, '**$1**')
+          .replace(/<b>(.*?)<\/b>/gi, '**$1**')
+          .replace(/<em>(.*?)<\/em>/gi, '*$1*')
+          .replace(/<i>(.*?)<\/i>/gi, '*$1*')
+          .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1')
+          .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1')
+          .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1')
+          .replace(/<h4[^>]*>(.*?)<\/h4>/gi, '### $1')
+          .replace(/<h5[^>]*>(.*?)<\/h5>/gi, '### $1')
+          .replace(/<h6[^>]*>(.*?)<\/h6>/gi, '### $1')
+          .replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n\n')
+          .replace(/<br\s*\/?>/gi, '\n')
+          .replace(/<li[^>]*>(.*?)<\/li>/gi, '- $1\n')
+          .replace(/<ul[^>]*>(.*?)<\/ul>/gis, '$1')
+          .replace(/<ol[^>]*>(.*?)<\/ol>/gis, '$1')
+          // Remove any remaining HTML tags
+          .replace(/<[^>]+>/g, '')
+          // Decode HTML entities
+          .replace(/&nbsp;/g, ' ')
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'")
+          .replace(/&apos;/g, "'")
+          // Clean up extra whitespace
+          .replace(/\n\s*\n\s*\n/g, '\n\n')
+          .trim();
+      };
+
+      // Strip HTML tags from generated text before processing
+      const cleanedText = stripHtmlTags(generatedText);
+
       // Final content conversion - convert markdown text to proper TipTap format
-      const lines = generatedText.split('\n');
+      const lines = cleanedText.split('\n');
       const tipTapNodes = [];
       let currentParagraph = '';
       let inList = false;
@@ -296,7 +320,7 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
         const trimmedLine = line.trim();
         
         // Check if it's a heading (starts with #)
-        if (trimmedLine.startsWith('#') && !trimmedLine.startsWith('##')) {
+        if (trimmedLine.startsWith('#')) {
           flushList();
           if (currentParagraph) {
             tipTapNodes.push({

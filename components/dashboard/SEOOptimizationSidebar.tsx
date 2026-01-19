@@ -32,6 +32,12 @@ interface TermData {
   category: string;
 }
 
+interface SuggestedKeyword {
+  keyword: string;
+  importance: 'high' | 'medium' | 'low';
+  selected: boolean;
+}
+
 export function SEOOptimizationSidebar({
   projectId,
   content,
@@ -62,19 +68,55 @@ export function SEOOptimizationSidebar({
     const wordMin = Math.floor(wordTarget * 0.9);
     const wordMax = Math.ceil(wordTarget * 1.1);
     
-    // Headings: roughly 1 heading per 100 words
-    const headingsTarget = Math.ceil(wordTarget / 100);
-    const headingsMin = Math.max(5, headingsTarget - 5);
-    const headingsMax = headingsTarget + 10;
+    // Headings: scale based on content length
+    let headingsMin, headingsMax;
+    if (wordTarget < 800) {
+      // Short content: fewer headings (1 heading per 150-200 words)
+      const target = Math.max(2, Math.ceil(wordTarget / 180));
+      headingsMin = Math.max(2, target - 1);
+      headingsMax = target + 2;
+    } else if (wordTarget < 2000) {
+      // Medium content: standard ratio (1 heading per 120-150 words)
+      const target = Math.ceil(wordTarget / 130);
+      headingsMin = Math.max(5, target - 3);
+      headingsMax = target + 4;
+    } else {
+      // Long content: more headings (1 heading per 100 words)
+      const target = Math.ceil(wordTarget / 100);
+      headingsMin = Math.max(10, target - 5);
+      headingsMax = target + 8;
+    }
     
-    // Paragraphs: roughly 1 paragraph per 100 words
-    const paragraphsTarget = Math.ceil(wordTarget / 100);
-    const paragraphsMin = Math.max(5, paragraphsTarget - 5);
+    // Paragraphs: scale based on content length
+    let paragraphsMin;
+    if (wordTarget < 800) {
+      // Short content: roughly 1 paragraph per 80-100 words
+      paragraphsMin = Math.max(4, Math.ceil(wordTarget / 90));
+    } else if (wordTarget < 2000) {
+      // Medium content: roughly 1 paragraph per 80 words
+      paragraphsMin = Math.max(8, Math.ceil(wordTarget / 80));
+    } else {
+      // Long content: roughly 1 paragraph per 70 words
+      paragraphsMin = Math.max(15, Math.ceil(wordTarget / 70));
+    }
     
-    // Images: roughly 1 image per 200-300 words
-    const imagesTarget = Math.max(1, Math.ceil(wordTarget / 250));
-    const imagesMin = Math.max(1, imagesTarget - 2);
-    const imagesMax = imagesTarget + 5;
+    // Images: scale based on content length
+    let imagesMin, imagesMax;
+    if (wordTarget < 800) {
+      // Short content: 1-2 images
+      imagesMin = 1;
+      imagesMax = 2;
+    } else if (wordTarget < 2000) {
+      // Medium content: roughly 1 image per 300 words
+      const target = Math.max(2, Math.ceil(wordTarget / 300));
+      imagesMin = Math.max(2, target - 1);
+      imagesMax = target + 2;
+    } else {
+      // Long content: roughly 1 image per 250 words
+      const target = Math.ceil(wordTarget / 250);
+      imagesMin = Math.max(4, target - 2);
+      imagesMax = target + 4;
+    }
     
     return {
       words: { min: wordMin, max: wordMax },
@@ -87,6 +129,7 @@ export function SEOOptimizationSidebar({
   const [terms, setTerms] = useState<TermData[]>([]);
   const [termSearch, setTermSearch] = useState('');
   const [termFilter, setTermFilter] = useState<'all' | 'headings' | 'nlp'>('all');
+  const [suggestedKeywords, setSuggestedKeywords] = useState<SuggestedKeyword[]>([]);
   
   const debouncedContent = useDebounce(content, 2000);
 
@@ -262,6 +305,7 @@ export function SEOOptimizationSidebar({
           primaryKeyword: project.primary_keyword,
           secondaryKeywords: project.secondary_keywords || [],
           topic: project.topic,
+          wordCount: project.word_count_target,
         }),
       });
 
@@ -270,6 +314,49 @@ export function SEOOptimizationSidebar({
         // Populate terms from analysis
         if (data.suggestedTerms) {
           setTerms(data.suggestedTerms);
+          
+          // Build suggested keywords list with importance levels
+          const keywords: SuggestedKeyword[] = [];
+          
+          // Primary keyword - high importance (green)
+          if (project.primary_keyword) {
+            keywords.push({
+              keyword: project.primary_keyword,
+              importance: 'high',
+              selected: true,
+            });
+          }
+          
+          // Secondary keywords - medium importance (orange)
+          if (project.secondary_keywords && project.secondary_keywords.length > 0) {
+            project.secondary_keywords.forEach((kw: string) => {
+              keywords.push({
+                keyword: kw,
+                importance: 'medium',
+                selected: true,
+              });
+            });
+          }
+          
+          // Suggested keywords from AI - categorize by position
+          const suggestedFromAI = data.suggestedTerms.filter((t: TermData) => t.category === 'Suggested');
+          suggestedFromAI.forEach((term: TermData, index: number) => {
+            // First 3 are high importance, next 4 are medium, rest are low
+            let importance: 'high' | 'medium' | 'low' = 'low';
+            if (index < 3) {
+              importance = 'high';
+            } else if (index < 7) {
+              importance = 'medium';
+            }
+            
+            keywords.push({
+              keyword: term.term,
+              importance,
+              selected: false,
+            });
+          });
+          
+          setSuggestedKeywords(keywords);
         }
         setAnalyzed(true);
       }
@@ -278,6 +365,14 @@ export function SEOOptimizationSidebar({
     } finally {
       setAnalyzing(false);
     }
+  };
+
+  const toggleKeywordSelection = (keyword: string) => {
+    setSuggestedKeywords(prev => 
+      prev.map(kw => 
+        kw.keyword === keyword ? { ...kw, selected: !kw.selected } : kw
+      )
+    );
   };
 
   const filteredTerms = terms.filter(term => {
@@ -395,6 +490,58 @@ export function SEOOptimizationSidebar({
                   </Button>
                 )}
               </div>
+
+              {/* Suggested Keywords Section */}
+              {analyzed && suggestedKeywords.length > 0 && (
+                <>
+                  <div className="divider" />
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-semibold">Suggested Keywords</h3>
+                      <Info className="h-3 w-3 text-muted-foreground" />
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2">
+                      {suggestedKeywords.map((kw, index) => {
+                        const colorClass = 
+                          kw.importance === 'high' 
+                            ? 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200' 
+                            : kw.importance === 'medium'
+                            ? 'bg-orange-100 text-orange-800 border-orange-300 hover:bg-orange-200'
+                            : 'bg-red-100 text-red-800 border-red-300 hover:bg-red-200';
+                        
+                        const selectedClass = kw.selected ? 'ring-2 ring-offset-1 ring-violet-500' : '';
+                        
+                        return (
+                          <Badge
+                            key={index}
+                            variant="outline"
+                            className={`cursor-pointer text-xs px-2 py-1 ${colorClass} ${selectedClass} transition-all`}
+                            onClick={() => toggleKeywordSelection(kw.keyword)}
+                          >
+                            {kw.keyword}
+                          </Badge>
+                        );
+                      })}
+                    </div>
+                    
+                    <div className="text-xs text-muted-foreground space-y-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-green-100 border border-green-300 rounded"></div>
+                        <span>High priority - Must use</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-orange-100 border border-orange-300 rounded"></div>
+                        <span>Medium priority - Good idea</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-red-100 border border-red-300 rounded"></div>
+                        <span>Low priority - Use sparingly</span>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
 
               {/* Divider */}
               <div className="divider" />
