@@ -27,10 +27,16 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
   const [activeView, setActiveView] = useState<DashboardView>('home');
   const [projectCount, setProjectCount] = useState(0);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [projectRefreshTrigger, setProjectRefreshTrigger] = useState(0);
   
   // Modal states
   const [showProjectCreationModal, setShowProjectCreationModal] = useState(false);
   const [showUserGuideModal, setShowUserGuideModal] = useState(false);
+
+  const handleProjectUpdate = () => {
+    // Trigger a refresh of the project data
+    setProjectRefreshTrigger(prev => prev + 1);
+  };
 
   // Don't show initial modal anymore - using new dashboard home
   // useEffect(() => {
@@ -125,6 +131,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
                 onOpenProjectModal={handleOpenProjects}
                 onNewProject={() => setShowProjectCreationModal(true)}
                 onContentChange={setEditorContent}
+                key={`editor-${selectedProject}-${projectRefreshTrigger}`}
               />
 
               {/* Right Sidebar */}
@@ -132,6 +139,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
                 projectId={selectedProject}
                 writerModelId={selectedWriterModel}
                 content={editorContent}
+                onProjectUpdate={handleProjectUpdate}
               />
             </div>
           )}

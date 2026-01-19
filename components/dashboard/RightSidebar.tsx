@@ -17,6 +17,7 @@ interface RightSidebarProps {
   writerModelId: string | null;
   content?: any;
   onContentUpdate?: (content: any) => void;
+  onProjectUpdate?: () => void;
 }
 
 export function RightSidebar({ 
@@ -24,6 +25,7 @@ export function RightSidebar({
   writerModelId,
   content,
   onContentUpdate,
+  onProjectUpdate,
 }: RightSidebarProps) {
   const [activeTab, setActiveTab] = useState('seo');
   const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([]);
@@ -244,6 +246,7 @@ export function RightSidebar({
           content={content}
           project={project}
           onContentUpdate={onContentUpdate}
+          onProjectUpdate={onProjectUpdate}
         />
       ) : (
         <Card className="bg-white shadow-lg flex-1 flex flex-col">
