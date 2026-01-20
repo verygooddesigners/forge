@@ -19,9 +19,9 @@ export function ProjectsPageClient({ user }: ProjectsPageClientProps) {
     router.push(`/dashboard?project=${projectId}&model=${writerModelId}`);
   };
 
-  const handleProjectCreated = (projectId: string, writerModelId: string) => {
+  const handleProjectCreated = (project: any) => {
     setShowProjectCreationModal(false);
-    router.push(`/dashboard?project=${projectId}&model=${writerModelId}`);
+    router.push(`/dashboard?project=${project.id}&model=${project.writer_model_id}`);
   };
 
   return (

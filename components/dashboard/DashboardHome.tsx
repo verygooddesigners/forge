@@ -356,9 +356,9 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         open={showProjectCreationModal}
         onOpenChange={setShowProjectCreationModal}
         userId={user.id}
-        onProjectCreated={(projectId, writerModelId) => {
+        onProjectCreated={(project) => {
           setShowProjectCreationModal(false);
-          router.push(`/dashboard?project=${projectId}&model=${writerModelId}`);
+          router.push(`/dashboard?project=${project.id}&model=${project.writer_model_id}`);
         }}
       />
     </div>
