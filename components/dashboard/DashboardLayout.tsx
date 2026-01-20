@@ -100,13 +100,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
         <div className="ml-[260px] min-h-screen">
           {/* Main Content Area - Conditional */}
           {activeView === 'home' ? (
-            <DashboardHome
-              user={user}
-              onCreateProject={() => setShowProjectCreationModal(true)}
-              onOpenSmartBriefs={handleOpenSmartBriefs}
-              onOpenNFLOdds={handleOpenNFLOdds}
-              onSelectProject={handleSelectProject}
-            />
+            <DashboardHome user={user} />
           ) : activeView === 'projects' ? (
             <ProjectsPanel 
               user={user}
