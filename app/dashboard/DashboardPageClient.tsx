@@ -3,7 +3,7 @@
 import { User } from '@/types';
 import { AppSidebar } from '@/components/layout/AppSidebar';
 import { DashboardHome } from '@/components/dashboard/DashboardHome';
-import { EditorPanel } from '@/components/editor/EditorPanel';
+import { EditorPanel } from '@/components/dashboard/EditorPanel';
 import { RightSidebar } from '@/components/dashboard/RightSidebar';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
