@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { User, Project } from '@/types';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { InlineEdit } from '@/components/ui/inline-edit';
+import { ProjectCreationModal } from '@/components/modals/ProjectCreationModal';
 import { 
   Plus,
   FileText,
@@ -19,20 +21,12 @@ import { createClient } from '@/lib/supabase/client';
 
 interface DashboardHomeProps {
   user: User;
-  onCreateProject: () => void;
-  onOpenSmartBriefs: () => void;
-  onOpenNFLOdds: () => void;
-  onSelectProject: (projectId: string, writerModelId: string) => void;
 }
 
-export function DashboardHome({
-  user,
-  onCreateProject,
-  onOpenSmartBriefs,
-  onOpenNFLOdds,
-  onSelectProject,
-}: DashboardHomeProps) {
+export function DashboardHome({ user }: DashboardHomeProps) {
+  const router = useRouter();
   const [recentProjects, setRecentProjects] = useState<Project[]>([]);
+  const [showProjectCreationModal, setShowProjectCreationModal] = useState(false);
   const [stats, setStats] = useState({
     articlesThisWeek: 0,
     wordsGenerated: 0,
@@ -236,7 +230,7 @@ export function DashboardHome({
         <div className="grid grid-cols-3 gap-4">
           <Card 
             className="p-6 cursor-pointer relative overflow-hidden group hover:translate-y-0"
-            onClick={onCreateProject}
+            onClick={() => setShowProjectCreationModal(true)}
           >
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="w-11 h-11 rounded-[10px] bg-accent-muted flex items-center justify-center text-accent-primary mb-4">
@@ -250,7 +244,7 @@ export function DashboardHome({
 
           <Card 
             className="p-6 cursor-pointer relative overflow-hidden group hover:translate-y-0"
-            onClick={onOpenSmartBriefs}
+            onClick={() => router.push('/smartbriefs')}
           >
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-ai-accent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="w-11 h-11 rounded-[10px] bg-ai-muted flex items-center justify-center text-ai-accent mb-4">
@@ -264,7 +258,7 @@ export function DashboardHome({
 
           <Card 
             className="p-6 cursor-pointer relative overflow-hidden group hover:translate-y-0"
-            onClick={onOpenNFLOdds}
+            onClick={() => router.push('/nfl-odds')}
           >
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-success to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="w-11 h-11 rounded-[10px] bg-success-muted flex items-center justify-center text-success mb-4">
@@ -296,7 +290,7 @@ export function DashboardHome({
               <Card 
                 key={project.id}
                 className="p-5 cursor-pointer hover:translate-y-0"
-                onClick={() => onSelectProject(project.id, project.writer_model_id)}
+                onClick={() => router.push(`/dashboard?project=${project.id}&model=${project.writer_model_id}`)}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 mr-3">
@@ -357,6 +351,16 @@ export function DashboardHome({
           <strong className="text-text-primary font-semibold">7 AI Agents</strong> online and ready — All systems operational
         </span>
       </div>
+
+      <ProjectCreationModal
+        open={showProjectCreationModal}
+        onOpenChange={setShowProjectCreationModal}
+        userId={user.id}
+        onProjectCreated={(projectId, writerModelId) => {
+          setShowProjectCreationModal(false);
+          router.push(`/dashboard?project=${projectId}&model=${writerModelId}`);
+        }}
+      />
     </div>
   );
 }

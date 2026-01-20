@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
+import { DashboardPageClient } from './DashboardPageClient';
 
 // Force dynamic rendering to avoid SSR issues with Supabase
 export const dynamic = 'force-dynamic';
@@ -25,7 +25,7 @@ export default async function DashboardPage() {
       redirect('/login');
     }
 
-    return <DashboardLayout user={profile} />;
+    return <DashboardPageClient user={profile} />;
   } catch (error) {
     console.error('Dashboard error:', error);
     // If Supabase is not configured, redirect to login
