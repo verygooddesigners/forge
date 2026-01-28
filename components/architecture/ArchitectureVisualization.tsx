@@ -10,6 +10,7 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   MarkerType,
+  Position,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -48,8 +49,8 @@ export function ArchitectureVisualization() {
       ...node,
       onSelect: () => setSelectedNode(node.id),
     },
-    sourcePosition: 'right' as const,
-    targetPosition: 'left' as const,
+    sourcePosition: Position.Right,
+    targetPosition: Position.Left,
     zIndex: 1000,
   }));
 
