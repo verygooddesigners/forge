@@ -5,15 +5,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Layers } from 'lucide-react';
 
+type LayerKey = 'frontend' | 'api' | 'agent' | 'database' | 'external';
+
 interface LayerToggleProps {
-  layers: {
-    frontend: boolean;
-    api: boolean;
-    agent: boolean;
-    database: boolean;
-    external: boolean;
-  };
-  onToggle: (layer: keyof typeof layers) => void;
+  layers: Record<LayerKey, boolean>;
+  onToggle: (layer: LayerKey) => void;
 }
 
 const layerInfo = [

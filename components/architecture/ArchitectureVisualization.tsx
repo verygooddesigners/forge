@@ -26,10 +26,12 @@ const nodeTypes = {
   custom: CustomNode,
 };
 
+type LayerKey = 'frontend' | 'api' | 'agent' | 'database' | 'external';
+
 export function ArchitectureVisualization() {
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [selectedWorkflow, setSelectedWorkflow] = useState<string | null>(null);
-  const [visibleLayers, setVisibleLayers] = useState({
+  const [visibleLayers, setVisibleLayers] = useState<Record<LayerKey, boolean>>({
     frontend: true,
     api: true,
     agent: true,
@@ -171,7 +173,7 @@ export function ArchitectureVisualization() {
     ? architectureNodes.find((n) => n.id === selectedNode)
     : null;
 
-  const handleLayerToggle = (layer: keyof typeof visibleLayers) => {
+  const handleLayerToggle = (layer: LayerKey) => {
     setVisibleLayers((prev) => ({ ...prev, [layer]: !prev[layer] }));
   };
 
