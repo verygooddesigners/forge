@@ -43,10 +43,12 @@ export const CustomNode = memo(({ data }: CustomNodeProps) => {
         'hover:shadow-xl hover:scale-105',
         'min-w-[200px] max-w-[240px] min-h-[60px]',
         'flex items-center',
+        'relative z-10',
         typeColors[data.type],
-        data.highlighted && 'ring-4 ring-white/50 scale-110 shadow-2xl z-50',
+        data.highlighted && 'ring-4 ring-white/50 scale-110 shadow-2xl !z-50',
         data.dimmed && 'opacity-30'
       )}
+      style={{ position: 'relative' }}
     >
       <Handle type="target" position={Position.Left} className="!bg-white !w-3 !h-3 !border-2 !border-gray-400" />
       <div className="flex items-center gap-3 w-full">

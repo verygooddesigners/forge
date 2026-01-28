@@ -1,0 +1,60 @@
+/* React Flow Custom Styles for System Architecture */
+
+/* Ensure nodes always render ABOVE edges */
+.react-flow__node {
+  z-index: 1000 !important;
+}
+
+.react-flow__edge {
+  z-index: 1 !important;
+}
+
+/* Make edges less prominent */
+.react-flow__edge-path {
+  stroke-opacity: 0.4;
+}
+
+/* Improve handle visibility */
+.react-flow__handle {
+  background: white;
+  border: 2px solid #94a3b8;
+  width: 12px;
+  height: 12px;
+}
+
+/* Smooth edge labels */
+.react-flow__edge-text {
+  fill: #64748b;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Improve control buttons */
+.react-flow__controls {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.react-flow__controls-button {
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+}
+
+.react-flow__controls-button:hover {
+  background: rgba(148, 163, 184, 0.1);
+  color: white;
+}
+
+/* Improve minimap */
+.react-flow__minimap {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+/* Improve background grid */
+.react-flow__background {
+  background-color: #0f172a;
+}

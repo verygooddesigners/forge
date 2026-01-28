@@ -9,7 +9,6 @@ import ReactFlow, {
   MiniMap,
   useNodesState,
   useEdgesState,
-  ConnectionLineType,
   MarkerType,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
@@ -49,6 +48,9 @@ export function ArchitectureVisualization() {
       ...node,
       onSelect: () => setSelectedNode(node.id),
     },
+    sourcePosition: 'right' as const,
+    targetPosition: 'left' as const,
+    zIndex: 1000,
   }));
 
   // Convert architecture data to React Flow edges
@@ -58,7 +60,7 @@ export function ArchitectureVisualization() {
     target: edge.target,
     label: edge.label,
     animated: edge.animated || false,
-    type: ConnectionLineType.SmoothStep,
+    type: 'smoothstep',
     markerEnd: {
       type: MarkerType.ArrowClosed,
       width: 16,
@@ -69,6 +71,11 @@ export function ArchitectureVisualization() {
       stroke: '#64748b',
       opacity: 0.4,
       ...edge.style,
+    },
+    zIndex: 1,
+    pathOptions: {
+      offset: 25,
+      borderRadius: 20,
     },
   }));
 
@@ -240,11 +247,14 @@ export function ArchitectureVisualization() {
           onNodeClick={handleNodeClick}
           onPaneClick={handlePaneClick}
           nodeTypes={nodeTypes}
-          connectionLineType={ConnectionLineType.SmoothStep}
           fitView
           minZoom={0.1}
           maxZoom={1.5}
           defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
+          elevateNodesOnSelect={true}
+          elevateEdgesOnSelect={false}
+          edgesUpdatable={false}
+          edgesFocusable={false}
         >
           <Background color="#6b21a8" gap={16} size={1} />
           <Controls className="!bg-bg-elevated !border-border-subtle" />
