@@ -33,15 +33,15 @@ export function DetailPanel({ node, onClose }: DetailPanelProps) {
   const IconComponent = (Icons as any)[node.icon] || Icons.Box;
 
   return (
-    <div className="absolute top-32 right-4 z-20 w-96 max-h-[calc(100vh-180px)] overflow-auto">
-      <Card className="bg-bg-elevated border-border-subtle shadow-2xl">
+    <div className="absolute top-32 right-4 z-20 w-80 max-h-[calc(100vh-180px)] overflow-auto">
+      <Card className="bg-bg-elevated/70 backdrop-blur-md border-border-subtle shadow-2xl">
         <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4">
-          <div className="flex items-start gap-3 flex-1">
-            <div className={cn('mt-1', `text-${node.type === 'frontend' ? 'violet' : node.type === 'api' ? 'blue' : node.type === 'agent' ? 'emerald' : node.type === 'database' ? 'amber' : 'slate'}-400`)}>
+          <div className="flex items-start gap-3 flex-1 min-w-0">
+            <div className={cn('mt-1 flex-shrink-0', `text-${node.type === 'frontend' ? 'violet' : node.type === 'api' ? 'blue' : node.type === 'agent' ? 'emerald' : node.type === 'database' ? 'amber' : 'slate'}-400`)}>
               <IconComponent size={24} />
             </div>
-            <div className="flex-1">
-              <CardTitle className="text-xl font-bold text-text-primary">
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-xl font-bold text-text-primary break-words">
                 {node.label}
               </CardTitle>
               <Badge className={cn('mt-2', typeBadgeColors[node.type])}>
@@ -53,7 +53,7 @@ export function DetailPanel({ node, onClose }: DetailPanelProps) {
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="h-8 w-8 text-text-secondary hover:text-text-primary"
+            className="h-8 w-8 text-text-secondary hover:text-text-primary flex-shrink-0 ml-2"
           >
             <X size={18} />
           </Button>
@@ -82,8 +82,8 @@ export function DetailPanel({ node, onClose }: DetailPanelProps) {
                     key={idx}
                     className="text-sm text-text-secondary flex items-start gap-2"
                   >
-                    <span className="text-accent-primary mt-1">•</span>
-                    <span>{feature}</span>
+                    <span className="text-accent-primary mt-1 flex-shrink-0">•</span>
+                    <span className="break-words">{feature}</span>
                   </li>
                 ))}
               </ul>

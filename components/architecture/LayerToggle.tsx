@@ -22,11 +22,11 @@ const layerInfo = [
 
 export function LayerToggle({ layers, onToggle }: LayerToggleProps) {
   return (
-    <Card className="w-64 bg-bg-elevated/95 backdrop-blur-sm border-border-subtle shadow-xl">
+    <Card className="w-56 bg-bg-elevated/70 backdrop-blur-md border-border-subtle shadow-xl">
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-semibold text-text-primary flex items-center gap-2">
-          <Layers size={16} />
-          Layers
+          <Layers size={16} className="flex-shrink-0" />
+          <span className="truncate">Layers</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -36,11 +36,11 @@ export function LayerToggle({ layers, onToggle }: LayerToggleProps) {
               id={key}
               checked={layers[key]}
               onCheckedChange={() => onToggle(key)}
-              className="border-border-subtle data-[state=checked]:bg-accent-primary data-[state=checked]:border-accent-primary"
+              className="border-border-subtle data-[state=checked]:bg-accent-primary data-[state=checked]:border-accent-primary flex-shrink-0"
             />
             <Label
               htmlFor={key}
-              className={`text-sm cursor-pointer ${color} ${
+              className={`text-sm cursor-pointer truncate ${color} ${
                 !layers[key] && 'opacity-50'
               }`}
             >

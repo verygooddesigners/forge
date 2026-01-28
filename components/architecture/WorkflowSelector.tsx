@@ -18,19 +18,19 @@ export function WorkflowSelector({
   onSelect,
 }: WorkflowSelectorProps) {
   return (
-    <Card className="w-64 bg-bg-elevated/95 backdrop-blur-sm border-border-subtle shadow-xl">
+    <Card className="w-56 bg-bg-elevated/70 backdrop-blur-md border-border-subtle shadow-xl">
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-semibold text-text-primary flex items-center gap-2">
-            <WorkflowIcon size={16} />
-            Workflows
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="text-sm font-semibold text-text-primary flex items-center gap-2 truncate">
+            <WorkflowIcon size={16} className="flex-shrink-0" />
+            <span className="truncate">Workflows</span>
           </CardTitle>
           {selectedWorkflow && (
             <Button
               variant="ghost"
               size="icon"
               onClick={() => onSelect(null)}
-              className="h-6 w-6 text-text-secondary hover:text-text-primary"
+              className="h-6 w-6 text-text-secondary hover:text-text-primary flex-shrink-0"
             >
               <X size={14} />
             </Button>
@@ -57,9 +57,9 @@ export function WorkflowSelector({
                 selectedWorkflow === workflow.id ? workflow.color : 'transparent',
             }}
           >
-            <div className="flex flex-col gap-0.5">
-              <span className="text-xs font-medium">{workflow.name}</span>
-              <span className="text-[10px] text-text-secondary font-normal">
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <span className="text-xs font-medium truncate">{workflow.name}</span>
+              <span className="text-[10px] text-text-secondary font-normal line-clamp-2">
                 {workflow.description}
               </span>
             </div>

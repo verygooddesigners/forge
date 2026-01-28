@@ -13,25 +13,25 @@ const legendItems = [
 
 export function Legend() {
   return (
-    <Card className="w-64 bg-bg-elevated/95 backdrop-blur-sm border-border-subtle shadow-xl">
+    <Card className="w-56 bg-bg-elevated/70 backdrop-blur-md border-border-subtle shadow-xl">
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-semibold text-text-primary flex items-center gap-2">
-          <Info size={16} />
-          Legend
+          <Info size={16} className="flex-shrink-0" />
+          <span className="truncate">Legend</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
         {legendItems.map(({ color, label }) => (
           <div key={label} className="flex items-center gap-2">
-            <div className={`w-3 h-3 rounded-full ${color}`} />
-            <span className="text-xs text-text-secondary">{label}</span>
+            <div className={`w-3 h-3 rounded-full flex-shrink-0 ${color}`} />
+            <span className="text-xs text-text-secondary truncate">{label}</span>
           </div>
         ))}
         <div className="pt-2 mt-2 border-t border-border-subtle">
-          <p className="text-[10px] text-text-tertiary">
+          <p className="text-[10px] text-text-tertiary leading-relaxed">
             Click any node for details
           </p>
-          <p className="text-[10px] text-text-tertiary mt-1">
+          <p className="text-[10px] text-text-tertiary mt-1 leading-relaxed">
             Select workflows to highlight paths
           </p>
         </div>
