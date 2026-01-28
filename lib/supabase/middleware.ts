@@ -89,13 +89,19 @@ export async function updateSession(request: NextRequest) {
     user = null;
   }
 
+  // Public routes that don't require authentication
+  const publicPaths = ['/system-architecture', '/login', '/reset-password', '/api/auth'];
+  const isPublicPath = publicPaths.some(path => 
+    request.nextUrl.pathname.startsWith(path)
+  );
+
   // TEMPORARILY DISABLED FOR SCREENSHOTS - Protected routes
   // const protectedPaths = ['/dashboard', '/admin'];
   // const isProtectedPath = protectedPaths.some(path => 
   //   request.nextUrl.pathname.startsWith(path)
   // );
 
-  // if (isProtectedPath && !user) {
+  // if (isProtectedPath && !isPublicPath && !user) {
   //   // #region agent log
   //   console.log('[Middleware] Redirecting to login:', { totalDuration: Date.now() - startTime });
   //   // #endregion
