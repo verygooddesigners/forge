@@ -39,26 +39,27 @@ export const CustomNode = memo(({ data }: CustomNodeProps) => {
     <div
       onClick={data.onSelect}
       className={cn(
-        'px-4 py-3 rounded-lg border-2 shadow-lg cursor-pointer transition-all duration-200',
+        'px-5 py-4 rounded-lg border-2 shadow-lg cursor-pointer transition-all duration-200',
         'hover:shadow-xl hover:scale-105',
-        'min-w-[180px] max-w-[220px]',
+        'min-w-[200px] max-w-[240px] min-h-[60px]',
+        'flex items-center',
         typeColors[data.type],
-        data.highlighted && 'ring-4 ring-white/50 scale-110 shadow-2xl',
+        data.highlighted && 'ring-4 ring-white/50 scale-110 shadow-2xl z-50',
         data.dimmed && 'opacity-30'
       )}
     >
-      <Handle type="target" position={Position.Left} className="!bg-white !w-3 !h-3" />
-      <div className="flex items-start gap-3">
-        <div className={cn('mt-0.5', typeIconColors[data.type])}>
-          <IconComponent size={20} />
+      <Handle type="target" position={Position.Left} className="!bg-white !w-3 !h-3 !border-2 !border-gray-400" />
+      <div className="flex items-center gap-3 w-full">
+        <div className={cn('flex-shrink-0', typeIconColors[data.type])}>
+          <IconComponent size={22} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="font-semibold text-sm leading-tight break-words">
+          <div className="font-semibold text-sm leading-snug break-words">
             {data.label}
           </div>
         </div>
       </div>
-      <Handle type="source" position={Position.Right} className="!bg-white !w-3 !h-3" />
+      <Handle type="source" position={Position.Right} className="!bg-white !w-3 !h-3 !border-2 !border-gray-400" />
     </div>
   );
 });

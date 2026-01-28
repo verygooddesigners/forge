@@ -61,11 +61,13 @@ export function ArchitectureVisualization() {
     type: ConnectionLineType.SmoothStep,
     markerEnd: {
       type: MarkerType.ArrowClosed,
-      width: 20,
-      height: 20,
+      width: 16,
+      height: 16,
     },
     style: {
-      strokeWidth: 2,
+      strokeWidth: 1.5,
+      stroke: '#64748b',
+      opacity: 0.4,
       ...edge.style,
     },
   }));
@@ -138,8 +140,8 @@ export function ArchitectureVisualization() {
             style: {
               ...edge.style,
               stroke: isWorkflowEdge ? workflow.color : '#64748b',
-              strokeWidth: isWorkflowEdge ? 3 : 2,
-              opacity: isWorkflowEdge ? 1 : 0.3,
+              strokeWidth: isWorkflowEdge ? 2.5 : 1.5,
+              opacity: isWorkflowEdge ? 0.9 : 0.2,
             },
             animated: isWorkflowEdge,
           };
@@ -151,8 +153,8 @@ export function ArchitectureVisualization() {
         style: {
           ...edge.style,
           stroke: '#64748b',
-          strokeWidth: 2,
-          opacity: 1,
+          strokeWidth: 1.5,
+          opacity: 0.4,
         },
         animated: edge.animated || false,
       }));

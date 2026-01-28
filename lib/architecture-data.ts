@@ -63,7 +63,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['TipTap', 'React', 'TailwindCSS'],
     files: ['components/editor/RichTextEditor.tsx', 'components/editor/SEOAssistant.tsx'],
     icon: 'FileEdit',
-    position: { x: 50, y: 250 },
+    position: { x: 50, y: 300 },
   },
   {
     id: 'smartbriefs',
@@ -80,7 +80,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['React', 'TipTap', 'Claude AI'],
     files: ['app/smartbriefs/page.tsx', 'components/modals/BriefModal.tsx'],
     icon: 'FileText',
-    position: { x: 50, y: 400 },
+    position: { x: 50, y: 500 },
   },
   {
     id: 'writer-factory',
@@ -97,7 +97,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['React', 'OpenAI Embeddings', 'pgvector'],
     files: ['app/writer-factory/page.tsx', 'components/dashboard/WriterFactoryPanel.tsx'],
     icon: 'Brain',
-    position: { x: 50, y: 550 },
+    position: { x: 50, y: 700 },
   },
   {
     id: 'nfl-odds',
@@ -114,7 +114,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['React', 'Claude Vision', 'GPT-4o Vision'],
     files: ['app/nfl-odds/page.tsx'],
     icon: 'Image',
-    position: { x: 50, y: 700 },
+    position: { x: 50, y: 900 },
   },
   {
     id: 'research-center',
@@ -131,7 +131,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['React', 'Tavily AI', 'Claude AI'],
     files: ['components/dashboard/ResearchPanel.tsx'],
     icon: 'Search',
-    position: { x: 50, y: 850 },
+    position: { x: 50, y: 1100 },
   },
   {
     id: 'admin-panel',
@@ -149,7 +149,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['React', 'Supabase Admin'],
     files: ['app/admin/page.tsx', 'components/admin/*'],
     icon: 'Settings',
-    position: { x: 50, y: 1000 },
+    position: { x: 50, y: 1300 },
   },
   {
     id: 'ai-helper',
@@ -166,7 +166,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['React', 'Claude AI', 'Perplexity API'],
     files: ['components/ai/AIAssistant.tsx'],
     icon: 'Bot',
-    position: { x: 50, y: 1150 },
+    position: { x: 50, y: 1500 },
   },
 
   // API LAYER
@@ -184,7 +184,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Next.js API Route', 'Claude AI'],
     files: ['app/api/generate/route.ts'],
     icon: 'Zap',
-    position: { x: 350, y: 100 },
+    position: { x: 400, y: 100 },
   },
   {
     id: 'api-research',
@@ -199,7 +199,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Next.js API', 'Tavily AI'],
     files: ['app/api/research/*'],
     icon: 'Database',
-    position: { x: 350, y: 250 },
+    position: { x: 400, y: 300 },
   },
   {
     id: 'api-seo',
@@ -216,7 +216,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Next.js API', 'Claude AI'],
     files: ['app/api/seo/*'],
     icon: 'TrendingUp',
-    position: { x: 350, y: 400 },
+    position: { x: 400, y: 500 },
   },
   {
     id: 'api-train',
@@ -232,7 +232,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Next.js API', 'OpenAI Embeddings'],
     files: ['app/api/writer-models/train/route.ts'],
     icon: 'Cpu',
-    position: { x: 350, y: 550 },
+    position: { x: 400, y: 700 },
   },
   {
     id: 'api-briefs',
@@ -248,7 +248,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Next.js API', 'Claude AI'],
     files: ['app/api/briefs/analyze-urls/route.ts'],
     icon: 'Link',
-    position: { x: 350, y: 700 },
+    position: { x: 400, y: 900 },
   },
   {
     id: 'api-nfl',
@@ -264,7 +264,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Next.js API', 'Claude Vision', 'GPT-4o'],
     files: ['app/api/nfl-odds/extract/route.ts'],
     icon: 'ScanEye',
-    position: { x: 350, y: 850 },
+    position: { x: 400, y: 1100 },
   },
   {
     id: 'api-assistant',
@@ -280,7 +280,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Next.js API', 'Claude AI', 'Perplexity'],
     files: ['app/api/assistant/chat/route.ts'],
     icon: 'MessageSquare',
-    position: { x: 350, y: 1000 },
+    position: { x: 400, y: 1300 },
   },
   {
     id: 'api-admin',
@@ -295,7 +295,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Next.js API', 'Supabase Admin'],
     files: ['app/api/admin/*'],
     icon: 'Shield',
-    position: { x: 350, y: 1150 },
+    position: { x: 400, y: 1500 },
   },
   {
     id: 'api-auth',
@@ -310,7 +310,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Next.js API', 'Supabase Auth', 'Azure AD'],
     files: ['app/api/auth/*'],
     icon: 'Lock',
-    position: { x: 350, y: 1300 },
+    position: { x: 400, y: 1700 },
   },
 
   // MULTI-AGENT AI SYSTEM
@@ -329,7 +329,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Claude Sonnet 4', 'pgvector', 'RAG'],
     files: ['lib/agents/content-generation.ts'],
     icon: 'Sparkles',
-    position: { x: 650, y: 100 },
+    position: { x: 750, y: 100 },
   },
   {
     id: 'agent-training',
@@ -345,7 +345,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Claude AI', 'OpenAI Embeddings'],
     files: ['lib/agents/writer-training.ts'],
     icon: 'GraduationCap',
-    position: { x: 650, y: 250 },
+    position: { x: 750, y: 300 },
   },
   {
     id: 'agent-seo',
@@ -361,7 +361,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Claude AI', 'SEO algorithms'],
     files: ['lib/agents/seo-optimization.ts'],
     icon: 'Target',
-    position: { x: 650, y: 400 },
+    position: { x: 750, y: 500 },
   },
   {
     id: 'agent-qa',
@@ -377,7 +377,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['LanguageTool API', 'Claude AI'],
     files: ['lib/agents/quality-assurance.ts'],
     icon: 'CheckCircle',
-    position: { x: 650, y: 550 },
+    position: { x: 750, y: 700 },
   },
   {
     id: 'agent-persona',
@@ -393,7 +393,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Claude AI'],
     files: ['lib/agents/persona-tone.ts'],
     icon: 'Users',
-    position: { x: 650, y: 700 },
+    position: { x: 750, y: 900 },
   },
   {
     id: 'agent-creative',
@@ -408,7 +408,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Claude AI'],
     files: ['lib/agents/creative-features.ts'],
     icon: 'Wand2',
-    position: { x: 650, y: 850 },
+    position: { x: 750, y: 1100 },
   },
   {
     id: 'agent-visual',
@@ -424,7 +424,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Claude Vision', 'GPT-4o Vision'],
     files: ['lib/agents/visual-extraction.ts'],
     icon: 'Eye',
-    position: { x: 650, y: 1000 },
+    position: { x: 750, y: 1300 },
   },
   {
     id: 'agent-fact',
@@ -440,7 +440,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['Claude AI', 'Tavily AI'],
     files: ['lib/agents/fact-verification.ts'],
     icon: 'ShieldCheck',
-    position: { x: 650, y: 1150 },
+    position: { x: 750, y: 1500 },
   },
 
   // DATABASE LAYER
@@ -458,7 +458,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['PostgreSQL', 'Supabase', 'RLS'],
     files: ['supabase/migrations/00001_initial_schema.sql'],
     icon: 'Users',
-    position: { x: 950, y: 100 },
+    position: { x: 1100, y: 100 },
   },
   {
     id: 'db-projects',
@@ -475,7 +475,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['PostgreSQL', 'JSONB'],
     files: ['supabase/migrations/00001_initial_schema.sql'],
     icon: 'FolderOpen',
-    position: { x: 950, y: 250 },
+    position: { x: 1100, y: 300 },
   },
   {
     id: 'db-models',
@@ -491,7 +491,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['PostgreSQL', 'JSONB'],
     files: ['supabase/migrations/00001_initial_schema.sql'],
     icon: 'Brain',
-    position: { x: 950, y: 400 },
+    position: { x: 1100, y: 500 },
   },
   {
     id: 'db-training',
@@ -507,7 +507,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['PostgreSQL', 'pgvector', 'OpenAI Embeddings'],
     files: ['supabase/migrations/00001_initial_schema.sql'],
     icon: 'Database',
-    position: { x: 950, y: 550 },
+    position: { x: 1100, y: 700 },
   },
   {
     id: 'db-briefs',
@@ -523,7 +523,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['PostgreSQL', 'JSONB'],
     files: ['supabase/migrations/00001_initial_schema.sql'],
     icon: 'FileText',
-    position: { x: 950, y: 700 },
+    position: { x: 1100, y: 900 },
   },
   {
     id: 'db-api-keys',
@@ -539,7 +539,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['PostgreSQL', 'Encryption'],
     files: ['supabase/migrations/00001_initial_schema.sql'],
     icon: 'Key',
-    position: { x: 950, y: 850 },
+    position: { x: 1100, y: 1100 },
   },
   {
     id: 'db-ai-settings',
@@ -555,7 +555,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['PostgreSQL'],
     files: ['supabase/migrations/00001_initial_schema.sql'],
     icon: 'Settings',
-    position: { x: 950, y: 1000 },
+    position: { x: 1100, y: 1300 },
   },
   {
     id: 'db-trusted-sources',
@@ -571,7 +571,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['PostgreSQL'],
     files: ['supabase/migrations/00008_trusted_sources.sql'],
     icon: 'Shield',
-    position: { x: 950, y: 1150 },
+    position: { x: 1100, y: 1500 },
   },
   {
     id: 'db-helper',
@@ -587,7 +587,7 @@ export const architectureNodes: ArchitectureNode[] = [
     tech: ['PostgreSQL', 'Full-text search'],
     files: ['supabase/migrations/00006_ai_helper.sql'],
     icon: 'BookOpen',
-    position: { x: 950, y: 1300 },
+    position: { x: 1100, y: 1700 },
   },
 
   // EXTERNAL SERVICES
@@ -604,7 +604,7 @@ export const architectureNodes: ArchitectureNode[] = [
     ],
     tech: ['Claude Sonnet 4', 'Anthropic API'],
     icon: 'Bot',
-    position: { x: 1250, y: 200 },
+    position: { x: 1450, y: 300 },
   },
   {
     id: 'ext-openai',
@@ -618,7 +618,7 @@ export const architectureNodes: ArchitectureNode[] = [
     ],
     tech: ['OpenAI API', 'GPT-4o'],
     icon: 'Sparkles',
-    position: { x: 1250, y: 400 },
+    position: { x: 1450, y: 600 },
   },
   {
     id: 'ext-tavily',
@@ -633,7 +633,7 @@ export const architectureNodes: ArchitectureNode[] = [
     ],
     tech: ['Tavily API'],
     icon: 'Newspaper',
-    position: { x: 1250, y: 600 },
+    position: { x: 1450, y: 900 },
   },
   {
     id: 'ext-languagetool',
@@ -648,7 +648,7 @@ export const architectureNodes: ArchitectureNode[] = [
     ],
     tech: ['LanguageTool API'],
     icon: 'SpellCheck',
-    position: { x: 1250, y: 800 },
+    position: { x: 1450, y: 1200 },
   },
   {
     id: 'ext-azure',
@@ -663,7 +663,7 @@ export const architectureNodes: ArchitectureNode[] = [
     ],
     tech: ['Azure AD', 'OAuth'],
     icon: 'Cloud',
-    position: { x: 1250, y: 1000 },
+    position: { x: 1450, y: 1500 },
   },
   {
     id: 'ext-supabase-auth',
@@ -678,7 +678,7 @@ export const architectureNodes: ArchitectureNode[] = [
     ],
     tech: ['Supabase', 'PostgreSQL'],
     icon: 'Lock',
-    position: { x: 1250, y: 1200 },
+    position: { x: 1450, y: 1700 },
   },
 ];
 
