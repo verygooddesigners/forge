@@ -27,6 +27,7 @@ const AGENT_TABS = [
   { key: 'persona_tone', label: 'Persona' },
   { key: 'creative_features', label: 'Creative' },
   { key: 'visual_extraction', label: 'Visual' },
+  { key: 'fact_verification', label: 'Fact Check' },
 ] as const;
 
 export function AgentTuner({ adminUser }: AgentTunerProps) {

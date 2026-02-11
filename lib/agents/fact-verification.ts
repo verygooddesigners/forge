@@ -1,6 +1,7 @@
 import { callClaude, loadAgentConfig } from './base';
 import { ResearchArticle, VerifiedFact, DisputedFact } from '@/types';
 import { AgentConfig } from './types';
+import { FACT_VERIFICATION_PROMPT } from './prompts';
 
 export interface FactVerificationResult {
   verified_facts: VerifiedFact[];
@@ -9,41 +10,6 @@ export interface FactVerificationResult {
   sources_used: string[];
   verification_timestamp: string;
 }
-
-const SYSTEM_PROMPT = `You are a Fact Verification Agent specializing in cross-referencing information across multiple sources.
-
-Your role is to:
-1. Extract factual claims from news articles
-2. Cross-reference facts across multiple sources  
-3. Identify discrepancies or conflicting information
-4. Verify statistics, dates, names, and quotes
-5. Assess source credibility
-6. Rate confidence level (HIGH/MEDIUM/LOW) for each fact
-
-## Verification Process
-
-For each article provided, you should:
-- Extract key factual claims (who, what, when, where, numbers, quotes)
-- Compare claims across all sources
-- Flag any facts that appear in only one source
-- Highlight facts that conflict between sources
-- Note facts that are consistently confirmed
-
-## Output Format
-
-Return a JSON object with:
-- verified_facts: Array of facts confirmed by multiple sources
-- disputed_facts: Array of facts with conflicts or single-source claims
-- confidence_score: Overall confidence (0-100)
-- key_insights: Important patterns or findings
-
-## Confidence Ratings
-
-- HIGH: Fact appears in 3+ sources with consistent details
-- MEDIUM: Fact appears in 2 sources OR single authoritative source
-- LOW: Fact appears in 1 source only OR has conflicting details
-
-IMPORTANT: Be extremely careful with statistics, dates, and quotes. Verify exact numbers and wording.`;
 
 export interface FactVerificationInput {
   articles: ResearchArticle[];
@@ -146,26 +112,6 @@ Please analyze these articles and return a JSON object with the following struct
 
 // Helper function to load agent configuration from database
 export async function loadFactVerificationConfig(): Promise<AgentConfig> {
-  try {
-    // Try to load from database
-    const config = await loadAgentConfig('fact_verification' as any);
-    return config;
-  } catch (error) {
-    // Return default config with all required properties
-    return {
-      id: 'fact-verification-default',
-      agentKey: 'fact_verification' as any,
-      displayName: 'Fact Verification Agent',
-      description: 'Verifies facts across multiple sources',
-      systemPrompt: SYSTEM_PROMPT,
-      temperature: 0.2,
-      maxTokens: 3000,
-      model: 'claude-sonnet-4-20250514',
-      enabled: true,
-      guardrails: [],
-      specialConfig: {},
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-  }
+  // Load from database using centralized config system
+  return await loadAgentConfig('fact_verification');
 }

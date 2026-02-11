@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { User } from '@/types';
 import { 
@@ -14,8 +14,11 @@ import {
   UserCircle,
   Settings,
   LogOut,
+  Package,
 } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import type { InstalledToolWithDetails } from '@/types/tools';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,6 +51,24 @@ export function AppSidebar({
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
+  const [installedTools, setInstalledTools] = useState<InstalledToolWithDetails[]>([]);
+
+  // Fetch installed tools
+  useEffect(() => {
+    fetchInstalledTools();
+  }, []);
+
+  const fetchInstalledTools = async () => {
+    try {
+      const response = await fetch('/api/tools/my-tools');
+      if (response.ok) {
+        const data = await response.json();
+        setInstalledTools(data.tools.filter((t: InstalledToolWithDetails) => t.enabled));
+      }
+    } catch (error) {
+      console.error('Error fetching installed tools:', error);
+    }
+  };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -64,6 +85,12 @@ export function AppSidebar({
   };
 
   const isActive = (path: string) => pathname === path;
+
+  // Get Lucide icon component by name
+  const getIconComponent = (iconName: string) => {
+    const IconComponent = (LucideIcons as any)[iconName];
+    return IconComponent || Package;
+  };
 
   return (
     <aside 
@@ -146,6 +173,45 @@ export function AppSidebar({
           </button>
 
         </div>
+
+        {/* TOOLS Section */}
+        {installedTools.length > 0 && (
+          <div className="mb-6">
+            <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
+              Tools
+            </div>
+            
+            {installedTools
+              .sort((a, b) => a.tool.sidebar_order - b.tool.sidebar_order)
+              .map((installedTool) => {
+                const Icon = getIconComponent(installedTool.tool.sidebar_icon);
+                const toolPath = `/tools/${installedTool.tool.slug}/app`;
+                
+                return (
+                  <button
+                    key={installedTool.id}
+                    onClick={() => router.push(toolPath)}
+                    className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
+                      pathname.startsWith(toolPath)
+                        ? 'bg-accent-muted text-accent-primary'
+                        : 'hover:bg-bg-hover'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5 text-accent-primary" />
+                    {installedTool.tool.sidebar_label}
+                  </button>
+                );
+              })}
+
+            <button
+              onClick={() => router.push('/tools')}
+              className="w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all text-text-tertiary"
+            >
+              <Package className="w-5 h-5" />
+              Browse Tools...
+            </button>
+          </div>
+        )}
 
         {/* SYSTEM Section - Only for super admin */}
         {user.email === 'jeremy.botter@gdcgroup.com' && (

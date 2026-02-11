@@ -6,7 +6,7 @@ AI-powered content creation platform with RAG-based writer models, brief builder
 
 ### Core Features
 - **Writer Engine (RAG)**: Train AI models on specific writer styles using vector embeddings
-- **Multi-Agent System**: 7 specialized AI agents with guardrails and admin controls
+- **Multi-Agent System**: 8 specialized AI agents with guardrails and admin controls
 - **SmartBrief Builder**: Create AI-powered content templates with URL analysis
 - **NewsEngine**: Find relevant news with Tavily AI search
 - **SEO Assistant**: Real-time scoring with live keyword tracking as you type
@@ -16,7 +16,7 @@ AI-powered content creation platform with RAG-based writer models, brief builder
 - **Admin Dashboard**: User management, API keys, AI configuration, and Agent Tuner
 
 ### Technical Highlights
-- **Multi-Agent AI**: 7 specialized agents (Content, Training, SEO, QA, Persona, Creative, Visual)
+- **Multi-Agent AI**: 8 specialized agents (Content, Training, SEO, QA, Persona, Creative, Visual, Fact Verification)
 - **Visual Extraction**: Claude Vision + GPT-4o fallback for image data extraction
 - **RAG Implementation**: pgvector + Claude for style matching
 - **Streaming AI**: Real-time content generation with Claude Sonnet 4
@@ -211,7 +211,7 @@ npm run lint
 ## 🎉 Recent Updates (January 2026)
 
 ### Phase 1: Multi-Agent System ✅
-- 7 specialized AI agents with guardrails
+- 8 specialized AI agents with guardrails
 - Database-backed agent configurations
 - Admin Agent Tuner UI for real-time adjustments
 - LanguageTool integration for grammar checking

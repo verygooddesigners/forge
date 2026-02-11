@@ -15,6 +15,7 @@ import { AIHelperAdmin } from './AIHelperAdmin';
 import { CursorRemotePanel } from './CursorRemotePanel';
 import { SSOConfigStatus } from './SSOConfigStatus';
 import { TrustedSourcesAdmin } from './TrustedSourcesAdmin';
+import { ToolsAdmin } from './ToolsAdmin';
 
 interface AdminDashboardProps {
   user: User;
@@ -80,6 +81,12 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
           >
             Trusted Sources
           </TabsTrigger>
+          <TabsTrigger 
+            value="tools"
+            className="data-[state=active]:bg-bg-elevated data-[state=active]:text-text-primary text-text-secondary text-[13px] font-medium px-5 py-2.5"
+          >
+            Tools
+          </TabsTrigger>
         </TabsList>
 
           <TabsContent value="users">
@@ -115,6 +122,10 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
 
           <TabsContent value="trusted-sources">
             <TrustedSourcesAdmin />
+          </TabsContent>
+
+          <TabsContent value="tools">
+            <ToolsAdmin />
           </TabsContent>
       </Tabs>
     </div>

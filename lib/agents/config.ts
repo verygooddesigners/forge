@@ -138,6 +138,28 @@ export const DEFAULT_AGENT_CONFIGS: Record<AgentKey, Omit<AgentConfig, 'id' | 'c
       confidenceThreshold: 0.85,
       fallbackTrigger: 'both'
     }
+  },
+  fact_verification: {
+    agentKey: 'fact_verification',
+    displayName: 'Fact Verification',
+    description: 'Verifies facts across multiple sources',
+    systemPrompt: '',
+    temperature: 0.2,
+    maxTokens: 3000,
+    model: 'claude-sonnet-4-20250514',
+    enabled: true,
+    guardrails: [
+      'cannot_generate_content',
+      'cannot_modify_database',
+      'cannot_train_models',
+      'cannot_make_editorial_decisions',
+      'cannot_access_user_management'
+    ],
+    specialConfig: {
+      minSourcesForHighConfidence: 3,
+      minSourcesForMediumConfidence: 2,
+      requireMultipleSourcesForVerification: true
+    }
   }
 };
 

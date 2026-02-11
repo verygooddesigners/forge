@@ -5,7 +5,8 @@ export type AgentKey =
   | 'quality_assurance'
   | 'persona_tone'
   | 'creative_features'
-  | 'visual_extraction';
+  | 'visual_extraction'
+  | 'fact_verification';
 
 export interface AgentConfig {
   id: string;
