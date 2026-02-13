@@ -90,7 +90,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Public routes that don't require authentication
-  const publicPaths = ['/system-architecture', '/login', '/reset-password', '/api/auth'];
+  const publicPaths = ['/system-architecture', '/login', '/signup', '/reset-password', '/api/auth', '/smartbrief-guide'];
   const isPublicPath = publicPaths.some(path => 
     request.nextUrl.pathname.startsWith(path)
   );

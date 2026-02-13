@@ -14,9 +14,8 @@ import { Separator } from '@/components/ui/separator';
 import { createClient } from '@/lib/supabase/client';
 import { Brief, Category, User } from '@/types';
 import { TipTapEditor } from '@/components/editor/TipTapEditor';
-import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft, HelpCircle } from 'lucide-react';
+import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft, HelpCircle, ExternalLink } from 'lucide-react';
 import { SmartBriefListModal } from '@/components/modals/SmartBriefListModal';
-import { SmartBriefGuideModal } from '@/components/modals/SmartBriefGuideModal';
 
 interface SmartBriefPanelProps {
   user: User;
@@ -32,7 +31,6 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   const [isShared, setIsShared] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showBriefListModal, setShowBriefListModal] = useState(false);
-  const [showGuideModal, setShowGuideModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false); // Track create mode
   
   // AI Configuration fields
@@ -237,9 +235,12 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
                     Learn how to create effective SmartBriefs with our comprehensive guide covering structure, 
                     AI configuration, examples, and best practices.
                   </p>
-                  <Button onClick={() => setShowGuideModal(true)} size="lg" className="w-full sm:w-auto">
-                    <BookOpen className="h-4 w-4 mr-2" />
-                    How to Create SmartBriefs
+                  <Button asChild size="lg" className="w-full sm:w-auto">
+                    <a href="/smartbrief-guide" target="_blank" rel="noopener noreferrer">
+                      <BookOpen className="h-4 w-4 mr-2" />
+                      How to Create SmartBriefs
+                      <ExternalLink className="h-3 w-3 ml-2" />
+                    </a>
                   </Button>
                 </div>
               </div>
@@ -276,9 +277,12 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
                       Check out our step-by-step guide with examples and best practices
                     </p>
                   </div>
-                  <Button onClick={() => setShowGuideModal(true)} variant="outline" size="sm">
-                    <BookOpen className="h-4 w-4 mr-2" />
-                    View Guide
+                  <Button asChild variant="outline" size="sm">
+                    <a href="/smartbrief-guide" target="_blank" rel="noopener noreferrer">
+                      <BookOpen className="h-4 w-4 mr-2" />
+                      View Guide
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
                   </Button>
                 </div>
               </div>
@@ -510,12 +514,6 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
           setSelectedBrief(brief);
           setIsCreating(true);
         }}
-      />
-
-      {/* SmartBrief Guide Modal */}
-      <SmartBriefGuideModal
-        open={showGuideModal}
-        onOpenChange={setShowGuideModal}
       />
     </>
   );
