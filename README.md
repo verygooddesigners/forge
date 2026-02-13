@@ -146,6 +146,9 @@ TAVILY_API_KEY=
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:5309
+
+# Beta signup (optional - required for /signup?invite=TOKEN)
+BETA_SIGNUP_TOKEN=your-secret-invite-token
 ```
 
 ## 🎨 Design System
@@ -263,3 +266,4 @@ Built with:
 
 **RotoWrite** - AI-Powered Content Creation Platform  
 Version v1.01.01 | Built with ❤️ for RotoWire
+# Test webhook trigger
