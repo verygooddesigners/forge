@@ -8,11 +8,11 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { toolId: string } }
+  { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
     const supabase = await createClient();
-    const { toolId } = params;
+    const { toolId } = await params;
 
     // Verify user is authenticated
     const { data: { user } } = await supabase.auth.getUser();

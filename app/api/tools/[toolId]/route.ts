@@ -15,11 +15,11 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { toolId: string } }
+  { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
     const supabase = await createClient();
-    const { toolId } = params;
+    const { toolId } = await params;
 
     const { data: tool, error } = await supabase
       .from('tools')
@@ -103,11 +103,11 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { toolId: string } }
+  { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
     const supabase = await createClient();
-    const { toolId } = params;
+    const { toolId } = await params;
 
     // Verify user is authenticated
     const { data: { user } } = await supabase.auth.getUser();
@@ -248,11 +248,11 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { toolId: string } }
+  { params }: { params: Promise<{ toolId: string }> }
 ) {
   try {
     const supabase = await createClient();
-    const { toolId } = params;
+    const { toolId } = await params;
 
     // Verify user is authenticated and is admin
     const { data: { user } } = await supabase.auth.getUser();
