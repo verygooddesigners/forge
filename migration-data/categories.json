@@ -1,0 +1,110 @@
+[
+  {
+    "id": "27d53ccc-ac38-47b5-a138-88a05f8fdc44",
+    "name": "NFL",
+    "type": "brief",
+    "created_at": "2025-11-18T21:30:36.599039+00:00"
+  },
+  {
+    "id": "00971362-53b7-4fa0-bb48-3199b4ab61b4",
+    "name": "MLB",
+    "type": "brief",
+    "created_at": "2025-11-18T21:30:36.599039+00:00"
+  },
+  {
+    "id": "c413e110-5a93-4461-b328-4b1973595c9e",
+    "name": "NBA",
+    "type": "brief",
+    "created_at": "2025-11-18T21:30:36.599039+00:00"
+  },
+  {
+    "id": "f49a6a0f-9814-4ec6-980d-58f10df42706",
+    "name": "Betting Guides",
+    "type": "brief",
+    "created_at": "2025-11-18T21:30:36.599039+00:00"
+  },
+  {
+    "id": "473f5b46-923d-4a2a-981c-178ff4760ebb",
+    "name": "Casino Reviews",
+    "type": "brief",
+    "created_at": "2025-11-18T21:30:36.599039+00:00"
+  },
+  {
+    "id": "be3bb966-cfcf-407c-8ce8-acb00a50ed00",
+    "name": "State Regulations",
+    "type": "brief",
+    "created_at": "2025-11-18T21:30:36.599039+00:00"
+  },
+  {
+    "id": "3112072e-1f04-4a93-b12e-39840ec0fd0f",
+    "name": "Team Analysis",
+    "type": "project",
+    "created_at": "2025-11-18T21:30:36.599039+00:00"
+  },
+  {
+    "id": "dabf57e2-c817-4686-91e1-0b058698c2a8",
+    "name": "Game Previews",
+    "type": "project",
+    "created_at": "2025-11-18T21:30:36.599039+00:00"
+  },
+  {
+    "id": "b86121e8-0fa7-4f8e-9ce0-ba7fb405879b",
+    "name": "Industry News",
+    "type": "project",
+    "created_at": "2025-11-18T21:30:36.599039+00:00"
+  },
+  {
+    "id": "c54beded-8dc6-458f-9629-2a0ab18504e7",
+    "name": "Betting Odds Preview",
+    "type": "brief",
+    "created_at": "2025-11-18T22:32:54.960747+00:00"
+  },
+  {
+    "id": "14db442c-6c76-47f5-990a-a60a011dcf06",
+    "name": "Default",
+    "type": "brief",
+    "created_at": "2025-11-18T22:33:19.931967+00:00"
+  },
+  {
+    "id": "caa06167-5b40-4706-8847-afc055a74021",
+    "name": "Injury Reports",
+    "type": "brief",
+    "created_at": "2026-01-14T22:57:46.537022+00:00"
+  },
+  {
+    "id": "dd903083-7fa5-433a-9d99-bd58268f292b",
+    "name": "NFL Odds Tracker",
+    "type": "brief",
+    "created_at": "2026-01-15T17:55:58.474774+00:00"
+  },
+  {
+    "id": "787c0309-fc41-400f-85f5-0d17f7e6bdab",
+    "name": "Email",
+    "type": "brief",
+    "created_at": "2026-01-15T22:10:57.806577+00:00"
+  },
+  {
+    "id": "858e0c23-eaec-44ee-92e8-9b631ce3acf8",
+    "name": "Operator Promo Code & Full Review",
+    "type": "brief",
+    "created_at": "2026-01-16T20:53:07.101608+00:00"
+  },
+  {
+    "id": "8c4b685f-4cf8-496c-b9f9-fa6aa2d2577c",
+    "name": "Team vs. Team Best Prop Bets",
+    "type": "brief",
+    "created_at": "2026-01-16T20:55:03.729165+00:00"
+  },
+  {
+    "id": "6c4e7258-676a-4825-bf5a-716cd57d8f82",
+    "name": "News",
+    "type": "brief",
+    "created_at": "2026-01-19T03:34:50.521616+00:00"
+  },
+  {
+    "id": "d5efd7a9-fe7c-4e08-b811-c2165687b279",
+    "name": "NFL Game Preview",
+    "type": "brief",
+    "created_at": "2026-01-19T04:24:28.247792+00:00"
+  }
+]

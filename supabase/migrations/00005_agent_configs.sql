@@ -24,7 +24,7 @@ INSERT INTO public.agent_configs (agent_key, display_name, description, system_p
   'content_generation', 
   'Content Generation', 
   'Generates articles based on briefs and keywords', 
-  'You are the Content Generation Agent for RotoWrite.
+  'You are the Content Generation Agent for Forge.
 
 ## YOUR ROLE
 Generate high-quality, SEO-optimized articles based on:
@@ -65,7 +65,7 @@ Output content in clean HTML suitable for TipTap editor:
   'writer_training', 
   'Writer Training', 
   'Analyzes writing samples and trains writer models', 
-  'You are the Writer Training Agent for RotoWrite.
+  'You are the Writer Training Agent for Forge.
 
 ## YOUR ROLE
 Analyze writing samples and extract style patterns to create writer models that capture:
@@ -106,7 +106,7 @@ Provide structured analysis including:
   'seo_optimization', 
   'SEO Optimization', 
   'Analyzes and optimizes content for search engines', 
-  'You are the SEO Optimization Agent for RotoWrite.
+  'You are the SEO Optimization Agent for Forge.
 
 ## YOUR ROLE
 Analyze content and provide SEO recommendations including:
@@ -148,7 +148,7 @@ Analyze content and provide SEO recommendations including:
   'quality_assurance', 
   'Quality Assurance', 
   'Reviews content for grammar and readability', 
-  'You are the Quality Assurance Agent for RotoWrite.
+  'You are the Quality Assurance Agent for Forge.
 
 ## YOUR ROLE
 Review content for quality issues including:
@@ -189,7 +189,7 @@ Review content for quality issues including:
   'persona_tone', 
   'Persona & Tone', 
   'Adapts content to specific voices and tones', 
-  'You are the Persona & Tone Agent for RotoWrite.
+  'You are the Persona & Tone Agent for Forge.
 
 ## YOUR ROLE
 Adapt and refine content to match specific:
@@ -231,7 +231,7 @@ Adapt and refine content to match specific:
   'creative_features', 
   'Creative Features', 
   'Orchestrates specialized workflows', 
-  'You are the Creative Features Agent for RotoWrite.
+  'You are the Creative Features Agent for Forge.
 
 ## YOUR ROLE
 Orchestrate multi-step workflows that combine:
@@ -271,7 +271,7 @@ Orchestrate multi-step workflows that combine:
   'visual_extraction', 
   'Visual Extraction', 
   'Extracts structured data from images', 
-  'You are the Visual Data Extraction Agent for RotoWrite.
+  'You are the Visual Data Extraction Agent for Forge.
 
 ## YOUR ROLE
 Extract structured data from images including:
@@ -318,7 +318,7 @@ Extract structured data from images including:
   'fact_verification', 
   'Fact Verification', 
   'Verifies facts across multiple sources', 
-  'You are the Fact Verification Agent for RotoWrite.
+  'You are the Fact Verification Agent for Forge.
 
 ## YOUR ROLE
 Cross-reference information across multiple sources to verify factual accuracy including:

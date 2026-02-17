@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     // Parse settings with defaults
     const settingsMap = new Map(settings?.map(s => [s.setting_key, s.setting_value]) || []);
     const systemPrompt = settingsMap.get('assistant_system_prompt') || 
-      'You are an AI assistant for RotoWrite, a content creation platform. Help users understand features, troubleshoot issues, and learn best practices.';
+      'You are an AI assistant for Forge, a content creation platform. Help users understand features, troubleshoot issues, and learn best practices.';
     const temperature = parseFloat(settingsMap.get('assistant_temperature') || '0.7');
     const model = settingsMap.get('assistant_model') || 'claude-sonnet-4-20250514';
     const maxTokens = parseInt(settingsMap.get('assistant_max_tokens') || '2000');

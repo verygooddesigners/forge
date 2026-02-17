@@ -57,7 +57,7 @@ export default function StyleGuidePage() {
             </h1>
           </div>
           <p className="text-text-secondary text-[15px]">
-            Design system reference with RotoWrite Purple (#7C49E3) as the primary accent
+            Design system reference with Forge Purple (#7C49E3) as the primary accent
           </p>
         </div>
       </div>
@@ -116,7 +116,7 @@ export default function StyleGuidePage() {
           <div className="space-y-6">
             <div className="space-y-2">
               <div className="text-[11px] font-mono text-text-muted">H1 — DM Sans Bold 32px</div>
-              <h1 className="text-[32px] font-bold tracking-tight">Welcome to RotoWrite</h1>
+              <h1 className="text-[32px] font-bold tracking-tight">Welcome to Forge</h1>
             </div>
             <div className="space-y-2">
               <div className="text-[11px] font-mono text-text-muted">H2 — DM Sans Bold 24px</div>
@@ -129,7 +129,7 @@ export default function StyleGuidePage() {
             <div className="space-y-2">
               <div className="text-[11px] font-mono text-text-muted">Body — DM Sans Regular 15px</div>
               <p className="text-[15px] text-text-secondary leading-relaxed">
-                RotoWrite combines Writer Models, SEO Packages, and SmartBriefs to create content that ranks well while maintaining your authentic voice.
+                Forge combines Writer Models, SEO Packages, and SmartBriefs to create content that ranks well while maintaining your authentic voice.
               </p>
             </div>
             <div className="space-y-2">

@@ -1,13 +1,13 @@
-# RotoWrite System Architecture Visualization
+# Forge System Architecture Visualization
 
-An interactive, visual representation of the entire RotoWrite system architecture.
+An interactive, visual representation of the entire Forge system architecture.
 
 ## Access
 
 Visit: **`http://localhost:5309/system-architecture`** (development)  
-Production: **`https://rotowrite.vercel.app/system-architecture`**
+Production: **`https://forge.vercel.app/system-architecture`**
 
-**🌐 Public Access:** This page is intentionally public and does not require authentication. Anyone can view the RotoWrite system architecture visualization without logging in.
+**🌐 Public Access:** This page is intentionally public and does not require authentication. Anyone can view the Forge system architecture visualization without logging in.
 
 ## Features
 
@@ -15,7 +15,7 @@ Production: **`https://rotowrite.vercel.app/system-architecture`**
 - **Pan & Zoom** - Navigate the full architecture
 - **Clickable Nodes** - Click any component for detailed information
 - **Mini Map** - Bird's-eye view navigation
-- **Background Grid** - Violet-themed design matching RotoWrite
+- **Background Grid** - Violet-themed design matching Forge
 
 ### 📊 Layer Management
 - **Frontend Layer** (Purple) - UI components and pages

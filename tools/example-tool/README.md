@@ -1,6 +1,6 @@
 # Example Tool
 
-This is a simple example tool that demonstrates the RotoWrite Tools system.
+This is a simple example tool that demonstrates the Forge Tools system.
 
 ## Features
 
@@ -19,11 +19,11 @@ This tool is included as an example and can be installed from the Tools Marketpl
 
 ## Development
 
-This tool serves as a template for building your own RotoWrite Tools. Key patterns demonstrated:
+This tool serves as a template for building your own Forge Tools. Key patterns demonstrated:
 
-1. **UI Components**: Simple React component with RotoWrite design system
+1. **UI Components**: Simple React component with Forge design system
 2. **Permission Checking**: How to verify and use granted permissions
-3. **Data Fetching**: Accessing RotoWrite data through API routes
+3. **Data Fetching**: Accessing Forge data through API routes
 4. **Error Handling**: Proper error states and loading indicators
 
 ## File Structure
@@ -37,4 +37,4 @@ example-tool/
 
 ## Next Steps
 
-After admin approval, the tool component will be integrated into the RotoWrite codebase.
+After admin approval, the tool component will be integrated into the Forge codebase.

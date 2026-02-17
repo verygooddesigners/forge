@@ -1,5 +1,5 @@
 // Tool Registry System
-// This file manages the loading and registration of RotoWrite Tools
+// This file manages the loading and registration of Forge Tools
 
 import type { Tool } from '@/types/tools';
 

@@ -57,18 +57,18 @@ export default function UserGuidePage() {
 
   const guideContent: Record<string, { title: string; content: React.JSX.Element }> = {
     'getting-started': {
-      title: 'Getting Started with RotoWrite',
+      title: 'Getting Started with Forge',
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed">
-            Welcome to RotoWrite! This guide will help you master the art of creating AI-powered, 
+            Welcome to Forge! This guide will help you master the art of creating AI-powered, 
             SEO-optimized content that maintains your unique voice and style.
           </p>
 
           <div className="bg-accent-muted border-l-4 border-accent-primary p-6 rounded-r-lg">
-            <h3 className="text-lg font-semibold mb-3 text-accent-primary">What Makes RotoWrite Different?</h3>
+            <h3 className="text-lg font-semibold mb-3 text-accent-primary">What Makes Forge Different?</h3>
             <p className="leading-relaxed text-text-secondary">
-              RotoWrite combines three powerful elements to create content that's both SEO-optimized 
+              Forge combines three powerful elements to create content that's both SEO-optimized 
               and authentically written in your voice: <strong className="text-text-primary">Writer Models</strong>, <strong className="text-text-primary">SEO Packages</strong>, 
               and <strong className="text-text-primary">SmartBriefs</strong>. This unique combination ensures your content ranks well while 
               maintaining your personal style.
@@ -126,7 +126,7 @@ export default function UserGuidePage() {
           <h3 className="text-xl font-semibold mt-8 mb-4">How It All Works Together</h3>
           
           <p className="leading-relaxed mb-4">
-            When you create content in RotoWrite, the AI combines:
+            When you create content in Forge, the AI combines:
           </p>
 
           <ol className="list-decimal list-inside space-y-3 ml-4">
@@ -154,7 +154,7 @@ export default function UserGuidePage() {
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed">
-            RotoWrite is powered by a sophisticated <strong>Multi-Agent AI System</strong> – a team of 7 specialized 
+            Forge is powered by a sophisticated <strong>Multi-Agent AI System</strong> – a team of 7 specialized 
             AI agents that work together to produce high-quality, SEO-optimized content in your unique voice. 
             Each agent has a specific role and expertise, making the whole system more powerful than any single AI could be.
           </p>
@@ -166,7 +166,7 @@ export default function UserGuidePage() {
             </h3>
             <p className="text-center text-text-secondary mb-6">
               Just like a symphony orchestra has different sections working in harmony, 
-              RotoWrite's agents each play their part to create content that ranks and resonates.
+              Forge's agents each play their part to create content that ranks and resonates.
             </p>
           </div>
 
@@ -316,7 +316,7 @@ export default function UserGuidePage() {
           <h3 className="text-xl font-semibold mt-12 mb-4 text-text-primary">How Agents Work Together</h3>
 
           <p className="leading-relaxed mb-6 text-text-secondary">
-            When you create content in RotoWrite, multiple agents collaborate behind the scenes:
+            When you create content in Forge, multiple agents collaborate behind the scenes:
           </p>
 
           <div className="bg-bg-elevated border border-border-default rounded-lg p-6 my-6">
@@ -423,7 +423,7 @@ export default function UserGuidePage() {
             </h4>
             <p className="leading-relaxed text-sm mb-3 text-text-secondary">
               Traditional AI systems use a single model for everything, which can lead to inconsistent results. 
-              RotoWrite's multi-agent approach means:
+              Forge's multi-agent approach means:
             </p>
             <ul className="text-sm space-y-2">
               <li className="flex items-start gap-2">
@@ -503,7 +503,7 @@ export default function UserGuidePage() {
           <h3 className="text-xl font-semibold mb-4">Creating Your Account</h3>
           
           <p className="leading-relaxed">
-            To get started with RotoWrite, you'll need to register for an account and have it verified 
+            To get started with Forge, you'll need to register for an account and have it verified 
             by an administrator.
           </p>
 
@@ -1208,7 +1208,7 @@ export default function UserGuidePage() {
             <h4 className="font-semibold mb-3">Why the SEO Package Matters</h4>
             <p className="leading-relaxed text-sm">
               The SEO Package ensures that your content is optimized for search engines from the start. 
-              By combining your target keywords with AI analysis and Writer Model training, RotoWrite creates 
+              By combining your target keywords with AI analysis and Writer Model training, Forge creates 
               content that ranks well while still sounding natural and authentic to your voice.
             </p>
           </div>
@@ -1231,7 +1231,7 @@ export default function UserGuidePage() {
             <p className="leading-relaxed text-green-900">
               <strong>Accuracy is non-negotiable.</strong> The Research Story workflow prevents the generation 
               of content with outdated stats, incorrect facts, or unreliable information. By requiring research 
-              before generation, RotoWrite ensures every article is built on a foundation of verified facts.
+              before generation, Forge ensures every article is built on a foundation of verified facts.
             </p>
           </div>
 
@@ -1657,7 +1657,7 @@ export default function UserGuidePage() {
               Powered by Advanced AI Analysis
             </h4>
             <p className="leading-relaxed text-sm">
-              RotoWrite now features a centralized <strong>SEO Engine</strong> that powers all optimization features. 
+              Forge now features a centralized <strong>SEO Engine</strong> that powers all optimization features. 
               This sophisticated system combines traditional SEO metrics with AI-powered analysis from Claude to provide 
               comprehensive, intelligent content optimization.
             </p>
@@ -1724,7 +1724,7 @@ export default function UserGuidePage() {
             <p className="text-sm text-text-secondary leading-relaxed">
               The SEO Engine is designed to evolve with the latest SEO best practices and AI capabilities. 
               As search algorithms change and new optimization techniques emerge, the Engine can be updated 
-              without changing how you use RotoWrite—your workflow stays the same while the intelligence behind 
+              without changing how you use Forge—your workflow stays the same while the intelligence behind 
               it gets better.
             </p>
           </div>
@@ -1737,7 +1737,7 @@ export default function UserGuidePage() {
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed">
-            Content generation in RotoWrite is where the magic happens – combining your Writer Model, 
+            Content generation in Forge is where the magic happens – combining your Writer Model, 
             SEO Package, and Brief to create optimized content that sounds authentically like you.
           </p>
 
@@ -1902,7 +1902,7 @@ export default function UserGuidePage() {
           <div className="bg-accent-muted border-l-4 border-primary p-6 rounded-r-lg mt-8">
             <h4 className="font-semibold mb-3">Why This Approach Works</h4>
             <p className="text-sm leading-relaxed mb-2">
-              Traditional AI content often sounds generic and doesn't follow specific structures. RotoWrite 
+              Traditional AI content often sounds generic and doesn't follow specific structures. Forge 
               solves this by:
             </p>
             <ul className="text-sm space-y-2 mt-3">
@@ -1933,14 +1933,14 @@ export default function UserGuidePage() {
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed">
-            After generating content, RotoWrite's real-time SEO analysis guides your editing process. 
+            After generating content, Forge's real-time SEO analysis guides your editing process. 
             Every change you make is instantly reflected in the SEO Wizard metrics.
           </p>
 
           <h3 className="text-xl font-semibold mt-8 mb-4">The Editor</h3>
 
           <p className="leading-relaxed mb-4">
-            RotoWrite uses TipTap, a powerful rich text editor that supports:
+            Forge uses TipTap, a powerful rich text editor that supports:
           </p>
 
           <div className="grid md:grid-cols-2 gap-4">
@@ -2183,13 +2183,13 @@ export default function UserGuidePage() {
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed font-semibold text-primary">
-            Follow this step-by-step walkthrough to create your first piece of optimized content in RotoWrite.
+            Follow this step-by-step walkthrough to create your first piece of optimized content in Forge.
           </p>
 
           <div className="bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-lg p-6 my-8">
             <h3 className="text-2xl font-bold mb-2">Let's Create Content!</h3>
             <p className="text-accent-light">
-              This walkthrough assumes you've registered, been approved, and are logged into RotoWrite.
+              This walkthrough assumes you've registered, been approved, and are logged into Forge.
             </p>
           </div>
 
@@ -2474,7 +2474,7 @@ export default function UserGuidePage() {
             <h3 className="text-2xl font-bold mb-3">🎉 Congratulations!</h3>
             <p className="text-green-50 text-lg">
               You've created your first piece of SEO-optimized content that maintains your authentic voice. 
-              The more you use RotoWrite, the better your Writer Models become, and the faster your workflow gets.
+              The more you use Forge, the better your Writer Models become, and the faster your workflow gets.
             </p>
             <p className="text-green-100 mt-4">
               Now create more content, experiment with different briefs, and watch your productivity soar!
@@ -2507,8 +2507,8 @@ export default function UserGuidePage() {
           <div className="flex items-center gap-2 sm:gap-3">
             <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-accent-primary" />
             <div>
-              <h1 className="text-lg sm:text-2xl font-bold text-text-primary">RotoWrite User Guide</h1>
-              <p className="text-xs sm:text-sm text-text-secondary hidden sm:block">Everything you need to master RotoWrite</p>
+              <h1 className="text-lg sm:text-2xl font-bold text-text-primary">Forge User Guide</h1>
+              <p className="text-xs sm:text-sm text-text-secondary hidden sm:block">Everything you need to master Forge</p>
             </div>
           </div>
           

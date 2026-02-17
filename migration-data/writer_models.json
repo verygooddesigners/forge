@@ -1,0 +1,80 @@
+[
+  {
+    "id": "f6baf017-b82a-4ac4-bdba-5cd582e7088d",
+    "name": "Max Staley",
+    "strategist_id": null,
+    "created_by": "5aa89d35-a451-4d6e-b4da-eb7df4cc624f",
+    "metadata": {},
+    "created_at": "2025-11-18T21:44:22.909519+00:00",
+    "updated_at": "2025-11-18T21:44:22.909519+00:00"
+  },
+  {
+    "id": "2331cffc-e765-46ea-bd84-dc3d1acae647",
+    "name": "Jeremy Bottter",
+    "strategist_id": null,
+    "created_by": "5aa89d35-a451-4d6e-b4da-eb7df4cc624f",
+    "metadata": {},
+    "created_at": "2025-11-18T21:44:27.448854+00:00",
+    "updated_at": "2025-11-18T21:44:27.448854+00:00"
+  },
+  {
+    "id": "889ce0c9-39ed-457b-8985-eb48118664e2",
+    "name": "Tyler Olsen",
+    "strategist_id": null,
+    "created_by": "5aa89d35-a451-4d6e-b4da-eb7df4cc624f",
+    "metadata": {},
+    "created_at": "2025-11-18T21:44:34.273193+00:00",
+    "updated_at": "2025-11-18T21:44:34.273193+00:00"
+  },
+  {
+    "id": "a9b01eb8-2449-4aa2-a0eb-e763a3af71b1",
+    "name": "Tyler Huntington",
+    "strategist_id": null,
+    "created_by": "5aa89d35-a451-4d6e-b4da-eb7df4cc624f",
+    "metadata": {},
+    "created_at": "2025-11-18T21:46:31.699405+00:00",
+    "updated_at": "2025-11-18T21:46:31.699405+00:00"
+  },
+  {
+    "id": "3bb31580-a33d-4fc4-b3cc-5a269ec64f71",
+    "name": "Wes Roesch",
+    "strategist_id": null,
+    "created_by": "5aa89d35-a451-4d6e-b4da-eb7df4cc624f",
+    "metadata": {},
+    "created_at": "2025-11-19T20:20:55.444975+00:00",
+    "updated_at": "2025-11-19T20:20:55.444975+00:00"
+  },
+  {
+    "id": "070de4fe-04c8-40a4-9b89-31c27eadef0a",
+    "name": "Blake Weishaar",
+    "strategist_id": null,
+    "created_by": "5aa89d35-a451-4d6e-b4da-eb7df4cc624f",
+    "metadata": {
+      "total_training_pieces": 2
+    },
+    "created_at": "2025-11-18T21:35:42.194734+00:00",
+    "updated_at": "2026-01-15T16:37:41.128321+00:00"
+  },
+  {
+    "id": "82ac67f2-f719-49de-9af1-2f41cbea20c2",
+    "name": "Calli Varner",
+    "strategist_id": "5aa89d35-a451-4d6e-b4da-eb7df4cc624f",
+    "created_by": "5aa89d35-a451-4d6e-b4da-eb7df4cc624f",
+    "metadata": {
+      "total_training_pieces": 4
+    },
+    "created_at": "2026-01-19T01:45:02.720168+00:00",
+    "updated_at": "2026-01-19T03:30:42.809504+00:00"
+  },
+  {
+    "id": "3eae6543-68bb-42bd-bc85-c1deeb72f796",
+    "name": "Brian Stephens",
+    "strategist_id": "5aa89d35-a451-4d6e-b4da-eb7df4cc624f",
+    "created_by": "5aa89d35-a451-4d6e-b4da-eb7df4cc624f",
+    "metadata": {
+      "total_training_pieces": 10
+    },
+    "created_at": "2026-01-15T22:08:56.661284+00:00",
+    "updated_at": "2026-01-19T18:41:31.988881+00:00"
+  }
+]

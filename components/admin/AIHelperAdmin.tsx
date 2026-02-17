@@ -106,7 +106,7 @@ export function AIHelperAdmin({ adminUser }: AIHelperAdminProps) {
       const settingsMap = new Map(data.map(s => [s.setting_key, s.setting_value]));
       setSettings({
         system_prompt: settingsMap.get('assistant_system_prompt') || 
-          'You are an AI assistant for RotoWrite, a content creation platform. Help users understand features, troubleshoot issues, and learn best practices.',
+          'You are an AI assistant for Forge, a content creation platform. Help users understand features, troubleshoot issues, and learn best practices.',
         temperature: parseFloat(settingsMap.get('assistant_temperature') || '0.7'),
         model: settingsMap.get('assistant_model') || 'claude-sonnet-4-20250514',
         max_tokens: parseInt(settingsMap.get('assistant_max_tokens') || '2000'),

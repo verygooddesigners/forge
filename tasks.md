@@ -17,7 +17,7 @@ Instructions: I will add new tasks here as bullet points. You ingest them into y
 [DONE] 4. Run database migrations for trusted_sources and research_feedback tables
 [PENDING] 5. Test Research Story workflow end-to-end
 [DONE] 6. Implement Research Story feature with Fact Verification Agent (#8)
-[DONE] 7. Deploy Research Story to production (https://rotowrite.vercel.app)
+[DONE] 7. Deploy Research Story to production (https://forge.vercel.app)
 
 ---
 

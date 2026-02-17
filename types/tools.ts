@@ -1,4 +1,4 @@
-// TypeScript types for RotoWrite Tools/Plugins Marketplace system
+// TypeScript types for Forge Tools/Plugins Marketplace system
 
 export type ToolStatus = 'pending' | 'approved' | 'rejected' | 'archived';
 export type PermissionRiskLevel = 'low' | 'medium' | 'high';

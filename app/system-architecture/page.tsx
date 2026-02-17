@@ -1,15 +1,15 @@
 import { ArchitectureVisualization } from '@/components/architecture/ArchitectureVisualization';
 
 export const metadata = {
-  title: 'System Architecture | RotoWrite',
-  description: 'Interactive visualization of the RotoWrite system architecture',
+  title: 'System Architecture | Forge',
+  description: 'Interactive visualization of the Forge system architecture',
 };
 
 /**
  * System Architecture Page
  * 
  * This page is intentionally PUBLIC and does not require authentication.
- * Anyone can view the RotoWrite system architecture visualization.
+ * Anyone can view the Forge system architecture visualization.
  * 
  * Route: /system-architecture
  * Access: Public (no login required)

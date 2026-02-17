@@ -1,0 +1,257 @@
+[
+  {
+    "id": "5fe996c7-89ff-4bdc-9b64-f9033d8e861f",
+    "domain": "espn.com",
+    "name": "ESPN",
+    "trust_level": "high",
+    "category": [
+      "sports",
+      "nfl",
+      "nba",
+      "mlb",
+      "nhl"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "7d04c5c5-23f7-4ebd-8310-4f5401ce323a",
+    "domain": "nfl.com",
+    "name": "NFL.com",
+    "trust_level": "high",
+    "category": [
+      "nfl",
+      "football"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "2e07e8da-95bf-4e4f-8bdd-9f0c35d542a5",
+    "domain": "nba.com",
+    "name": "NBA.com",
+    "trust_level": "high",
+    "category": [
+      "nba",
+      "basketball"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "a3b03886-efbb-41f1-a521-1a1cd5c7a871",
+    "domain": "mlb.com",
+    "name": "MLB.com",
+    "trust_level": "high",
+    "category": [
+      "mlb",
+      "baseball"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "5c3c0532-95aa-4e3e-89e1-62fa37f3cc2d",
+    "domain": "nhl.com",
+    "name": "NHL.com",
+    "trust_level": "high",
+    "category": [
+      "nhl",
+      "hockey"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "100598c0-9607-48af-9c9b-ea52b51c72b5",
+    "domain": "rotowire.com",
+    "name": "RotoWire",
+    "trust_level": "high",
+    "category": [
+      "sports",
+      "fantasy",
+      "nfl",
+      "nba",
+      "mlb"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "572acffe-2431-4c0b-90f6-bd5d4b26c513",
+    "domain": "si.com",
+    "name": "Sports Illustrated",
+    "trust_level": "high",
+    "category": [
+      "sports",
+      "nfl",
+      "nba"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "f47ed78b-59e8-4c5a-b3da-518de068f3d7",
+    "domain": "theathletic.com",
+    "name": "The Athletic",
+    "trust_level": "high",
+    "category": [
+      "sports",
+      "nfl",
+      "nba",
+      "mlb"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "632a1f2e-c694-4d40-bef7-8c10c1cf070d",
+    "domain": "sportingnews.com",
+    "name": "Sporting News",
+    "trust_level": "medium",
+    "category": [
+      "sports",
+      "nfl",
+      "nba"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "97e7e9cb-6c59-4dd1-8c4b-16fd2d74d354",
+    "domain": "bleacherreport.com",
+    "name": "Bleacher Report",
+    "trust_level": "medium",
+    "category": [
+      "sports",
+      "nfl",
+      "nba"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "c505590b-5189-4d69-a587-8c137df1e689",
+    "domain": "cbssports.com",
+    "name": "CBS Sports",
+    "trust_level": "medium",
+    "category": [
+      "sports",
+      "nfl",
+      "nba",
+      "mlb"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "13621115-8cbe-4a7f-9b0f-dae0b5f9e372",
+    "domain": "foxsports.com",
+    "name": "FOX Sports",
+    "trust_level": "medium",
+    "category": [
+      "sports",
+      "nfl",
+      "nba",
+      "mlb"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "1852a7aa-986b-4df8-8c64-e6d871aa761a",
+    "domain": "nbcsports.com",
+    "name": "NBC Sports",
+    "trust_level": "medium",
+    "category": [
+      "sports",
+      "nfl",
+      "nba",
+      "mlb"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "98174c1a-ac70-45de-bc2c-09dadcd5419a",
+    "domain": "profootballtalk.com",
+    "name": "Pro Football Talk",
+    "trust_level": "medium",
+    "category": [
+      "nfl",
+      "football"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "06ba5bb2-6c2d-4b1e-b246-7a26a4dc4a33",
+    "domain": "reddit.com",
+    "name": "Reddit",
+    "trust_level": "low",
+    "category": [
+      "sports",
+      "general"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "3ac82316-82cc-4a87-8c87-0359c29ae104",
+    "domain": "twitter.com",
+    "name": "Twitter/X",
+    "trust_level": "low",
+    "category": [
+      "sports",
+      "general"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  },
+  {
+    "id": "641c0b57-a34d-4aec-aa0f-4cb12c311369",
+    "domain": "x.com",
+    "name": "X (Twitter)",
+    "trust_level": "low",
+    "category": [
+      "sports",
+      "general"
+    ],
+    "notes": null,
+    "created_by": null,
+    "created_at": "2026-01-19T04:53:49.754423+00:00",
+    "updated_at": "2026-01-19T04:53:49.754423+00:00"
+  }
+]

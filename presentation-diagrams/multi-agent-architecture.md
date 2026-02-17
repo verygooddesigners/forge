@@ -1,8 +1,8 @@
-# RotoWrite Multi-Agent AI Architecture
+# Forge Multi-Agent AI Architecture
 
 ```mermaid
 graph TB
-    User[Content Strategist] --> Dashboard[RotoWrite Dashboard]
+    User[Content Strategist] --> Dashboard[Forge Dashboard]
     Dashboard --> Orchestrator[Creative Features Agent<br/>Workflow Orchestrator]
     
     Orchestrator --> Agent1[Content Generation Agent]

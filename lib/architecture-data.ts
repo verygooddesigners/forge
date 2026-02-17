@@ -1,4 +1,4 @@
-// RotoWrite System Architecture Data
+// Forge System Architecture Data
 
 export interface ArchitectureNode {
   id: string;

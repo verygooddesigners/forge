@@ -1,4 +1,4 @@
-# RotoWrite Writer Engine - RAG-Based Style Replication
+# Forge Writer Engine - RAG-Based Style Replication
 
 ## How the Writer Engine Works
 
@@ -223,7 +223,7 @@ User Prompt → Generic AI Model → Generic Output
 ```
 **Problem:** Content sounds robotic and generic
 
-### RotoWrite Writer Engine (RAG)
+### Forge Writer Engine (RAG)
 ```
 User Prompt → Retrieve Training Examples → AI Model + Context → Authentic Voice Output
 ```
@@ -236,7 +236,7 @@ User Prompt → Retrieve Training Examples → AI Model + Context → Authentic 
 ```mermaid
 sequenceDiagram
     participant User as Strategist
-    participant UI as RotoWrite UI
+    participant UI as Forge UI
     participant API as Content API
     participant RAG as RAG System
     participant DB as Training Database
@@ -464,7 +464,7 @@ Generic analysis that could be written by anyone, often with:
 
 ---
 
-### RotoWrite Writer Engine
+### Forge Writer Engine
 
 **Input:**
 - Project: "NFL Week 14 Betting Analysis"
@@ -532,7 +532,7 @@ graph LR
 ## Conclusion: The Writer Engine Advantage
 
 **The Core Innovation:**
-RotoWrite doesn't just generate content—it replicates authentic writer voice using advanced RAG techniques.
+Forge doesn't just generate content—it replicates authentic writer voice using advanced RAG techniques.
 
 **The Business Impact:**
 - Scale individual writers without losing their unique voice
@@ -541,7 +541,7 @@ RotoWrite doesn't just generate content—it replicates authentic writer voice u
 - Enable rapid expansion without quality dilution
 
 **The Competitive Moat:**
-Generic AI tools cannot replicate this level of authentic voice matching. RotoWrite's Writer Engine is purpose-built for content authenticity at scale.
+Generic AI tools cannot replicate this level of authentic voice matching. Forge's Writer Engine is purpose-built for content authenticity at scale.
 
 **The Result:**
 Content that's indistinguishable from human-written work, produced in a fraction of the time, maintaining the quality and authenticity that readers expect from RotoWire.

@@ -1,6 +1,6 @@
-# Getting Started with RotoWrite
+# Getting Started with Forge
 
-Welcome to RotoWrite! This guide will help you get up and running quickly.
+Welcome to Forge! This guide will help you get up and running quickly.
 
 ## Quick Start
 
@@ -239,6 +239,6 @@ Access to:
 - Verify environment variables
 - Test individual features
 
-Happy writing with RotoWrite! 🚀
+Happy writing with Forge! 🚀
 
 

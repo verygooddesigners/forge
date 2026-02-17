@@ -18,7 +18,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RotoWrite - Editorial Command Center",
+  title: "Forge - Editorial Command Center",
   description: "AI-powered content creation platform for sports betting and gaming content",
 };
 

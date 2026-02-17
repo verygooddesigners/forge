@@ -1,9 +1,9 @@
 
 ### Integration Points
-- Seamlessly integrated into existing RotoWrite dashboard
+- Seamlessly integrated into existing Forge dashboard
 - Uses same editor, SEO tools, and project management
 - Accessible via "NFL Odds Extractor" button in left sidebar
-- Creates standard RotoWrite projects for editing and storage
+- Creates standard Forge projects for editing and storage
 
 ## User Experience
 

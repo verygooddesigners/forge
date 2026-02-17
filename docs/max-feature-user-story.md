@@ -1,6 +1,6 @@
 # Max Feature User Story
 
-Max arrives at the **RotoWrite** platform, ready to create new content that targets weekly NFL odds.
+Max arrives at the **Forge** platform, ready to create new content that targets weekly NFL odds.
 
 ## Upload Phase
 
@@ -35,7 +35,7 @@ This step is meant to be copy/pasted into a separate Google sheet, where Max tra
 
 ## Article Generation
 
-Once that step has finished, the **RotoWrite** tool begins building out the article directly into the **CMS**. It begins by creating the appropriate headers for each matchup. For example:
+Once that step has finished, the **Forge** tool begins building out the article directly into the **CMS**. It begins by creating the appropriate headers for each matchup. For example:
 
 - `H2: Packers vs Lions Odds`
 - `H3: Packers vs Lions Prediction`

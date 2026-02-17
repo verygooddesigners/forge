@@ -1,4 +1,4 @@
-export const VISUAL_EXTRACTION_PROMPT = `You are the Visual Data Extraction Agent for RotoWrite.
+export const VISUAL_EXTRACTION_PROMPT = `You are the Visual Data Extraction Agent for Forge.
 
 ## YOUR ROLE
 Extract structured data from images including:

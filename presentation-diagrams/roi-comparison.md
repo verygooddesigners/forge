@@ -1,4 +1,4 @@
-# RotoWrite ROI & Cost Comparison
+# Forge ROI & Cost Comparison
 
 ## Annual Cost-Benefit Analysis
 
@@ -86,11 +86,11 @@ Break-Even Point = $600 / $3,750
 Break-Even Point = 0.16 weeks (1.1 days)
 ```
 
-**RotoWrite pays for itself in less than 2 days of use.**
+**Forge pays for itself in less than 2 days of use.**
 
 ---
 
-## Cost Comparison: RotoWrite vs Alternatives
+## Cost Comparison: Forge vs Alternatives
 
 ```mermaid
 graph LR
@@ -106,7 +106,7 @@ graph LR
         H4 --> H5
     end
     
-    subgraph "RotoWrite"
+    subgraph "Forge"
         R1[AI Costs: $360]
         R2[Hosting: $240]
         R3[Training: 1 hour]
@@ -137,9 +137,9 @@ graph LR
 | **Hire 2 FTE** | $180,000 | 1.875 FTE | 6 months | High (human) |
 | **Generic AI Tools** | $3,000-6,000 | 0.5 FTE | 3-6 months | Low (generic) |
 | **Freelancers** | $120,000+ | Variable | Immediate | Variable |
-| **RotoWrite** | **$600** | **1.875 FTE** | **2 days** | **High (AI + human)** |
+| **Forge** | **$600** | **1.875 FTE** | **2 days** | **High (AI + human)** |
 
-### Winner: RotoWrite
+### Winner: Forge
 - **300x cheaper** than hiring
 - **5-10x cheaper** than generic AI tools
 - **200x cheaper** than freelancers
@@ -169,14 +169,14 @@ graph LR
 | Scenario | Total Cost | Total Value | Net Value |
 |----------|-----------|-------------|-----------|
 | Hiring 2 FTE | $900,000 | $975,000 | $75,000 |
-| RotoWrite | $3,000 | $975,000 | **$972,000** |
+| Forge | $3,000 | $975,000 | **$972,000** |
 | **Difference** | **$897,000 savings** | Equal capacity | **$897,000 better** |
 
 ---
 
 ## Risk-Adjusted ROI
 
-### RotoWrite Risk Factors
+### Forge Risk Factors
 1. **AI API cost increase:** Unlikely, prices trending down (Low risk)
 2. **Adoption resistance:** Mitigated by training & support (Low risk)
 3. **Quality concerns:** Human review maintained (Low risk)
@@ -202,7 +202,7 @@ Even with conservative adjustments:
 | Complex Article | 120 min | $100 | 260 | $26,000 |
 | **Total** | | | **2,860** | **$91,000** |
 
-### With RotoWrite
+### With Forge
 | Article Type | Time | Cost at $50/hr | AI Cost | Total Cost | Annual Volume | Annual Cost |
 |-------------|------|----------------|---------|------------|---------------|-------------|
 | New Article | 25 min | $20.83 | $0.15 | $20.98 | 1,040 | $21,820 |
@@ -221,7 +221,7 @@ Even with conservative adjustments:
 
 ## Opportunity Cost Analysis
 
-### Status Quo (No RotoWrite)
+### Status Quo (No Forge)
 - Content team at full capacity
 - Limited ability to take on new content types
 - Slow response to trending topics
@@ -236,7 +236,7 @@ Even with conservative adjustments:
 
 **Estimated Annual Hidden Cost: $160,000+**
 
-### With RotoWrite
+### With Forge
 - 60% capacity increase or 75 hours/week for strategic work
 - Rapid response to new content opportunities
 - Team focused on high-value creative work
@@ -268,9 +268,9 @@ Even with conservative adjustments:
 | Content Management System Upgrade | $50,000 | 5% improvement | 10% |
 | Marketing Automation Platform | $30,000 | 10% improvement | 25% |
 | Hiring 1 Intern | $40,000 | 0.5 FTE | 100% |
-| **RotoWrite** | **$600** | **1.875 FTE** | **32,400%** |
+| **Forge** | **$600** | **1.875 FTE** | **32,400%** |
 
-**Conclusion:** RotoWrite delivers 100x better ROI than typical enterprise software investments.
+**Conclusion:** Forge delivers 100x better ROI than typical enterprise software investments.
 
 ---
 
@@ -299,7 +299,7 @@ Even with conservative adjustments:
 ### Recommendation
 **APPROVE: Exceptional financial returns with minimal risk.**
 
-This is one of the highest-ROI investments the company can make. Every week without RotoWrite costs $3,750 in lost productivity.
+This is one of the highest-ROI investments the company can make. Every week without Forge costs $3,750 in lost productivity.
 
 ---
 
@@ -319,7 +319,7 @@ This is one of the highest-ROI investments the company can make. Every week with
 
 **Opportunity Cost of Waiting:** $3,750 per week lost
 
-### The Question Isn't "Should We Deploy RotoWrite?"
+### The Question Isn't "Should We Deploy Forge?"
 
 ### The Question Is "How Fast Can We Roll It Out?"
 

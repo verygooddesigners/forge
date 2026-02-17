@@ -1,5 +1,5 @@
 /**
- * RotoWrite Multi-Agent System
+ * Forge Multi-Agent System
  * Central exports for all agents and utilities
  */
 

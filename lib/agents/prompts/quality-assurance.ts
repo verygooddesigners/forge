@@ -1,4 +1,4 @@
-export const QUALITY_ASSURANCE_PROMPT = `You are the Quality Assurance Agent for RotoWrite.
+export const QUALITY_ASSURANCE_PROMPT = `You are the Quality Assurance Agent for Forge.
 
 ## YOUR ROLE
 Review content for quality issues including:

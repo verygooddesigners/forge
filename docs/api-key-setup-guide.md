@@ -1,8 +1,8 @@
-# RotoWrite API Key Setup Guide
+# Forge API Key Setup Guide
 
 ## Overview
 
-This document provides exact instructions for setting up API keys required for the RotoWrite Multi-Agent System. Follow these steps precisely to ensure all agents function correctly.
+This document provides exact instructions for setting up API keys required for the Forge Multi-Agent System. Follow these steps precisely to ensure all agents function correctly.
 
 ---
 
@@ -30,7 +30,7 @@ This document provides exact instructions for setting up API keys required for t
 ### Key Creation
 
 1. Click **"Create Key"**
-2. **Name:** `rotowrite-production`
+2. **Name:** `forge-production`
 3. **Permissions:** Leave as default (full access)
 
 ### Required Model Access
@@ -83,7 +83,7 @@ ANTHROPIC_API_KEY=sk-ant-api03-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ### Key Creation (if not already created)
 
 1. Click **"Create new secret key"**
-2. **Name:** `rotowrite-multi-agent`
+2. **Name:** `forge-multi-agent`
 3. **Permissions:** Full access (needed for both embeddings and vision)
 
 ### Required Model Access
@@ -222,7 +222,7 @@ Add these environment variables in Vercel Dashboard:
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://...` | Production |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJ...` | Production |
 | `SUPABASE_SERVICE_ROLE_KEY` | `eyJ...` | Production |
-| `NEXT_PUBLIC_APP_URL` | `https://rotowrite.vercel.app` | Production |
+| `NEXT_PUBLIC_APP_URL` | `https://forge.vercel.app` | Production |
 
 ---
 
@@ -343,7 +343,7 @@ lib/agents/prompts/
 
 ```typescript
 export const CONTENT_GENERATION_SYSTEM_PROMPT = `
-You are the Content Generation Agent for RotoWrite.
+You are the Content Generation Agent for Forge.
 
 ## YOUR ROLE
 Generate high-quality, SEO-optimized articles based on:
@@ -387,7 +387,7 @@ use a professional, engaging tone appropriate for sports content.
 
 ```typescript
 export const VISUAL_EXTRACTION_SYSTEM_PROMPT = `
-You are the Visual Data Extraction Agent for RotoWrite.
+You are the Visual Data Extraction Agent for Forge.
 
 ## YOUR ROLE
 Extract structured data from uploaded screenshots, specifically:
@@ -526,7 +526,7 @@ GET /api/health/tavily    → Tests Tavily API connection
 ## Checklist Before Implementation
 
 - [ ] Anthropic account created/verified
-- [ ] Claude API key generated with name `rotowrite-production`
+- [ ] Claude API key generated with name `forge-production`
 - [ ] Verified Sonnet 4 model access
 - [ ] Verified Vision API enabled (default with Sonnet 4)
 - [ ] OpenAI API key verified active

@@ -1,8 +1,8 @@
-# RotoWrite AI Agent Transition 
+# Forge AI Agent Transition 
 
 Your idea of transitioning from a single API to specialized agents for distinct functionalities is a strategic approach, especially in complex systems where modularity, scalability, and feature-specific optimization are essential. Each agent can be tailored to excel in its assigned task, leveraging models that are optimized for specific domains or functionalities. Here’s how I would architect this transition and suggest breaking it down into specialized agents and their corresponding models:
 
-I am transitioning RotoWrite from its current AI architecture (where one model handles all AI tasks) to a system utilizing six agents, each focused on a particular feature or function. 
+I am transitioning Forge from its current AI architecture (where one model handles all AI tasks) to a system utilizing six agents, each focused on a particular feature or function. 
 1. Content Generation Agent
 2. AI Writer Model and Training Agent
 3. SEO Optimization Agent

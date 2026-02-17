@@ -14,10 +14,10 @@ export function ToolsDocsClient() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-4xl font-bold text-text-primary">
-              RotoWrite Tools Developer Documentation
+              Forge Tools Developer Documentation
             </h1>
             <p className="text-text-secondary mt-2">
-              Build powerful plugins to extend RotoWrite's functionality
+              Build powerful plugins to extend Forge's functionality
             </p>
           </div>
           <Link href="/tools">
@@ -60,7 +60,7 @@ export function ToolsDocsClient() {
           </h2>
           
           <p className="text-text-secondary">
-            RotoWrite Tools are plugins that extend the functionality of RotoWrite. 
+            Forge Tools are plugins that extend the functionality of Forge. 
             They can add new features, integrate with external services, or provide custom workflows.
           </p>
 
@@ -84,7 +84,7 @@ export function ToolsDocsClient() {
           </h2>
 
           <p className="text-text-secondary mb-4">
-            Every RotoWrite Tool must include a <code className="bg-bg-elevated px-2 py-1 rounded">tool-manifest.json</code> file 
+            Every Forge Tool must include a <code className="bg-bg-elevated px-2 py-1 rounded">tool-manifest.json</code> file 
             in the root of your GitHub repository.
           </p>
 
@@ -164,7 +164,7 @@ export function ToolsDocsClient() {
           </h2>
 
           <p className="text-text-secondary mb-4">
-            Tools must request permissions to access RotoWrite data and features. 
+            Tools must request permissions to access Forge data and features. 
             Users will see what permissions your tool requires before installing.
           </p>
 
@@ -258,8 +258,8 @@ const data = await response.json();`}
 
           <pre className="bg-bg-elevated p-4 rounded-lg overflow-x-auto text-sm">
 {`# Create a new repository
-mkdir rotowrite-my-tool
-cd rotowrite-my-tool
+mkdir forge-my-tool
+cd forge-my-tool
 git init
 
 # Create manifest
@@ -294,7 +294,7 @@ EOF`}
           </h3>
 
           <p className="text-text-secondary mb-4">
-            Push your code to GitHub and submit your tool through the RotoWrite Tools Marketplace.
+            Push your code to GitHub and submit your tool through the Forge Tools Marketplace.
           </p>
 
           <Link href="/tools/submit">
@@ -313,7 +313,7 @@ EOF`}
             <li>✓ Request only the permissions you actually need</li>
             <li>✓ Provide clear, detailed descriptions of what your tool does</li>
             <li>✓ Include error handling and loading states</li>
-            <li>✓ Follow RotoWrite's design system and UI patterns</li>
+            <li>✓ Follow Forge's design system and UI patterns</li>
             <li>✓ Test with different user roles and permissions</li>
             <li>✓ Document your code and include a README</li>
             <li>✓ Use semantic versioning for updates</li>
@@ -332,7 +332,7 @@ EOF`}
 
           <ul className="text-text-secondary space-y-2">
             <li>• Check the example tools in the marketplace</li>
-            <li>• Review the RotoWrite codebase for patterns</li>
+            <li>• Review the Forge codebase for patterns</li>
             <li>• Contact the admin team for guidance</li>
           </ul>
 
@@ -341,7 +341,7 @@ EOF`}
               Ready to build?
             </h3>
             <p className="text-sm text-text-secondary mb-4">
-              Start creating your RotoWrite Tool today and share it with the team!
+              Start creating your Forge Tool today and share it with the team!
             </p>
             <Link href="/tools/submit">
               <Button>

@@ -22,7 +22,7 @@ NEXT_PUBLIC_AZURE_TENANT_ID=your-azure-tenant-id
 ### 1. Register Application in Azure Portal
 1. Go to [Azure Portal](https://portal.azure.com)
 2. Navigate to **Azure Active Directory** > **App registrations** > **New registration**
-3. Name: `RotoWrite SSO`
+3. Name: `Forge SSO`
 4. Supported account types: Choose based on your needs
    - **Single tenant**: Only your organization
    - **Multitenant**: Any organization
@@ -44,7 +44,7 @@ http://localhost:54321/auth/v1/callback
 
 ### 3. Create Client Secret
 1. Go to **Certificates & secrets** > **New client secret**
-2. Description: `RotoWrite Supabase Integration`
+2. Description: `Forge Supabase Integration`
 3. Expiry: Choose appropriate duration
 4. **Save the secret value** - you'll need this for Supabase
 

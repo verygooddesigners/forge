@@ -1,6 +1,6 @@
-# RotoWrite UI Redesign - Cursor Implementation Guide
+# Forge UI Redesign - Cursor Implementation Guide
 
-This document provides complete specifications for rebuilding the RotoWrite UI with the new "Editorial Command Center" design system. Follow these guidelines to implement a consistent, professional dark theme across all screens.
+This document provides complete specifications for rebuilding the Forge UI with the new "Editorial Command Center" design system. Follow these guidelines to implement a consistent, professional dark theme across all screens.
 
 ---
 
@@ -37,7 +37,7 @@ Add these CSS custom properties to your global styles (or Tailwind config):
   --text-tertiary: #71717a;   /* Labels, hints */
   --text-muted: #52525b;      /* Disabled, placeholder */
 
-  /* Primary Accent - RotoWrite Purple */
+  /* Primary Accent - Forge Purple */
   --accent-primary: #7C49E3;
   --accent-hover: #9166e8;
   --accent-muted: rgba(124, 73, 227, 0.15);
@@ -967,4 +967,4 @@ The HTML mockup files demonstrate the complete implementation of each screen. Us
 7. `rotowrite-mockup-7-admin.html` - Admin Dashboard
 8. `rotowrite-style-guide.html` - Complete style reference with purple accent
 
-**Note:** The mockups use the amber/gold accent color. Replace with #7C49E3 (RotoWrite Purple) during implementation as shown in the style guide.
+**Note:** The mockups use the amber/gold accent color. Replace with #7C49E3 (Forge Purple) during implementation as shown in the style guide.

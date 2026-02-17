@@ -1,14 +1,14 @@
-# RotoWrite Presentation Materials - Delivery Summary
+# Forge Presentation Materials - Delivery Summary
 
 ## What Has Been Created
 
-I've generated a complete Keynote presentation outline and supporting visual materials for presenting RotoWrite to the company president. All materials focus on demonstrating the app's power, business value, and exceptional ROI.
+I've generated a complete Keynote presentation outline and supporting visual materials for presenting Forge to the company president. All materials focus on demonstrating the app's power, business value, and exceptional ROI.
 
 ---
 
 ## Main Deliverable
 
-### `RotoWrite-Presentation-Outline.md`
+### `Forge-Presentation-Outline.md`
 **25-slide comprehensive presentation outline** designed for a 30-40 minute executive presentation.
 
 **Key Focus Areas:**
@@ -36,7 +36,7 @@ All visual materials are in the `presentation-diagrams/` directory:
 
 Contains:
 - Mermaid flowchart of 9-step process
-- Time comparison Gantt chart (Traditional vs RotoWrite)
+- Time comparison Gantt chart (Traditional vs Forge)
 - Detailed step-by-step breakdown
 - Time savings: 75 min → 19 min (75% reduction)
 
@@ -86,7 +86,7 @@ Contains:
 Contains:
 - Annual cost-benefit breakdown ($600 cost vs $195K value)
 - ROI calculation showing 32,400% return
-- Cost comparison: RotoWrite vs hiring vs generic AI tools
+- Cost comparison: Forge vs hiring vs generic AI tools
 - 5-year financial projection ($972K cumulative value)
 - Cost per article analysis
 - Opportunity cost evaluation
@@ -163,9 +163,9 @@ NewsEngine (automated research)
 ## How to Create the Presentation
 
 ### Step 1: Create Slides in Keynote/PowerPoint
-1. Use the outline from `RotoWrite-Presentation-Outline.md`
+1. Use the outline from `Forge-Presentation-Outline.md`
 2. Create 25 slides following the provided structure
-3. Apply RotoWrite brand colors (violet/purple theme)
+3. Apply Forge brand colors (violet/purple theme)
 
 ### Step 2: Generate Diagrams
 1. Go to https://mermaid.live
@@ -183,7 +183,7 @@ NewsEngine (automated research)
 - Writer Engine process flow (from `writer-engine-process.md`)
 
 ### Step 3: Add Screenshots
-Include actual RotoWrite screenshots for:
+Include actual Forge screenshots for:
 - Dashboard overview (Slide 3)
 - SmartBrief Builder with two-tab interface (Slide 8)
 - SEO Wizard sidebar showing real-time score (Slide 9)
@@ -191,7 +191,7 @@ Include actual RotoWrite screenshots for:
 - Admin dashboard with Agent Tuner (Slide 14)
 
 **Where to Get Screenshots:**
-- Production app: https://rotowrite.vercel.app
+- Production app: https://forge.vercel.app
 - Take high-resolution screenshots (2x display scaling)
 - Crop and annotate to highlight key features
 
@@ -213,7 +213,7 @@ Include actual RotoWrite screenshots for:
 3. State the ask: "Ready to deploy today"
 
 ### Core Message (Repeat Throughout)
-**"RotoWrite delivers the capacity of 2 full-time positions for less than the cost of a monthly gym membership."**
+**"Forge delivers the capacity of 2 full-time positions for less than the cost of a monthly gym membership."**
 
 ### Emphasis Points
 1. **Slide 4 (Time Savings):** Pause here, let numbers sink in
@@ -236,7 +236,7 @@ A: Writer Engine replicates individual voice using RAG technology. 95% of test c
 A: Minimal. Costs $600/year. Can cancel anytime. No vendor lock-in. Break-even in 1.1 days. Downside is negligible, upside is massive.
 
 **Q: "Why not just use ChatGPT?"**
-A: Generic AI produces generic content. RotoWrite is purpose-built for RotoWire with writer modeling, integrated workflow, SEO optimization, and specialized features like NFL Odds Extractor. (See Slide 17 comparison.)
+A: Generic AI produces generic content. Forge is purpose-built for RotoWire with writer modeling, integrated workflow, SEO optimization, and specialized features like NFL Odds Extractor. (See Slide 17 comparison.)
 
 ---
 
@@ -267,11 +267,11 @@ A: Generic AI produces generic content. RotoWrite is purpose-built for RotoWire 
 ### Month 1: Ramp-Up
 1. Each strategist trains their writer model (5-25 articles)
 2. Build shared library of SmartBriefs
-3. Produce first 50 articles with RotoWrite
+3. Produce first 50 articles with Forge
 4. Measure time savings and gather feedback
 
 ### Quarter 1: Full Deployment
-1. Achieve 60% of content via RotoWrite
+1. Achieve 60% of content via Forge
 2. Document ROI and present results
 3. Deploy additional features (Microsoft SSO)
 4. Consider expansion (additional sport extractors)
@@ -280,11 +280,11 @@ A: Generic AI produces generic content. RotoWrite is purpose-built for RotoWire 
 
 ## File Locations
 
-All materials are in the RotoWrite project directory:
+All materials are in the Forge project directory:
 
 ```
-/RotoWrite/
-├── RotoWrite-Presentation-Outline.md    (Main presentation outline - 25 slides)
+/Forge/
+├── Forge-Presentation-Outline.md    (Main presentation outline - 25 slides)
 ├── PRESENTATION-MATERIALS-SUMMARY.md    (This file - how to use everything)
 └── presentation-diagrams/
     ├── README.md                        (Guide to diagram materials)
@@ -299,10 +299,10 @@ All materials are in the RotoWrite project directory:
 
 ## Quick Start Checklist
 
-- [ ] Read `RotoWrite-Presentation-Outline.md` (25 slides)
+- [ ] Read `Forge-Presentation-Outline.md` (25 slides)
 - [ ] Review `presentation-diagrams/README.md` for diagram generation
 - [ ] Generate mermaid diagrams using https://mermaid.live
-- [ ] Take screenshots from https://rotowrite.vercel.app
+- [ ] Take screenshots from https://forge.vercel.app
 - [ ] Create Keynote/PowerPoint deck
 - [ ] Add diagrams and screenshots to slides
 - [ ] Practice delivery (30-40 minutes)

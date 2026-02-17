@@ -1,7 +1,7 @@
 -- Migration: 00012_tools_system.sql
--- Description: Create tables for RotoWrite Tools/Plugins Marketplace system
+-- Description: Create tables for Forge Tools/Plugins Marketplace system
 -- This enables a WordPress-style plugin ecosystem where developers can create,
--- submit, and publish Tools that extend RotoWrite's functionality.
+-- submit, and publish Tools that extend Forge's functionality.
 
 -- ============================================================================
 -- ENUMS
@@ -284,7 +284,7 @@ ON CONFLICT (permission_key) DO NOTHING;
 -- COMMENTS
 -- ============================================================================
 
-COMMENT ON TABLE public.tools IS 'Registry of all RotoWrite Tools/Plugins';
+COMMENT ON TABLE public.tools IS 'Registry of all Forge Tools/Plugins';
 COMMENT ON TABLE public.user_installed_tools IS 'Tracks which users have installed which Tools';
 COMMENT ON TABLE public.tool_permissions IS 'Defines available permissions that Tools can request';
 COMMENT ON TABLE public.tool_data IS 'Isolated data storage for each Tool per user';

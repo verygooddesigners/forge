@@ -1,8 +1,8 @@
-# RotoWrite: AI-Powered Content Creation Platform
+# Forge: AI-Powered Content Creation Platform
 
 ## Overview
 
-RotoWrite is an AI-powered content creation platform that combines your unique writing style with advanced SEO optimization. The system trains on your existing content to capture your voice, then uses that model along with SEO best practices to generate articles that sound authentically like you while ranking well in search engines. It's designed specifically for content creators who need to scale their output without sacrificing quality or authenticity.
+Forge is an AI-powered content creation platform that combines your unique writing style with advanced SEO optimization. The system trains on your existing content to capture your voice, then uses that model along with SEO best practices to generate articles that sound authentically like you while ranking well in search engines. It's designed specifically for content creators who need to scale their output without sacrificing quality or authenticity.
 
 ## The Three-Pillar System
 
@@ -68,8 +68,8 @@ RotoWrite is an AI-powered content creation platform that combines your unique w
 
 ---
 
-**Live Site:** https://rotowrite.vercel.app  
-**GitHub:** https://github.com/verygooddesigners/rotowrite  
+**Live Site:** https://forge.vercel.app  
+**GitHub:** https://github.com/verygooddesigners/forge  
 **Development Port:** localhost:5309
 
 

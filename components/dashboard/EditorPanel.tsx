@@ -476,7 +476,7 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
           <div className="w-16 h-16 bg-accent-muted rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Plus className="w-8 h-8 text-accent-primary" />
           </div>
-          <h2 className="text-2xl font-bold text-text-primary">Welcome to RotoWrite</h2>
+          <h2 className="text-2xl font-bold text-text-primary">Welcome to Forge</h2>
           <p className="text-text-secondary max-w-md">
             Create a new project or open an existing one to start writing AI-powered content.
           </p>

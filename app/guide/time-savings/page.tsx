@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import TimeSavingsPage from './TimeSavingsPage';
 
 export const metadata: Metadata = {
-  title: 'Time Savings Calculator - RotoWrite | Calculate Your Content ROI',
+  title: 'Time Savings Calculator - Forge | Calculate Your Content ROI',
   description:
-    'Calculate how much time your team could save with RotoWrite. Interactive calculator shows weekly, monthly, and annual time savings for new articles, updates, and complex data-driven content.',
+    'Calculate how much time your team could save with Forge. Interactive calculator shows weekly, monthly, and annual time savings for new articles, updates, and complex data-driven content.',
   keywords: [
-    'RotoWrite time savings',
+    'Forge time savings',
     'content creation ROI',
     'AI writing efficiency',
     'team productivity calculator',
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     'SEO content efficiency',
   ],
   openGraph: {
-    title: 'Time Savings Calculator - RotoWrite',
+    title: 'Time Savings Calculator - Forge',
     description: 'Calculate how much time your team could save with AI-powered content creation',
     type: 'website',
   },

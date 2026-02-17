@@ -1,9 +1,9 @@
-# RotoWrite - Project Status
+# Forge - Project Status
 
 **Version:** v1.02.00  
 **Last Updated:** January 14, 2026  
-**Deployed:** https://rotowrite.vercel.app  
-**Repository:** https://github.com/verygooddesigners/rotowrite
+**Deployed:** https://forge.vercel.app  
+**Repository:** https://github.com/verygooddesigners/forge
 
 ---
 
@@ -200,7 +200,7 @@ CLAUDE_API_KEY=[Your Claude API key]
 TAVILY_API_KEY=[Your Tavily API key]
 
 # App URL
-NEXT_PUBLIC_APP_URL=https://rotowrite.vercel.app
+NEXT_PUBLIC_APP_URL=https://forge.vercel.app
 ```
 
 ### Where to Find Supabase Keys
@@ -275,7 +275,7 @@ a37df0f - Fix user creation
 
 ### 1. Debug Writer Model Display
 ```
-Open browser console (F12) on rotowrite.vercel.app and check for:
+Open browser console (F12) on forge.vercel.app and check for:
 - "Loading project: [id]"
 - "Project loaded: [headline] Writer Model ID: [id]"
 - "Loading writer model: [id]"
@@ -349,7 +349,7 @@ The `match_training_content` SQL function in `00001_initial_schema.sql` referenc
 - Look for authentication errors, API key errors, database errors
 
 ### 2. Check Browser Console
-- Open rotowrite.vercel.app
+- Open forge.vercel.app
 - F12 → Console tab
 - Look for the console.log statements added for debugging
 - Note any error messages
@@ -363,7 +363,7 @@ The `match_training_content` SQL function in `00001_initial_schema.sql` referenc
 
 ### 4. Test Locally
 ```bash
-cd /Users/jeremy.botter/Desktop/Development/RotoWrite
+cd /Users/jeremy.botter/Desktop/Development/Forge
 npm run dev
 # Open http://localhost:5309
 # Test the same flow, check console for errors
@@ -541,11 +541,11 @@ Generating content with: {...}
 - **Dashboard:** https://supabase.com/dashboard/project/ybrhwafnetvcgrrmxgvy
 
 ### Vercel Project
-- **URL:** https://rotowrite.vercel.app
+- **URL:** https://forge.vercel.app
 - **Dashboard:** [Your Vercel project dashboard]
 
 ### GitHub Repo
-- **URL:** https://github.com/verygooddesigners/rotowrite
+- **URL:** https://github.com/verygooddesigners/forge
 - **Branch:** main
 
 ---
@@ -553,7 +553,7 @@ Generating content with: {...}
 ## 🎯 Tomorrow's Action Plan
 
 1. **Check Browser Console Logs**
-   - Open rotowrite.vercel.app
+   - Open forge.vercel.app
    - Open Developer Tools (F12)
    - Go to Console tab
    - Create a project and note all logs

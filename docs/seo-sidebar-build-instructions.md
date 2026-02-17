@@ -1,7 +1,7 @@
 # SEO Optimization Right Sidebar - Build Instructions
 
 ## Overview
-Build a comprehensive SEO optimization sidebar for RotoWrite that matches the reference screenshot exactly. This sidebar will replace or enhance the current SEO Assistant tab in the RightSidebar component.
+Build a comprehensive SEO optimization sidebar for Forge that matches the reference screenshot exactly. This sidebar will replace or enhance the current SEO Assistant tab in the RightSidebar component.
 
 ## Component Structure
 
@@ -17,7 +17,7 @@ Build a comprehensive SEO optimization sidebar for RotoWrite that matches the re
 - Three horizontal tabs at the top: **GUIDELINES**, **OUTLINE**, **BRIEF**
 - Default selected tab: **GUIDELINES** (highlighted in purple/violet)
 - Use Shadcn Tabs component
-- Tab styling: Purple/violet highlight for active tab, matching RotoWrite's primary color scheme
+- Tab styling: Purple/violet highlight for active tab, matching Forge's primary color scheme
 
 ### Implementation Notes
 - Use `Tabs`, `TabsList`, `TabsTrigger` from `@/components/ui/tabs`
@@ -244,7 +244,7 @@ interface SEOOptimizationSidebarProps {
 ## Styling Guidelines
 
 ### Colors
-- **Primary Purple/Violet:** Use RotoWrite's primary color (`hsl(var(--primary))`)
+- **Primary Purple/Violet:** Use Forge's primary color (`hsl(var(--primary))`)
 - **Green (Good):** Custom shade matching purple theme (not standard green)
 - **Yellow/Orange (Warning):** Custom shade matching purple theme
 - **Red (Bad):** Custom shade matching purple theme
@@ -358,7 +358,7 @@ interface SEOOptimizationSidebarProps {
 ## Notes
 
 - Match the screenshot design as closely as possible
-- Use existing RotoWrite design system (Shadcn UI, Tailwind CSS)
+- Use existing Forge design system (Shadcn UI, Tailwind CSS)
 - Follow existing code patterns and conventions
 - Ensure accessibility (keyboard navigation, ARIA labels)
 - Optimize for performance (debounce, memoization)

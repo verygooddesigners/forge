@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     // For now, we'll log the notification
     console.log(`
       Email notification would be sent to: ${email}
-      Subject: Your RotoWrite Account Has Been Approved
+      Subject: Your Forge Account Has Been Approved
       Body:
         Your account status has been changed to: ${newStatus}
         You can now log in at: ${loginUrl}
@@ -53,12 +53,12 @@ export async function POST(request: NextRequest) {
     /*
     await sendEmail({
       to: email,
-      subject: 'Your RotoWrite Account Has Been Approved',
+      subject: 'Your Forge Account Has Been Approved',
       html: `
         <h2>Your Account Has Been Approved!</h2>
         <p>Your account status has been changed to: <strong>${newStatus}</strong></p>
-        <p>You can now log in to RotoWrite and start creating content.</p>
-        <a href="${loginUrl}">Log in to RotoWrite</a>
+        <p>You can now log in to Forge and start creating content.</p>
+        <a href="${loginUrl}">Log in to Forge</a>
       `
     });
     */

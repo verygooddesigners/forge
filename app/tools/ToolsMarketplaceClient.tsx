@@ -59,7 +59,7 @@ export function ToolsMarketplaceClient() {
                 Tools Marketplace
               </h1>
               <p className="text-text-secondary mt-2">
-                Extend RotoWrite with powerful plugins and integrations
+                Extend Forge with powerful plugins and integrations
               </p>
             </div>
             <div className="flex gap-3">
@@ -96,10 +96,10 @@ export function ToolsMarketplaceClient() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold text-text-primary">
-                Create your own RotoWrite Tools
+                Create your own Forge Tools
               </h3>
               <p className="text-sm text-text-secondary mt-1">
-                Build custom plugins to extend RotoWrite's functionality for your team
+                Build custom plugins to extend Forge's functionality for your team
               </p>
             </div>
             <Link href="/tools/docs">

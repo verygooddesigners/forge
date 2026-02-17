@@ -1,8 +1,8 @@
-# RotoWrite Tools Marketplace - Implementation Complete
+# Forge Tools Marketplace - Implementation Complete
 
 ## Summary
 
-The RotoWrite Tools/Plugins Marketplace system has been successfully implemented. This WordPress-style plugin ecosystem enables developers to create, submit, and publish custom tools that extend RotoWrite's functionality.
+The Forge Tools/Plugins Marketplace system has been successfully implemented. This WordPress-style plugin ecosystem enables developers to create, submit, and publish custom tools that extend Forge's functionality.
 
 ## What Was Built
 
@@ -136,7 +136,7 @@ Documentation:
    ```
 
 2. **Access the Marketplace**:
-   - Navigate to `/tools` in RotoWrite
+   - Navigate to `/tools` in Forge
    - Browse available tools (none yet until first submission)
 
 3. **Submit a Tool** (as developer):

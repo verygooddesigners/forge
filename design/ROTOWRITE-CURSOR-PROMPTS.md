@@ -1,4 +1,4 @@
-# RotoWrite Redesign - Cursor Prompts
+# Forge Redesign - Cursor Prompts
 
 Copy and paste these prompts into Cursor to implement the redesign. Work through them in order.
 
@@ -7,7 +7,7 @@ Copy and paste these prompts into Cursor to implement the redesign. Work through
 ## PROMPT 1: Setup Design System
 
 ```
-I'm redesigning the RotoWrite UI with a new dark "Editorial Command Center" theme. 
+I'm redesigning the Forge UI with a new dark "Editorial Command Center" theme. 
 
 First, set up the design system foundation:
 
@@ -20,7 +20,7 @@ First, set up the design system foundation:
 COLORS:
 - Backgrounds (dark to light): #0a0a0b, #111113, #18181b, #1f1f23, #27272a
 - Text: #fafafa (primary), #a1a1aa (secondary), #71717a (tertiary), #52525b (muted)
-- Primary Accent (RotoWrite Purple): #7C49E3, hover: #9166e8, muted: rgba(124, 73, 227, 0.15)
+- Primary Accent (Forge Purple): #7C49E3, hover: #9166e8, muted: rgba(124, 73, 227, 0.15)
 - Success: #22c55e, muted: rgba(34, 197, 94, 0.15)
 - Warning: #eab308, muted: rgba(234, 179, 8, 0.15)  
 - Error: #ef4444, muted: rgba(239, 68, 68, 0.15)
@@ -51,7 +51,7 @@ SIDEBAR SPECS:
 
 - Logo section at top (24px padding):
   - Logo mark: 36x36px square, rounded 8px, gradient from #7C49E3 to #5b2dcf, white "RW" text in Space Mono
-  - Logo text: "RotoWrite" in DM Sans 20px bold, "Write" portion colored #7C49E3
+  - Logo text: "Forge" in DM Sans 20px bold, "Write" portion colored #7C49E3
 
 - Navigation sections with labels:
   - Labels: 10px uppercase, letter-spacing 1px, color #71717a

@@ -1,6 +1,6 @@
-# RotoWrite Presentation Materials
+# Forge Presentation Materials
 
-This directory contains comprehensive visual diagrams and documentation to support the RotoWrite executive presentation.
+This directory contains comprehensive visual diagrams and documentation to support the Forge executive presentation.
 
 ## Files in This Directory
 
@@ -9,7 +9,7 @@ This directory contains comprehensive visual diagrams and documentation to suppo
 
 **Contents:**
 - Step-by-step workflow from project creation to publication
-- Time comparison: Traditional (75 min) vs RotoWrite (19 min)
+- Time comparison: Traditional (75 min) vs Forge (19 min)
 - Detailed breakdown of each workflow step
 - Mermaid flowcharts and Gantt charts
 
@@ -52,7 +52,7 @@ This directory contains comprehensive visual diagrams and documentation to suppo
 **Contents:**
 - Annual cost-benefit breakdown
 - ROI calculation (32,400%)
-- Cost comparison: RotoWrite vs hiring vs alternatives
+- Cost comparison: Forge vs hiring vs alternatives
 - 5-year financial projection
 - Cost per article analysis
 - Opportunity cost analysis
@@ -154,7 +154,7 @@ This directory contains comprehensive visual diagrams and documentation to suppo
 - **Width:** 1920px for full-slide diagrams, 960px for half-slide
 
 ### Color Scheme Consistency
-All diagrams use RotoWrite brand colors:
+All diagrams use Forge brand colors:
 - **Primary Purple:** #8b5cf6
 - **Light Purple:** #a78bfa
 - **Lightest Purple:** #c4b5fd
@@ -203,7 +203,7 @@ For different audiences:
 
 ### Presentation Templates
 - Search for "tech startup pitch deck templates" for modern designs
-- Use Keynote/PowerPoint built-in themes with RotoWrite colors
+- Use Keynote/PowerPoint built-in themes with Forge colors
 - Consider Canva for quick, professional-looking slides
 
 ---
@@ -214,7 +214,7 @@ For questions about these materials or assistance with presentation preparation:
 - **Technical Details:** Reference `README.md` and implementation docs
 - **Usage Statistics:** Check `app/guide/time-savings/TimeSavingsPage.tsx`
 - **Feature Details:** Review documentation in `docs/` directory
-- **Live Demo:** Access production app at https://rotowrite.vercel.app
+- **Live Demo:** Access production app at https://forge.vercel.app
 
 ---
 
@@ -256,4 +256,4 @@ For questions about these materials or assistance with presentation preparation:
 
 ---
 
-**These materials are designed to make a compelling case for RotoWrite deployment. Every diagram, statistic, and explanation supports the core message: exceptional ROI with minimal risk, ready to deploy immediately.**
+**These materials are designed to make a compelling case for Forge deployment. Every diagram, statistic, and explanation supports the core message: exceptional ROI with minimal risk, ready to deploy immediately.**

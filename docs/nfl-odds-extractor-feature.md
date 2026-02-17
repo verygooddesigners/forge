@@ -51,7 +51,7 @@ The NFL Odds Extractor is an AI-powered automation tool that transforms weekly N
 
 ### Step 1: Access NFL Odds Extractor
 
-Max clicks **"NFL Odds Extractor"** in the RotoWrite dashboard sidebar, opening a specialized project creation modal.
+Max clicks **"NFL Odds Extractor"** in the Forge dashboard sidebar, opening a specialized project creation modal.
 
 ### Step 2: Upload Screenshots
 
@@ -183,7 +183,7 @@ Two-column table tracking line movement:
 
 ### Step 7: Edit & Refine
 
-Max uses the standard RotoWrite editor to:
+Max uses the standard Forge editor to:
 
 - Add prediction content for each matchup
 - Fill in pick placeholders with his analysis
@@ -277,9 +277,9 @@ Max pastes content into RotoWire CMS:
 
 ### Seamless Integration
 
-- Uses existing RotoWrite editor (TipTap)
+- Uses existing Forge editor (TipTap)
 - Compatible with all current features (SEO Wizard, Auto-Optimize, NewsEngine)
-- Saves to standard RotoWrite projects
+- Saves to standard Forge projects
 - Full editing capabilities maintained
 - Works with existing writer models
 
@@ -459,6 +459,6 @@ Max pastes content into RotoWire CMS:
 
 ## Conclusion
 
-The NFL Odds Extractor transforms a tedious, error-prone manual process into a streamlined, automated workflow. By leveraging AI vision and content generation, RotoWrite delivers consistent, high-quality odds articles ready for publication in a fraction of the time.
+The NFL Odds Extractor transforms a tedious, error-prone manual process into a streamlined, automated workflow. By leveraging AI vision and content generation, Forge delivers consistent, high-quality odds articles ready for publication in a fraction of the time.
 
 **Key Deliverable:** Max can upload screenshots, click a few buttons, and have publication-ready content in the RotoWire CMS within minutes—maintaining full editorial control while eliminating repetitive data entry.

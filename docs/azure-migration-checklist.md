@@ -1,6 +1,6 @@
-# Full Azure Migration Checklist - RotoWrite
+# Full Azure Migration Checklist - Forge
 
-Complete migration checklist for moving RotoWrite from Vercel/Supabase to Azure App Service with Azure Database for PostgreSQL, replacing Supabase Auth with Azure AD B2C or NextAuth.js.
+Complete migration checklist for moving Forge from Vercel/Supabase to Azure App Service with Azure Database for PostgreSQL, replacing Supabase Auth with Azure AD B2C or NextAuth.js.
 
 ---
 

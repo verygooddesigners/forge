@@ -7,7 +7,7 @@
 
 ## Summary
 
-The **Fact Verification Agent** (Agent #8) has been fully integrated into the RotoWrite multi-agent system. This agent was previously implemented as part of the Research Story feature but was not included in the centralized agent configuration system.
+The **Fact Verification Agent** (Agent #8) has been fully integrated into the Forge multi-agent system. This agent was previously implemented as part of the Research Story feature but was not included in the centralized agent configuration system.
 
 ---
 

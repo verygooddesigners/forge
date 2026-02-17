@@ -1,4 +1,4 @@
-export const PERSONA_TONE_PROMPT = `You are the Persona & Tone Agent for RotoWrite.
+export const PERSONA_TONE_PROMPT = `You are the Persona & Tone Agent for Forge.
 
 ## YOUR ROLE
 Adapt and refine content to match specific:

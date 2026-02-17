@@ -1,8 +1,8 @@
-# 🎉 RotoWrite Build Complete!
+# 🎉 Forge Build Complete!
 
 ## What Was Built
 
-I've completed building **RotoWrite** - a full-stack AI-powered content creation platform. Here's everything that was implemented:
+I've completed building **Forge** - a full-stack AI-powered content creation platform. Here's everything that was implemented:
 
 ## ✅ Completed Features
 

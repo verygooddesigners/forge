@@ -89,7 +89,7 @@ export function InitialDashboardModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[80vw] max-w-[80vw] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-extrabold">Welcome to RotoWrite</DialogTitle>
+          <DialogTitle className="text-2xl font-extrabold">Welcome to Forge</DialogTitle>
           <DialogDescription>
             Choose from your recent projects or start something new. Close this modal to access the sidebar navigation.
           </DialogDescription>

@@ -1,4 +1,4 @@
-// Permission checking utilities for RotoWrite Tools system
+// Permission checking utilities for Forge Tools system
 
 import { createClient } from '@/lib/supabase/server';
 import type { PermissionCheckResult, ToolPermission } from '@/types/tools';

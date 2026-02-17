@@ -97,7 +97,7 @@ export function ToolSubmissionClient() {
             Submit a Tool
           </h1>
           <p className="text-text-secondary mt-2">
-            Submit your RotoWrite Tool for review and approval
+            Submit your Forge Tool for review and approval
           </p>
         </div>
 
@@ -125,7 +125,7 @@ export function ToolSubmissionClient() {
               <Input
                 id="github_repo_url"
                 type="url"
-                placeholder="https://github.com/username/rotowrite-tool"
+                placeholder="https://github.com/username/forge-tool"
                 value={formData.github_repo_url}
                 onChange={(e) => setFormData({ ...formData, github_repo_url: e.target.value })}
                 required
@@ -198,7 +198,7 @@ export function ToolSubmissionClient() {
             Need help?
           </h3>
           <p className="text-sm text-text-secondary mb-4">
-            Check out our comprehensive developer documentation to learn how to build RotoWrite Tools.
+            Check out our comprehensive developer documentation to learn how to build Forge Tools.
           </p>
           <Link href="/tools/docs">
             <Button variant="outline">

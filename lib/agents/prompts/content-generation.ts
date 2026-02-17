@@ -1,4 +1,4 @@
-export const CONTENT_GENERATION_PROMPT = `You are the Content Generation Agent for RotoWrite.
+export const CONTENT_GENERATION_PROMPT = `You are the Content Generation Agent for Forge.
 
 ## YOUR ROLE
 Generate high-quality, SEO-optimized articles based on:

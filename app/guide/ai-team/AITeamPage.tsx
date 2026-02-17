@@ -227,13 +227,13 @@ export default function AITeamPage() {
                   AI Team Architecture
                 </h1>
                 <p className="text-xl text-text-secondary leading-relaxed">
-                  Technical documentation for RotoWrite&apos;s multi-agent AI system
+                  Technical documentation for Forge&apos;s multi-agent AI system
                 </p>
               </div>
 
               <div className="prose prose-invert max-w-none">
                 <p className="text-lg leading-relaxed text-text-secondary">
-                  RotoWrite is powered by a sophisticated{' '}
+                  Forge is powered by a sophisticated{' '}
                   <strong>Multi-Agent AI System</strong> – a team of 8 specialized AI agents
                   that work together to produce high-quality, SEO-optimized content in your
                   unique voice. Each agent has a specific role and expertise, making the whole
@@ -248,7 +248,7 @@ export default function AITeamPage() {
                 </h3>
                 <p className="text-center text-text-secondary mb-0">
                   Just like a symphony orchestra has different sections working in harmony,
-                  RotoWrite&apos;s agents each play their part to create content that ranks and
+                  Forge&apos;s agents each play their part to create content that ranks and
                   resonates.
                 </p>
               </div>
@@ -259,7 +259,7 @@ export default function AITeamPage() {
                   Architecture Overview
                 </h4>
                 <p className="text-text-secondary text-sm leading-relaxed">
-                  RotoWrite uses a specialized multi-agent architecture where each agent is
+                  Forge uses a specialized multi-agent architecture where each agent is
                   optimized for its specific task. All agents share a common infrastructure layer
                   that handles API communication, configuration management, and guardrails
                   enforcement. This modular approach allows for independent optimization and
@@ -661,7 +661,7 @@ export default function AITeamPage() {
                       <div>
                         <h5 className="font-bold text-lg">Calculate Your Time Savings</h5>
                         <p className="text-violet-100 text-sm">
-                          See how much time your team could save with RotoWrite&apos;s AI agents
+                          See how much time your team could save with Forge&apos;s AI agents
                         </p>
                       </div>
                     </div>
@@ -679,7 +679,7 @@ export default function AITeamPage() {
               </h2>
 
               <p className="text-text-secondary leading-relaxed mb-8">
-                When you create content in RotoWrite, multiple agents collaborate behind the
+                When you create content in Forge, multiple agents collaborate behind the
                 scenes. The diagram below shows how data flows between agents during a typical
                 content generation workflow.
               </p>
@@ -927,7 +927,7 @@ export default function AITeamPage() {
                 <div className="p-4">
                   <Image
                     src="/images/guide/admin-agent-config.png"
-                    alt="RotoWrite Admin Dashboard showing AI Agent Configuration interface with system instructions, temperature slider, max tokens, model selection, and guardrails for the Content Generation agent"
+                    alt="Forge Admin Dashboard showing AI Agent Configuration interface with system instructions, temperature slider, max tokens, model selection, and guardrails for the Content Generation agent"
                     width={1200}
                     height={800}
                     className="rounded-lg border border-border-default w-full"
@@ -1388,7 +1388,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...`}</code>
                         Zero GDC Internal Data Usage
                       </h3>
                       <p className="text-lg text-emerald-50 leading-relaxed mb-4">
-                        RotoWrite operates completely independently from GDC&apos;s internal
+                        Forge operates completely independently from GDC&apos;s internal
                         systems and data. The application uses <strong>no GDC internal data</strong> whatsoever.
                       </p>
                       <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
@@ -1707,7 +1707,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...`}</code>
                   Back to User Guide
                 </Link>
                 <p className="text-sm text-text-tertiary">
-                  RotoWrite AI Team Architecture Documentation
+                  Forge AI Team Architecture Documentation
                 </p>
               </div>
             </footer>

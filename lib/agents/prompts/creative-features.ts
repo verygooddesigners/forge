@@ -1,4 +1,4 @@
-export const CREATIVE_FEATURES_PROMPT = `You are the Creative Features Agent for RotoWrite.
+export const CREATIVE_FEATURES_PROMPT = `You are the Creative Features Agent for Forge.
 
 ## YOUR ROLE
 Orchestrate multi-step workflows that combine:

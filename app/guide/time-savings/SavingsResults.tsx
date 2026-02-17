@@ -36,7 +36,7 @@ export default function SavingsResults({ results, inputs }: SavingsResultsProps)
             <div className="bg-emerald-500 rounded-full p-1.5">
               <TrendingDown className="h-4 w-4 text-white" />
             </div>
-            <h3 className="font-semibold text-emerald-800">With RotoWrite</h3>
+            <h3 className="font-semibold text-emerald-800">With Forge</h3>
           </div>
           <div className="text-4xl font-bold text-emerald-700 mb-1">
             {results.newWeeklyHours.toFixed(1)} hrs
@@ -52,7 +52,7 @@ export default function SavingsResults({ results, inputs }: SavingsResultsProps)
           {/* Current Time Bar */}
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span className="text-slate-600">Without RotoWrite</span>
+              <span className="text-slate-600">Without Forge</span>
               <span className="font-mono font-semibold text-slate-700">
                 {results.currentWeeklyHours.toFixed(1)} hrs
               </span>
@@ -65,10 +65,10 @@ export default function SavingsResults({ results, inputs }: SavingsResultsProps)
             </div>
           </div>
 
-          {/* With RotoWrite Bar */}
+          {/* With Forge Bar */}
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span className="text-emerald-700 font-medium">With RotoWrite</span>
+              <span className="text-emerald-700 font-medium">With Forge</span>
               <span className="font-mono font-semibold text-emerald-700">
                 {results.newWeeklyHours.toFixed(1)} hrs
               </span>

@@ -36,18 +36,18 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
 
   const guideContent: Record<string, { title: string; content: React.JSX.Element }> = {
     'getting-started': {
-      title: 'Getting Started with RotoWrite',
+      title: 'Getting Started with Forge',
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed">
-            Welcome to RotoWrite! This guide will help you master the art of creating AI-powered, 
+            Welcome to Forge! This guide will help you master the art of creating AI-powered, 
             SEO-optimized content that maintains your unique voice and style.
           </p>
 
           <div className="bg-violet-50 border-l-4 border-primary p-6 rounded-r-lg">
-            <h3 className="text-lg font-semibold mb-3 text-primary">What Makes RotoWrite Different?</h3>
+            <h3 className="text-lg font-semibold mb-3 text-primary">What Makes Forge Different?</h3>
             <p className="leading-relaxed">
-              RotoWrite combines three powerful elements to create content that's both SEO-optimized 
+              Forge combines three powerful elements to create content that's both SEO-optimized 
               and authentically written in your voice: <strong>Writer Models</strong>, <strong>SEO Packages</strong>, 
               and <strong>Briefs</strong>. This unique combination ensures your content ranks well while 
               maintaining your personal style.
@@ -105,7 +105,7 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
           <h3 className="text-xl font-semibold mt-8 mb-4">How It All Works Together</h3>
           
           <p className="leading-relaxed mb-4">
-            When you create content in RotoWrite, the AI combines:
+            When you create content in Forge, the AI combines:
           </p>
 
           <ol className="list-decimal list-inside space-y-3 ml-4">
@@ -135,7 +135,7 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
           <h3 className="text-xl font-semibold mb-4">Creating Your Account</h3>
           
           <p className="leading-relaxed">
-            To get started with RotoWrite, you'll need to register for an account and have it verified 
+            To get started with Forge, you'll need to register for an account and have it verified 
             by an administrator.
           </p>
 
@@ -613,7 +613,7 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
             <h4 className="font-semibold mb-3">Why the SEO Package Matters</h4>
             <p className="leading-relaxed text-sm">
               The SEO Package ensures that your content is optimized for search engines from the start. 
-              By combining your target keywords with AI analysis and Writer Model training, RotoWrite creates 
+              By combining your target keywords with AI analysis and Writer Model training, Forge creates 
               content that ranks well while still sounding natural and authentic to your voice.
             </p>
           </div>
@@ -819,7 +819,7 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
               Powered by Advanced AI Analysis
             </h4>
             <p className="leading-relaxed text-sm">
-              RotoWrite now features a centralized <strong>SEO Engine</strong> that powers all optimization features. 
+              Forge now features a centralized <strong>SEO Engine</strong> that powers all optimization features. 
               This sophisticated system combines traditional SEO metrics with AI-powered analysis from Claude to provide 
               comprehensive, intelligent content optimization.
             </p>
@@ -886,7 +886,7 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
             <p className="text-sm text-green-800 leading-relaxed">
               The SEO Engine is designed to evolve with the latest SEO best practices and AI capabilities. 
               As search algorithms change and new optimization techniques emerge, the Engine can be updated 
-              without changing how you use RotoWrite—your workflow stays the same while the intelligence behind 
+              without changing how you use Forge—your workflow stays the same while the intelligence behind 
               it gets better.
             </p>
           </div>
@@ -899,7 +899,7 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed">
-            Content generation in RotoWrite is where the magic happens – combining your Writer Model, 
+            Content generation in Forge is where the magic happens – combining your Writer Model, 
             SEO Package, and Brief to create optimized content that sounds authentically like you.
           </p>
 
@@ -1048,7 +1048,7 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
           <div className="bg-violet-50 border-l-4 border-primary p-6 rounded-r-lg mt-8">
             <h4 className="font-semibold mb-3">Why This Approach Works</h4>
             <p className="text-sm leading-relaxed mb-2">
-              Traditional AI content often sounds generic and doesn't follow specific structures. RotoWrite 
+              Traditional AI content often sounds generic and doesn't follow specific structures. Forge 
               solves this by:
             </p>
             <ul className="text-sm space-y-2 mt-3">
@@ -1079,14 +1079,14 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed">
-            After generating content, RotoWrite's real-time SEO analysis guides your editing process. 
+            After generating content, Forge's real-time SEO analysis guides your editing process. 
             Every change you make is instantly reflected in the SEO Wizard metrics.
           </p>
 
           <h3 className="text-xl font-semibold mt-8 mb-4">The Editor</h3>
 
           <p className="leading-relaxed mb-4">
-            RotoWrite uses TipTap, a powerful rich text editor that supports:
+            Forge uses TipTap, a powerful rich text editor that supports:
           </p>
 
           <div className="grid md:grid-cols-2 gap-4">
@@ -1326,13 +1326,13 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed font-semibold text-primary">
-            Follow this step-by-step walkthrough to create your first piece of optimized content in RotoWrite.
+            Follow this step-by-step walkthrough to create your first piece of optimized content in Forge.
           </p>
 
           <div className="bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-lg p-6 my-8">
             <h3 className="text-2xl font-bold mb-2">Let's Create Content!</h3>
             <p className="text-violet-100">
-              This walkthrough assumes you've registered, been approved, and are logged into RotoWrite.
+              This walkthrough assumes you've registered, been approved, and are logged into Forge.
             </p>
           </div>
 
@@ -1606,7 +1606,7 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
             <h3 className="text-2xl font-bold mb-3">🎉 Congratulations!</h3>
             <p className="text-green-50 text-lg">
               You've created your first piece of SEO-optimized content that maintains your authentic voice. 
-              The more you use RotoWrite, the better your Writer Models become, and the faster your workflow gets.
+              The more you use Forge, the better your Writer Models become, and the faster your workflow gets.
             </p>
             <p className="text-green-100 mt-4">
               Now create more content, experiment with different briefs, and watch your productivity soar!
@@ -1634,7 +1634,7 @@ export function UserGuideModal({ open, onOpenChange }: UserGuideModalProps) {
                 User Guide
               </DialogTitle>
               <DialogDescription className="text-sm">
-                Everything you need to master RotoWrite
+                Everything you need to master Forge
               </DialogDescription>
             </DialogHeader>
             

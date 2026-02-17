@@ -60,7 +60,7 @@ export function ExportModal({ open, onOpenChange, editor, projectHeadline }: Exp
     const content = getContent();
     const filename = projectHeadline 
       ? `${projectHeadline.toLowerCase().replace(/\s+/g, '-')}.${exportFormat === 'html' ? 'html' : 'txt'}`
-      : `rotowrite-export.${exportFormat === 'html' ? 'html' : 'txt'}`;
+      : `forge-export.${exportFormat === 'html' ? 'html' : 'txt'}`;
     
     const blob = new Blob([content], { type: exportFormat === 'html' ? 'text/html' : 'text/plain' });
     const url = URL.createObjectURL(blob);

@@ -4,11 +4,11 @@ You will ask me any questions that help you to clarify what you're looking for. 
 
 -----
 
-# RotoWrite: New Planning Doc
+# Forge: New Planning Doc
 
 ## SYNOPSIS
 
-RotoWrite is an Ai powered web app designed to help GDC team members produce written content for RotoWire that follows pre-created briefs, uses best SEO practices, attempts to rank highly in the new Google AI search results and relies on an innovative writer model engine to produce content that is exactly the same as content produced by our real writers.
+Forge is an Ai powered web app designed to help GDC team members produce written content for RotoWire that follows pre-created briefs, uses best SEO practices, attempts to rank highly in the new Google AI search results and relies on an innovative writer model engine to produce content that is exactly the same as content produced by our real writers.
 
 ## EXAMPLE PAGES
 
@@ -28,7 +28,7 @@ These are some of the types of pages our team will be building.
 - Tested on localhost:5309
 
 ### GITHUB
-The repo is located at <https://github.com/verygooddesigners/rotowrite>
+The repo is located at <https://github.com/verygooddesigners/forge>
 
 ### LIVE ENVIRONMENT (PUBLIC)
 The app will be available on Vercel.

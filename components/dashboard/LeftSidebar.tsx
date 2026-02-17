@@ -151,7 +151,7 @@ export function LeftSidebar({ user, projectId, onOpenProjectModal, onOpenWriterF
     <div className="w-64 bg-white rounded-lg shadow-lg flex flex-col p-4 overflow-y-auto">
       {/* Logo */}
       <div className="mb-4">
-        <h1 className="text-2xl font-extrabold text-primary">RotoWrite</h1>
+        <h1 className="text-2xl font-extrabold text-primary">Forge</h1>
       </div>
 
       {/* Project Info Section */}

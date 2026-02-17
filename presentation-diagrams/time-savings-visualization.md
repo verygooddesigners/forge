@@ -1,21 +1,21 @@
-# RotoWrite Time Savings Visualization
+# Forge Time Savings Visualization
 
 ## Time Reduction by Content Type
 
 ```mermaid
 graph LR
     subgraph "New Articles"
-        A1[Traditional: 60 min] --> A2[RotoWrite: 25 min]
+        A1[Traditional: 60 min] --> A2[Forge: 25 min]
         A2 -.->|58% Faster| A3[35 min saved]
     end
     
     subgraph "Update Articles"
-        B1[Traditional: 10 min] --> B2[RotoWrite: 4 min]
+        B1[Traditional: 10 min] --> B2[Forge: 4 min]
         B2 -.->|60% Faster| B3[6 min saved]
     end
     
     subgraph "Complex Articles"
-        C1[Traditional: 120 min] --> C2[RotoWrite: 20 min]
+        C1[Traditional: 120 min] --> C2[Forge: 20 min]
         C2 -.->|83% Faster| C3[100 min saved]
     end
     
@@ -40,11 +40,11 @@ graph LR
 - **5 Complex Articles** @ 120 min each = 600 min (10 hours)
 - **Total Traditional Time:** 2,100 minutes = **35 hours per week**
 
-### With RotoWrite
+### With Forge
 - **20 New Articles** @ 25 min each = 500 min (8.3 hours)
 - **30 Update Articles** @ 4 min each = 120 min (2 hours)
 - **5 Complex Articles** @ 20 min each = 100 min (1.7 hours)
-- **Total RotoWrite Time:** 720 minutes = **12 hours per week**
+- **Total Forge Time:** 720 minutes = **12 hours per week**
 
 ### Time Saved
 - **Per Week:** 23 hours (66% reduction)
@@ -61,7 +61,7 @@ graph LR
 ## Capacity Impact Visualization
 
 ```mermaid
-pie title "Weekly Team Hours - Before RotoWrite"
+pie title "Weekly Team Hours - Before Forge"
     "Content Creation" : 35
     "Editing & Review" : 20
     "Research & Planning" : 15
@@ -71,7 +71,7 @@ pie title "Weekly Team Hours - Before RotoWrite"
 ```
 
 ```mermaid
-pie title "Weekly Team Hours - With RotoWrite"
+pie title "Weekly Team Hours - With Forge"
     "Content Creation" : 12
     "Editing & Review" : 18
     "Research & Planning" : 10
@@ -91,7 +91,7 @@ pie title "Weekly Team Hours - With RotoWrite"
 
 **FTE Equivalent = 75 hours / 40 hours = 1.875 FTE**
 
-**Translation:** RotoWrite frees up the equivalent of nearly **2 full-time positions** worth of capacity every week.
+**Translation:** Forge frees up the equivalent of nearly **2 full-time positions** worth of capacity every week.
 
 **Annual Value at $50/hour fully loaded cost:**
 - 3,900 hours saved × $50/hour = **$195,000**
@@ -102,7 +102,7 @@ pie title "Weekly Team Hours - With RotoWrite"
 
 ```mermaid
 gantt
-    title Time Saved Per Month with RotoWrite
+    title Time Saved Per Month with Forge
     dateFormat X
     axisFormat %H hours
     
@@ -137,7 +137,7 @@ gantt
 - SEO optimization: 10 min
 - Editing & revision: 5 min
 
-**RotoWrite Process:**
+**Forge Process:**
 - Create project & generate: 5 min
 - Review AI draft: 10 min
 - Edit & refine: 8 min
@@ -155,7 +155,7 @@ gantt
 - SEO re-check: 3 min
 - Re-publish: 2 min
 
-**RotoWrite Process:**
+**Forge Process:**
 - Open project: 1 min
 - Edit with AI assistance: 2 min
 - SEO Wizard instant check: 1 min
@@ -175,7 +175,7 @@ gantt
 - Format headers/sections: 10 min
 - Write predictions: 10 min
 
-**RotoWrite Process:**
+**Forge Process:**
 - Upload ESPN screenshot: 1 min
 - Upload odds screenshots: 1 min
 - AI extraction & generation: 3 min
@@ -208,12 +208,12 @@ graph LR
 
 ### Content Output Capacity
 
-**Before RotoWrite:**
+**Before Forge:**
 - 6 strategists
 - 55 articles per week (team total)
 - ~9 articles per person per week
 
-**With RotoWrite (same 6 people):**
+**With Forge (same 6 people):**
 - Same 6 strategists
 - **88 articles per week** (60% increase)
 - ~15 articles per person per week
@@ -229,7 +229,7 @@ graph LR
 
 ## Break-Even Analysis
 
-### Cost to Operate RotoWrite
+### Cost to Operate Forge
 - **Monthly:** ~$50
 - **Annual:** ~$600
 
@@ -260,7 +260,7 @@ Every $1 spent returns $325 in value.
 - **Total First-Year Cost:** ~$200,000
 - **Ongoing Annual Cost:** ~$180,000
 
-### Option 2: Deploy RotoWrite
+### Option 2: Deploy Forge
 - **First-Year Cost:** $600
 - **Training Time:** 1 hour per user
 - **Capacity Equivalent:** 1.875 FTE
@@ -274,7 +274,7 @@ Every $1 spent returns $325 in value.
 
 ```mermaid
 gantt
-    title Time-to-Value: Hiring vs RotoWrite
+    title Time-to-Value: Hiring vs Forge
     dateFormat YYYY-MM-DD
     
     section Hiring 2 FTE
@@ -283,14 +283,14 @@ gantt
     Onboarding & Training        :2024-04-01, 90d
     Full Productivity            :2024-07-01, 1d
     
-    section RotoWrite
+    section Forge
     Setup & Configuration        :2024-01-01, 1d
     Team Training                :2024-01-02, 1d
     Full Productivity            :2024-01-03, 1d
 ```
 
 **Hiring Path:** 6 months to full productivity
-**RotoWrite Path:** 2 days to full productivity
+**Forge Path:** 2 days to full productivity
 
 ---
 
@@ -303,4 +303,4 @@ gantt
 5. **Measurable:** Easy to track and quantify ROI
 6. **Low Risk:** Minimal cost, instant break-even, easy rollback
 
-**Bottom Line:** RotoWrite delivers the capacity equivalent of 2 FTE positions at a fraction of the cost of hiring, with immediate time-to-value.
+**Bottom Line:** Forge delivers the capacity equivalent of 2 FTE positions at a fraction of the cost of hiring, with immediate time-to-value.

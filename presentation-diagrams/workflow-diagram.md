@@ -1,4 +1,4 @@
-# RotoWrite Content Creation Workflow
+# Forge Content Creation Workflow
 
 ```mermaid
 flowchart LR
@@ -22,11 +22,11 @@ flowchart LR
     style I fill:#10b981,stroke:#059669,color:#fff
 ```
 
-## Traditional Workflow vs RotoWrite
+## Traditional Workflow vs Forge
 
 ```mermaid
 gantt
-    title Time Comparison: Traditional vs RotoWrite
+    title Time Comparison: Traditional vs Forge
     dateFormat X
     axisFormat %M min
     
@@ -37,7 +37,7 @@ gantt
     Editing & Revisions       :55, 15
     Formatting for CMS        :70, 5
     
-    section RotoWrite
+    section Forge
     Create Project            :0, 2
     Auto-Research (NewsEngine):2, 1
     AI Generation             :3, 3
@@ -47,7 +47,7 @@ gantt
 ```
 
 **Traditional Process:** 75 minutes average
-**RotoWrite Process:** 19 minutes average
+**Forge Process:** 19 minutes average
 **Time Saved:** 56 minutes (75% reduction)
 
 ---

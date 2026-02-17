@@ -1,8 +1,8 @@
-# RotoWrite Presentation - Quick Start Guide
+# Forge Presentation - Quick Start Guide
 
 ## 🎯 What You Have
 
-✅ **Complete 25-slide presentation outline** (`RotoWrite-Presentation-Outline.md`)
+✅ **Complete 25-slide presentation outline** (`Forge-Presentation-Outline.md`)
 ✅ **5 comprehensive diagram documents** with Mermaid charts (in `presentation-diagrams/`)
 ✅ **Detailed documentation** for all visual materials
 ✅ **Statistics and talking points** ready to use
@@ -15,7 +15,7 @@
 ### Step 1: Open the Main Outline (5 min)
 ```bash
 # File location:
-/RotoWrite/RotoWrite-Presentation-Outline.md
+/Forge/Forge-Presentation-Outline.md
 ```
 
 - Read through all 25 slides
@@ -107,7 +107,7 @@
 "I'm going to show you how we can free up 75 hours of our content team's time every week—equivalent to nearly 2 full-time positions—for less than $600 a year. That's a 32,400% return on investment."
 
 **Setup:**
-"Our team built RotoWrite, an AI-powered content engine specifically designed for our sports betting content. It's been in production for months, it works, and it's ready to roll out to the entire team today."
+"Our team built Forge, an AI-powered content engine specifically designed for our sports betting content. It's been in production for months, it works, and it's ready to roll out to the entire team today."
 
 **Preview:**
 "In the next 30 minutes, I'll show you how it works, what it can do, and why deploying it immediately is one of the highest-ROI decisions we can make this year."
@@ -117,7 +117,7 @@
 ## 🎤 Your Closing (Last 2 Minutes)
 
 **Summary:**
-"To recap: RotoWrite saves 3,900 hours annually, delivers $195,000 in capacity value, and costs just $600 per year. The break-even point is 1.1 days. The risk is negligible, the upside is massive."
+"To recap: Forge saves 3,900 hours annually, delivers $195,000 in capacity value, and costs just $600 per year. The break-even point is 1.1 days. The risk is negligible, the upside is massive."
 
 **Recommendation:**
 "I'm recommending we approve immediate team-wide rollout. The system is production-ready, training takes one hour per user, and we can start seeing results within the first week."
@@ -169,7 +169,7 @@
 → "The Writer Engine replicates individual voice with 95% accuracy. In blind tests, editors couldn't distinguish AI-assisted from human-written."
 
 **"Why not just hire more people?"**
-→ "Hiring 2 people costs $200,000/year and takes 6 months to full productivity. RotoWrite costs $600/year and reaches full productivity in 2 days."
+→ "Hiring 2 people costs $200,000/year and takes 6 months to full productivity. Forge costs $600/year and reaches full productivity in 2 days."
 
 **"What's the risk?"**
 → "Minimal. $600/year cost, no vendor lock-in, can cancel anytime. Break-even in 1.1 days means downside is negligible."
@@ -182,7 +182,7 @@
 - [ ] Keynote/PowerPoint deck with 25 slides
 - [ ] Generated diagrams from Mermaid
 - [ ] Screenshots from production app
-- [ ] Backup: Live demo ready at https://rotowrite.vercel.app
+- [ ] Backup: Live demo ready at https://forge.vercel.app
 
 ### Leave-Behind Materials:
 - [ ] One-page ROI summary
@@ -202,9 +202,9 @@
 
 ### Create a 10-Slide Executive Summary:
 
-1. **Title Slide** - RotoWrite: AI-Powered Content Engine
+1. **Title Slide** - Forge: AI-Powered Content Engine
 2. **The Problem** - Content bottleneck, time constraints
-3. **The Solution** - RotoWrite overview
+3. **The Solution** - Forge overview
 4. **Time Savings** - 58-83% faster, 75 hrs/week saved
 5. **ROI** - 32,400% return, $195K value vs $600 cost
 6. **Key Features** - Writer Engine, 7 AI agents, SmartBrief
@@ -219,7 +219,7 @@ Use the same statistics and talking points from the full presentation.
 
 ## 📱 Backup: The Elevator Pitch (30 seconds)
 
-"We built RotoWrite, an AI content engine that makes our strategists 60-80% faster. It learns each writer's voice so the content is authentic, not generic. It saves our 6-person team 75 hours every week—equivalent to 2 full-time positions. Cost is $600/year. ROI is over 32,000%. It's production-ready today. I'm asking for approval to roll it out to the full team."
+"We built Forge, an AI content engine that makes our strategists 60-80% faster. It learns each writer's voice so the content is authentic, not generic. It saves our 6-person team 75 hours every week—equivalent to 2 full-time positions. Cost is $600/year. ROI is over 32,000%. It's production-ready today. I'm asking for approval to roll it out to the full team."
 
 ---
 
@@ -237,7 +237,7 @@ Use the same statistics and talking points from the full presentation.
 **1 Hour Before:**
 - [ ] Test presentation laptop and projector
 - [ ] Load backup on USB drive
-- [ ] Have production URL ready: https://rotowrite.vercel.app
+- [ ] Have production URL ready: https://forge.vercel.app
 - [ ] Bring printed notes
 - [ ] Review key statistics one more time
 
@@ -263,11 +263,11 @@ Use the same statistics and talking points from the full presentation.
 
 ## 📁 File Reference
 
-All materials are in your RotoWrite directory:
+All materials are in your Forge directory:
 
 ```
-/RotoWrite/
-├── RotoWrite-Presentation-Outline.md          ← START HERE (25 slides)
+/Forge/
+├── Forge-Presentation-Outline.md          ← START HERE (25 slides)
 ├── PRESENTATION-MATERIALS-SUMMARY.md          ← Full guide to all materials
 ├── PRESENTATION-QUICK-START.md                ← This file
 └── presentation-diagrams/
@@ -283,7 +283,7 @@ All materials are in your RotoWrite directory:
 
 ## 🚀 Bottom Line
 
-You have everything you need to deliver a compelling, data-driven presentation that demonstrates RotoWrite's exceptional value. The ROI is undeniable (32,400%), the time savings are dramatic (75 hours/week), and the system is production-ready today.
+You have everything you need to deliver a compelling, data-driven presentation that demonstrates Forge's exceptional value. The ROI is undeniable (32,400%), the time savings are dramatic (75 hours/week), and the system is production-ready today.
 
 **Your goal:** Get approval for immediate team-wide rollout.
 

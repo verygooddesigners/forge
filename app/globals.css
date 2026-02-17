@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  /* RotoWrite - Light Theme with Purple Accent */
+  /* Forge - Light Theme with Purple Accent */
   
   /* Background Layers - Light Mode */
   --color-bg-deepest: #ffffff;

@@ -1,10 +1,10 @@
-# RotoWrite Tools/Plugins Marketplace System
+# Forge Tools/Plugins Marketplace System
 
-A WordPress-style plugin ecosystem for RotoWrite that enables developers to create, submit, and publish custom tools that extend the platform's functionality.
+A WordPress-style plugin ecosystem for Forge that enables developers to create, submit, and publish custom tools that extend the platform's functionality.
 
 ## Overview
 
-The RotoWrite Tools system allows developers (including those using AI coding assistants) to build full-stack plugins that integrate seamlessly with RotoWrite. Tools are submitted via GitHub repositories, reviewed by admins, and published to a marketplace where users can discover and install them.
+The Forge Tools system allows developers (including those using AI coding assistants) to build full-stack plugins that integrate seamlessly with Forge. Tools are submitted via GitHub repositories, reviewed by admins, and published to a marketplace where users can discover and install them.
 
 ## Architecture
 
@@ -128,8 +128,8 @@ Every tool must include a `tool-manifest.json` file:
 ### 1. Create Your Tool
 
 ```bash
-mkdir rotowrite-my-tool
-cd rotowrite-my-tool
+mkdir forge-my-tool
+cd forge-my-tool
 git init
 
 # Create manifest
@@ -144,7 +144,7 @@ EOF
 
 ### 2. Build Your Tool
 
-- Create React components using RotoWrite's design system
+- Create React components using Forge's design system
 - Add API routes if needed
 - Request only necessary permissions
 - Test thoroughly
@@ -152,7 +152,7 @@ EOF
 ### 3. Submit for Review
 
 1. Push to GitHub (public repository)
-2. Visit `/tools/submit` in RotoWrite
+2. Visit `/tools/submit` in Forge
 3. Enter your GitHub repository URL
 4. Wait for admin approval
 

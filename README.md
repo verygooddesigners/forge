@@ -1,4 +1,4 @@
-# RotoWrite
+# Forge
 
 AI-powered content creation platform with RAG-based writer models, brief builder, and SEO optimization.
 
@@ -163,7 +163,7 @@ BETA_SIGNUP_TOKEN=your-secret-invite-token
 
 Deploy to Vercel in one click:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/verygooddesigners/rotowrite)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/verygooddesigners/forge)
 
 Or follow the [Deployment Guide](DEPLOYMENT.md) for manual setup.
 
@@ -264,6 +264,6 @@ Built with:
 
 ---
 
-**RotoWrite** - AI-Powered Content Creation Platform  
+**Forge** - AI-Powered Content Creation Platform  
 Version v1.01.01 | Built with ❤️ for RotoWire
 # Test webhook trigger

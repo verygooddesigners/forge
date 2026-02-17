@@ -1,8 +1,8 @@
-# RotoWrite Multi-Agent System: AI Models & API Requirements
+# Forge Multi-Agent System: AI Models & API Requirements
 
 ## Overview
 
-RotoWrite is transitioning from a single-AI-model architecture to a specialized multi-agent system. Each agent uses the optimal AI model for its specific function, improving quality, performance, and cost efficiency.
+Forge is transitioning from a single-AI-model architecture to a specialized multi-agent system. Each agent uses the optimal AI model for its specific function, improving quality, performance, and cost efficiency.
 
 ## Required API Keys & Services
 

@@ -50,7 +50,7 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
             Back to Dashboard
           </Button>
           <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-          <p className="text-gray-600 mt-1">Customize your RotoWrite experience</p>
+          <p className="text-gray-600 mt-1">Customize your Forge experience</p>
         </div>
 
         <div className="space-y-6">

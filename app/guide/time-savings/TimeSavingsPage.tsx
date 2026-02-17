@@ -112,7 +112,7 @@ export default function TimeSavingsPage() {
     const currentComplexTime = inputs.complexArticles * inputs.complexTime;
     const currentTotalMinutes = currentNewTime + currentUpdateTime + currentComplexTime;
 
-    // Time with RotoWrite (weekly, in minutes)
+    // Time with Forge (weekly, in minutes)
     const newNewTime = inputs.newArticles * (inputs.newTime * NEW_REDUCTION);
     const newUpdateTime = inputs.updateArticles * (inputs.updateTime * UPDATE_REDUCTION);
     const newComplexTime = inputs.complexArticles * (inputs.complexTime * COMPLEX_REDUCTION);
@@ -250,7 +250,7 @@ export default function TimeSavingsPage() {
 
               <div className="prose prose-invert max-w-none">
                 <p className="text-lg leading-relaxed">
-                  RotoWrite&apos;s multi-agent AI system dramatically reduces the time needed to
+                  Forge&apos;s multi-agent AI system dramatically reduces the time needed to
                   create high-quality, SEO-optimized content. Use this calculator to see exactly how
                   much time your team could reclaim each week, month, and year.
                 </p>
@@ -393,7 +393,7 @@ export default function TimeSavingsPage() {
                           Current Time (hrs/week)
                         </th>
                         <th className="text-right py-3 px-4 font-semibold text-text-secondary border-b">
-                          With RotoWrite
+                          With Forge
                         </th>
                         <th className="text-right py-3 px-4 font-semibold text-text-secondary border-b">
                           Time Saved
@@ -480,7 +480,7 @@ export default function TimeSavingsPage() {
                   <ArrowLeft className="h-4 w-4" />
                   Back to User Guide
                 </Link>
-                <p className="text-sm text-text-tertiary">RotoWrite Time Savings Calculator</p>
+                <p className="text-sm text-text-tertiary">Forge Time Savings Calculator</p>
               </div>
             </footer>
           </main>

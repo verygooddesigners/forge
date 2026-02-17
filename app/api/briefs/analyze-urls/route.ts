@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       try {
         const response = await fetch(url, {
           headers: {
-            'User-Agent': 'Mozilla/5.0 (compatible; RotoWrite/1.0; +https://rotowrite.com)',
+            'User-Agent': 'Mozilla/5.0 (compatible; Forge/1.0; +https://forge.com)',
           },
           signal: AbortSignal.timeout(10000), // 10 second timeout per URL
         });

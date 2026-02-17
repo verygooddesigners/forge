@@ -22,7 +22,7 @@ export function AIHelperWidget() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'Hi! I\'m here to help you with RotoWrite. Ask me anything about features, troubleshooting, or best practices.',
+      content: 'Hi! I\'m here to help you with Forge. Ask me anything about features, troubleshooting, or best practices.',
     },
   ]);
   const [input, setInput] = useState('');

@@ -3,10 +3,10 @@
   "slug": "example-tool",
   "version": "1.0.0",
   "description": {
-    "short": "A simple example tool to demonstrate the RotoWrite Tools system",
-    "long": "This is an example tool that demonstrates how to build RotoWrite Tools. It shows basic UI patterns, permission usage, and data storage."
+    "short": "A simple example tool to demonstrate the Forge Tools system",
+    "long": "This is an example tool that demonstrates how to build Forge Tools. It shows basic UI patterns, permission usage, and data storage."
   },
-  "author": "RotoWrite Team",
+  "author": "Forge Team",
   "permissions": [
     "projects.read"
   ],

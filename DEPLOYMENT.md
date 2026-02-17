@@ -1,8 +1,8 @@
-# RotoWrite Deployment Guide
+# Forge Deployment Guide
 
 ## Prerequisites
 
-Before deploying RotoWrite, ensure you have:
+Before deploying Forge, ensure you have:
 
 1. A Supabase project set up (see `supabase/SETUP.md`)
 2. API keys for:
@@ -64,7 +64,7 @@ Follow the instructions in `supabase/SETUP.md` to:
 
 ### One-Click Deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/verygooddesigners/rotowrite)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/verygooddesigners/forge)
 
 ### Manual Deployment
 

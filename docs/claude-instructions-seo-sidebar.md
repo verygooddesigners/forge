@@ -1,7 +1,7 @@
 # Instructions for Claude: Build SEO Optimization Right Sidebar
 
 ## Task
-Build a comprehensive SEO optimization sidebar component for RotoWrite that matches the reference screenshot exactly. Replace the current SEO Assistant tab content in the RightSidebar component.
+Build a comprehensive SEO optimization sidebar component for Forge that matches the reference screenshot exactly. Replace the current SEO Assistant tab content in the RightSidebar component.
 
 ## Reference Screenshot Analysis
 
@@ -100,7 +100,7 @@ The sidebar contains these sections (top to bottom):
 
 ### Styling
 
-- **Colors:** Use RotoWrite primary purple/violet (`hsl(var(--primary))`)
+- **Colors:** Use Forge primary purple/violet (`hsl(var(--primary))`)
 - **Custom colors:** Green/Yellow/Red shades that match purple theme (not standard colors)
 - **Font:** Inter, weight 400 (body), 600-800 (headings)
 - **Dividing lines:** 1px, soft purple, padding above/below
@@ -139,7 +139,7 @@ EditorPanel (content)
 2. **Gauge component** - Semi-circular score gauge (SVG or library)
 3. **API endpoint enhancements** - Update `/api/seo/analyze`, create new endpoints
 4. **Integration** - Update RightSidebar to use new component
-5. **Styling** - Match screenshot exactly with RotoWrite design system
+5. **Styling** - Match screenshot exactly with Forge design system
 
 ## Testing
 
@@ -154,7 +154,7 @@ EditorPanel (content)
 
 - Match screenshot design exactly
 - Use existing Shadcn UI components and Tailwind CSS
-- Follow RotoWrite code patterns and conventions
+- Follow Forge code patterns and conventions
 - Ensure good performance (debounce, memoization)
 - Make accessible (keyboard nav, ARIA labels)
 

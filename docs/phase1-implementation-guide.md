@@ -1,8 +1,8 @@
-# RotoWrite Phase 1: Multi-Agent System Implementation Guide
+# Forge Phase 1: Multi-Agent System Implementation Guide
 
 ## Overview
 
-This document contains everything needed to implement the Multi-Agent System transition for RotoWrite. Use this guide to start implementation in a new chat session.
+This document contains everything needed to implement the Multi-Agent System transition for Forge. Use this guide to start implementation in a new chat session.
 
 **Goal:** Transition from single-AI-model architecture to a 7-agent system with specialized roles, guardrails, and an admin tuner interface.
 
@@ -512,7 +512,7 @@ git checkout -b feature/multi-agent-system
 
 ### Content Generation Agent
 ```
-You are the Content Generation Agent for RotoWrite.
+You are the Content Generation Agent for Forge.
 
 ## YOUR ROLE
 Generate high-quality, SEO-optimized articles based on:
@@ -603,5 +603,5 @@ Output content in clean HTML suitable for TipTap editor:
 
 When starting a new chat, say:
 
-> "I want to implement Phase 1 of the RotoWrite multi-agent system. Please read `docs/phase1-implementation-guide.md` for the complete implementation guide, then start by creating the feature branch."
+> "I want to implement Phase 1 of the Forge multi-agent system. Please read `docs/phase1-implementation-guide.md` for the complete implementation guide, then start by creating the feature branch."
 

@@ -1,4 +1,4 @@
-// Core type definitions for RotoWrite
+// Core type definitions for Forge
 
 export type UserRole = 'admin' | 'strategist' | 'editor';
 export type AccountStatus = 'pending' | 'strategist' | 'editor' | 'admin';

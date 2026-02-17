@@ -202,7 +202,7 @@ export function ArchitectureVisualization() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-text-primary">
-              RotoWrite System Architecture
+              Forge System Architecture
             </h1>
             <p className="text-sm text-text-secondary mt-1">
               Interactive visualization of components, agents, and data flows

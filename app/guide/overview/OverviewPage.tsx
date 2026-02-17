@@ -119,7 +119,7 @@ export default function OverviewPage() {
               <div className="mb-12">
                 <h1 className="text-4xl font-bold text-text-primary mb-4 flex items-center gap-3">
                   <Sparkles className="h-10 w-10 text-accent-primary" />
-                  RotoWrite: Application Overview
+                  Forge: Application Overview
                 </h1>
                 <p className="text-xl text-text-secondary leading-relaxed">
                   AI-powered content creation platform designed specifically for sports betting and gaming content production
@@ -134,7 +134,7 @@ export default function OverviewPage() {
                 </h2>
                 <div className="bg-bg-surface rounded-xl p-8 shadow-sm border border-border-default">
                   <p className="text-lg leading-relaxed text-text-secondary">
-                    RotoWrite is an AI-powered content creation platform designed specifically for sports betting and gaming content production at RotoWire. Unlike generic AI writing tools, RotoWrite combines specialized writer modeling, SEO optimization, and intelligent content workflow management into a single, purpose-built application. The platform enables content strategists to produce high-quality, SEO-optimized articles that maintain authentic writer voice and style while dramatically accelerating the content creation process.
+                    Forge is an AI-powered content creation platform designed specifically for sports betting and gaming content production at RotoWire. Unlike generic AI writing tools, Forge combines specialized writer modeling, SEO optimization, and intelligent content workflow management into a single, purpose-built application. The platform enables content strategists to produce high-quality, SEO-optimized articles that maintain authentic writer voice and style while dramatically accelerating the content creation process.
                   </p>
                 </div>
               </section>
@@ -158,7 +158,7 @@ export default function OverviewPage() {
                           Innovative Writer Engine
                         </h3>
                         <p className="text-text-secondary leading-relaxed mb-4">
-                          The platform's standout feature is its innovative <strong>Writer Engine</strong>—a RAG-based (Retrieval-Augmented Generation) AI system that learns and replicates individual writer styles with remarkable precision. Instead of producing generic AI content, RotoWrite trains custom AI models on actual articles written by real strategists, analyzing tone, vocabulary, sentence structure, and stylistic patterns.
+                          The platform's standout feature is its innovative <strong>Writer Engine</strong>—a RAG-based (Retrieval-Augmented Generation) AI system that learns and replicates individual writer styles with remarkable precision. Instead of producing generic AI content, Forge trains custom AI models on actual articles written by real strategists, analyzing tone, vocabulary, sentence structure, and stylistic patterns.
                         </p>
                         <p className="text-text-secondary leading-relaxed">
                           When generating new content, the system retrieves relevant training examples and instructs Claude AI to match the specific writer's voice, producing articles that are virtually indistinguishable from human-written content. This solves the persistent problem of AI-generated content feeling robotic or off-brand—each piece sounds exactly like it came from the credited writer.
@@ -221,7 +221,7 @@ export default function OverviewPage() {
                 
                 <div className="bg-bg-surface rounded-xl p-8 shadow-sm border border-border-default">
                   <p className="text-lg text-text-secondary leading-relaxed mb-6">
-                    RotoWrite transforms content production from a multi-hour manual process into a streamlined, AI-assisted workflow:
+                    Forge transforms content production from a multi-hour manual process into a streamlined, AI-assisted workflow:
                   </p>
 
                   <div className="space-y-4">
@@ -304,7 +304,7 @@ export default function OverviewPage() {
                 
                 <div className="bg-bg-surface rounded-xl p-8 shadow-sm border border-border-default">
                   <p className="text-lg text-text-secondary leading-relaxed mb-6">
-                    Built on a modern tech stack featuring Next.js 14, React 19, Supabase PostgreSQL, and Claude AI (Anthropic's Sonnet model), RotoWrite delivers enterprise-grade performance with sophisticated security features.
+                    Built on a modern tech stack featuring Next.js 14, React 19, Supabase PostgreSQL, and Claude AI (Anthropic's Sonnet model), Forge delivers enterprise-grade performance with sophisticated security features.
                   </p>
 
                   <div className="grid md:grid-cols-2 gap-6">

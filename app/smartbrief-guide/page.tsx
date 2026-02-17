@@ -23,7 +23,7 @@ export default function SmartBriefGuidePage() {
 
   useEffect(() => {
     // Set page title
-    document.title = 'SmartBrief Creation Guide | RotoWrite';
+    document.title = 'SmartBrief Creation Guide | Forge';
     
     // Add meta description
     const metaDescription = document.querySelector('meta[name="description"]');
@@ -56,7 +56,7 @@ export default function SmartBriefGuidePage() {
               <h1 className="text-2xl font-bold text-text-primary">SmartBrief Creation Guide</h1>
             </div>
             <Button asChild>
-              <a href="/">Back to RotoWrite</a>
+              <a href="/">Back to Forge</a>
             </Button>
           </div>
         </div>
@@ -536,7 +536,7 @@ LENGTH: 1200-1500 words total`}
       {/* Footer */}
       <footer className="border-t border-border-default bg-bg-surface py-8 mt-12">
         <div className="container mx-auto px-6 text-center text-text-secondary text-sm">
-          <p>© 2026 RotoWrite. All rights reserved.</p>
+          <p>© 2026 Forge. All rights reserved.</p>
         </div>
       </footer>
     </div>
