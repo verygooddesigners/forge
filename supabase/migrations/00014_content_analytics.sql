@@ -72,7 +72,7 @@ CREATE POLICY "Users can view own analytics events"
 
 CREATE POLICY "Team leaders can view all analytics events"
   ON public.analytics_events FOR SELECT
-  USING (has_minimum_role(auth.uid(), 'team_leader'));
+  USING (has_minimum_role(auth.uid(), 'team_leader'::user_role));
 
 CREATE POLICY "Authenticated users can insert own analytics events"
   ON public.analytics_events FOR INSERT
@@ -83,22 +83,22 @@ ALTER TABLE public.teams ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Team leaders can view teams"
   ON public.teams FOR SELECT
-  USING (has_minimum_role(auth.uid(), 'team_leader'));
+  USING (has_minimum_role(auth.uid(), 'team_leader'::user_role));
 
 CREATE POLICY "Managers can manage teams"
   ON public.teams FOR ALL
-  USING (has_minimum_role(auth.uid(), 'manager'));
+  USING (has_minimum_role(auth.uid(), 'manager'::user_role));
 
 -- team_members
 ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Team leaders can view team members"
   ON public.team_members FOR SELECT
-  USING (has_minimum_role(auth.uid(), 'team_leader'));
+  USING (has_minimum_role(auth.uid(), 'team_leader'::user_role));
 
 CREATE POLICY "Managers can manage team members"
   ON public.team_members FOR ALL
-  USING (has_minimum_role(auth.uid(), 'manager'));
+  USING (has_minimum_role(auth.uid(), 'manager'::user_role));
 
 -- saved_filters
 ALTER TABLE public.saved_filters ENABLE ROW LEVEL SECURITY;
@@ -116,7 +116,7 @@ CREATE POLICY "Users can view shared filters"
 -- ============================================================================
 CREATE POLICY "Team leaders can view all projects for analytics"
   ON public.projects FOR SELECT
-  USING (has_minimum_role(auth.uid(), 'team_leader'));
+  USING (has_minimum_role(auth.uid(), 'team_leader'::user_role));
 
 -- ============================================================================
 -- 6. Triggers for updated_at
