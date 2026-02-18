@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import type { ApproveToolRequest } from '@/types/tools';
+import { canManageTools } from '@/lib/auth-config';
+import { UserRole } from '@/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,7 +62,7 @@ export async function GET(
         .eq('id', user.id)
         .single();
 
-      const isAdmin = userData?.role === 'admin';
+      const isAdmin = canManageTools(userData?.role as UserRole);
       const isAuthor = user.id === tool.author_id;
 
       if (!isAdmin && !isAuthor) {
@@ -139,7 +141,7 @@ export async function PUT(
       .eq('id', user.id)
       .single();
 
-    const isAdmin = userData?.role === 'admin';
+    const isAdmin = canManageTools(userData?.role as UserRole);
     const isAuthor = user.id === tool.author_id;
 
     const body = await request.json();
@@ -269,7 +271,7 @@ export async function DELETE(
       .eq('id', user.id)
       .single();
 
-    if (!userData || userData.role !== 'admin') {
+    if (!userData || !canManageTools(userData.role as UserRole)) {
       return NextResponse.json(
         { error: 'Forbidden: Admin access required' },
         { status: 403 }

@@ -1,9 +1,10 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
+import { canEditUsers } from '@/lib/auth-config';
+import { UserRole } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
-    // Verify the requester is an admin
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -11,14 +12,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Check if user is admin
     const { data: profile } = await supabase
       .from('users')
       .select('role')
       .eq('id', user.id)
       .single();
 
-    if (!profile || profile.role !== 'admin') {
+    if (!profile || !canEditUsers(profile.role as UserRole)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 

@@ -43,10 +43,10 @@ export async function POST(request: NextRequest) {
       .eq('id', user.id)
       .single();
 
-    const isAdmin = userProfile?.role === 'admin';
+    const isManagerOrAbove = userProfile?.role && ['super_admin', 'admin', 'manager'].includes(userProfile.role);
     const ownsModel = model.strategist_id === user.id;
 
-    if (!isAdmin && !ownsModel) {
+    if (!isManagerOrAbove && !ownsModel) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 

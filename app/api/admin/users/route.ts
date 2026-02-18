@@ -1,10 +1,12 @@
 import { createClient } from '@/lib/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
+import { canCreateUsers } from '@/lib/auth-config';
+import { UserRole } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
-    // Verify the requester is an admin
+    // Verify the requester has permission to create users (manager+)
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -12,14 +14,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Check if user is admin
     const { data: profile } = await supabase
       .from('users')
       .select('role')
       .eq('id', user.id)
       .single();
 
-    if (!profile || profile.role !== 'admin') {
+    if (!profile || !canCreateUsers(profile.role as UserRole)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
@@ -100,7 +101,7 @@ export async function POST(request: NextRequest) {
         id: authData.user.id,
         email: authData.user.email!,
         full_name: fullName || null,
-        role: role || 'strategist',
+        role: role || 'content_creator',
       }, {
         onConflict: 'id'
       });
@@ -120,7 +121,7 @@ export async function POST(request: NextRequest) {
         id: authData.user.id,
         email: authData.user.email,
         full_name: fullName,
-        role: role || 'strategist',
+        role: role || 'content_creator',
       },
     });
   } catch (error: any) {

@@ -3,7 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { AgentConfig, AgentKey } from '@/lib/agents/types';
 import { isValidAgentKey } from '@/lib/agents/config';
-import { isSuperAdmin } from '@/lib/auth-config';
+import { canTuneAgents } from '@/lib/auth-config';
+import { UserRole } from '@/types';
 
 interface RouteParams {
   params: Promise<{
@@ -14,7 +15,7 @@ interface RouteParams {
 /**
  * GET /api/admin/agents/[agentKey]
  * Get specific agent configuration
- * Access: Super admin only
+ * Access: Manager+
  */
 export async function GET(
   request: NextRequest,
@@ -22,12 +23,11 @@ export async function GET(
 ) {
   try {
     const { agentKey } = await params;
-    
-    // Check super admin access
+
     const user = await getCurrentUser();
-    if (!user || !isSuperAdmin(user?.email)) {
+    if (!user || !canTuneAgents(user.role as UserRole)) {
       return NextResponse.json(
-        { error: 'Unauthorized. Super admin access required.' },
+        { error: 'Unauthorized. Manager access or above required.' },
         { status: 403 }
       );
     }
@@ -85,7 +85,7 @@ export async function GET(
 /**
  * PUT /api/admin/agents/[agentKey]
  * Update specific agent configuration
- * Access: Super admin only
+ * Access: Manager+
  */
 export async function PUT(
   request: NextRequest,
@@ -94,13 +94,12 @@ export async function PUT(
   try {
     const { agentKey } = await params;
 
-    // Check super admin access
     const user = await getCurrentUser();
 
-    if (!user || !isSuperAdmin(user?.email)) {
+    if (!user || !canTuneAgents(user.role as UserRole)) {
       console.error('[AGENT_UPDATE] Unauthorized access attempt by:', user?.email);
       return NextResponse.json(
-        { error: 'Unauthorized. Super admin access required.' },
+        { error: 'Unauthorized. Manager access or above required.' },
         { status: 403 }
       );
     }

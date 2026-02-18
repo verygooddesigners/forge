@@ -1,7 +1,31 @@
 // Core type definitions for Forge
 
-export type UserRole = 'admin' | 'strategist' | 'editor';
-export type AccountStatus = 'pending' | 'strategist' | 'editor' | 'admin';
+export type UserRole = 'super_admin' | 'admin' | 'manager' | 'team_leader' | 'content_creator';
+export type AccountStatus = 'awaiting_confirmation' | 'confirmed';
+
+// Role hierarchy levels (higher = more privileged)
+export const ROLE_LEVELS: Record<UserRole, number> = {
+  super_admin: 5,
+  admin: 4,
+  manager: 3,
+  team_leader: 2,
+  content_creator: 1,
+};
+
+// Display labels for roles
+export const ROLE_LABELS: Record<UserRole, string> = {
+  super_admin: 'Super Admin',
+  admin: 'Admin',
+  manager: 'Manager',
+  team_leader: 'Team Leader',
+  content_creator: 'Content Creator',
+};
+
+// Display labels for account status
+export const STATUS_LABELS: Record<AccountStatus, string> = {
+  awaiting_confirmation: 'Awaiting Confirmation',
+  confirmed: 'Confirmed',
+};
 
 export interface User {
   id: string;

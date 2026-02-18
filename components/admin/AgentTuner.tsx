@@ -14,7 +14,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertCircle, CheckCircle2, Loader2, RotateCcw, Save } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AgentConfig, AgentKey } from '@/lib/agents/types';
-import { isSuperAdmin } from '@/lib/auth-config';
+import { canTuneAgents, canToggleAgents } from '@/lib/auth-config';
+import { UserRole } from '@/types';
 
 interface AgentTunerProps {
   adminUser: User;
@@ -38,14 +39,15 @@ export function AgentTuner({ adminUser }: AgentTunerProps) {
   const [selectedAgent, setSelectedAgent] = useState<AgentKey>('content_generation');
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // Check if user is super admin
-  const superAdmin = isSuperAdmin(adminUser.email);
+  const role = adminUser.role as UserRole;
+  const hasAccess = canTuneAgents(role);
+  const canToggle = canToggleAgents(role);
 
   useEffect(() => {
-    if (superAdmin) {
+    if (hasAccess) {
       loadAgents();
     }
-  }, [superAdmin]);
+  }, [hasAccess]);
 
   const loadAgents = async () => {
     try {
@@ -128,7 +130,7 @@ export function AgentTuner({ adminUser }: AgentTunerProps) {
     }));
   };
 
-  if (!superAdmin) {
+  if (!hasAccess) {
     return (
       <Card>
         <CardHeader>
@@ -139,7 +141,7 @@ export function AgentTuner({ adminUser }: AgentTunerProps) {
           <Alert>
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              This section is only accessible to super administrators.
+              This section requires Manager role or above.
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -208,14 +210,16 @@ export function AgentTuner({ adminUser }: AgentTunerProps) {
                   <h3 className="text-xl font-semibold">{currentAgent.displayName}</h3>
                   <p className="text-sm text-gray-500">{currentAgent.description}</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Label htmlFor={`enabled-${tab.key}`}>Enabled</Label>
-                  <Switch
-                    id={`enabled-${tab.key}`}
-                    checked={currentAgent.enabled}
-                    onCheckedChange={(checked) => updateAgent(tab.key, { enabled: checked })}
-                  />
-                </div>
+                {canToggle && (
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor={`enabled-${tab.key}`}>Enabled</Label>
+                    <Switch
+                      id={`enabled-${tab.key}`}
+                      checked={currentAgent.enabled}
+                      onCheckedChange={(checked) => updateAgent(tab.key, { enabled: checked })}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="space-y-4">

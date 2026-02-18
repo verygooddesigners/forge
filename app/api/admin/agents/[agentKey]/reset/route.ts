@@ -3,7 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { AgentKey } from '@/lib/agents/types';
 import { isValidAgentKey, getDefaultAgentConfig } from '@/lib/agents/config';
-import { isSuperAdmin } from '@/lib/auth-config';
+import { canTuneAgents } from '@/lib/auth-config';
+import { UserRole } from '@/types';
 
 interface RouteParams {
   params: Promise<{
@@ -23,11 +24,10 @@ export async function POST(
   try {
     const { agentKey } = await params;
     
-    // Check super admin access
     const user = await getCurrentUser();
-    if (!user || !isSuperAdmin(user?.email)) {
+    if (!user || !canTuneAgents(user.role as UserRole)) {
       return NextResponse.json(
-        { error: 'Unauthorized. Super admin access required.' },
+        { error: 'Unauthorized. Manager access or above required.' },
         { status: 403 }
       );
     }

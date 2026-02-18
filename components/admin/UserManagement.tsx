@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, UserRole, AccountStatus } from '@/types';
+import { User, UserRole, AccountStatus, ROLE_LABELS, STATUS_LABELS } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -31,6 +31,13 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 import { Plus, Edit, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
+import {
+  canCreateUsers,
+  canEditUsers,
+  canDeleteUsers,
+  getAssignableRoles,
+} from '@/lib/auth-config';
 
 interface UserManagementProps {
   adminUser: User;
@@ -43,12 +50,16 @@ export function UserManagement({ adminUser }: UserManagementProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<UserRole>('strategist');
-  const [accountStatus, setAccountStatus] = useState<AccountStatus>('pending');
+  const [role, setRole] = useState<UserRole>('content_creator');
+  const [accountStatus, setAccountStatus] = useState<AccountStatus>('awaiting_confirmation');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const supabase = createClient();
+
+  const adminRole = adminUser.role as UserRole;
+  const assignableRoles = getAssignableRoles(adminRole);
+  const showCreateButton = canCreateUsers(adminRole);
+  const showEditButton = canEditUsers(adminRole);
+  const showDeleteButton = canDeleteUsers(adminRole);
 
   useEffect(() => {
     loadUsers();
@@ -69,33 +80,28 @@ export function UserManagement({ adminUser }: UserManagementProps) {
     setEmail('');
     setPassword('');
     setFullName('');
-    setRole('strategist');
-    setAccountStatus('pending');
+    setRole('content_creator');
+    setAccountStatus('awaiting_confirmation');
     setEditingUser(null);
-    setError(null);
-    setSuccess(null);
   };
 
   const handleCreateUser = async () => {
     if (!email || !password) {
-      setError('Email and password are required');
+      toast.error('Email and password are required');
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+      toast.error('Password must be at least 6 characters');
       return;
     }
 
     setLoading(true);
-    setError(null);
 
     try {
       const response = await fetch('/api/admin/users', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
           password,
@@ -110,13 +116,12 @@ export function UserManagement({ adminUser }: UserManagementProps) {
         throw new Error(data.error || 'Failed to create user');
       }
 
-      // Close dialog and reload
+      toast.success('User created successfully');
       setShowDialog(false);
       resetForm();
       await loadUsers();
     } catch (error: any) {
-      console.error('Error creating user:', error);
-      setError(error.message || 'Failed to create user');
+      toast.error(error.message || 'Failed to create user');
     } finally {
       setLoading(false);
     }
@@ -124,51 +129,25 @@ export function UserManagement({ adminUser }: UserManagementProps) {
 
   const handleUpdateUser = async (userId: string) => {
     setLoading(true);
-    setError(null);
-    setSuccess(null);
-    
-    try {
-      const oldStatus = editingUser?.account_status;
-      const statusChanged = oldStatus === 'pending' && accountStatus !== 'pending';
 
+    try {
       const { error } = await supabase
         .from('users')
-        .update({ 
-          full_name: fullName, 
-          role, 
-          account_status: accountStatus 
+        .update({
+          full_name: fullName,
+          role,
+          account_status: accountStatus,
         })
         .eq('id', userId);
 
       if (error) throw error;
 
-      // Send notification email if status changed from pending to active
-      if (statusChanged) {
-        try {
-          await fetch('/api/admin/users/notify-status-change', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              userId,
-              email: editingUser?.email,
-              newStatus: accountStatus,
-            }),
-          });
-          setSuccess('User updated and notification email sent!');
-        } catch (emailError) {
-          console.error('Email notification failed:', emailError);
-          setSuccess('User updated but email notification failed.');
-        }
-      }
-
-      setTimeout(() => {
-        setShowDialog(false);
-        resetForm();
-        loadUsers();
-      }, statusChanged ? 1500 : 0);
+      toast.success('User updated successfully');
+      setShowDialog(false);
+      resetForm();
+      loadUsers();
     } catch (error: any) {
-      console.error('Error updating user:', error);
-      setError(error.message || 'Failed to update user');
+      toast.error(error.message || 'Failed to update user');
     } finally {
       setLoading(false);
     }
@@ -183,7 +162,10 @@ export function UserManagement({ adminUser }: UserManagementProps) {
       .eq('id', userId);
 
     if (!error) {
+      toast.success('User deleted');
       await loadUsers();
+    } else {
+      toast.error('Failed to delete user');
     }
   };
 
@@ -191,9 +173,19 @@ export function UserManagement({ adminUser }: UserManagementProps) {
     setEditingUser(user);
     setEmail(user.email);
     setFullName(user.full_name || '');
-    setRole(user.role);
-    setAccountStatus(user.account_status);
+    setRole(user.role as UserRole);
+    setAccountStatus(user.account_status as AccountStatus);
     setShowDialog(true);
+  };
+
+  const getRoleBadgeVariant = (role: string): 'default' | 'secondary' | 'outline' => {
+    if (role === 'super_admin' || role === 'admin') return 'default';
+    if (role === 'manager' || role === 'team_leader') return 'secondary';
+    return 'outline';
+  };
+
+  const getStatusBadgeVariant = (status: string): 'default' | 'secondary' | 'outline' => {
+    return status === 'confirmed' ? 'default' : 'outline';
   };
 
   return (
@@ -205,10 +197,12 @@ export function UserManagement({ adminUser }: UserManagementProps) {
               <CardTitle>User Management</CardTitle>
               <CardDescription>Create, edit, and manage user accounts</CardDescription>
             </div>
-            <Button onClick={() => setShowDialog(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Create User
-            </Button>
+            {showCreateButton && (
+              <Button onClick={() => setShowDialog(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create User
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent>
@@ -229,32 +223,28 @@ export function UserManagement({ adminUser }: UserManagementProps) {
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.full_name || '-'}</TableCell>
                   <TableCell>
-                    <Badge 
-                      variant={
-                        user.account_status === 'pending' ? 'outline' :
-                        user.account_status === 'admin' ? 'default' : 
-                        'secondary'
-                      }
-                    >
-                      {user.account_status}
+                    <Badge variant={getStatusBadgeVariant(user.account_status)}>
+                      {STATUS_LABELS[user.account_status as AccountStatus] || user.account_status}
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
-                      {user.role}
+                    <Badge variant={getRoleBadgeVariant(user.role)}>
+                      {ROLE_LABELS[user.role as UserRole] || user.role}
                     </Badge>
                   </TableCell>
                   <TableCell>{new Date(user.created_at).toLocaleDateString()}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => openEditDialog(user)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      {user.id !== adminUser.id && (
+                      {showEditButton && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openEditDialog(user)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {showDeleteButton && user.id !== adminUser.id && (
                         <Button
                           variant="ghost"
                           size="sm"
@@ -280,24 +270,13 @@ export function UserManagement({ adminUser }: UserManagementProps) {
           <DialogHeader>
             <DialogTitle>{editingUser ? 'Edit User' : 'Create New User'}</DialogTitle>
             <DialogDescription>
-              {editingUser 
-                ? 'Update user information and role' 
+              {editingUser
+                ? 'Update user information and role'
                 : 'Create a new user account with email and password.'}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
-            {error && (
-              <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
-                {error}
-              </div>
-            )}
-            {success && (
-              <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
-                {success}
-              </div>
-            )}
-
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -343,17 +322,10 @@ export function UserManagement({ adminUser }: UserManagementProps) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="strategist">Strategist</SelectItem>
-                    <SelectItem value="editor">Editor</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
+                    <SelectItem value="awaiting_confirmation">Awaiting Confirmation</SelectItem>
+                    <SelectItem value="confirmed">Confirmed</SelectItem>
                   </SelectContent>
                 </Select>
-                {editingUser.account_status === 'pending' && accountStatus !== 'pending' && (
-                  <p className="text-sm text-muted-foreground">
-                    User will receive a notification email when status is changed from pending.
-                  </p>
-                )}
               </div>
             )}
 
@@ -364,9 +336,11 @@ export function UserManagement({ adminUser }: UserManagementProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="strategist">Strategist</SelectItem>
-                  <SelectItem value="editor">Editor</SelectItem>
+                  {assignableRoles.map((r) => (
+                    <SelectItem key={r} value={r}>
+                      {ROLE_LABELS[r]}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -384,5 +358,3 @@ export function UserManagement({ adminUser }: UserManagementProps) {
     </>
   );
 }
-
-

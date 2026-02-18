@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { User } from '@/types';
+import { User, UserRole, AccountStatus, ROLE_LABELS, STATUS_LABELS } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -53,12 +53,16 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
 
   const getRoleBadgeVariant = (role: string) => {
     switch (role) {
+      case 'super_admin':
+        return 'text-red-400 border-red-500/30 bg-red-500/10';
       case 'admin':
         return 'text-violet-400 border-violet-500/30 bg-violet-500/10';
-      case 'strategist':
+      case 'manager':
         return 'text-blue-400 border-blue-500/30 bg-blue-500/10';
-      case 'editor':
+      case 'team_leader':
         return 'text-green-400 border-green-500/30 bg-green-500/10';
+      case 'content_creator':
+        return 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10';
       default:
         return 'text-text-secondary border-border-subtle bg-bg-elevated';
     }
@@ -152,7 +156,7 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
                 Role
               </Label>
               <Badge variant="outline" className={getRoleBadgeVariant(user.role)}>
-                {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                {ROLE_LABELS[user.role as UserRole] || user.role}
               </Badge>
               <p className="text-xs text-text-tertiary">Role is managed by administrators</p>
             </div>
@@ -160,8 +164,12 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
             {/* Account Status (read-only) */}
             <div className="space-y-2">
               <Label className="text-text-primary">Account Status</Label>
-              <Badge variant="outline" className="text-green-400 border-green-500/30 bg-green-500/10">
-                {user.account_status.charAt(0).toUpperCase() + user.account_status.slice(1)}
+              <Badge variant="outline" className={
+                user.account_status === 'confirmed'
+                  ? 'text-green-400 border-green-500/30 bg-green-500/10'
+                  : 'text-yellow-400 border-yellow-500/30 bg-yellow-500/10'
+              }>
+                {STATUS_LABELS[user.account_status as AccountStatus] || user.account_status}
               </Badge>
             </div>
 

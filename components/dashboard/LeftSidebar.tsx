@@ -396,7 +396,7 @@ export function LeftSidebar({ user, projectId, onOpenProjectModal, onOpenWriterF
           <TrendingUp className="mr-3 h-5 w-5" />
           NFL Odds Extractor
         </Button>
-        {user.role === 'admin' && (
+        {['super_admin', 'admin', 'manager', 'team_leader'].includes(user.role) && (
           <>
             <Separator className="my-2" />
             <Button

@@ -4,6 +4,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { canManageTools } from '@/lib/auth-config';
+import { UserRole } from '@/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +13,6 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
 
-    // Verify user is authenticated and is admin
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json(
@@ -20,14 +21,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Check if user is admin
     const { data: userData, error: userError } = await supabase
       .from('users')
       .select('role')
       .eq('id', user.id)
       .single();
 
-    if (userError || !userData || userData.role !== 'admin') {
+    if (userError || !userData || !canManageTools(userData.role as UserRole)) {
       return NextResponse.json(
         { error: 'Forbidden: Admin access required' },
         { status: 403 }

@@ -19,7 +19,8 @@ import {
 import * as LucideIcons from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import type { InstalledToolWithDetails } from '@/types/tools';
-import { isSuperAdmin } from '@/lib/auth-config';
+import { canAccessAdmin } from '@/lib/auth-config';
+import { UserRole, ROLE_LABELS } from '@/types';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -214,8 +215,8 @@ export function AppSidebar({
           </div>
         )}
 
-        {/* SYSTEM Section - Only for super admin */}
-        {isSuperAdmin(user.email) && (
+        {/* SYSTEM Section - team_leader+ can access admin */}
+        {canAccessAdmin(user.role as UserRole) && (
           <div>
             <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
               System
@@ -249,7 +250,7 @@ export function AppSidebar({
                   {user.full_name || user.email.split('@')[0]}
                 </div>
                 <div className="text-[11px] text-text-tertiary uppercase tracking-wide">
-                  {user.role}
+                  {ROLE_LABELS[user.role as UserRole] || user.role}
                 </div>
               </div>
               <ChevronDown className="w-4 h-4 text-text-tertiary group-hover:opacity-100 transition-opacity" />

@@ -208,7 +208,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   };
 
   const canEditBrief = (brief: Brief) => {
-    return brief.created_by === user.id || user.role === 'admin';
+    return brief.created_by === user.id || ['super_admin', 'admin', 'manager', 'team_leader'].includes(user.role);
   };
 
   return (

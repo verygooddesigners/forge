@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { AdminPageClient } from '@/components/admin/AdminPageClient';
+import { canAccessAdmin } from '@/lib/auth-config';
+import { UserRole } from '@/types';
 
 // Force dynamic rendering to avoid SSR issues with Supabase
 export const dynamic = 'force-dynamic';
@@ -21,7 +23,7 @@ export default async function AdminPage() {
       .eq('id', user.id)
       .single();
 
-    if (!profile || profile.role !== 'admin') {
+    if (!profile || !canAccessAdmin(profile.role as UserRole)) {
       redirect('/dashboard');
     }
 

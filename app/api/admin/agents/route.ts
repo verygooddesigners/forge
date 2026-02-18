@@ -2,20 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { AgentConfig } from '@/lib/agents/types';
-import { isSuperAdmin } from '@/lib/auth-config';
+import { canTuneAgents } from '@/lib/auth-config';
+import { UserRole } from '@/types';
 
 /**
  * GET /api/admin/agents
  * List all agent configurations
- * Access: Super admin only
+ * Access: Manager+ (canTuneAgents)
  */
 export async function GET(request: NextRequest) {
   try {
-    // Check super admin access
     const user = await getCurrentUser();
-    if (!user || !isSuperAdmin(user?.email)) {
+    if (!user || !canTuneAgents(user.role as UserRole)) {
       return NextResponse.json(
-        { error: 'Unauthorized. Super admin access required.' },
+        { error: 'Unauthorized. Manager access or above required.' },
         { status: 403 }
       );
     }
@@ -62,15 +62,14 @@ export async function GET(request: NextRequest) {
 /**
  * PUT /api/admin/agents
  * Bulk update multiple agent configurations
- * Access: Super admin only
+ * Access: Manager+ (canTuneAgents)
  */
 export async function PUT(request: NextRequest) {
   try {
-    // Check super admin access
     const user = await getCurrentUser();
-    if (!user || !isSuperAdmin(user?.email)) {
+    if (!user || !canTuneAgents(user.role as UserRole)) {
       return NextResponse.json(
-        { error: 'Unauthorized. Super admin access required.' },
+        { error: 'Unauthorized. Manager access or above required.' },
         { status: 403 }
       );
     }
