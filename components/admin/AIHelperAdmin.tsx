@@ -235,7 +235,7 @@ export function AIHelperAdmin({ adminUser }: AIHelperAdminProps) {
           .upsert({
             ...setting,
             updated_by: adminUser.id,
-          });
+          }, { onConflict: 'setting_key' });
 
         if (error) throw error;
       }

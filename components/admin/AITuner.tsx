@@ -55,7 +55,7 @@ export function AITuner({ adminUser }: AITunerProps) {
           setting_key: 'master_instructions',
           setting_value: masterInstructions,
           updated_by: adminUser.id,
-        });
+        }, { onConflict: 'setting_key' });
 
       if (!error) {
         console.log('[AI_TUNER] Save successful');
