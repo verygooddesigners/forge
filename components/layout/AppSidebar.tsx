@@ -18,6 +18,7 @@ import {
   Package,
 } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import type { InstalledToolWithDetails } from '@/types/tools';
 import { canAccessAdmin } from '@/lib/auth-config';
@@ -100,14 +101,16 @@ export function AppSidebar({
       className="fixed left-0 top-0 h-screen w-[260px] bg-bg-deep border-r border-border-subtle flex flex-col z-100"
     >
       {/* Logo */}
-      <div className="p-6 border-b border-border-subtle">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-white">
-            F
-          </div>
-          <div className="text-xl font-bold tracking-tight text-text-primary">
-            Forge
-          </div>
+      <div className="p-5 border-b border-border-subtle">
+        <div className="flex items-center justify-center">
+          <Image
+            src="/images/forge-icon.png"
+            alt="Forge"
+            width={120}
+            height={120}
+            className="rounded-lg"
+            priority
+          />
         </div>
       </div>
 

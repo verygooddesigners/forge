@@ -6,7 +6,8 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
+import Image from 'next/image';
+import {
   Copy, Check, Home, FileText, BookOpen, Sparkles,
   Plus, TrendingUp, Calendar, BarChart3, CheckCircle2,
   AlertCircle, Loader2
@@ -49,9 +50,13 @@ export default function StyleGuidePage() {
       <div className="sticky top-0 z-50 bg-bg-deep border-b border-border-subtle px-8 py-6">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-white">
-              F
-            </div>
+            <Image
+              src="/images/forge-icon.png"
+              alt="Forge"
+              width={40}
+              height={40}
+              className="rounded-lg"
+            />
             <h1 className="text-3xl font-bold tracking-tight">
               Forge Style Guide
             </h1>

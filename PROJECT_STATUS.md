@@ -1,7 +1,7 @@
 # Forge - Project Status
 
 **Last Updated:** February 18, 2026  
-**Version:** v1.03.00  
+**Version:** v1.04.00  
 **Production:** https://gdcforce.vercel.app  
 **Repository:** https://github.com/verygooddesigners/forge  
 **Local Dev:** http://localhost:5309  
