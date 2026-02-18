@@ -1,10 +1,12 @@
 'use client';
 
-import { User } from '@/types';
+import { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { User, UserRole } from '@/types';
 import { AppSidebar } from '../layout/AppSidebar';
+import { AdminMenu, getDefaultSection, getAdminMenuCollapsed, setAdminMenuCollapsed, type AdminSectionId } from './AdminMenu';
 import { AdminDashboard } from './AdminDashboard';
 import { AIHelperWidget } from '@/components/ai/AIHelperWidget';
-import { useRouter } from 'next/navigation';
 
 interface AdminPageClientProps {
   user: User;
@@ -12,12 +14,27 @@ interface AdminPageClientProps {
 
 export function AdminPageClient({ user }: AdminPageClientProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const sectionParam = searchParams.get('section');
+  const defaultSection = getDefaultSection(user.role as UserRole);
+  const activeSection = (sectionParam as AdminSectionId) || defaultSection;
+
+  const [collapsed, setCollapsedState] = useState(false);
+
+  useEffect(() => {
+    setCollapsedState(getAdminMenuCollapsed());
+  }, []);
+
+  const onToggleCollapse = () => {
+    const next = !collapsed;
+    setCollapsedState(next);
+    setAdminMenuCollapsed(next);
+  };
 
   return (
     <>
-      <div className="min-h-screen bg-bg-deepest">
-        {/* Fixed Sidebar */}
-        <AppSidebar 
+      <div className="flex h-screen bg-bg-deepest overflow-hidden">
+        <AppSidebar
           user={user}
           onOpenProjects={() => router.push('/dashboard')}
           onOpenSmartBriefs={() => router.push('/dashboard')}
@@ -26,31 +43,17 @@ export function AdminPageClient({ user }: AdminPageClientProps) {
           projectCount={0}
         />
 
-        <div className="ml-[260px]">
-          {/* Top Bar */}
-          <div className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 bg-bg-deep border-b border-border-subtle">
-            <div className="flex items-center gap-4">
-              <button 
-                onClick={() => window.location.href = '/dashboard'}
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[13px] font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"/>
-                </svg>
-                Dashboard
-              </button>
-              <div className="w-px h-5 bg-border-default" />
-              <h1 className="text-[15px] font-semibold">Admin Dashboard</h1>
-            </div>
-          </div>
-          
-          <div className="p-8">
-            <AdminDashboard user={user} />
-          </div>
-        </div>
+        <AdminMenu
+          user={user}
+          collapsed={collapsed}
+          onToggleCollapse={onToggleCollapse}
+        />
+
+        <main className="flex-1 overflow-auto p-8">
+          <AdminDashboard user={user} activeSection={activeSection} />
+        </main>
       </div>
 
-      {/* AI Helper Widget */}
       <AIHelperWidget />
     </>
   );

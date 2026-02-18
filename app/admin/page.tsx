@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { AdminPageClient } from '@/components/admin/AdminPageClient';
 import { canAccessAdmin } from '@/lib/auth-config';
@@ -27,7 +28,11 @@ export default async function AdminPage() {
       redirect('/dashboard');
     }
 
-    return <AdminPageClient user={profile} />;
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-bg-deepest flex items-center justify-center">Loading...</div>}>
+        <AdminPageClient user={profile} />
+      </Suspense>
+    );
   } catch (error) {
     // If Supabase is not configured, redirect to login
     redirect('/login');

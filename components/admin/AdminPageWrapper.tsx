@@ -1,9 +1,10 @@
 'use client';
 
-import { User } from '@/types';
+import { User, UserRole } from '@/types';
 import { AppSidebar } from '../layout/AppSidebar';
 import { AdminDashboard } from './AdminDashboard';
-import { useRouter } from 'next/navigation';
+import { getDefaultSection, type AdminSectionId } from './AdminMenu';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface AdminPageWrapperProps {
   user: User;
@@ -11,6 +12,10 @@ interface AdminPageWrapperProps {
 
 export function AdminPageWrapper({ user }: AdminPageWrapperProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const sectionParam = searchParams.get('section');
+  const defaultSection = getDefaultSection(user.role as UserRole);
+  const activeSection = (sectionParam as AdminSectionId) || defaultSection;
 
   return (
     <div className="min-h-screen bg-bg-deepest">
@@ -44,7 +49,7 @@ export function AdminPageWrapper({ user }: AdminPageWrapperProps) {
         </div>
         
         <div className="p-8">
-          <AdminDashboard user={user} />
+          <AdminDashboard user={user} activeSection={activeSection} />
         </div>
       </div>
     </div>

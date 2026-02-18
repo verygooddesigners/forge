@@ -59,9 +59,14 @@ export function canAccessAdmin(role: UserRole | undefined | null): boolean {
   return hasMinimumRole(role, 'team_leader');
 }
 
-/** Can view user list (team_leader+) */
+/** Can view user list / Manage All Users (manager+) */
 export function canViewUsers(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'team_leader');
+  return hasMinimumRole(role, 'manager');
+}
+
+/** Can manage/create/edit teams (manager+) */
+export function canManageTeams(role: UserRole | undefined | null): boolean {
+  return hasMinimumRole(role, 'manager');
 }
 
 /** Can create/invite users (manager+) */
@@ -79,14 +84,14 @@ export function canDeleteUsers(role: UserRole | undefined | null): boolean {
   return hasMinimumRole(role, 'admin');
 }
 
-/** Can edit master AI instructions (team_leader+) */
+/** Can edit master AI instructions / AI Tuner (manager+) */
 export function canEditMasterInstructions(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'team_leader');
+  return hasMinimumRole(role, 'manager');
 }
 
-/** Can tune individual AI agents — temperature, prompts, models (manager+) */
+/** Can tune individual AI agents — temperature, prompts, models (team_leader+) */
 export function canTuneAgents(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'manager');
+  return hasMinimumRole(role, 'team_leader');
 }
 
 /** Can enable/disable AI agents (admin+) */
@@ -94,9 +99,9 @@ export function canToggleAgents(role: UserRole | undefined | null): boolean {
   return hasMinimumRole(role, 'admin');
 }
 
-/** Can manage API keys (admin+) */
+/** Can manage API keys (super_admin only) */
 export function canManageApiKeys(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'admin');
+  return hasMinimumRole(role, 'super_admin');
 }
 
 /** Can manage SSO configuration (admin+) */
@@ -104,9 +109,9 @@ export function canManageSso(role: UserRole | undefined | null): boolean {
   return hasMinimumRole(role, 'admin');
 }
 
-/** Can manage trusted sources (admin+) */
+/** Can manage trusted sources (team_leader+) */
 export function canManageTrustedSources(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'admin');
+  return hasMinimumRole(role, 'team_leader');
 }
 
 /** Can access Cursor Remote (super_admin only) */
@@ -124,7 +129,7 @@ export function canDeleteAnyBrief(role: UserRole | undefined | null): boolean {
   return hasMinimumRole(role, 'manager');
 }
 
-/** Can manage tools (admin+) */
+/** Can manage tools (super_admin only) */
 export function canManageTools(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'admin');
+  return hasMinimumRole(role, 'super_admin');
 }
