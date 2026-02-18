@@ -531,6 +531,8 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
         onOpenChange={setShowExportModal}
         editor={editorRef.current}
         projectHeadline={project?.headline}
+        projectId={project?.id}
+        userId={project?.user_id}
       />
     </>
   );

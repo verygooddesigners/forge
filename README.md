@@ -39,9 +39,9 @@ AI-powered content creation platform with RAG-based writer models, brief builder
 
 ## 📚 Documentation
 
-- **[Getting Started Guide](GETTING_STARTED.md)** - Complete setup walkthrough
-- **[Deployment Guide](DEPLOYMENT.md)** - Production deployment instructions
+- **[Project Status](PROJECT_STATUS.md)** - Current project status and change log
 - **[Supabase Setup](supabase/SETUP.md)** - Database configuration
+- **[Reference Docs](docs/)** - Feature specs, planning docs, and setup guides
 
 ## 🏃 Quick Start
 
@@ -165,7 +165,7 @@ Deploy to Vercel in one click:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/verygooddesigners/forge)
 
-Or follow the [Deployment Guide](DEPLOYMENT.md) for manual setup.
+Or configure manually via Vercel dashboard.
 
 ## 📊 Database Schema
 
@@ -265,5 +265,5 @@ Built with:
 ---
 
 **Forge** - AI-Powered Content Creation Platform  
-Version v1.01.01 | Built with ❤️ for RotoWire
+Version v1.03.00 | Built with ❤️ for RotoWire
 # Test webhook trigger

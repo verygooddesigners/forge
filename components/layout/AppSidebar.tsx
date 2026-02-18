@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { User } from '@/types';
-import { 
+import {
   Home,
-  FileText, 
-  BookOpen, 
-  Wrench, 
+  FileText,
+  BookOpen,
+  BarChart3,
+  Wrench,
   TrendingUp,
   Shield,
   ChevronDown,
@@ -149,6 +150,18 @@ export function AppSidebar({
           >
             <BookOpen className="w-5 h-5 text-accent-primary" />
             SmartBriefs
+          </button>
+
+          <button
+            onClick={() => router.push('/content-analytics')}
+            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
+              isActive('/content-analytics')
+                ? 'bg-accent-muted text-accent-primary'
+                : 'hover:bg-bg-hover'
+            }`}
+          >
+            <BarChart3 className="w-5 h-5 text-accent-primary" />
+            Content Analytics
           </button>
         </div>
 

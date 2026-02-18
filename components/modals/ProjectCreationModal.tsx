@@ -23,6 +23,7 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { WriterModel, Brief, Project } from '@/types';
 import { ArrowLeft, ArrowRight, Plus, Check, Sparkles, Loader2 } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
 
 interface ProjectCreationModalProps {
   open: boolean;
@@ -144,6 +145,7 @@ export function ProjectCreationModal({
         .single();
 
       if (!error && data) {
+        trackEvent(supabase, userId, 'project_created', data.id, 'project', { word_count_target: parseInt(wordCount) || 800 });
         onProjectCreated?.(data);
         onOpenChange(false);
         resetForm();

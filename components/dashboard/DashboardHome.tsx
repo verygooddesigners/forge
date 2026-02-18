@@ -18,6 +18,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { countWordsInTipTapJson } from '@/lib/word-count';
 
 interface DashboardHomeProps {
   user: User;
@@ -99,19 +100,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         p => new Date(p.created_at) > oneWeekAgo
       );
 
-      const totalWords = projects.reduce((sum, p) => {
-        const content = p.content;
-        if (content && content.content) {
-          let words = 0;
-          const countWords = (node: any) => {
-            if (node.text) words += node.text.split(/\s+/).filter(Boolean).length;
-            if (node.content) node.content.forEach(countWords);
-          };
-          content.content.forEach(countWords);
-          return sum + words;
-        }
-        return sum;
-      }, 0);
+      const totalWords = projects.reduce((sum, p) => sum + countWordsInTipTapJson(p.content), 0);
 
       const avgScore = projects.length > 0
         ? Math.round(projects.reduce((sum, p) => sum + (p.seo_score || 0), 0) / projects.length)

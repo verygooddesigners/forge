@@ -16,6 +16,8 @@ import { Editor } from '@tiptap/react';
 import { toast } from 'sonner';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from 'docx';
 import { saveAs } from 'file-saver';
+import { trackEvent } from '@/lib/analytics';
+import { createClient } from '@/lib/supabase/client';
 
 type ExportFormat = 'text' | 'markdown' | 'docx' | 'html';
 
@@ -24,6 +26,8 @@ interface ExportModalProps {
   onOpenChange: (open: boolean) => void;
   editor: Editor | null;
   projectHeadline?: string;
+  projectId?: string;
+  userId?: string;
 }
 
 function htmlToMarkdown(html: string): string {
@@ -185,7 +189,7 @@ const MIME_TYPES: Record<ExportFormat, string> = {
   html: 'text/html',
 };
 
-export function ExportModal({ open, onOpenChange, editor, projectHeadline }: ExportModalProps) {
+export function ExportModal({ open, onOpenChange, editor, projectHeadline, projectId, userId }: ExportModalProps) {
   const [exportFormat, setExportFormat] = useState<ExportFormat>('html');
   const [copied, setCopied] = useState(false);
   const [acknowledged, setAcknowledged] = useState(false);
@@ -249,6 +253,11 @@ export function ExportModal({ open, onOpenChange, editor, projectHeadline }: Exp
         saveAs(blob, filename);
       }
       toast.success(`Downloaded as ${filename}`);
+      // Track export event
+      if (userId && projectId) {
+        const supabase = createClient();
+        trackEvent(supabase, userId, 'project_exported', projectId, 'project', { format: exportFormat });
+      }
     } catch (err) {
       toast.error('Failed to download file');
     }

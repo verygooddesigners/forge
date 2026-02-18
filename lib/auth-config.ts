@@ -133,3 +133,13 @@ export function canDeleteAnyBrief(role: UserRole | undefined | null): boolean {
 export function canManageTools(role: UserRole | undefined | null): boolean {
   return hasMinimumRole(role, 'super_admin');
 }
+
+/** Can view team analytics (team_leader+) */
+export function canViewTeamAnalytics(role: UserRole | undefined | null): boolean {
+  return hasMinimumRole(role, 'team_leader');
+}
+
+/** Can export analytics data (team_leader+) */
+export function canExportAnalytics(role: UserRole | undefined | null): boolean {
+  return hasMinimumRole(role, 'team_leader');
+}
