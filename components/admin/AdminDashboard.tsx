@@ -16,6 +16,7 @@ import { CursorRemotePanel } from './CursorRemotePanel';
 import { SSOConfigStatus } from './SSOConfigStatus';
 import { TrustedSourcesAdmin } from './TrustedSourcesAdmin';
 import { ToolsAdmin } from './ToolsAdmin';
+import { isSuperAdmin } from '@/lib/auth-config';
 
 interface AdminDashboardProps {
   user: User;
@@ -23,7 +24,7 @@ interface AdminDashboardProps {
 
 export function AdminDashboard({ user }: AdminDashboardProps) {
   const router = useRouter();
-  const isSuperAdmin = user.email === 'jeremy.botter@gdcgroup.com';
+  const superAdmin = isSuperAdmin(user.email);
 
   return (
     <div className="space-y-6">
@@ -59,16 +60,16 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
           >
             AI Helper Bot
           </TabsTrigger>
-          {isSuperAdmin && (
-            <TabsTrigger 
+          {superAdmin && (
+            <TabsTrigger
               value="agents"
               className="data-[state=active]:bg-bg-elevated data-[state=active]:text-text-primary text-text-secondary text-[13px] font-medium px-5 py-2.5"
             >
               AI Agents
             </TabsTrigger>
           )}
-          {isSuperAdmin && (
-            <TabsTrigger 
+          {superAdmin && (
+            <TabsTrigger
               value="cursor-remote"
               className="data-[state=active]:bg-bg-elevated data-[state=active]:text-text-primary text-text-secondary text-[13px] font-medium px-5 py-2.5"
             >
@@ -109,12 +110,12 @@ export function AdminDashboard({ user }: AdminDashboardProps) {
             <AIHelperAdmin adminUser={user} />
           </TabsContent>
 
-          {isSuperAdmin && (
+          {superAdmin && (
             <TabsContent value="agents">
               <AgentTuner adminUser={user} />
             </TabsContent>
           )}
-        {isSuperAdmin && (
+        {superAdmin && (
           <TabsContent value="cursor-remote">
             <CursorRemotePanel adminUser={user} />
           </TabsContent>

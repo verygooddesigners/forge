@@ -49,8 +49,8 @@ export function SEOOptimizationSidebar({
 }: SEOOptimizationSidebarProps) {
   const [activeTab, setActiveTab] = useState('guidelines');
   const [seoScore, setSeoScore] = useState(0);
-  const [avgScore, setAvgScore] = useState(83);
-  const [topScore, setTopScore] = useState(87);
+  const [avgScore, setAvgScore] = useState(0);
+  const [topScore, setTopScore] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [analyzed, setAnalyzed] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);

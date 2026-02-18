@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       title: result.title,
       description: result.content,
       url: result.url,
-      source: new URL(result.url).hostname,
+      source: (() => { try { return new URL(result.url).hostname; } catch { return result.url || 'unknown'; } })(),
       published_date: result.published_date || new Date().toISOString(),
       image_url: result.image_url,
       relevance_score: result.score || 0,

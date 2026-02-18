@@ -15,6 +15,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import type { ToolWithAuthor } from '@/types/tools';
+import { toast } from 'sonner';
 
 export function ToolsAdmin() {
   const [pendingTools, setPendingTools] = useState<ToolWithAuthor[]>([]);
@@ -53,11 +54,11 @@ export function ToolsAdmin() {
         await fetchPendingTools();
       } else {
         const data = await response.json();
-        alert(data.error || 'Failed to approve tool');
+        toast.error(data.error || 'Failed to approve tool');
       }
     } catch (error) {
       console.error('Error approving tool:', error);
-      alert('Failed to approve tool');
+      toast.error('Failed to approve tool');
     } finally {
       setActionLoading(null);
     }
@@ -81,11 +82,11 @@ export function ToolsAdmin() {
         await fetchPendingTools();
       } else {
         const data = await response.json();
-        alert(data.error || 'Failed to reject tool');
+        toast.error(data.error || 'Failed to reject tool');
       }
     } catch (error) {
       console.error('Error rejecting tool:', error);
-      alert('Failed to reject tool');
+      toast.error('Failed to reject tool');
     } finally {
       setActionLoading(null);
     }

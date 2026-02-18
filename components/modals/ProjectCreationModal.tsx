@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -21,7 +22,7 @@ import {
 } from '@/components/ui/select';
 import { createClient } from '@/lib/supabase/client';
 import { WriterModel, Brief, Project } from '@/types';
-import { ArrowLeft, ArrowRight, Plus, Check } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Plus, Check, Sparkles, Loader2 } from 'lucide-react';
 
 interface ProjectCreationModalProps {
   open: boolean;
@@ -58,6 +59,7 @@ export function ProjectCreationModal({
   const [briefs, setBriefs] = useState<Brief[]>([]);
   
   const [loading, setLoading] = useState(false);
+  const [suggestingKeywords, setSuggestingKeywords] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -129,6 +131,7 @@ export function ProjectCreationModal({
         .insert({
           user_id: userId,
           headline,
+          file_name: projectName || headline,
           primary_keyword: primaryKeyword,
           secondary_keywords: secondaryKeywords.split(',').map(k => k.trim()).filter(Boolean),
           topic: topic || null,
@@ -149,6 +152,34 @@ export function ProjectCreationModal({
       console.error('Error creating project:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSuggestKeywords = async () => {
+    setSuggestingKeywords(true);
+    try {
+      const response = await fetch('/api/project-creation/suggest-keywords', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ headline, primaryKeyword }),
+      });
+
+      if (!response.ok) throw new Error('Failed to suggest keywords');
+
+      const { keywords } = await response.json();
+      if (keywords && keywords.length > 0) {
+        // Append to existing keywords if any, otherwise set
+        const existing = secondaryKeywords.trim();
+        if (existing) {
+          setSecondaryKeywords(`${existing}, ${keywords.join(', ')}`);
+        } else {
+          setSecondaryKeywords(keywords.join(', '));
+        }
+      }
+    } catch (error) {
+      console.error('Error suggesting keywords:', error);
+    } finally {
+      setSuggestingKeywords(false);
     }
   };
 
@@ -257,7 +288,27 @@ export function ProjectCreationModal({
             {/* Step 4: Secondary Keywords */}
             {step === 4 && (
               <div className="space-y-4">
-                <Label htmlFor="secondaryKeywords">What are the secondary keywords? (Separate each with a comma)</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="secondaryKeywords">What are the secondary keywords? (Separate each with a comma)</Label>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSuggestKeywords}
+                    disabled={suggestingKeywords}
+                  >
+                    {suggestingKeywords ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                        Suggesting...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-4 w-4 mr-1" />
+                        Suggest Keywords
+                      </>
+                    )}
+                  </Button>
+                </div>
                 <Textarea
                   id="secondaryKeywords"
                   value={secondaryKeywords}
@@ -325,7 +376,7 @@ export function ProjectCreationModal({
                     size="sm"
                     onClick={() => {
                       // TODO: Open brief builder modal
-                      alert('Brief builder integration coming soon');
+                      toast.info('Brief builder integration coming soon');
                     }}
                   >
                     <Plus className="h-4 w-4 mr-1" />

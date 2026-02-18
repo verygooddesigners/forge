@@ -27,12 +27,6 @@ export async function signInWithMicrosoft(redirectTo: string = '/dashboard') {
     // Construct the redirect URL for after authentication
     const redirectURL = `${window.location.origin}/api/auth/callback?next=${encodeURIComponent(redirectTo)}`;
     
-    console.log('[Microsoft SSO] Initiating sign in:', {
-      redirectTo,
-      redirectURL,
-      timestamp: new Date().toISOString(),
-    });
-
     // Use Supabase's Azure OAuth provider
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'azure',
@@ -51,7 +45,6 @@ export async function signInWithMicrosoft(redirectTo: string = '/dashboard') {
       throw error;
     }
 
-    console.log('[Microsoft SSO] OAuth flow initiated successfully');
     return data;
   } catch (error) {
     console.error('[Microsoft SSO] Failed to initiate sign in:', error);
@@ -67,8 +60,6 @@ export async function handleMicrosoftCallback() {
   try {
     const supabase = createClient();
     
-    console.log('[Microsoft SSO] Processing callback');
-
     // Supabase automatically handles the OAuth callback
     // and sets the session cookie
     const { data: { session }, error } = await supabase.auth.getSession();
@@ -81,11 +72,6 @@ export async function handleMicrosoftCallback() {
     if (!session) {
       throw new Error('No session found after Microsoft sign in');
     }
-
-    console.log('[Microsoft SSO] Callback processed successfully:', {
-      userId: session.user.id,
-      email: session.user.email,
-    });
 
     return session;
   } catch (error) {

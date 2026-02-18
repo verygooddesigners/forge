@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertCircle, CheckCircle2, Loader2, RotateCcw, Save } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AgentConfig, AgentKey } from '@/lib/agents/types';
+import { isSuperAdmin } from '@/lib/auth-config';
 
 interface AgentTunerProps {
   adminUser: User;
@@ -38,13 +39,13 @@ export function AgentTuner({ adminUser }: AgentTunerProps) {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Check if user is super admin
-  const isSuperAdmin = adminUser.email === 'jeremy.botter@gmail.com' || adminUser.email === 'jeremy.botter@gdcgroup.com';
+  const superAdmin = isSuperAdmin(adminUser.email);
 
   useEffect(() => {
-    if (isSuperAdmin) {
+    if (superAdmin) {
       loadAgents();
     }
-  }, [isSuperAdmin]);
+  }, [superAdmin]);
 
   const loadAgents = async () => {
     try {
@@ -127,7 +128,7 @@ export function AgentTuner({ adminUser }: AgentTunerProps) {
     }));
   };
 
-  if (!isSuperAdmin) {
+  if (!superAdmin) {
     return (
       <Card>
         <CardHeader>
@@ -192,7 +193,7 @@ export function AgentTuner({ adminUser }: AgentTunerProps) {
         )}
 
         <Tabs value={selectedAgent} onValueChange={(v) => setSelectedAgent(v as AgentKey)}>
-          <TabsList className="grid grid-cols-7 w-full mb-6">
+          <TabsList className="grid grid-cols-8 w-full mb-6">
             {AGENT_TABS.map(tab => (
               <TabsTrigger key={tab.key} value={tab.key}>
                 {tab.label}
@@ -390,6 +391,65 @@ export function AgentTuner({ adminUser }: AgentTunerProps) {
                           <SelectItem value="both">Both Conditions</SelectItem>
                         </SelectContent>
                       </Select>
+                    </div>
+                  </div>
+                )}
+
+                {/* Special config for Fact Verification agent */}
+                {tab.key === 'fact_verification' && currentAgent.specialConfig && (
+                  <div className="space-y-4 border-t pt-4">
+                    <h4 className="font-semibold">Verification Settings</h4>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="require-multiple-sources">Require Multiple Sources</Label>
+                      <Switch
+                        id="require-multiple-sources"
+                        checked={currentAgent.specialConfig.requireMultipleSourcesForVerification ?? true}
+                        onCheckedChange={(checked) =>
+                          updateAgent(tab.key, {
+                            specialConfig: { ...currentAgent.specialConfig, requireMultipleSourcesForVerification: checked },
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Label>
+                        Min Sources for High Confidence: {currentAgent.specialConfig.minSourcesForHighConfidence ?? 3}
+                      </Label>
+                      <Slider
+                        value={[currentAgent.specialConfig.minSourcesForHighConfidence ?? 3]}
+                        onValueChange={([value]) =>
+                          updateAgent(tab.key, {
+                            specialConfig: { ...currentAgent.specialConfig, minSourcesForHighConfidence: value },
+                          })
+                        }
+                        min={1}
+                        max={10}
+                        step={1}
+                        className="mt-2"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Number of corroborating sources required for a HIGH confidence rating
+                      </p>
+                    </div>
+                    <div>
+                      <Label>
+                        Min Sources for Medium Confidence: {currentAgent.specialConfig.minSourcesForMediumConfidence ?? 2}
+                      </Label>
+                      <Slider
+                        value={[currentAgent.specialConfig.minSourcesForMediumConfidence ?? 2]}
+                        onValueChange={([value]) =>
+                          updateAgent(tab.key, {
+                            specialConfig: { ...currentAgent.specialConfig, minSourcesForMediumConfidence: value },
+                          })
+                        }
+                        min={1}
+                        max={10}
+                        step={1}
+                        className="mt-2"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Number of corroborating sources required for a MEDIUM confidence rating
+                      </p>
                     </div>
                   </div>
                 )}

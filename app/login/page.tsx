@@ -141,11 +141,11 @@ export default function LoginPage() {
         <CardHeader className="space-y-3 text-center">
           <div className="flex items-center justify-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-white">
-              RW
+              F
             </div>
           </div>
           <CardTitle className="text-2xl font-bold tracking-tight text-text-primary">
-            Roto<span className="text-accent-primary">Write</span>
+            Forge
           </CardTitle>
           <CardDescription className="text-text-secondary">
             {activeTab === 'login' ? 'Sign in to your account' : 'Create a new account'}

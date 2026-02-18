@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Save } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface APIKeyManagementProps {
   adminUser: User;
@@ -43,10 +44,10 @@ export function APIKeyManagement({ adminUser }: APIKeyManagementProps) {
       
       // Simulate save
       await new Promise(resolve => setTimeout(resolve, 1000));
-      alert('API keys saved successfully');
+      toast.success('API keys saved successfully');
     } catch (error) {
       console.error('Error saving API keys:', error);
-      alert('Failed to save API keys');
+      toast.error('Failed to save API keys');
     } finally {
       setSaving(false);
     }

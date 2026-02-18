@@ -16,6 +16,7 @@ import { Brief, Category, User } from '@/types';
 import { TipTapEditor } from '@/components/editor/TipTapEditor';
 import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft, HelpCircle, ExternalLink } from 'lucide-react';
 import { SmartBriefListModal } from '@/components/modals/SmartBriefListModal';
+import { toast } from 'sonner';
 
 interface SmartBriefPanelProps {
   user: User;
@@ -97,7 +98,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
 
       if (!error) {
         // Brief updated successfully
-        alert('SmartBrief updated successfully!');
+        toast.success('SmartBrief updated successfully!');
       }
     } else {
       const { data, error } = await supabase
@@ -115,7 +116,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
 
       if (!error && data) {
         setSelectedBrief(data);
-        alert('SmartBrief created successfully!');
+        toast.success('SmartBrief created successfully!');
       }
     }
     
@@ -132,7 +133,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
 
     if (!error) {
       resetForm();
-      alert('SmartBrief deleted successfully!');
+      toast.success('SmartBrief deleted successfully!');
     }
   };
 
@@ -169,12 +170,12 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
     console.log('[SmartBrief] AI Instructions:', aiInstructions.substring(0, 50) + '...');
     
     if (urls.length === 0) {
-      alert('Please add at least one URL in the Training Stories field');
+      toast.warning('Please add at least one URL in the Training Stories field');
       return;
     }
 
     if (!aiInstructions.trim()) {
-      alert('Please add AI instructions first to provide context for the URL analysis');
+      toast.warning('Please add AI instructions first to provide context for the URL analysis');
       return;
     }
 
@@ -197,10 +198,10 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
       const result = await response.json();
       console.log('[SmartBrief] Analysis complete, URLs analyzed:', result.urlsAnalyzed);
       setUrlAnalysis(result.analysis);
-      alert(`✅ Analysis complete! Analyzed ${result.urlsAnalyzed} of ${result.totalUrls} URLs.`);
+      toast.success(`Analysis complete! Analyzed ${result.urlsAnalyzed} of ${result.totalUrls} URLs.`);
     } catch (error: any) {
       console.error('[SmartBrief] Error analyzing URLs:', error);
-      alert(`❌ Error: ${error.message || 'Failed to analyze example URLs'}`);
+      toast.error(error.message || 'Failed to analyze example URLs');
     } finally {
       setAnalyzing(false);
     }

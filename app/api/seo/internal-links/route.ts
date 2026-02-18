@@ -21,11 +21,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get project details
+    // Get project details (verify ownership)
     const { data: project, error: projectError } = await supabase
       .from('projects')
       .select('headline, primary_keyword, secondary_keywords')
       .eq('id', projectId)
+      .eq('user_id', user.id)
       .single();
 
     if (projectError || !project) {

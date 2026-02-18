@@ -277,7 +277,10 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         <div>
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-lg font-semibold tracking-tight">Recent Projects</h2>
-            <button className="text-[13px] text-accent-primary font-medium hover:text-accent-hover flex items-center gap-1">
+            <button
+              onClick={() => router.push('/projects')}
+              className="text-[13px] text-accent-primary font-medium hover:text-accent-hover flex items-center gap-1"
+            >
               View all
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/>
@@ -348,7 +351,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
       <div className="mt-8 flex items-center gap-2 px-4 py-3 bg-bg-surface border border-border-subtle rounded-lg">
         <div className="w-2 h-2 rounded-full bg-success animate-pulse-slow" />
         <span className="text-[13px] text-text-secondary">
-          <strong className="text-text-primary font-semibold">7 AI Agents</strong> online and ready — All systems operational
+          <strong className="text-text-primary font-semibold">AI Agents</strong> online and ready — All systems operational
         </span>
       </div>
 

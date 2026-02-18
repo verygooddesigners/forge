@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Bell, Palette, Zap, Save } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface SettingsPageClientProps {
   user: User;
@@ -27,17 +28,17 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
       // Settings would be saved to a user_settings table or preferences field
       // For now, just show success message
       await new Promise(resolve => setTimeout(resolve, 500));
-      alert('Settings saved successfully');
+      toast.success('Settings saved successfully');
     } catch (error) {
       console.error('Error saving settings:', error);
-      alert('Failed to save settings. Please try again.');
+      toast.error('Failed to save settings. Please try again.');
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50 p-6">
+    <div className="min-h-screen bg-bg-primary p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -49,26 +50,26 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Dashboard
           </Button>
-          <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-          <p className="text-gray-600 mt-1">Customize your Forge experience</p>
+          <h1 className="text-3xl font-bold text-text-primary">Settings</h1>
+          <p className="text-text-secondary mt-1">Customize your Forge experience</p>
         </div>
 
         <div className="space-y-6">
           {/* Editor Settings */}
-          <Card>
+          <Card className="bg-bg-surface border-border-default">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Zap className="h-5 w-5 text-primary" />
+              <CardTitle className="flex items-center gap-2 text-text-primary">
+                <Zap className="h-5 w-5 text-accent-primary" />
                 Editor Preferences
               </CardTitle>
-              <CardDescription>Configure how the editor behaves</CardDescription>
+              <CardDescription className="text-text-secondary">Configure how the editor behaves</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Auto-save */}
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="auto-save">Auto-save</Label>
-                  <p className="text-sm text-gray-600">
+                  <Label htmlFor="auto-save" className="text-text-primary">Auto-save</Label>
+                  <p className="text-sm text-text-secondary">
                     Automatically save your work while you type
                   </p>
                 </div>
@@ -82,7 +83,7 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
               {/* Auto-save Delay */}
               {autoSave && (
                 <div className="space-y-2">
-                  <Label htmlFor="auto-save-delay">Auto-save Delay</Label>
+                  <Label htmlFor="auto-save-delay" className="text-text-primary">Auto-save Delay</Label>
                   <Select value={autoSaveDelay} onValueChange={setAutoSaveDelay}>
                     <SelectTrigger id="auto-save-delay" className="w-full">
                       <SelectValue />
@@ -94,7 +95,7 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
                       <SelectItem value="5">5 seconds</SelectItem>
                     </SelectContent>
                   </Select>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-text-tertiary">
                     How long to wait after you stop typing before saving
                   </p>
                 </div>
@@ -103,8 +104,8 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
               {/* Word Count Display */}
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Show Word Count</Label>
-                  <p className="text-sm text-gray-600">
+                  <Label className="text-text-primary">Show Word Count</Label>
+                  <p className="text-sm text-text-secondary">
                     Display word count in the editor toolbar
                   </p>
                 </div>
@@ -114,19 +115,19 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
           </Card>
 
           {/* Notification Settings */}
-          <Card>
+          <Card className="bg-bg-surface border-border-default">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5 text-primary" />
+              <CardTitle className="flex items-center gap-2 text-text-primary">
+                <Bell className="h-5 w-5 text-accent-primary" />
                 Notifications
               </CardTitle>
-              <CardDescription>Manage how you receive notifications</CardDescription>
+              <CardDescription className="text-text-secondary">Manage how you receive notifications</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="email-notifications">Email Notifications</Label>
-                  <p className="text-sm text-gray-600">
+                  <Label htmlFor="email-notifications" className="text-text-primary">Email Notifications</Label>
+                  <p className="text-sm text-text-secondary">
                     Receive updates about your projects and team activity
                   </p>
                 </div>
@@ -139,8 +140,8 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Content Generation Complete</Label>
-                  <p className="text-sm text-gray-600">
+                  <Label className="text-text-primary">Content Generation Complete</Label>
+                  <p className="text-sm text-text-secondary">
                     Notify when AI finishes generating content
                   </p>
                 </div>
@@ -149,8 +150,8 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>SEO Score Alerts</Label>
-                  <p className="text-sm text-gray-600">
+                  <Label className="text-text-primary">SEO Score Alerts</Label>
+                  <p className="text-sm text-text-secondary">
                     Alert when SEO score falls below threshold
                   </p>
                 </div>
@@ -160,17 +161,17 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
           </Card>
 
           {/* Appearance Settings */}
-          <Card>
+          <Card className="bg-bg-surface border-border-default">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Palette className="h-5 w-5 text-primary" />
+              <CardTitle className="flex items-center gap-2 text-text-primary">
+                <Palette className="h-5 w-5 text-accent-primary" />
                 Appearance
               </CardTitle>
-              <CardDescription>Customize the look and feel</CardDescription>
+              <CardDescription className="text-text-secondary">Customize the look and feel</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label>Theme</Label>
+                <Label className="text-text-primary">Theme</Label>
                 <Select value="dark" disabled>
                   <SelectTrigger className="w-full">
                     <SelectValue />
@@ -181,13 +182,13 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
                     <SelectItem value="auto">Auto</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-text-tertiary">
                   Theme customization coming soon
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label>Editor Font Size</Label>
+                <Label className="text-text-primary">Editor Font Size</Label>
                 <Select value="medium" disabled>
                   <SelectTrigger className="w-full">
                     <SelectValue />

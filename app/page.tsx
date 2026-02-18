@@ -5,21 +5,16 @@ import { createClient } from '@/lib/supabase/server';
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  // TEMPORARILY DISABLED FOR SCREENSHOTS - Bypass login and go straight to dashboard
-  redirect('/dashboard');
-  
-  // try {
-  //   const supabase = await createClient();
-  //   const { data: { user } } = await supabase.auth.getUser();
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
-  //   // Redirect to dashboard if logged in, otherwise to login
-  //   if (user) {
-  //     redirect('/dashboard');
-  //   } else {
-  //     redirect('/login');
-  //   }
-  // } catch (error) {
-  //   // If Supabase is not configured, redirect to login
-  //   redirect('/login');
-  // }
+    if (user) {
+      redirect('/dashboard');
+    } else {
+      redirect('/login');
+    }
+  } catch {
+    redirect('/login');
+  }
 }

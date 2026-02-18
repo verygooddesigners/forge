@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 import { ArrowLeft, Edit, Save, X, UserCircle, Mail, Shield, Calendar } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ProfilePageClientProps {
   user: User;
@@ -34,12 +35,12 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
 
       if (error) throw error;
 
-      alert('Profile updated successfully');
+      toast.success('Profile updated successfully');
       setIsEditing(false);
       router.refresh();
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('Failed to update profile. Please try again.');
+      toast.error('Failed to update profile. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -50,21 +51,21 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
     setIsEditing(false);
   };
 
-  const getRoleBadgeColor = (role: string) => {
+  const getRoleBadgeVariant = (role: string) => {
     switch (role) {
       case 'admin':
-        return 'bg-purple-100 text-purple-800 border-purple-300';
+        return 'text-violet-400 border-violet-500/30 bg-violet-500/10';
       case 'strategist':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
+        return 'text-blue-400 border-blue-500/30 bg-blue-500/10';
       case 'editor':
-        return 'bg-green-100 text-green-800 border-green-300';
+        return 'text-green-400 border-green-500/30 bg-green-500/10';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-300';
+        return 'text-text-secondary border-border-subtle bg-bg-elevated';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50 p-6">
+    <div className="min-h-screen bg-bg-primary p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -76,20 +77,20 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Dashboard
           </Button>
-          <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
-          <p className="text-gray-600 mt-1">Manage your account information</p>
+          <h1 className="text-3xl font-bold text-text-primary">Profile</h1>
+          <p className="text-text-secondary mt-1">Manage your account information</p>
         </div>
 
         {/* Profile Card */}
-        <Card className="mb-6">
+        <Card className="mb-6 bg-bg-surface border-border-default">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="flex items-center gap-2">
-                  <UserCircle className="h-5 w-5 text-primary" />
+                <CardTitle className="flex items-center gap-2 text-text-primary">
+                  <UserCircle className="h-5 w-5 text-accent-primary" />
                   Account Information
                 </CardTitle>
-                <CardDescription>Your personal details and account settings</CardDescription>
+                <CardDescription className="text-text-secondary">Your personal details and account settings</CardDescription>
               </div>
               {!isEditing && (
                 <Button onClick={() => setIsEditing(true)} variant="outline">
@@ -102,13 +103,13 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
           <CardContent className="space-y-6">
             {/* Avatar */}
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center font-bold text-white text-2xl">
+              <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-bold text-white text-2xl">
                 {user.full_name
                   ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase()
                   : user.email[0].toUpperCase()}
               </div>
               <div>
-                <p className="text-sm text-gray-600">Profile Picture</p>
+                <p className="text-sm text-text-secondary">Profile Picture</p>
                 <Button variant="outline" size="sm" className="mt-2" disabled>
                   Upload Photo
                 </Button>
@@ -117,7 +118,7 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
 
             {/* Full Name */}
             <div className="space-y-2">
-              <Label htmlFor="fullName" className="flex items-center gap-2">
+              <Label htmlFor="fullName" className="text-text-primary">
                 Full Name
               </Label>
               {isEditing ? (
@@ -128,49 +129,49 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
                   placeholder="Enter your full name"
                 />
               ) : (
-                <p className="text-sm font-medium">
-                  {user.full_name || <span className="text-gray-400 italic">Not set</span>}
+                <p className="text-sm font-medium text-text-primary">
+                  {user.full_name || <span className="text-text-tertiary italic">Not set</span>}
                 </p>
               )}
             </div>
 
             {/* Email (read-only) */}
             <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-gray-500" />
+              <Label className="flex items-center gap-2 text-text-primary">
+                <Mail className="h-4 w-4 text-text-tertiary" />
                 Email Address
               </Label>
-              <p className="text-sm font-medium text-gray-700">{user.email}</p>
-              <p className="text-xs text-gray-500">Email cannot be changed</p>
+              <p className="text-sm font-medium text-text-secondary">{user.email}</p>
+              <p className="text-xs text-text-tertiary">Email cannot be changed</p>
             </div>
 
             {/* Role (read-only) */}
             <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-gray-500" />
+              <Label className="flex items-center gap-2 text-text-primary">
+                <Shield className="h-4 w-4 text-text-tertiary" />
                 Role
               </Label>
-              <Badge variant="outline" className={getRoleBadgeColor(user.role)}>
+              <Badge variant="outline" className={getRoleBadgeVariant(user.role)}>
                 {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
               </Badge>
-              <p className="text-xs text-gray-500">Role is managed by administrators</p>
+              <p className="text-xs text-text-tertiary">Role is managed by administrators</p>
             </div>
 
             {/* Account Status (read-only) */}
             <div className="space-y-2">
-              <Label>Account Status</Label>
-              <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">
+              <Label className="text-text-primary">Account Status</Label>
+              <Badge variant="outline" className="text-green-400 border-green-500/30 bg-green-500/10">
                 {user.account_status.charAt(0).toUpperCase() + user.account_status.slice(1)}
               </Badge>
             </div>
 
             {/* Created Date */}
             <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-gray-500" />
+              <Label className="flex items-center gap-2 text-text-primary">
+                <Calendar className="h-4 w-4 text-text-tertiary" />
                 Member Since
               </Label>
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-text-secondary">
                 {new Date(user.created_at).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -196,15 +197,15 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
         </Card>
 
         {/* Account Security Card */}
-        <Card>
+        <Card className="bg-bg-surface border-border-default">
           <CardHeader>
-            <CardTitle>Security</CardTitle>
-            <CardDescription>Manage your password and security settings</CardDescription>
+            <CardTitle className="text-text-primary">Security</CardTitle>
+            <CardDescription className="text-text-secondary">Manage your password and security settings</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Password</Label>
-              <p className="text-sm text-gray-600">••••••••</p>
+              <Label className="text-text-primary">Password</Label>
+              <p className="text-sm text-text-secondary">••••••••</p>
               <Button variant="outline" size="sm" onClick={() => router.push('/reset-password')}>
                 Change Password
               </Button>
@@ -212,7 +213,7 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
 
             {user.auth_provider && (
               <div className="space-y-2">
-                <Label>Authentication Provider</Label>
+                <Label className="text-text-primary">Authentication Provider</Label>
                 <Badge variant="outline">
                   {user.auth_provider === 'azure' ? 'Microsoft SSO' : user.auth_provider}
                 </Badge>

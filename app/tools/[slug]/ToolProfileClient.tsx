@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -80,11 +81,11 @@ export function ToolProfileClient({ slug }: { slug: string }) {
         await fetchTool();
       } else {
         const data = await response.json();
-        alert(data.error || 'Failed to install tool');
+        toast.error(data.error || 'Failed to install tool');
       }
     } catch (error) {
       console.error('Error installing tool:', error);
-      alert('Failed to install tool');
+      toast.error('Failed to install tool');
     } finally {
       setActionLoading(false);
     }
@@ -107,11 +108,11 @@ export function ToolProfileClient({ slug }: { slug: string }) {
         await fetchTool();
       } else {
         const data = await response.json();
-        alert(data.error || 'Failed to uninstall tool');
+        toast.error(data.error || 'Failed to uninstall tool');
       }
     } catch (error) {
       console.error('Error uninstalling tool:', error);
-      alert('Failed to uninstall tool');
+      toast.error('Failed to uninstall tool');
     } finally {
       setActionLoading(false);
     }

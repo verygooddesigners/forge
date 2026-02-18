@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { createClient } from '@/lib/supabase/client';
 import { Save } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface AITunerProps {
   adminUser: User;
@@ -58,7 +59,7 @@ export function AITuner({ adminUser }: AITunerProps) {
 
       if (!error) {
         console.log('[AI_TUNER] Save successful');
-        alert('Master instructions saved successfully');
+        toast.success('Master instructions saved successfully');
       } else {
         console.error('[AI_TUNER] Save error:', error);
         throw error;
@@ -66,7 +67,7 @@ export function AITuner({ adminUser }: AITunerProps) {
     } catch (error: any) {
       console.error('[AI_TUNER] Error saving master instructions:', error);
       const errorMsg = error?.message || error?.details || 'Unknown error';
-      alert(`Failed to save master instructions\n\nError: ${errorMsg}\n\nPlease check your user role in the database.`);
+      toast.error('Failed to save master instructions', { description: `Error: ${errorMsg}\n\nPlease check your user role in the database.` });
     } finally {
       setSaving(false);
     }

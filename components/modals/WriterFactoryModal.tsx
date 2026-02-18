@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -152,14 +153,14 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
           setTrainingContent(extractedContent);
           setTrainingUrl('');
         } else {
-          alert('No content could be extracted from that URL. Please try copy/pasting the text manually.');
+          toast.warning('No content could be extracted from that URL. Please try copy/pasting the text manually.');
         }
       } else {
-        alert('Failed to extract content from URL. Please try copy/pasting the text manually.');
+        toast.error('Failed to extract content from URL. Please try copy/pasting the text manually.');
       }
     } catch (error) {
       console.error('URL extraction error:', error);
-      alert('Failed to extract content from URL. Please try copy/pasting the text manually.');
+      toast.error('Failed to extract content from URL. Please try copy/pasting the text manually.');
     } finally {
       setExtracting(false);
     }
@@ -225,13 +226,13 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
         const errorData = await response.json().catch(() => ({}));
         const errorMessage = errorData.details || errorData.error || 'Unknown error';
         console.error('Training error:', errorData);
-        alert(`Error: Failed to add training story\n\n${errorMessage}\n\nPlease check the browser console for more details.`);
+        toast.error('Failed to add training story', { description: `${errorMessage}\n\nPlease check the browser console for more details.` });
       }
     } catch (error) {
       // If there was an error, restore the content
       setTrainingContent(contentToSubmit);
       console.error('Error adding training content:', error);
-      alert('Failed to add training content. Please try again.');
+      toast.error('Failed to add training content. Please try again.');
     } finally {
       setLoading(false);
     }

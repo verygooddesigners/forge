@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { AgentConfig, AgentKey } from '@/lib/agents/types';
 import { isValidAgentKey } from '@/lib/agents/config';
+import { isSuperAdmin } from '@/lib/auth-config';
 
 interface RouteParams {
   params: Promise<{
@@ -22,26 +23,24 @@ export async function GET(
   try {
     const { agentKey } = await params;
     
-    // Check super admin access (only jeremy.botter@gdcgroup.com)
+    // Check super admin access
     const user = await getCurrentUser();
-    const isSuperAdmin = user?.email === 'jeremy.botter@gdcgroup.com';
-    
-    if (!user || !isSuperAdmin) {
+    if (!user || !isSuperAdmin(user?.email)) {
       return NextResponse.json(
         { error: 'Unauthorized. Super admin access required.' },
         { status: 403 }
       );
     }
-    
+
     if (!isValidAgentKey(agentKey)) {
       return NextResponse.json(
         { error: 'Invalid agent key' },
         { status: 400 }
       );
     }
-    
+
     const supabase = await createClient();
-    
+
     const { data: config, error } = await supabase
       .from('agent_configs')
       .select('*')
@@ -94,16 +93,11 @@ export async function PUT(
 ) {
   try {
     const { agentKey } = await params;
-    
-    console.log('[AGENT_UPDATE] Request received for agent:', agentKey);
-    
-    // Check super admin access (only jeremy.botter@gdcgroup.com)
+
+    // Check super admin access
     const user = await getCurrentUser();
-    console.log('[AGENT_UPDATE] User:', user?.email, 'Role:', user?.role);
-    
-    const isSuperAdmin = user?.email === 'jeremy.botter@gdcgroup.com';
-    
-    if (!user || !isSuperAdmin) {
+
+    if (!user || !isSuperAdmin(user?.email)) {
       console.error('[AGENT_UPDATE] Unauthorized access attempt by:', user?.email);
       return NextResponse.json(
         { error: 'Unauthorized. Super admin access required.' },
@@ -120,9 +114,7 @@ export async function PUT(
     
     const body = await request.json();
     const supabase = await createClient();
-    
-    console.log('[AGENT_UPDATE] Updating agent config in database');
-    
+
     const { data, error } = await supabase
       .from('agent_configs')
       .update({
@@ -145,9 +137,7 @@ export async function PUT(
       console.error('[AGENT_UPDATE] Database error:', error);
       throw error;
     }
-    
-    console.log('[AGENT_UPDATE] Successfully updated agent');
-    
+
     // Transform response
     const agentConfig: AgentConfig = {
       id: data.id,

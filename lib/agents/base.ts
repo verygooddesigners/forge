@@ -79,6 +79,8 @@ function getDefaultSystemPrompt(agentKey: AgentKey): string {
       return prompts.CREATIVE_FEATURES_PROMPT;
     case 'visual_extraction':
       return prompts.VISUAL_EXTRACTION_PROMPT;
+    case 'fact_verification':
+      return 'You are a fact verification specialist. Cross-reference claims against multiple sources to verify accuracy. Flag any disputed or unverifiable claims with clear reasoning.';
     default:
       return '';
   }

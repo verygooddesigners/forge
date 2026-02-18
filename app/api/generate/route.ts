@@ -39,8 +39,6 @@ function convertTipTapToText(doc: any): string {
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('[GENERATE] Starting content generation...');
-    
     const {
       projectId,
       headline,
@@ -50,16 +48,6 @@ export async function POST(request: NextRequest) {
       writerModelId,
       briefContent,
     } = await request.json();
-
-    console.log('[GENERATE] Request data:', {
-      projectId,
-      headline,
-      primaryKeyword,
-      hasSecondaryKeywords: !!secondaryKeywords,
-      wordCount,
-      writerModelId,
-      hasBriefContent: !!briefContent,
-    });
 
     // Validate required fields
     if (!headline || !primaryKeyword || !writerModelId) {
@@ -73,7 +61,6 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
 
     // Verify user is authenticated
-    console.log('[GENERATE] Checking authentication...');
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       console.error('[GENERATE] User not authenticated');
@@ -82,10 +69,39 @@ export async function POST(request: NextRequest) {
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
-    console.log('[GENERATE] User authenticated:', user.id);
+    // Verify project ownership if projectId provided
+    if (projectId) {
+      const { data: project } = await supabase
+        .from('projects')
+        .select('id')
+        .eq('id', projectId)
+        .eq('user_id', user.id)
+        .single();
+      if (!project) {
+        return new Response(
+          JSON.stringify({ error: 'Project not found or access denied' }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // Verify writer model ownership
+    if (writerModelId) {
+      const { data: model } = await supabase
+        .from('writer_models')
+        .select('id')
+        .eq('id', writerModelId)
+        .eq('user_id', user.id)
+        .single();
+      if (!model) {
+        return new Response(
+          JSON.stringify({ error: 'Writer model not found or access denied' }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+    }
 
     // Get AI master instructions (optional - don't fail if missing)
-    console.log('[GENERATE] Fetching AI master instructions...');
     let masterInstructions = '';
     try {
       const { data: aiSettings, error: settingsError } = await supabase
@@ -98,14 +114,12 @@ export async function POST(request: NextRequest) {
         console.warn('[GENERATE] ai_settings query failed (non-fatal):', settingsError.message);
       } else {
         masterInstructions = aiSettings?.setting_value || '';
-        console.log('[GENERATE] Master instructions loaded');
       }
     } catch (settingsErr) {
       console.warn('[GENERATE] ai_settings table might not exist (non-fatal):', settingsErr);
     }
 
     // Use RAG to find similar training content
-    console.log('[GENERATE] Fetching training content for model:', writerModelId);
     const queryText = `${headline} ${primaryKeyword} ${secondaryKeywords?.join(' ') || ''}`;
     let similarContent = [];
     let writerContext = '';
@@ -116,8 +130,7 @@ export async function POST(request: NextRequest) {
         queryText,
         3 // Get top 3 examples
       );
-      console.log('[GENERATE] Found training content:', similarContent.length, 'examples');
-      
+
       // Build context from examples
       writerContext = buildContextFromExamples(similarContent);
       
@@ -131,7 +144,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Convert brief content from TipTap JSON to plain text
-    console.log('[GENERATE] Processing brief content...');
     let briefText = 'Write a well-structured article with clear headings and paragraphs.';
     if (briefContent) {
       try {
@@ -141,7 +153,6 @@ export async function POST(request: NextRequest) {
         // Convert TipTap JSON to plain text
         if (briefJson && briefJson.content) {
           briefText = convertTipTapToText(briefJson);
-          console.log('[GENERATE] Brief content converted to text:', briefText.substring(0, 100) + '...');
         } else {
           briefText = briefContent;
         }
@@ -149,12 +160,9 @@ export async function POST(request: NextRequest) {
         console.warn('[GENERATE] Brief parsing error (using default):', e.message);
         briefText = 'Write a well-structured article with clear headings and paragraphs.';
       }
-    } else {
-      console.log('[GENERATE] No brief content provided, using default');
     }
 
     // Build the brief with all context
-    console.log('[GENERATE] Building content generation request...');
     let fullBrief = briefText;
     if (masterInstructions) {
       fullBrief = `${masterInstructions}\n\n${briefText}`;
@@ -171,11 +179,9 @@ export async function POST(request: NextRequest) {
     };
 
     // Generate content with streaming using agent
-    console.log('[GENERATE] Calling Content Generation Agent for streaming...');
     let stream: ReadableStream;
     try {
       stream = await generateContentStream(agentRequest);
-      console.log('[GENERATE] Stream created successfully');
     } catch (aiError: any) {
       console.error('[GENERATE] Content Generation Agent error:', aiError.message);
       return new Response(

@@ -67,7 +67,7 @@ Return as a JSON array of strings, like: ["keyword1", "keyword2", "keyword3"]`;
         status: 'under' as const,
         category: 'Primary',
       },
-      ...secondaryKeywords.map((keyword: string) => ({
+      ...(secondaryKeywords || []).map((keyword: string) => ({
         term: keyword.toLowerCase(),
         current: 0,
         target: `${Math.floor(idealKeywordCount * 0.3)}-${Math.ceil(idealKeywordCount * 0.7)}`,

@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Package, Download, Check, Loader2 } from 'lucide-react';
 import type { ToolWithInstallStatus } from '@/types/tools';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 interface ToolCardProps {
   tool: ToolWithInstallStatus;
@@ -37,11 +38,11 @@ export function ToolCard({ tool, onInstallChange }: ToolCardProps) {
         onInstallChange?.();
       } else {
         const data = await response.json();
-        alert(data.error || 'Failed to install tool');
+        toast.error(data.error || 'Failed to install tool');
       }
     } catch (error) {
       console.error('Error installing tool:', error);
-      alert('Failed to install tool');
+      toast.error('Failed to install tool');
     } finally {
       setIsInstalling(false);
     }

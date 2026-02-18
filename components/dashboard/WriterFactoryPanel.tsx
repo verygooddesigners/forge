@@ -15,6 +15,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { toast } from 'sonner';
 
 interface WriterFactoryPanelProps {
   user: User;
@@ -114,14 +115,14 @@ export function WriterFactoryPanel({ user }: WriterFactoryPanelProps) {
           setTrainingText(extractedContent);
           setTrainingUrl('');
         } else {
-          alert('No content could be extracted from that URL. Please try copy/pasting the text manually.');
+          toast.warning('No content could be extracted from that URL. Please try copy/pasting the text manually.');
         }
       } else {
-        alert('Failed to extract content from URL. Please try copy/pasting the text manually.');
+        toast.error('Failed to extract content from URL. Please try copy/pasting the text manually.');
       }
     } catch (error) {
       console.error('URL extraction error:', error);
-      alert('Failed to extract content from URL. Please try copy/pasting the text manually.');
+      toast.error('Failed to extract content from URL. Please try copy/pasting the text manually.');
     } finally {
       setExtracting(false);
     }
@@ -168,12 +169,12 @@ export function WriterFactoryPanel({ user }: WriterFactoryPanelProps) {
         await loadTrainingContent(selectedModel.id);
         await loadModels(); // Reload models to update badge counts
         setTrainingText('');
-        alert('✅ Training story added successfully!');
+        toast.success('Training story added successfully!');
       } else {
         throw new Error('Failed to add training story');
       }
     } catch (error: any) {
-      alert(`❌ Error: ${error.message}`);
+      toast.error(error.message);
     } finally {
       setTraining(false);
     }

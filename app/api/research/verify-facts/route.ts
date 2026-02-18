@@ -22,11 +22,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get project details
+    // Get project details (verify ownership)
     const { data: project } = await supabase
       .from('projects')
       .select('headline, topic, primary_keyword')
       .eq('id', projectId)
+      .eq('user_id', user.id)
       .single();
 
     if (!project) {
@@ -66,7 +67,8 @@ export async function POST(request: NextRequest) {
         research_brief: researchBrief,
         updated_at: new Date().toISOString(),
       })
-      .eq('id', projectId);
+      .eq('id', projectId)
+      .eq('user_id', user.id);
 
     if (updateError) {
       console.error('Error updating project with research brief:', updateError);

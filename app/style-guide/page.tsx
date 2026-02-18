@@ -50,10 +50,10 @@ export default function StyleGuidePage() {
         <div className="max-w-[1400px] mx-auto">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-white">
-              RW
+              F
             </div>
             <h1 className="text-3xl font-bold tracking-tight">
-              Roto<span className="text-accent-primary">Write</span> Style Guide
+              Forge Style Guide
             </h1>
           </div>
           <p className="text-text-secondary text-[15px]">

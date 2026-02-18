@@ -9,20 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, Loader2, RefreshCw, Send } from 'lucide-react';
+import { isSuperAdmin } from '@/lib/auth-config';
 
 interface CursorRemotePanelProps {
   adminUser: User;
 }
 
-const SUPER_ADMIN_EMAILS = new Set([
-  'jeremy.botter@gdcgroup.com',
-]);
-
 const REFRESH_INTERVAL_MS = 10000;
-
-function isSuperAdmin(email?: string | null) {
-  return !!email && SUPER_ADMIN_EMAILS.has(email);
-}
 
 function formatDate(value?: string | null) {
   if (!value) return '—';

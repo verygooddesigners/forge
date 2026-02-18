@@ -1,14 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
-
-const SUPER_ADMIN_EMAILS = new Set([
-  'jeremy.botter@gdcgroup.com',
-]);
-
-function isSuperAdmin(email?: string | null) {
-  return !!email && SUPER_ADMIN_EMAILS.has(email);
-}
+import { isSuperAdmin } from '@/lib/auth-config';
 
 export async function GET() {
   try {

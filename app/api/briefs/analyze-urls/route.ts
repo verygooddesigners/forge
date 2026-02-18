@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateContent } from '@/lib/agents/content-generation';
+import { createClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { urls, instructions } = await request.json();
 
     if (!urls || !Array.isArray(urls) || urls.length === 0) {

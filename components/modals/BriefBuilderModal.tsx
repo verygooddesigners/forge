@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -234,7 +235,7 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
     }
 
     if (!aiInstructions.trim()) {
-      alert('Please add AI instructions first to provide context for the URL analysis');
+      toast.warning('Please add AI instructions first to provide context for the URL analysis');
       return;
     }
 
@@ -257,7 +258,7 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
       setUrlAnalysis(result.analysis);
     } catch (error: any) {
       console.error('Error analyzing URLs:', error);
-      alert(error.message || 'Failed to analyze example URLs');
+      toast.error(error.message || 'Failed to analyze example URLs');
     } finally {
       setAnalyzing(false);
     }

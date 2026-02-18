@@ -9,6 +9,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Project } from '@/types';
 import { Editor } from '@tiptap/react';
+import { toast } from 'sonner';
 
 interface EditorPanelProps {
   projectId: string | null;
@@ -72,7 +73,6 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
       }
 
       if (data) {
-        console.log('Project loaded:', data.headline, 'Writer Model ID:', data.writer_model_id);
         setProject(data as Project);
         setContent(data.content || null);
       }
@@ -106,20 +106,20 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
 
   const handleGenerateContent = async () => {
     if (!project || !projectId) {
-      alert('Project not loaded. Please try again.');
+      toast.error('Project not loaded. Please try again.');
       return;
     }
 
     // Check if research is required and complete
     if (!project.research_brief || !project.research_brief.fact_check_complete) {
-      alert('Please complete story research before generating content. Click "Research Story" in the SEO Wizard.');
+      toast.warning('Please complete story research before generating content. Click "Research Story" in the SEO Wizard.');
       return;
     }
 
     // Use writerModelId from prop or from project
     const modelId = writerModelId || project.writer_model_id;
     if (!modelId) {
-      alert('No writer model selected. Please select a writer model for this project.');
+      toast.error('No writer model selected. Please select a writer model for this project.');
       return;
     }
 
@@ -140,14 +140,6 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
           briefContent = briefData.content;
         }
       }
-
-      console.log('Generating content with:', {
-        projectId,
-        headline: project.headline,
-        primaryKeyword: project.primary_keyword,
-        writerModelId: modelId,
-        hasBrief: !!briefContent,
-      });
 
       const response = await fetch('/api/generate', {
         method: 'POST',
@@ -435,10 +427,6 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
         content: tipTapNodes.filter((node) => node.content && (node.content.length > 0 || node.type === 'bulletList' || node.type === 'orderedList')),
       };
 
-      console.log('[GENERATE] TipTap content structure:', JSON.stringify(tipTapContent, null, 2));
-      console.log('[GENERATE] Total nodes:', tipTapContent.content.length);
-      console.log('[GENERATE] Node types:', tipTapContent.content.map((n: any) => n.type));
-
       setContent(tipTapContent);
       
       // Save the generated content
@@ -463,7 +451,7 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
         }
       }
       
-      alert(`Content Generation Error:\n\n${errorMessage}\n\nPlease check the browser console for more details.`);
+      toast.error('Content Generation Error', { description: `${errorMessage} Please check the browser console for more details.` });
     } finally {
       setGenerating(false);
     }

@@ -73,3 +73,9 @@ export interface SEOOptimizationSpecialConfig {
   minContentLength: number;
 }
 
+export interface FactVerificationSpecialConfig {
+  minSourcesForHighConfidence: number;
+  minSourcesForMediumConfidence: number;
+  requireMultipleSourcesForVerification: boolean;
+}
+

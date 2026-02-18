@@ -19,6 +19,7 @@ import {
 import * as LucideIcons from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import type { InstalledToolWithDetails } from '@/types/tools';
+import { isSuperAdmin } from '@/lib/auth-config';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -100,10 +101,10 @@ export function AppSidebar({
       <div className="p-6 border-b border-border-subtle">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-mono font-bold text-sm text-white">
-            RW
+            F
           </div>
           <div className="text-xl font-bold tracking-tight text-text-primary">
-            Roto<span className="text-accent-primary">Write</span>
+            Forge
           </div>
         </div>
       </div>
@@ -214,7 +215,7 @@ export function AppSidebar({
         )}
 
         {/* SYSTEM Section - Only for super admin */}
-        {user.email === 'jeremy.botter@gdcgroup.com' && (
+        {isSuperAdmin(user.email) && (
           <div>
             <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
               System

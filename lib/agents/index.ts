@@ -63,6 +63,9 @@ export {
   type VisualExtractionResult,
 } from './visual-extraction';
 
+// Agent #8: Fact Verification
+export { verifyFacts } from './fact-verification';
+
 // LanguageTool integration
 export {
   checkGrammar,

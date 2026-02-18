@@ -2,27 +2,26 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
 import { AgentConfig } from '@/lib/agents/types';
+import { isSuperAdmin } from '@/lib/auth-config';
 
 /**
  * GET /api/admin/agents
  * List all agent configurations
- * Access: Super admin only (jeremy.botter@gmail.com)
+ * Access: Super admin only
  */
 export async function GET(request: NextRequest) {
   try {
-    // Check super admin access (only jeremy.botter@gdcgroup.com)
+    // Check super admin access
     const user = await getCurrentUser();
-    const isSuperAdmin = user?.email === 'jeremy.botter@gdcgroup.com';
-    
-    if (!user || !isSuperAdmin) {
+    if (!user || !isSuperAdmin(user?.email)) {
       return NextResponse.json(
         { error: 'Unauthorized. Super admin access required.' },
         { status: 403 }
       );
     }
-    
+
     const supabase = await createClient();
-    
+
     const { data: configs, error } = await supabase
       .from('agent_configs')
       .select('*')
@@ -67,17 +66,15 @@ export async function GET(request: NextRequest) {
  */
 export async function PUT(request: NextRequest) {
   try {
-    // Check super admin access (only jeremy.botter@gdcgroup.com)
+    // Check super admin access
     const user = await getCurrentUser();
-    const isSuperAdmin = user?.email === 'jeremy.botter@gdcgroup.com';
-    
-    if (!user || !isSuperAdmin) {
+    if (!user || !isSuperAdmin(user?.email)) {
       return NextResponse.json(
         { error: 'Unauthorized. Super admin access required.' },
         { status: 403 }
       );
     }
-    
+
     const body = await request.json();
     const { agents } = body;
     

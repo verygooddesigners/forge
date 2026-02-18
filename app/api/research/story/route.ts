@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 
     // Transform and score results
     const articles: ResearchArticle[] = (tavilyData.results || []).map((result: any, index: number) => {
-      const domain = new URL(result.url).hostname.replace('www.', '');
+      const domain = (() => { try { return new URL(result.url).hostname.replace('www.', ''); } catch { return result.url || 'unknown'; } })();
       const trustedSource = trustedSourcesMap.get(domain);
       
       // Calculate trust score
