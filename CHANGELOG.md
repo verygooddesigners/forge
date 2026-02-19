@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.05.01] - 2026-02-19
+
+- **SmartBriefs full-screen browser**: replaced the modal-based SmartBriefs browser with a full-screen panel view matching the Projects screen pattern. Includes search bar, summary stats (total, shared, AI configured), and a responsive card grid. "Back to Dashboard" in the editor now navigates back to the SmartBriefs browser.
+
 ## [1.05.00] - 2026-02-18
 
 - **Twigs Template System**: 70+ template variables across 8 categories (Sportsbook, Geography, Offer, Sports, Date, Author, Content, SEO). Twig Inserter button in both SmartBrief and Content Editor toolbars with searchable dropdown. Auto-replacement of date twigs and content metadata during generation.

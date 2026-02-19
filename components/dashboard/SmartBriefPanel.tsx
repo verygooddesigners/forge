@@ -14,8 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { createClient } from '@/lib/supabase/client';
 import { Brief, Category, User } from '@/types';
 import { TipTapEditor } from '@/components/editor/TipTapEditor';
-import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft, HelpCircle, ExternalLink } from 'lucide-react';
-import { SmartBriefListModal } from '@/components/modals/SmartBriefListModal';
+import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft, HelpCircle, ExternalLink, Search } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface SmartBriefPanelProps {
@@ -31,8 +30,13 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   const [categoryId, setCategoryId] = useState<string>('');
   const [isShared, setIsShared] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showBriefListModal, setShowBriefListModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false); // Track create mode
+
+  // Browser state
+  const [briefs, setBriefs] = useState<Brief[]>([]);
+  const [filteredBriefs, setFilteredBriefs] = useState<Brief[]>([]);
+  const [browserLoading, setBrowserLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // AI Configuration fields
   const [aiInstructions, setAiInstructions] = useState('');
@@ -44,7 +48,23 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
 
   useEffect(() => {
     loadCategories();
+    loadBriefs();
   }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredBriefs(briefs);
+    } else {
+      const query = searchQuery.toLowerCase();
+      setFilteredBriefs(
+        briefs.filter(
+          (brief) =>
+            brief.name.toLowerCase().includes(query) ||
+            brief.category?.name.toLowerCase().includes(query)
+        )
+      );
+    }
+  }, [searchQuery, briefs]);
 
   useEffect(() => {
     if (selectedBrief) {
@@ -70,6 +90,31 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
     if (!error && data) {
       setCategories(data);
     }
+  };
+
+  const loadBriefs = async () => {
+    setBrowserLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('briefs')
+        .select('*, category:categories(*)')
+        .order('updated_at', { ascending: false });
+
+      if (!error && data) {
+        setBriefs(data);
+        setFilteredBriefs(data);
+      }
+    } catch (error) {
+      console.error('Error loading briefs:', error);
+    } finally {
+      setBrowserLoading(false);
+    }
+  };
+
+  const handleBriefSelect = (brief: Brief) => {
+    setSelectedBrief(brief);
+    setIsCreating(true);
+    setSearchQuery('');
   };
 
   const saveBrief = async () => {
@@ -99,6 +144,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
       if (!error) {
         // Brief updated successfully
         toast.success('SmartBrief updated successfully!');
+        loadBriefs();
       }
     } else {
       const { data, error } = await supabase
@@ -117,9 +163,10 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
       if (!error && data) {
         setSelectedBrief(data);
         toast.success('SmartBrief created successfully!');
+        loadBriefs();
       }
     }
-    
+
     setLoading(false);
   };
 
@@ -133,6 +180,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
 
     if (!error) {
       resetForm();
+      loadBriefs();
       toast.success('SmartBrief deleted successfully!');
     }
   };
@@ -215,50 +263,121 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
     <>
       <div className="flex-1 bg-bg-deepest overflow-y-auto">
         {!selectedBrief && !isCreating ? (
-          // Welcome state - centered matching dark theme
-          <div className="flex flex-col items-center justify-center h-full p-12 text-center">
-            <h2 className="text-3xl font-bold text-accent-primary mb-2">SmartBriefs</h2>
-            <p className="text-text-secondary max-w-md mb-6">
-              Create smart AI-powered content templates
-            </p>
+          // Full-screen SmartBriefs browser
+          <div className="p-8">
+            {/* Filters Bar */}
+            <div className="flex items-center gap-4 mb-8">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
+                <Input
+                  placeholder="Search SmartBriefs by name or category..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
 
-            {/* Prominent Guide Callout */}
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-2 border-accent-primary rounded-xl p-6 mb-6 max-w-2xl">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-accent-primary rounded-lg flex items-center justify-center">
-                  <HelpCircle className="h-6 w-6 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-text-primary mb-2">
-                    New to SmartBriefs?
-                  </h3>
-                  <p className="text-sm text-text-secondary mb-4">
-                    Learn how to create effective SmartBriefs with our comprehensive guide covering structure, 
-                    AI configuration, examples, and best practices.
-                  </p>
-                  <Button asChild size="lg" className="w-full sm:w-auto">
-                    <a href="/smartbrief-guide" target="_blank" rel="noopener noreferrer">
-                      <BookOpen className="h-4 w-4 mr-2" />
-                      How to Create SmartBriefs
-                      <ExternalLink className="h-3 w-3 ml-2" />
-                    </a>
-                  </Button>
-                </div>
+              <Button asChild variant="outline" size="sm">
+                <a href="/smartbrief-guide" target="_blank" rel="noopener noreferrer">
+                  <HelpCircle className="h-4 w-4" />
+                  Guide
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </Button>
+
+              <Button onClick={startNewBrief}>
+                <Plus className="w-4 h-4" />
+                New SmartBrief
+              </Button>
+            </div>
+
+            {/* Summary Stats */}
+            <div className="flex items-center gap-6 mb-6 pb-6 border-b border-border-subtle">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold font-mono">{briefs.length}</span>
+                <span className="text-[13px] text-text-tertiary">Total SmartBriefs</span>
+              </div>
+              <div className="w-px h-8 bg-border-default" />
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold font-mono text-ai-accent">
+                  {briefs.filter(b => b.is_shared).length}
+                </span>
+                <span className="text-[13px] text-text-tertiary">Shared</span>
+              </div>
+              <div className="w-px h-8 bg-border-default" />
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold font-mono text-success">
+                  {briefs.filter(b => (b.seo_config as any)?.ai_instructions).length}
+                </span>
+                <span className="text-[13px] text-text-tertiary">AI Configured</span>
               </div>
             </div>
 
-            <div className="flex gap-3 mb-4">
-              <Button onClick={startNewBrief} size="lg">
-                <Plus className="h-4 w-4 mr-2" />
-                Create New SmartBrief
-              </Button>
-            </div>
-            <button
-              onClick={() => setShowBriefListModal(true)}
-              className="text-accent-primary hover:underline text-sm"
-            >
-              Or browse existing SmartBriefs
-            </button>
+            {/* SmartBriefs Grid */}
+            {browserLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-accent-primary" />
+              </div>
+            ) : filteredBriefs.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <BookOpen className="h-12 w-12 text-text-muted mb-4 opacity-30" />
+                <p className="text-lg font-semibold text-text-secondary">
+                  {searchQuery ? 'No SmartBriefs found' : 'No SmartBriefs yet'}
+                </p>
+                <p className="text-sm text-text-tertiary mt-2 mb-4">
+                  {searchQuery ? 'Try a different search term' : 'Create your first SmartBrief to get started'}
+                </p>
+                {!searchQuery && (
+                  <Button onClick={startNewBrief}>
+                    <Plus className="w-4 h-4" />
+                    Create New SmartBrief
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                {filteredBriefs.map((brief) => (
+                  <Card
+                    key={brief.id}
+                    className="cursor-pointer relative overflow-hidden group p-5 hover:translate-y-0"
+                    onClick={() => handleBriefSelect(brief)}
+                  >
+                    <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="text-base font-semibold text-text-primary flex-1 leading-snug">
+                        {brief.name}
+                      </h3>
+                      {brief.category && (
+                        <Badge variant="secondary" className="ml-2 flex-shrink-0">
+                          {brief.category.name}
+                        </Badge>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-wrap mb-3">
+                      {brief.is_shared && (
+                        <Badge variant="ai" className="text-xs">
+                          Shared
+                        </Badge>
+                      )}
+                      {(brief.seo_config as any)?.ai_instructions && (
+                        <div className="flex items-center gap-1 text-xs text-ai-accent">
+                          <Sparkles className="h-3 w-3" />
+                          AI Configured
+                        </div>
+                      )}
+                    </div>
+
+                    {brief.updated_at && (
+                      <div className="text-[11px] text-text-tertiary">
+                        Updated {new Date(brief.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </div>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         ) : (
           // SmartBrief editor
@@ -293,9 +412,9 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <Button size="sm" variant="ghost" onClick={onBack}>
+                  <Button size="sm" variant="ghost" onClick={resetForm}>
                     <ArrowLeft className="h-4 w-4" />
-                    Back to Dashboard
+                    Back to SmartBriefs
                   </Button>
                   <div className="w-px h-5 bg-border-default" />
                   <h2 className="text-2xl font-bold">
@@ -507,15 +626,6 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
         )}
       </div>
 
-      {/* SmartBrief List Modal */}
-      <SmartBriefListModal
-        open={showBriefListModal}
-        onOpenChange={setShowBriefListModal}
-        onSelectBrief={(brief) => {
-          setSelectedBrief(brief);
-          setIsCreating(true);
-        }}
-      />
     </>
   );
 }
