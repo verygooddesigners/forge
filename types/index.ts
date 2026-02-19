@@ -264,4 +264,23 @@ export interface CursorAgentStatus {
   updated_at: string;
 }
 
+export interface Team {
+  id: string;
+  name: string;
+  description?: string;
+  managed_by?: string;
+  manager?: User;
+  member_count?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TeamMember {
+  id: string;
+  team_id: string;
+  user_id: string;
+  user?: User;
+  added_at: string;
+}
+
 
