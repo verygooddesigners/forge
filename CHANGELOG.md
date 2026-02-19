@@ -6,6 +6,18 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.06.00] - 2026-02-19
+
+- **MenuBar (AppSidebar) revamp**: new nav structure with Projects, SmartBriefs, User Guide, Tools (Coming Soon), Admin links. ProfileMenuBox at bottom shows user avatar, full name, and role. UserProfileMenu (expands upward) adds direct Writer Model link alongside Profile and Settings.
+- **AdminMenu overhaul**: grouped navigation with User Management, AI & Content, Integrations, and Platform sections. New sections: Role Wizard, Odds API Management, Audit Log, System Health.
+- **Role Wizard** (new admin screen): super-admin can configure permissions per role using toggles across 5 categories — Content, AI & Tools, Analytics, User Management, Admin Access. Backed by new `role_permissions` DB table with full seed data.
+- **Per-user permission overrides**: edit dialog in User Management now includes a collapsible "Individual Permission Overrides" section with toggles for every permission, saved to `user_permission_overrides` DB table.
+- **Projects screen**: revamped with "My Projects" and "Shared Projects" sections, sort dropdown (Last Modified, Date Created, A→Z, Z→A), plus the new `is_shared` column on the `projects` table.
+- **SmartBriefs screen**: revamped with "My SmartBriefs" and "Shared SmartBriefs" sections, sort dropdown, How-to Guide link and Create New SmartBrief button in header. Added `description` field (shown on cards) to SmartBrief creation/edit form, backed by new `description` column on the `briefs` table.
+- **Settings page**: expanded with Appearance (theme, compact cards), Editor (font size, spell check, auto-save, word count, SEO score), Content Defaults (word count target), Export Preferences (format), and Notifications sections.
+- **System Health admin screen**: real-time health checks for Database, Authentication, Storage, and AI API services.
+- **DB migration 00015**: adds `role_permissions`, `user_permission_overrides` tables with RLS; adds `description` to `briefs`; adds `is_shared` to `projects`; seeds default permissions for all 5 roles.
+
 ## [1.05.01] - 2026-02-19
 
 - **SmartBriefs full-screen browser**: replaced the modal-based SmartBriefs browser with a full-screen panel view matching the Projects screen pattern. Includes search bar, summary stats (total, shared, AI configured), and a responsive card grid. "Back to Dashboard" in the editor now navigates back to the SmartBriefs browser.

@@ -15,6 +15,11 @@ import {
   Wrench,
   ChevronLeft,
   ChevronRight,
+  ShieldCheck,
+  TrendingUp,
+  ScrollText,
+  Activity,
+  Link2,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -35,7 +40,11 @@ export type AdminSectionId =
   | 'ai-helper'
   | 'ai-agents'
   | 'trusted-sources'
-  | 'tools';
+  | 'tools'
+  | 'role-wizard'
+  | 'odds-api'
+  | 'audit-log'
+  | 'system-health';
 
 interface AdminMenuProps {
   user: User;
@@ -48,19 +57,30 @@ interface MenuItem {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   minRole: UserRole;
-  parentLabel?: string;
+  group?: string;
 }
 
 const MENU_ITEMS: MenuItem[] = [
-  { id: 'users', label: 'Manage All Users', icon: Users, minRole: 'manager', parentLabel: 'User Management' },
-  { id: 'teams', label: 'Manage/Create/Edit Teams', icon: UsersRound, minRole: 'manager', parentLabel: 'User Management' },
-  { id: 'api-keys', label: 'API Keys', icon: Key, minRole: 'super_admin' },
-  { id: 'sso', label: 'SSO Config', icon: Shield, minRole: 'admin' },
-  { id: 'ai-tuner', label: 'AI Tuner', icon: Sliders, minRole: 'manager' },
-  { id: 'ai-helper', label: 'AI Helper Bot', icon: MessageCircle, minRole: 'team_leader' },
-  { id: 'ai-agents', label: 'AI Agents', icon: Bot, minRole: 'team_leader' },
-  { id: 'trusted-sources', label: 'Trusted Sources', icon: BookMarked, minRole: 'team_leader' },
-  { id: 'tools', label: 'Tools', icon: Wrench, minRole: 'super_admin' },
+  // User Management
+  { id: 'users', label: 'Manage Users', icon: Users, minRole: 'manager', group: 'User Management' },
+  { id: 'teams', label: 'Teams', icon: UsersRound, minRole: 'manager', group: 'User Management' },
+  { id: 'role-wizard', label: 'Role Wizard', icon: ShieldCheck, minRole: 'super_admin', group: 'User Management' },
+
+  // AI & Content
+  { id: 'ai-tuner', label: 'AI Tuner', icon: Sliders, minRole: 'manager', group: 'AI & Content' },
+  { id: 'ai-agents', label: 'AI Agents', icon: Bot, minRole: 'team_leader', group: 'AI & Content' },
+  { id: 'ai-helper', label: 'AI Helper Bot', icon: MessageCircle, minRole: 'team_leader', group: 'AI & Content' },
+  { id: 'trusted-sources', label: 'Trusted Sources', icon: BookMarked, minRole: 'team_leader', group: 'AI & Content' },
+
+  // Integrations
+  { id: 'api-keys', label: 'API Keys', icon: Key, minRole: 'super_admin', group: 'Integrations' },
+  { id: 'sso', label: 'SSO Management', icon: Link2, minRole: 'admin', group: 'Integrations' },
+  { id: 'odds-api', label: 'Odds API', icon: TrendingUp, minRole: 'super_admin', group: 'Integrations' },
+
+  // Platform
+  { id: 'tools', label: 'Tools Management', icon: Wrench, minRole: 'super_admin', group: 'Platform' },
+  { id: 'audit-log', label: 'Audit Log', icon: ScrollText, minRole: 'admin', group: 'Platform' },
+  { id: 'system-health', label: 'System Health', icon: Activity, minRole: 'super_admin', group: 'Platform' },
 ];
 
 const ROLE_LEVELS: Record<UserRole, number> = {
@@ -123,7 +143,7 @@ export function AdminMenu({ user, collapsed, onToggleCollapse }: AdminMenuProps)
         : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
     );
 
-  const iconClass = 'w-5 h-5 shrink-0 text-accent-primary';
+  const iconClass = 'w-4 h-4 shrink-0';
 
   return (
     <aside
@@ -145,9 +165,9 @@ export function AdminMenu({ user, collapsed, onToggleCollapse }: AdminMenuProps)
                 aria-label={collapsed ? 'Expand admin menu' : 'Collapse admin menu'}
               >
                 {collapsed ? (
-                  <ChevronRight className="w-5 h-5" />
+                  <ChevronRight className="w-4 h-4" />
                 ) : (
-                  <ChevronLeft className="w-5 h-5" />
+                  <ChevronLeft className="w-4 h-4" />
                 )}
               </button>
             </TooltipTrigger>
@@ -158,7 +178,7 @@ export function AdminMenu({ user, collapsed, onToggleCollapse }: AdminMenuProps)
         </TooltipProvider>
       </div>
 
-      <nav className="flex-1 p-3 overflow-y-auto">
+      <nav className="flex-1 p-2 overflow-y-auto">
         {collapsed ? (
           <div className="flex flex-col gap-1">
             {visibleItems.map((item) => {
@@ -176,7 +196,7 @@ export function AdminMenu({ user, collapsed, onToggleCollapse }: AdminMenuProps)
                             : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
                         )}
                       >
-                        <Icon className="w-5 h-5" />
+                        <Icon className="w-4 h-4" />
                       </button>
                     </TooltipTrigger>
                     <TooltipContent side="right">{item.label}</TooltipContent>
@@ -186,29 +206,30 @@ export function AdminMenu({ user, collapsed, onToggleCollapse }: AdminMenuProps)
             })}
           </div>
         ) : (
-          <div className="space-y-1">
-            {visibleItems.map((item, index) => {
-              const prev = visibleItems[index - 1];
-              const showParentHeader =
-                item.parentLabel && (!prev || prev.parentLabel !== item.parentLabel);
-
-              return (
-                <div key={item.id}>
-                  {showParentHeader && (
-                    <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
-                      {item.parentLabel}
-                    </div>
-                  )}
-                  <button
-                    onClick={() => setSection(item.id)}
-                    className={cn(buttonClass(item.id), 'px-3.5 py-3')}
-                  >
-                    <item.icon className={iconClass} />
-                    <span className="truncate">{item.label}</span>
-                  </button>
-                </div>
-              );
-            })}
+          <div className="space-y-0.5">
+            {(() => {
+              let lastGroup: string | undefined = undefined;
+              return visibleItems.map((item) => {
+                const showGroupHeader = item.group && item.group !== lastGroup;
+                lastGroup = item.group;
+                return (
+                  <div key={item.id}>
+                    {showGroupHeader && (
+                      <div className="px-3 pt-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
+                        {item.group}
+                      </div>
+                    )}
+                    <button
+                      onClick={() => setSection(item.id)}
+                      className={cn(buttonClass(item.id), 'px-3 py-2')}
+                    >
+                      <item.icon className={iconClass} />
+                      <span className="truncate text-[13px]">{item.label}</span>
+                    </button>
+                  </div>
+                );
+              });
+            })()}
           </div>
         )}
       </nav>

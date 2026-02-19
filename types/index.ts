@@ -86,6 +86,7 @@ export interface Category {
 export interface Brief {
   id: string;
   name: string;
+  description?: string;
   category_id?: string;
   category?: Category;
   content: any; // TipTap JSON
@@ -105,6 +106,7 @@ export interface Project {
   user_id: string;
   headline: string;
   file_name?: string;
+  is_shared?: boolean;
   primary_keyword: string;
   secondary_keywords: string[];
   topic?: string;

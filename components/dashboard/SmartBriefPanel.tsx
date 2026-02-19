@@ -14,7 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { createClient } from '@/lib/supabase/client';
 import { Brief, Category, User } from '@/types';
 import { TipTapEditor } from '@/components/editor/TipTapEditor';
-import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft, HelpCircle, ExternalLink, Search } from 'lucide-react';
+import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft, HelpCircle, ExternalLink, Search, ArrowUpDown, Users2, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface SmartBriefPanelProps {
@@ -32,11 +32,15 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   const [loading, setLoading] = useState(false);
   const [isCreating, setIsCreating] = useState(false); // Track create mode
 
+  // Description field for the editor
+  const [briefDescription, setBriefDescription] = useState('');
+
   // Browser state
   const [briefs, setBriefs] = useState<Brief[]>([]);
   const [filteredBriefs, setFilteredBriefs] = useState<Brief[]>([]);
   const [browserLoading, setBrowserLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortKey, setSortKey] = useState<'last_modified' | 'date_created' | 'alpha_az' | 'alpha_za'>('last_modified');
   
   // AI Configuration fields
   const [aiInstructions, setAiInstructions] = useState('');
@@ -69,10 +73,11 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   useEffect(() => {
     if (selectedBrief) {
       setBriefName(selectedBrief.name);
+      setBriefDescription(selectedBrief.description || '');
       setBriefContent(selectedBrief.content);
       setCategoryId(selectedBrief.category_id || '');
       setIsShared(selectedBrief.is_shared);
-      
+
       const seoConfig = selectedBrief.seo_config as any;
       setAiInstructions(seoConfig?.ai_instructions || '');
       setExampleUrls(seoConfig?.example_urls?.join('\n') || '');
@@ -134,6 +139,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
         .from('briefs')
         .update({
           name: briefName,
+          description: briefDescription.trim() || null,
           content: briefContent,
           category_id: categoryId || null,
           is_shared: isShared,
@@ -151,6 +157,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
         .from('briefs')
         .insert({
           name: briefName,
+          description: briefDescription.trim() || null,
           content: briefContent || {},
           category_id: categoryId || null,
           is_shared: isShared,
@@ -200,6 +207,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   const resetForm = () => {
     setSelectedBrief(null);
     setBriefName('');
+    setBriefDescription('');
     setBriefContent(null);
     setCategoryId('');
     setIsShared(false);
@@ -207,6 +215,28 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
     setExampleUrls('');
     setUrlAnalysis(null);
     setIsCreating(false);
+  };
+
+  const startNewBriefFull = () => {
+    resetForm();
+    setIsCreating(true);
+  };
+
+  const sortBriefs = (list: Brief[]): Brief[] => {
+    return [...list].sort((a, b) => {
+      switch (sortKey) {
+        case 'last_modified':
+          return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+        case 'date_created':
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        case 'alpha_az':
+          return a.name.localeCompare(b.name);
+        case 'alpha_za':
+          return b.name.localeCompare(a.name);
+        default:
+          return 0;
+      }
+    });
   };
 
   const analyzeExampleUrls = async () => {
@@ -259,124 +289,156 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
     return brief.created_by === user.id || ['super_admin', 'admin', 'manager', 'team_leader'].includes(user.role);
   };
 
+  // Computed sections for browser view
+  const myBriefs = sortBriefs(filteredBriefs.filter((b) => b.created_by === user.id));
+  const sharedBriefs = sortBriefs(filteredBriefs.filter((b) => b.created_by !== user.id && b.is_shared));
+
+  const BriefCard = ({ brief }: { brief: Brief }) => (
+    <Card
+      className="cursor-pointer relative overflow-hidden group p-5 hover:translate-y-0"
+      onClick={() => handleBriefSelect(brief)}
+    >
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="flex items-start justify-between mb-2">
+        <h3 className="text-[14px] font-semibold text-text-primary flex-1 leading-snug line-clamp-2">
+          {brief.name}
+        </h3>
+        {brief.category && (
+          <Badge variant="secondary" className="ml-2 flex-shrink-0 text-[10px]">
+            {brief.category.name}
+          </Badge>
+        )}
+      </div>
+      {brief.description && (
+        <p className="text-xs text-text-secondary line-clamp-2 mb-2">
+          {brief.description}
+        </p>
+      )}
+      <div className="flex items-center gap-2 flex-wrap mb-2">
+        {brief.is_shared && (
+          <Badge variant="ai" className="text-[10px]">Shared</Badge>
+        )}
+        {(brief.seo_config as any)?.ai_instructions && (
+          <span className="flex items-center gap-1 text-[10px] text-ai-accent">
+            <Sparkles className="h-3 w-3" />
+            AI Configured
+          </span>
+        )}
+      </div>
+      {brief.updated_at && (
+        <div className="text-[10px] text-text-tertiary">
+          Updated {new Date(brief.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+        </div>
+      )}
+    </Card>
+  );
+
   return (
     <>
       <div className="flex-1 bg-bg-deepest overflow-y-auto">
         {!selectedBrief && !isCreating ? (
           // Full-screen SmartBriefs browser
           <div className="p-8">
-            {/* Filters Bar */}
-            <div className="flex items-center gap-4 mb-8">
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
-                <Input
-                  placeholder="Search SmartBriefs by name or category..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
+            {/* Header Bar */}
+            <div className="flex items-center gap-3 mb-8">
+              <h1 className="text-2xl font-bold text-text-primary flex-1">SmartBriefs</h1>
 
-              <Button asChild variant="outline" size="sm">
+              {/* Guide link */}
+              <Button asChild variant="ghost" size="sm" className="gap-1.5 text-text-secondary">
                 <a href="/smartbrief-guide" target="_blank" rel="noopener noreferrer">
                   <HelpCircle className="h-4 w-4" />
-                  Guide
+                  How to Create SmartBriefs
                   <ExternalLink className="h-3 w-3" />
                 </a>
               </Button>
 
-              <Button onClick={startNewBrief}>
+              {/* Search */}
+              <div className="relative w-56">
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-text-muted pointer-events-none" />
+                <Input
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 h-9 text-sm"
+                />
+              </div>
+
+              {/* Sort */}
+              <select
+                value={sortKey}
+                onChange={(e) => setSortKey(e.target.value as any)}
+                className="h-9 px-3 text-sm rounded-lg border border-border-default bg-bg-surface text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-primary"
+              >
+                <option value="last_modified">Last Modified</option>
+                <option value="date_created">Date Created</option>
+                <option value="alpha_az">A → Z</option>
+                <option value="alpha_za">Z → A</option>
+              </select>
+
+              <Button onClick={startNewBriefFull} size="sm" className="gap-2">
                 <Plus className="w-4 h-4" />
-                New SmartBrief
+                Create New SmartBrief
               </Button>
             </div>
 
-            {/* Summary Stats */}
-            <div className="flex items-center gap-6 mb-6 pb-6 border-b border-border-subtle">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold font-mono">{briefs.length}</span>
-                <span className="text-[13px] text-text-tertiary">Total SmartBriefs</span>
-              </div>
-              <div className="w-px h-8 bg-border-default" />
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold font-mono text-ai-accent">
-                  {briefs.filter(b => b.is_shared).length}
-                </span>
-                <span className="text-[13px] text-text-tertiary">Shared</span>
-              </div>
-              <div className="w-px h-8 bg-border-default" />
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold font-mono text-success">
-                  {briefs.filter(b => (b.seo_config as any)?.ai_instructions).length}
-                </span>
-                <span className="text-[13px] text-text-tertiary">AI Configured</span>
-              </div>
-            </div>
-
-            {/* SmartBriefs Grid */}
             {browserLoading ? (
-              <div className="flex items-center justify-center py-12">
+              <div className="flex items-center justify-center py-20">
                 <Loader2 className="h-8 w-8 animate-spin text-accent-primary" />
               </div>
-            ) : filteredBriefs.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <BookOpen className="h-12 w-12 text-text-muted mb-4 opacity-30" />
-                <p className="text-lg font-semibold text-text-secondary">
-                  {searchQuery ? 'No SmartBriefs found' : 'No SmartBriefs yet'}
-                </p>
-                <p className="text-sm text-text-tertiary mt-2 mb-4">
-                  {searchQuery ? 'Try a different search term' : 'Create your first SmartBrief to get started'}
-                </p>
-                {!searchQuery && (
-                  <Button onClick={startNewBrief}>
-                    <Plus className="w-4 h-4" />
-                    Create New SmartBrief
-                  </Button>
-                )}
-              </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                {filteredBriefs.map((brief) => (
-                  <Card
-                    key={brief.id}
-                    className="cursor-pointer relative overflow-hidden group p-5 hover:translate-y-0"
-                    onClick={() => handleBriefSelect(brief)}
-                  >
-                    <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="text-base font-semibold text-text-primary flex-1 leading-snug">
-                        {brief.name}
-                      </h3>
-                      {brief.category && (
-                        <Badge variant="secondary" className="ml-2 flex-shrink-0">
-                          {brief.category.name}
-                        </Badge>
-                      )}
+                <div className="space-y-8">
+                  {/* My SmartBriefs */}
+                  <section>
+                    <div className="flex items-center gap-2 mb-4">
+                      <FileText className="w-4 h-4 text-text-tertiary" />
+                      <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-wide">
+                        My SmartBriefs
+                      </h2>
+                      <span className="text-xs text-text-tertiary font-mono">({myBriefs.length})</span>
                     </div>
-
-                    <div className="flex items-center gap-2 flex-wrap mb-3">
-                      {brief.is_shared && (
-                        <Badge variant="ai" className="text-xs">
-                          Shared
-                        </Badge>
-                      )}
-                      {(brief.seo_config as any)?.ai_instructions && (
-                        <div className="flex items-center gap-1 text-xs text-ai-accent">
-                          <Sparkles className="h-3 w-3" />
-                          AI Configured
+                    {myBriefs.length === 0 ? (
+                      searchQuery ? (
+                        <p className="text-sm text-text-tertiary">No SmartBriefs match your search.</p>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center py-10 text-center">
+                          <BookOpen className="h-10 w-10 text-text-muted mb-3 opacity-30" />
+                          <p className="text-text-secondary font-medium">No SmartBriefs yet</p>
+                          <p className="text-sm text-text-tertiary mt-1 mb-4">
+                            Create your first SmartBrief to define a content structure
+                          </p>
+                          <Button onClick={startNewBriefFull} size="sm" className="gap-2">
+                            <Plus className="w-4 h-4" />
+                            Create New SmartBrief
+                          </Button>
                         </div>
-                      )}
-                    </div>
-
-                    {brief.updated_at && (
-                      <div className="text-[11px] text-text-tertiary">
-                        Updated {new Date(brief.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      )
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        {myBriefs.map((brief) => <BriefCard key={brief.id} brief={brief} />)}
                       </div>
                     )}
-                  </Card>
-                ))}
-              </div>
+                  </section>
+
+                  {/* Shared SmartBriefs */}
+                  <section>
+                    <div className="flex items-center gap-2 mb-4 pt-2 border-t border-border-subtle">
+                      <Users2 className="w-4 h-4 text-text-tertiary mt-2" />
+                      <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-wide mt-2">
+                        Shared SmartBriefs
+                      </h2>
+                      <span className="text-xs text-text-tertiary font-mono mt-2">({sharedBriefs.length})</span>
+                    </div>
+                    {sharedBriefs.length === 0 ? (
+                      <p className="text-sm text-text-tertiary">
+                        {searchQuery ? 'No shared SmartBriefs match your search.' : 'No SmartBriefs have been shared yet.'}
+                      </p>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        {sharedBriefs.map((brief) => <BriefCard key={brief.id} brief={brief} />)}
+                      </div>
+                    )}
+                  </section>
+                </div>
             )}
           </div>
         ) : (
@@ -439,9 +501,10 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="briefName">SmartBrief Name</Label>
+                  <Label htmlFor="briefName">SmartBrief Name <span className="text-red-400">*</span></Label>
                   <Input
                     id="briefName"
                     value={briefName}
@@ -449,7 +512,17 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
                     placeholder="e.g., NFL Team Analysis Template"
                   />
                 </div>
-
+                <div className="space-y-2">
+                  <Label htmlFor="briefDescription">Description <span className="text-text-tertiary text-xs">(optional)</span></Label>
+                  <Input
+                    id="briefDescription"
+                    value={briefDescription}
+                    onChange={(e) => setBriefDescription(e.target.value)}
+                    placeholder="Short description shown in the SmartBrief browser"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="category">Category</Label>
                   <div className="flex gap-2">
@@ -486,7 +559,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
                   </div>
                 </div>
 
-                <div className="flex items-end">
+                <div className="flex items-end pb-1">
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="shared"
@@ -498,6 +571,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
                     </Label>
                   </div>
                 </div>
+              </div>
               </div>
             </div>
 
