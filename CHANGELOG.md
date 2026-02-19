@@ -6,6 +6,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.06.01] - 2026-02-19
+
+- **Fix dropdown z-index behind modals**: bumped `SelectContent` from `z-50` to `z-[300]` so all dropdowns (writer model, role, category, etc.) render above dialogs — fixes the role dropdown in User Management and writer model dropdown in the new project wizard.
+- **Writer model selection**: admins and super-admins now see all writer models in the project creation wizard; regular users see only their own assigned model. Added `userRole` prop to `ProjectCreationModal`.
+- **DB migration fix**: added explicit `::user_role` type casts in `role_permissions` and `user_permission_overrides` RLS policies.
+
 ## [1.06.00] - 2026-02-19
 
 - **MenuBar (AppSidebar) revamp**: new nav structure with Projects, SmartBriefs, User Guide, Tools (Coming Soon), Admin links. ProfileMenuBox at bottom shows user avatar, full name, and role. UserProfileMenu (expands upward) adds direct Writer Model link alongside Profile and Settings.

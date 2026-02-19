@@ -348,6 +348,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         open={showProjectCreationModal}
         onOpenChange={setShowProjectCreationModal}
         userId={user.id}
+        userRole={user.role as any}
         onProjectCreated={(project) => {
           setShowProjectCreationModal(false);
           router.push(`/dashboard?project=${project.id}&model=${project.writer_model_id}`);

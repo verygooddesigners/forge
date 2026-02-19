@@ -21,14 +21,16 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { createClient } from '@/lib/supabase/client';
-import { WriterModel, Brief, Project } from '@/types';
+import { WriterModel, Brief, Project, UserRole } from '@/types';
 import { ArrowLeft, ArrowRight, Plus, Check, Sparkles, Loader2 } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
+import { hasMinimumRole } from '@/lib/auth-config';
 
 interface ProjectCreationModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   userId: string;
+  userRole?: UserRole;
   onProjectCreated?: (project: Project) => void;
 }
 
@@ -38,6 +40,7 @@ export function ProjectCreationModal({
   open,
   onOpenChange,
   userId,
+  userRole,
   onProjectCreated,
 }: ProjectCreationModalProps) {
   const [step, setStep] = useState<Step>(1);
@@ -70,11 +73,12 @@ export function ProjectCreationModal({
   }, [open]);
 
   const loadData = async () => {
-    // Load writer models
-    const { data: models } = await supabase
-      .from('writer_models')
-      .select('*')
-      .order('name');
+    // Load writer models — admins see all, regular users see only their own
+    const isAdmin = hasMinimumRole(userRole, 'admin');
+    const modelsQuery = supabase.from('writer_models').select('*').order('name');
+    const { data: models } = isAdmin
+      ? await modelsQuery
+      : await modelsQuery.eq('strategist_id', userId);
     
     // Load briefs (shared or owned by user)
     const { data: briefsData } = await supabase

@@ -145,6 +145,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
         open={showProjectCreationModal}
         onOpenChange={setShowProjectCreationModal}
         userId={user.id}
+        userRole={user.role as any}
         onProjectCreated={handleProjectCreated}
       />
 

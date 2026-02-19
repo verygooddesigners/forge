@@ -55,7 +55,7 @@ CREATE POLICY "role_permissions_write" ON role_permissions
   FOR ALL TO authenticated
   USING (
     EXISTS (
-      SELECT 1 FROM users WHERE id = auth.uid() AND role = 'super_admin'
+      SELECT 1 FROM users WHERE id = auth.uid() AND role = 'super_admin'::user_role
     )
   );
 
@@ -67,7 +67,7 @@ CREATE POLICY "user_permission_overrides_read" ON user_permission_overrides
   USING (
     user_id = auth.uid()
     OR EXISTS (
-      SELECT 1 FROM users WHERE id = auth.uid() AND role IN ('super_admin', 'admin')
+      SELECT 1 FROM users WHERE id = auth.uid() AND role IN ('super_admin'::user_role, 'admin'::user_role)
     )
   );
 
@@ -75,7 +75,7 @@ CREATE POLICY "user_permission_overrides_write" ON user_permission_overrides
   FOR ALL TO authenticated
   USING (
     EXISTS (
-      SELECT 1 FROM users WHERE id = auth.uid() AND role = 'super_admin'
+      SELECT 1 FROM users WHERE id = auth.uid() AND role = 'super_admin'::user_role
     )
   );
 
