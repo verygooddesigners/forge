@@ -7,15 +7,18 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { InlineEdit } from '@/components/ui/inline-edit';
-import { 
+import {
   Search,
   Calendar,
   FileText,
   BarChart3,
   Loader2,
   Plus,
+  Pencil,
+  Trash2,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { toast } from 'sonner';
 
 interface ProjectsPanelProps {
   user: User;
@@ -104,6 +107,27 @@ export function ProjectsPanel({ user, onSelectProject, onCreateProject }: Projec
     // You could add a status field to projects table
 
     setFilteredProjects(filtered);
+  };
+
+  const deleteProject = async (e: React.MouseEvent, projectId: string) => {
+    e.stopPropagation();
+    if (!confirm('Are you sure you want to delete this project? This cannot be undone.')) return;
+
+    try {
+      const { error } = await supabase
+        .from('projects')
+        .delete()
+        .eq('id', projectId)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      setProjects(prev => prev.filter(p => p.id !== projectId));
+      toast.success('Project deleted');
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      toast.error('Failed to delete project');
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -247,7 +271,28 @@ export function ProjectsPanel({ user, onSelectProject, onCreateProject }: Projec
               >
                 {/* Colored top border on hover */}
                 <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                
+
+                {/* Action icons - visible on hover */}
+                <div className="absolute top-3 right-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectProject(project.id, project.writer_model_id);
+                    }}
+                    className="p-1.5 rounded-md hover:bg-bg-hover text-text-tertiary hover:text-accent-primary transition-all"
+                    title="Edit project"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={(e) => deleteProject(e, project.id)}
+                    className="p-1.5 rounded-md hover:bg-red-500/10 text-text-tertiary hover:text-red-500 transition-all"
+                    title="Delete project"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1 mr-3">
                     <InlineEdit
