@@ -95,30 +95,29 @@ export function WriterFactoryPanel({ user }: WriterFactoryPanelProps) {
 
   const extractContentFromUrl = async () => {
     if (!trainingUrl.trim()) return;
-    
+
     setExtracting(true);
     try {
-      const response = await fetch('/api/assistant', {
+      const response = await fetch('/api/extract-url', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt: `Extract the main article content from this URL: ${trainingUrl}\n\nReturn ONLY the article text, no metadata, no formatting.`,
-          context: '',
-        }),
+        body: JSON.stringify({ url: trainingUrl.trim() }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        const extractedContent = data.response || '';
-        
+        const extractedContent = data.content || '';
+
         if (extractedContent.trim()) {
           setTrainingText(extractedContent);
           setTrainingUrl('');
+          toast.success('Content extracted successfully');
         } else {
           toast.warning('No content could be extracted from that URL. Please try copy/pasting the text manually.');
         }
       } else {
-        toast.error('Failed to extract content from URL. Please try copy/pasting the text manually.');
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(errorData.error || 'Failed to extract content from URL. Please try copy/pasting the text manually.');
       }
     } catch (error) {
       console.error('URL extraction error:', error);
