@@ -1,8 +1,8 @@
 # Forge - Project Status
 
 **Last Updated:** February 19, 2026
-**Version:** v1.06.08
-**Production:** https://gdcforce.vercel.app  
+**Version:** v1.06.09
+**Production:** https://gdcforge.vercel.app
 **Repository:** https://github.com/verygooddesigners/forge  
 **Local Dev:** http://localhost:5309  
 **Spark Project ID:** 7bf75473-0a06-469c-9fd2-2229efff76e0

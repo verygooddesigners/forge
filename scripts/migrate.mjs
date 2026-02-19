@@ -5,7 +5,8 @@
  *   - No args: applies all unapplied migrations in supabase/migrations/
  *   - With arg: applies a specific migration file
  *
- * Requires SUPABASE_ACCESS_TOKEN in .env.local
+ * Requires SUPABASE_ACCESS_TOKEN in .env.local (from https://supabase.com/dashboard/account/tokens)
+ * The token must belong to the account that owns the Supabase project.
  */
 
 import { readFileSync, readdirSync } from 'fs';
@@ -25,12 +26,25 @@ try {
 }
 
 const TOKEN = env.SUPABASE_ACCESS_TOKEN;
-const PROJECT_REF = 'hjnmeaklpgcjwzafakwt';
+
+// Extract project ref from NEXT_PUBLIC_SUPABASE_URL
+// URL format: https://<project-ref>.supabase.co
+const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+const PROJECT_REF = supabaseUrl ? supabaseUrl.replace('https://', '').split('.')[0] : null;
 
 if (!TOKEN) {
-  console.error('Missing SUPABASE_ACCESS_TOKEN in .env.local');
+  console.error('❌ Missing SUPABASE_ACCESS_TOKEN in .env.local');
+  console.error('   Get a Personal Access Token from: https://supabase.com/dashboard/account/tokens');
+  console.error('   The token must belong to the account that owns this project.');
   process.exit(1);
 }
+
+if (!PROJECT_REF) {
+  console.error('❌ Could not determine project ref from NEXT_PUBLIC_SUPABASE_URL');
+  process.exit(1);
+}
+
+console.log(`🔗 Target project: ${PROJECT_REF}`);
 
 async function runSQL(sql, label) {
   const res = await fetch(`https://api.supabase.com/v1/projects/${PROJECT_REF}/database/query`, {
@@ -43,7 +57,21 @@ async function runSQL(sql, label) {
   });
   const data = await res.json();
   if (!res.ok || data?.message) {
-    console.error(`❌ ${label}: ${data?.message || JSON.stringify(data)}`);
+    const msg = data?.message || JSON.stringify(data);
+    console.error(`❌ ${label}: ${msg}`);
+    if (msg.includes('privileges')) {
+      console.error('');
+      console.error('   The SUPABASE_ACCESS_TOKEN does not have access to this project.');
+      console.error('   You need a token from the account that owns project: ' + PROJECT_REF);
+      console.error('   Get one at: https://supabase.com/dashboard/account/tokens');
+      console.error('');
+      console.error('   Alternatively, run this SQL directly in the Supabase Dashboard:');
+      console.error('   https://supabase.com/dashboard/project/' + PROJECT_REF + '/sql/new');
+      console.error('');
+      console.error('--- SQL to run ---');
+      console.error(sql);
+      console.error('--- end SQL ---');
+    }
     return false;
   }
   console.log(`✅ ${label}`);

@@ -6,6 +6,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.06.09] - 2026-02-19
+
+- **Fix migration script**: `scripts/migrate.mjs` now auto-detects the Supabase project ref from `NEXT_PUBLIC_SUPABASE_URL` (no more hardcoded wrong project ref). When the PAT lacks access, it now prints the exact SQL and the Supabase dashboard URL where the user can run it manually.
+- **Fix migration SQL**: Added `NOTIFY pgrst, 'reload schema'` to `00017_add_description_to_briefs.sql` so PostgREST picks up the new column immediately without a restart.
+- **Fix production URL**: Corrected `gdcforce` → `gdcforge` in PROJECT_STATUS.md.
+
 ## [1.06.08] - 2026-02-19
 
 - **Fix SmartBrief saves**: Diagnosed that the production Supabase project (`ybrhwafnetvcgrrmxgvy`) is in a different org than the PAT-accessible project, so the `description` column migration was applied to the wrong DB. Fixed by re-applying the seo_config workaround: `description` is stored in `seo_config.description` (loaded from both locations for forward compat). After creating a new SmartBrief, the user is now navigated back to the list view so the saved brief is immediately visible. Toast message updated to "SmartBrief Saved Successfully".

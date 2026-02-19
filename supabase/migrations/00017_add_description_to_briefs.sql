@@ -3,6 +3,9 @@
 ALTER TABLE public.briefs
   ADD COLUMN IF NOT EXISTS description TEXT;
 
+-- Reload PostgREST schema cache so the new column is immediately available
+NOTIFY pgrst, 'reload schema';
+
 -- Migrate any existing descriptions from seo_config JSONB into the proper column
 UPDATE public.briefs
   SET description = seo_config->>'description'
