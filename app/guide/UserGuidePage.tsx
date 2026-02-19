@@ -869,8 +869,73 @@ export default function UserGuidePage() {
           <div className="bg-[rgba(59,130,246,0.15)] border-l-4 border-[#3b82f6] p-5 rounded-r-lg mt-6">
             <p className="text-sm font-medium text-text-primary mb-2">💡 Pro Tip</p>
             <p className="text-sm text-text-secondary">
-              Create multiple brief templates for different content types (team analysis, player profiles, 
+              Create multiple brief templates for different content types (team analysis, player profiles,
               game previews, etc.) to maintain consistency across your content library.
+            </p>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">Twigs: Dynamic Template Variables</h3>
+
+          <p className="leading-relaxed">
+            Twigs are template variables you can insert into SmartBriefs and the Content Editor. They act as
+            placeholders that get automatically replaced with real values when content is generated.
+          </p>
+
+          <p className="leading-relaxed mt-4">
+            For example, writing <code className="bg-bg-elevated px-1.5 py-0.5 rounded text-accent-primary text-sm">{'{sportsbook.name}'}</code> in
+            your SmartBrief will be replaced with the actual sportsbook name (e.g., "DraftKings") during generation.
+          </p>
+
+          <h4 className="font-semibold text-lg mt-6 mb-3">How to Insert Twigs</h4>
+
+          <ol className="space-y-2 mt-4 ml-4 list-decimal list-inside">
+            <li className="leading-relaxed">Click the <strong>Twigs</strong> button (curly braces icon) in the editor toolbar</li>
+            <li className="leading-relaxed">Browse categories or type in the search box to filter</li>
+            <li className="leading-relaxed">Click a twig to insert it at your cursor position</li>
+          </ol>
+
+          <h4 className="font-semibold text-lg mt-6 mb-3">Available Twig Categories</h4>
+
+          <ul className="space-y-2 mt-4 ml-4">
+            <li className="flex items-start gap-2">
+              <span className="text-primary">•</span>
+              <span className="leading-relaxed"><strong>Sportsbook & Brand</strong> — name, short name, URLs, app name, parent company</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-primary">•</span>
+              <span className="leading-relaxed"><strong>Geography</strong> — state name, initials, city, region, legalization date, regulatory body</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-primary">•</span>
+              <span className="leading-relaxed"><strong>Offer/Promotion</strong> — offer type, amounts, promo codes, terms</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-primary">•</span>
+              <span className="leading-relaxed"><strong>Sports & Games</strong> — sport, teams, players, game details, odds</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-primary">•</span>
+              <span className="leading-relaxed"><strong>Date & Time</strong> — auto-filled with current date values during generation</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-primary">•</span>
+              <span className="leading-relaxed"><strong>Author/Publication</strong> — author name, byline, publication info</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-primary">•</span>
+              <span className="leading-relaxed"><strong>Content Metadata</strong> — title, type, word count, keywords, slug</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-primary">•</span>
+              <span className="leading-relaxed"><strong>SEO/Ratings</strong> — ratings, star scores, ranking position</span>
+            </li>
+          </ul>
+
+          <div className="bg-[rgba(59,130,246,0.15)] border-l-4 border-[#3b82f6] p-5 rounded-r-lg mt-6">
+            <p className="text-sm font-medium text-text-primary mb-2">💡 Pro Tip</p>
+            <p className="text-sm text-text-secondary">
+              Date twigs like <code className="bg-bg-elevated px-1 py-0.5 rounded text-accent-primary text-xs">{'{date.today}'}</code> and <code className="bg-bg-elevated px-1 py-0.5 rounded text-accent-primary text-xs">{'{date.year}'}</code> are
+              automatically filled with the current date when content is generated — no manual input needed.
             </p>
           </div>
         </div>
