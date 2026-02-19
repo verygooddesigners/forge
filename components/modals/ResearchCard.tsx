@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ThumbsUp, ThumbsDown, ExternalLink, ChevronDown, ChevronUp, Shield, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, ExternalLink, ChevronDown, ChevronUp, Shield, ShieldCheck, AlertTriangle, Check } from 'lucide-react';
 import { ResearchArticle } from '@/types';
 
 interface ResearchCardProps {
@@ -13,6 +13,8 @@ interface ResearchCardProps {
   onThumbsUp?: (articleId: string) => void;
   isTrusted: boolean;
   isFlagged: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (articleId: string) => void;
 }
 
 export function ResearchCard({
@@ -21,6 +23,8 @@ export function ResearchCard({
   onThumbsUp,
   isTrusted,
   isFlagged,
+  isSelected = false,
+  onToggleSelect,
 }: ResearchCardProps) {
   const [expanded, setExpanded] = useState(false);
 
@@ -68,11 +72,40 @@ export function ResearchCard({
     return date.toLocaleDateString();
   };
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Don't toggle selection if clicking on interactive elements
+    const target = e.target as HTMLElement;
+    if (target.closest('a') || target.closest('button')) return;
+    if (onToggleSelect && !isFlagged) {
+      onToggleSelect(article.id);
+    }
+  };
+
   return (
-    <Card className={`transition-all ${isFlagged ? 'opacity-50 border-red-300' : 'hover:shadow-lg'}`}>
+    <Card
+      className={`transition-all cursor-pointer ${
+        isFlagged
+          ? 'opacity-50 border-red-300'
+          : isSelected
+            ? 'ring-2 ring-accent-primary border-accent-primary shadow-lg'
+            : 'hover:shadow-lg'
+      }`}
+      onClick={handleCardClick}
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2 mb-2">
-          {getTrustBadge()}
+          <div className="flex items-center gap-2">
+            {onToggleSelect && !isFlagged && (
+              <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                isSelected
+                  ? 'bg-accent-primary border-accent-primary'
+                  : 'border-border-default hover:border-accent-primary'
+              }`}>
+                {isSelected && <Check className="h-3 w-3 text-white" />}
+              </div>
+            )}
+            {getTrustBadge()}
+          </div>
           <div className="flex items-center gap-1">
             <span className={`text-xs font-semibold ${getRelevanceColor(article.relevance_score)}`}>
               {Math.round(article.relevance_score * 100)}%

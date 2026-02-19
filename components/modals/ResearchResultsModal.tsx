@@ -40,6 +40,7 @@ export function ResearchResultsModal({
   const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
   const [researchComplete, setResearchComplete] = useState(false);
   const [verificationResults, setVerificationResults] = useState<any>(null);
+  const [selectedArticleIds, setSelectedArticleIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (open && projectId) {
@@ -64,7 +65,10 @@ export function ResearchResultsModal({
 
       if (response.ok) {
         const data = await response.json();
-        setArticles(data.articles || []);
+        const loadedArticles = data.articles || [];
+        setArticles(loadedArticles);
+        // Auto-select all unflagged articles
+        setSelectedArticleIds(new Set(loadedArticles.filter((a: ResearchArticle) => !a.is_flagged).map((a: ResearchArticle) => a.id)));
       } else {
         console.error('Research failed:', await response.text());
       }
@@ -73,6 +77,18 @@ export function ResearchResultsModal({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleToggleSelect = (articleId: string) => {
+    setSelectedArticleIds(prev => {
+      const next = new Set(prev);
+      if (next.has(articleId)) {
+        next.delete(articleId);
+      } else {
+        next.add(articleId);
+      }
+      return next;
+    });
   };
 
   const handleThumbsDown = (articleId: string) => {
@@ -91,12 +107,17 @@ export function ResearchResultsModal({
 
     setUserFeedback([...userFeedback, feedback]);
 
-    // Update article to mark as flagged
-    setArticles(articles.map(article => 
-      article.id === selectedArticleId 
+    // Update article to mark as flagged and deselect it
+    setArticles(articles.map(article =>
+      article.id === selectedArticleId
         ? { ...article, is_flagged: true, feedback_reason: reason }
         : article
     ));
+    setSelectedArticleIds(prev => {
+      const next = new Set(prev);
+      next.delete(selectedArticleId);
+      return next;
+    });
 
     // Submit feedback to API
     try {
@@ -121,8 +142,8 @@ export function ResearchResultsModal({
   const handleVerifyFacts = async () => {
     setVerifying(true);
     try {
-      // Filter out flagged articles
-      const unflaggedArticles = articles.filter(a => !a.is_flagged);
+      // Use only selected articles
+      const unflaggedArticles = articles.filter(a => selectedArticleIds.has(a.id));
 
       const response = await fetch('/api/research/verify-facts', {
         method: 'POST',
@@ -156,6 +177,7 @@ export function ResearchResultsModal({
     article.source.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const selectedCount = selectedArticleIds.size;
   const unflaggedCount = articles.filter(a => !a.is_flagged).length;
   const trustedCount = articles.filter(a => a.is_trusted && !a.is_flagged).length;
 
@@ -227,6 +249,10 @@ export function ResearchResultsModal({
                       <p className="text-lg font-bold">{articles.length}</p>
                     </div>
                     <div>
+                      <p className="text-xs text-muted-foreground">Selected</p>
+                      <p className="text-lg font-bold text-accent-primary">{selectedCount}</p>
+                    </div>
+                    <div>
                       <p className="text-xs text-muted-foreground">Trusted Sources</p>
                       <p className="text-lg font-bold text-green-600">{trustedCount}</p>
                     </div>
@@ -245,7 +271,7 @@ export function ResearchResultsModal({
                     />
                     <Button
                       onClick={handleVerifyFacts}
-                      disabled={verifying || unflaggedCount === 0}
+                      disabled={verifying || selectedCount === 0}
                       className="gap-2"
                     >
                       {verifying ? (
@@ -256,7 +282,7 @@ export function ResearchResultsModal({
                       ) : (
                         <>
                           <CheckCircle2 className="h-4 w-4" />
-                          Verify Facts ({unflaggedCount})
+                          Verify Facts ({selectedCount})
                         </>
                       )}
                     </Button>
@@ -274,6 +300,8 @@ export function ResearchResultsModal({
                           onThumbsDown={handleThumbsDown}
                           isTrusted={article.is_trusted}
                           isFlagged={article.is_flagged}
+                          isSelected={selectedArticleIds.has(article.id)}
+                          onToggleSelect={handleToggleSelect}
                         />
                       ))}
                     </div>
