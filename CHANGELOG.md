@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.06.06] - 2026-02-19
+
+- **Fix SmartBrief save error ("description" column not found)**: The `briefs` table is missing a `description` column that the code was trying to write. Fixed by storing `description` inside the existing `seo_config` JSONB column (keyed as `seo_config.description`) so saves succeed immediately without a schema change. Loading reads from both locations (`brief.description` or `seo_config.description`) for forward compatibility. Migration `00017_add_description_to_briefs.sql` is included — once applied via the Supabase dashboard it will add the proper column and migrate existing data automatically.
+
 ## [1.06.05] - 2026-02-19
 
 - **Fix SmartBrief save button blocking UI (240ms)**: The TipTap editor in `SmartBriefPanel` had a bidirectional content sync — it received `briefContent` as a prop (updated every keystroke via `onChange`), which triggered an expensive `JSON.stringify` comparison in TipTap's internal `useEffect` on every keystroke, blocking the main thread. Fixed by: (1) adding `key={selectedBrief?.id ?? 'new'}` so the editor remounts cleanly when switching briefs (no programmatic `setContent` needed); (2) passing only the stable initial content (`selectedBrief?.content ?? null`) as the `content` prop so TipTap's sync effect no longer fires on every keystroke; (3) capturing the editor instance via `onEditorReady` + `editorRef`, so `saveBrief` reads content directly from `editorRef.current.getJSON()` instead of relying on React state — guaranteeing the latest editor content is always saved.
