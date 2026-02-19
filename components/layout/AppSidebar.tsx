@@ -10,11 +10,13 @@ import {
   BarChart3,
   Wrench,
   Shield,
-  ChevronDown,
+  ChevronUp,
   UserCircle,
   Settings,
   LogOut,
   Package,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import Image from 'next/image';
@@ -253,10 +255,10 @@ export function AppSidebar({
                   {ROLE_LABELS[user.role as UserRole] || user.role}
                 </div>
               </div>
-              <ChevronDown className="w-4 h-4 text-text-tertiary group-hover:opacity-100 transition-opacity" />
+              <ChevronUp className="w-4 h-4 text-text-tertiary group-hover:opacity-100 transition-opacity" />
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent side="top" align="start" className="w-56 mb-2">
           <DropdownMenuItem onClick={() => router.push('/profile')}>
             <UserCircle className="mr-2 h-4 w-4" />
             Profile
@@ -266,7 +268,16 @@ export function AppSidebar({
             Settings
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem 
+          <DropdownMenuItem
+            onClick={() => {
+              document.documentElement.classList.toggle('light');
+            }}
+          >
+            <Sun className="mr-2 h-4 w-4" />
+            Toggle Light/Dark
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
             onClick={async () => {
               const supabase = createClient();
               await supabase.auth.signOut();

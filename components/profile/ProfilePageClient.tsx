@@ -9,8 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
-import { ArrowLeft, Edit, Save, X, UserCircle, Mail, Shield, Calendar } from 'lucide-react';
+import { ArrowLeft, Edit, Save, X, UserCircle, Mail, Shield, Calendar, Briefcase, Camera, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 interface ProfilePageClientProps {
   user: User;
@@ -20,8 +21,57 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [fullName, setFullName] = useState(user.full_name || '');
+  const [jobTitle, setJobTitle] = useState(user.job_title || '');
+  const [avatarUrl, setAvatarUrl] = useState(user.avatar_url || '');
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const supabase = createClient();
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('Image must be under 2MB');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const filePath = `avatars/${user.id}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      setAvatarUrl(publicUrl);
+
+      // Save immediately
+      await supabase
+        .from('users')
+        .update({ avatar_url: publicUrl })
+        .eq('id', user.id);
+
+      toast.success('Photo uploaded');
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      toast.error('Failed to upload photo');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -30,6 +80,7 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
         .from('users')
         .update({
           full_name: fullName.trim() || null,
+          job_title: jobTitle.trim() || null,
         })
         .eq('id', user.id);
 
@@ -48,6 +99,7 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
 
   const handleCancel = () => {
     setFullName(user.full_name || '');
+    setJobTitle(user.job_title || '');
     setIsEditing(false);
   };
 
@@ -107,16 +159,44 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
           <CardContent className="space-y-6">
             {/* Avatar */}
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-bold text-white text-2xl">
-                {user.full_name
-                  ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase()
-                  : user.email[0].toUpperCase()}
+              <div className="relative group/avatar">
+                {avatarUrl ? (
+                  <Image
+                    src={avatarUrl}
+                    alt="Profile photo"
+                    width={80}
+                    height={80}
+                    className="w-20 h-20 rounded-lg object-cover"
+                  />
+                ) : (
+                  <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-accent-primary to-accent-dark flex items-center justify-center font-bold text-white text-2xl">
+                    {user.full_name
+                      ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase()
+                      : user.email[0].toUpperCase()}
+                  </div>
+                )}
+                {isEditing && (
+                  <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer">
+                    {uploading ? (
+                      <Loader2 className="h-6 w-6 text-white animate-spin" />
+                    ) : (
+                      <Camera className="h-6 w-6 text-white" />
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handlePhotoUpload}
+                      disabled={uploading}
+                    />
+                  </label>
+                )}
               </div>
               <div>
                 <p className="text-sm text-text-secondary">Profile Picture</p>
-                <Button variant="outline" size="sm" className="mt-2" disabled>
-                  Upload Photo
-                </Button>
+                {isEditing && (
+                  <p className="text-xs text-text-tertiary mt-1">Hover photo to change (max 2MB)</p>
+                )}
               </div>
             </div>
 
@@ -135,6 +215,26 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
               ) : (
                 <p className="text-sm font-medium text-text-primary">
                   {user.full_name || <span className="text-text-tertiary italic">Not set</span>}
+                </p>
+              )}
+            </div>
+
+            {/* Job Title */}
+            <div className="space-y-2">
+              <Label htmlFor="jobTitle" className="flex items-center gap-2 text-text-primary">
+                <Briefcase className="h-4 w-4 text-text-tertiary" />
+                Job Title
+              </Label>
+              {isEditing ? (
+                <Input
+                  id="jobTitle"
+                  value={jobTitle}
+                  onChange={(e) => setJobTitle(e.target.value)}
+                  placeholder="Enter your job title"
+                />
+              ) : (
+                <p className="text-sm font-medium text-text-primary">
+                  {user.job_title || <span className="text-text-tertiary italic">Not set</span>}
                 </p>
               )}
             </div>

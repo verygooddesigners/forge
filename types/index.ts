@@ -33,6 +33,7 @@ export interface User {
   role: UserRole;
   account_status: AccountStatus;
   full_name?: string;
+  job_title?: string;
   avatar_url?: string;
   auth_provider?: 'email' | 'azure' | 'google' | 'github';
   created_at: string;
