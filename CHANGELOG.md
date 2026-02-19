@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.06.03] - 2026-02-19
+
+- **Fix saving user edits**: Resolved "Could not find the 'account_status' column in the schema cache" error when editing users in the admin panel. User updates now go through a new server-side API route (`PATCH /api/admin/users/[userId]`) using the service role key, which bypasses PostgREST schema cache issues. Added migration `00016_ensure_account_status.sql` to defensively ensure the `account_status` column exists with the correct constraint and triggers a schema cache reload via `NOTIFY pgrst`.
+
 ## [1.06.02] - 2026-02-19
 
 - **Fix SmartBrief create button**: `saveBrief` in `SmartBriefPanel` was silently swallowing DB errors — wrapped in `try/catch/finally` so failures now surface a `toast.error()` with the actual message, and loading state is always properly reset.
