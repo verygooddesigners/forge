@@ -1,6 +1,6 @@
 {
   "name": "forge",
-  "version": "1.06.09",
+  "version": "1.06.10",
   "private": true,
   "scripts": {
     "dev": "next dev -p 5309",

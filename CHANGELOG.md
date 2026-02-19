@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.06.10] - 2026-02-19
+
+- **Fix SmartBrief description column (final)**: Confirmed that the production Supabase project is `hjnmeaklpgcjwzafakwt` (not the dev DB in `.env.local`). Migration 00017 added the `description` column there. Reverted the `seo_config` workaround — `description` now saves and loads as a proper column. Old records that stored description in `seo_config` still display correctly via fallback read.
+
 ## [1.06.09] - 2026-02-19
 
 - **Fix migration script**: `scripts/migrate.mjs` now auto-detects the Supabase project ref from `NEXT_PUBLIC_SUPABASE_URL` (no more hardcoded wrong project ref). When the PAT lacks access, it now prints the exact SQL and the Supabase dashboard URL where the user can run it manually.

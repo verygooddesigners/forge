@@ -27,10 +27,10 @@ try {
 
 const TOKEN = env.SUPABASE_ACCESS_TOKEN;
 
-// Extract project ref from NEXT_PUBLIC_SUPABASE_URL
-// URL format: https://<project-ref>.supabase.co
-const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
-const PROJECT_REF = supabaseUrl ? supabaseUrl.replace('https://', '').split('.')[0] : null;
+// Use the project ref that the SUPABASE_ACCESS_TOKEN has access to.
+// The production project is hjnmeaklpgcjwzafakwt (note: .env.local may point to a
+// different local dev DB, but the PAT and production Vercel env target this project).
+const PROJECT_REF = 'hjnmeaklpgcjwzafakwt';
 
 if (!TOKEN) {
   console.error('❌ Missing SUPABASE_ACCESS_TOKEN in .env.local');

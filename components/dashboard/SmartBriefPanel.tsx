@@ -79,7 +79,6 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
       setIsShared(selectedBrief.is_shared);
 
       const seoConfig = selectedBrief.seo_config as any;
-      // description lives in seo_config until migration 00017 is applied to production
       setBriefDescription(selectedBrief.description || seoConfig?.description || '');
       setAiInstructions(seoConfig?.ai_instructions || '');
       setExampleUrls(seoConfig?.example_urls?.join('\n') || '');
@@ -130,9 +129,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
     setLoading(true);
 
     const urls = exampleUrls.split('\n').map(u => u.trim()).filter(Boolean);
-    // description is stored in seo_config until migration 00017 is applied to production
     const seoConfig = {
-      description: briefDescription.trim() || undefined,
       ai_instructions: aiInstructions.trim() || undefined,
       example_urls: urls.length > 0 ? urls : undefined,
       url_analysis: urlAnalysis || undefined,
@@ -146,6 +143,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
           .from('briefs')
           .update({
             name: briefName,
+            description: briefDescription.trim() || null,
             content: contentToSave,
             category_id: categoryId || null,
             is_shared: isShared,
@@ -161,6 +159,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
           .from('briefs')
           .insert({
             name: briefName,
+            description: briefDescription.trim() || null,
             content: contentToSave,
             category_id: categoryId || null,
             is_shared: isShared,
