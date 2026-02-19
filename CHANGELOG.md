@@ -6,6 +6,18 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.05.00] - 2026-02-18
+
+- **Twigs Template System**: 70+ template variables across 8 categories (Sportsbook, Geography, Offer, Sports, Date, Author, Content, SEO). Twig Inserter button in both SmartBrief and Content Editor toolbars with searchable dropdown. Auto-replacement of date twigs and content metadata during generation.
+- **Research Story workflow fixes**: project data now reloads after research completion; research articles, verified facts, and disputed facts are passed to the AI content generation agent.
+- **Clickable research cards**: click anywhere on a research card to select/deselect it for fact verification (not just the checkbox).
+- **User Profile enhancements**: popup menu now opens upward with Profile, Settings, and Light/Dark toggle. Profile page adds Job Title field and photo upload. Settings page streamlined to Writer Factory training link.
+- **Projects panel improvements**: Edit and Delete action icons on hover for each project card.
+- **SmartBriefs modal**: larger modal (85vh) with 4-column grid and updated date display.
+- **Sidebar cleanup**: removed NFL Odds Extractor from menu, moved Writer Factory under SmartBriefs in Workspace section.
+- **Writer Factory URL extraction**: fixed extraction by creating dedicated `/api/extract-url` endpoint that fetches page content and uses AI to extract article text.
+- **User Guide**: added comprehensive Twigs documentation section.
+
 ## [1.04.00] - 2026-02-18
 
 - **Final Forge logo**: replaced all placeholder "F" monograms with the official Forge icon across sidebar, login page, style guide, and legacy left sidebar.

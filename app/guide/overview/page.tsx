@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import OverviewPage from './OverviewPage';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'App Overview - Forge | AI-Powered Content Creation Platform',
   description: 'Discover what makes Forge special: RAG-based writer models that learn your style, intelligent SEO optimization, and AI-powered content generation for sports betting content.',

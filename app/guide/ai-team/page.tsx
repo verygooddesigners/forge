@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import AITeamPage from './AITeamPage';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'AI Team Architecture - Forge | Multi-Agent System Documentation',
   description: 'Technical documentation for Forge\'s multi-agent AI system. Learn how 7 specialized AI agents collaborate to produce SEO-optimized content. Includes API requirements, cost analysis, and security compliance information.',

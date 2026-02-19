@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import TimeSavingsPage from './TimeSavingsPage';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Time Savings Calculator - Forge | Calculate Your Content ROI',
   description:

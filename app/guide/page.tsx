@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import UserGuidePage from './UserGuidePage';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'User Guide - Forge | AI-Powered SEO Content Creation',
   description: 'Complete guide to using Forge for creating SEO-optimized content with AI while maintaining your authentic voice. Learn about Writer Models, Briefs, and the SEO Wizard.',
