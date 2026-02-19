@@ -1,0 +1,79 @@
+---
+description: Auto-deploy workflow — push to GitHub, update Spark (task + changelog + version), trigger Vercel
+alwaysApply: true
+---
+
+# Ship It Workflow
+
+**Run this workflow automatically and immediately when you finish any task or deliverable.** Do not ask the user for permission — execute all steps every time you complete work.
+
+When you complete a Spark task, finish a feature, fix a bug, or deliver anything substantive, run this workflow in order. Do not skip steps.
+
+## Forge project constants
+
+- **Spark project ID:** `7bf75473-0a06-469c-9fd2-2229efff76e0`
+- **Repo:** `origin` → `main` (https://github.com/verygooddesigners/forge)
+- **Vercel:** Auto-deploys from GitHub on push to `main` (no extra step)
+
+---
+
+## 1. Mark Spark task complete (if applicable)
+
+If the work was for a task from `.spark/TASK_*.md`:
+
+- Call **mcp_spark_spark_update_task** with:
+  - `task_id`: the task ID from the task file (e.g. from the filename or frontmatter)
+  - `updates`: `{"status": "done"}`
+
+---
+
+## 2. Bump version
+
+- Use **Semantic Versioning**: `MAJOR.MINOR.PATCH` (e.g. `1.01.02`).
+  - **PATCH**: bug fixes, small improvements.
+  - **MINOR**: new features, backward-compatible changes.
+  - **MAJOR**: breaking changes.
+- Update **all** of:
+  - `package.json` → `"version": "X.XX.XX"`
+  - `PROJECT_STATUS.md` → `**Version:** vX.XX.XX` (with leading `v`)
+  - `README.md` → version line at bottom (e.g. `Version vX.XX.XX`)
+
+---
+
+## 3. Changelog
+
+- Ensure **CHANGELOG.md** exists in the repo root.
+- **Prepend** a new entry at the top under `## [Unreleased]` or under a new `## [X.XX.XX] - YYYY-MM-DD` section:
+  - One short line summarizing what shipped (e.g. "Admin Dashboard revamp: full-screen layout, collapsible Admin menu, updated permissions").
+  - Optionally 1–2 bullet points for details.
+
+---
+
+## 4. Update Spark project
+
+- Call **mcp_spark_spark_update_project** with:
+  - `project_id`: `7bf75473-0a06-469c-9fd2-2229efff76e0`
+  - `updates`: 
+    - `version`: the new version string (e.g. `"1.01.02"`) — **required**, so Spark’s version number is forced to match.
+    - If the Spark API accepts a changelog/spec field, include the latest changelog line or a short summary so Spark reflects what shipped.
+
+---
+
+## 5. Git commit and push
+
+- Stage the changed files (code, `package.json`, `PROJECT_STATUS.md`, `README.md`, `CHANGELOG.md`, and any other modified files).
+- Commit with a clear message that includes the version, e.g.:
+  - `v1.01.02: Admin Dashboard revamp — full-screen layout, collapsible Admin menu, updated permissions`
+- Push to GitHub: `git push origin main`
+
+Vercel will auto-deploy from the push. No separate deploy step is needed.
+
+---
+
+## When to run (automatic)
+
+- **Always** after completing a `.spark/TASK_*.md` task.
+- **Always** after you finish building a feature, fix, or any deliverable.
+- When the user says "ship it", "deploy", or runs the **Ship It** command.
+
+Run it by default. Do **not** run only for WIP or when the user explicitly says "do not push" or "do not deploy".

@@ -9,7 +9,6 @@ import {
   BookOpen,
   BarChart3,
   Wrench,
-  TrendingUp,
   Shield,
   ChevronDown,
   UserCircle,
@@ -36,7 +35,7 @@ interface AppSidebarProps {
   onOpenProjects: () => void;
   onOpenSmartBriefs: () => void;
   onOpenWriterFactory: () => void;
-  onOpenNFLOdds: () => void;
+  onOpenNFLOdds?: () => void;
   projectCount?: number;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
@@ -156,6 +155,14 @@ export function AppSidebar({
           </button>
 
           <button
+            onClick={onOpenWriterFactory}
+            className="w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all"
+          >
+            <Wrench className="w-5 h-5 text-accent-primary" />
+            Writer Factory
+          </button>
+
+          <button
             onClick={() => router.push('/content-analytics')}
             className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium transition-all ${
               isActive('/content-analytics')
@@ -168,29 +175,6 @@ export function AppSidebar({
           </button>
         </div>
 
-        {/* AI TOOLS Section */}
-        <div className="mb-6">
-          <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
-            AI Tools
-          </div>
-          
-          <button
-            onClick={onOpenWriterFactory}
-            className="w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all"
-          >
-            <Wrench className="w-5 h-5 text-accent-primary" />
-            Writer Factory
-          </button>
-
-          <button
-            onClick={onOpenNFLOdds}
-            className="w-full flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium hover:bg-bg-hover transition-all"
-          >
-            <TrendingUp className="w-5 h-5 text-accent-primary" />
-            NFL Odds Extractor
-          </button>
-
-        </div>
 
         {/* TOOLS Section */}
         {installedTools.length > 0 && (

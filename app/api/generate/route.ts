@@ -2,6 +2,8 @@ import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { findSimilarTrainingContent, buildContextFromExamples, buildContentGenerationPrompt } from '@/lib/rag';
 import { generateContentStream, ContentGenerationRequest } from '@/lib/agents';
+import { hasMinimumRole } from '@/lib/auth-config';
+import type { UserRole } from '@/types';
 
 /**
  * Convert TipTap JSON to plain text
@@ -85,15 +87,32 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Verify writer model ownership
+    // Verify writer model access (ownership or admin+)
     if (writerModelId) {
-      const { data: model } = await supabase
+      const { data: model, error: modelError } = await supabase
         .from('writer_models')
-        .select('id')
+        .select('id, strategist_id, created_by')
         .eq('id', writerModelId)
-        .eq('user_id', user.id)
         .single();
-      if (!model) {
+
+      if (modelError || !model) {
+        return new Response(
+          JSON.stringify({ error: 'Writer model not found or access denied' }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const { data: profile } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      const role = profile?.role as UserRole | undefined;
+      const isAdminOrAbove = hasMinimumRole(role, 'admin');
+      const ownsModel = model.strategist_id === user.id || model.created_by === user.id;
+
+      if (!isAdminOrAbove && !ownsModel) {
         return new Response(
           JSON.stringify({ error: 'Writer model not found or access denied' }),
           { status: 403, headers: { 'Content-Type': 'application/json' } }

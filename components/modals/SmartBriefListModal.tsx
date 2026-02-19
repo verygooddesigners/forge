@@ -79,7 +79,7 @@ export function SmartBriefListModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[90vw] max-w-[90vw] max-h-[90vh] overflow-hidden flex flex-col bg-bg-surface border-border-default">
+      <DialogContent className="w-[90vw] max-w-[90vw] h-[85vh] max-h-[85vh] overflow-hidden flex flex-col bg-bg-surface border-border-default">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-text-primary">Open SmartBrief</DialogTitle>
           <DialogDescription className="text-text-secondary">
@@ -115,16 +115,16 @@ export function SmartBriefListModal({
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {filteredBriefs.map((brief) => (
                 <Card
                   key={brief.id}
-                  className="cursor-pointer bg-bg-elevated border-border-subtle hover:border-border-hover transition-all p-5"
+                  className="cursor-pointer bg-bg-elevated border-border-subtle hover:border-border-hover hover:shadow-md transition-all p-5"
                   onClick={() => handleBriefClick(brief)}
                 >
                   <div className="mb-3">
                     <div className="flex items-start justify-between">
-                      <h3 className="text-base font-semibold text-text-primary line-clamp-2 flex-1">
+                      <h3 className="text-base font-semibold text-text-primary flex-1">
                         {brief.name}
                       </h3>
                       {brief.category && (
@@ -134,14 +134,14 @@ export function SmartBriefListModal({
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-2 flex-wrap">
                     {brief.is_shared && (
                       <Badge variant="ai" className="text-xs">
                         Shared
                       </Badge>
                     )}
-                    
+
                     {/* Show if has AI config */}
                     {(brief.seo_config as any)?.ai_instructions && (
                       <div className="flex items-center gap-1 text-xs text-ai-accent">
@@ -150,6 +150,12 @@ export function SmartBriefListModal({
                       </div>
                     )}
                   </div>
+
+                  {brief.updated_at && (
+                    <div className="mt-3 text-[11px] text-text-tertiary">
+                      Updated {new Date(brief.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </div>
+                  )}
                 </Card>
               ))}
             </div>

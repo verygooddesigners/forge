@@ -10,3 +10,15 @@ When you see a file named TASK_*.md in the .spark/ directory:
 - This updates the Spark UI in real-time so the user can see progress
 
 Auto-start tasks in .spark/ directory. Always call spark_update_task when done.
+
+## Ship It (MANDATORY after completing work)
+
+**You MUST automatically run the full Ship It workflow when you are done building something or completing a task.** Do not ask the user — run it every time.
+
+1. Mark Spark task complete (if the work was for a .spark/TASK_*.md task).
+2. Bump version in package.json, PROJECT_STATUS.md, README.md.
+3. Add/update CHANGELOG.md with what shipped.
+4. Call mcp_spark_spark_update_project (project_id 7bf75473-0a06-469c-9fd2-2229efff76e0) with the new version.
+5. Commit and push to origin main.
+
+Full details in `.cursor/rules/ship-it.mdc`. Running "Ship It" command also triggers this.
