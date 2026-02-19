@@ -74,12 +74,13 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   useEffect(() => {
     if (selectedBrief) {
       setBriefName(selectedBrief.name);
-      setBriefDescription(selectedBrief.description || '');
       setBriefContent(selectedBrief.content);
       setCategoryId(selectedBrief.category_id || '');
       setIsShared(selectedBrief.is_shared);
 
       const seoConfig = selectedBrief.seo_config as any;
+      // description lives in seo_config until migration 00017 is applied to production
+      setBriefDescription(selectedBrief.description || seoConfig?.description || '');
       setAiInstructions(seoConfig?.ai_instructions || '');
       setExampleUrls(seoConfig?.example_urls?.join('\n') || '');
       setUrlAnalysis(seoConfig?.url_analysis || null);
@@ -129,7 +130,9 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
     setLoading(true);
 
     const urls = exampleUrls.split('\n').map(u => u.trim()).filter(Boolean);
+    // description is stored in seo_config until migration 00017 is applied to production
     const seoConfig = {
+      description: briefDescription.trim() || undefined,
       ai_instructions: aiInstructions.trim() || undefined,
       example_urls: urls.length > 0 ? urls : undefined,
       url_analysis: urlAnalysis || undefined,
@@ -143,7 +146,6 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
           .from('briefs')
           .update({
             name: briefName,
-            description: briefDescription.trim() || null,
             content: contentToSave,
             category_id: categoryId || null,
             is_shared: isShared,
@@ -152,14 +154,13 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
           .eq('id', selectedBrief.id);
 
         if (error) throw error;
-        toast.success('SmartBrief updated successfully!');
+        toast.success('SmartBrief Saved Successfully');
         loadBriefs();
       } else {
         const { data, error } = await supabase
           .from('briefs')
           .insert({
             name: briefName,
-            description: briefDescription.trim() || null,
             content: contentToSave,
             category_id: categoryId || null,
             is_shared: isShared,
@@ -171,9 +172,11 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
 
         if (error) throw error;
         if (!data) throw new Error('Failed to create SmartBrief');
-        setSelectedBrief(data);
-        toast.success('SmartBrief created successfully!');
-        loadBriefs();
+        // Navigate back to list so the new brief is visibly there
+        await loadBriefs();
+        setIsCreating(false);
+        setSelectedBrief(null);
+        toast.success('SmartBrief Saved Successfully');
       }
     } catch (error: any) {
       console.error('[SmartBrief] Save error:', error);
@@ -315,9 +318,9 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
           </Badge>
         )}
       </div>
-      {brief.description && (
+      {(brief.description || (brief.seo_config as any)?.description) && (
         <p className="text-xs text-text-secondary line-clamp-2 mb-2">
-          {brief.description}
+          {brief.description || (brief.seo_config as any)?.description}
         </p>
       )}
       <div className="flex items-center gap-2 flex-wrap mb-2">

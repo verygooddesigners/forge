@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.06.08] - 2026-02-19
+
+- **Fix SmartBrief saves**: Diagnosed that the production Supabase project (`ybrhwafnetvcgrrmxgvy`) is in a different org than the PAT-accessible project, so the `description` column migration was applied to the wrong DB. Fixed by re-applying the seo_config workaround: `description` is stored in `seo_config.description` (loaded from both locations for forward compat). After creating a new SmartBrief, the user is now navigated back to the list view so the saved brief is immediately visible. Toast message updated to "SmartBrief Saved Successfully".
+
 ## [1.06.07] - 2026-02-19
 
 - **Migration tooling**: Added `scripts/migrate.mjs` — a Management API-powered migration runner. Run `npm run migrate` to apply all SQL files in `supabase/migrations/`, or `npm run migrate 00017_add_description_to_briefs.sql` for a specific file. Requires `SUPABASE_ACCESS_TOKEN` in `.env.local`.
