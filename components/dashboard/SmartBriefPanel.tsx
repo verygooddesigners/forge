@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -14,12 +14,59 @@ import { Separator } from '@/components/ui/separator';
 import { createClient } from '@/lib/supabase/client';
 import { Brief, Category, User } from '@/types';
 import { TipTapEditor } from '@/components/editor/TipTapEditor';
-import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft, HelpCircle, ExternalLink, Search, ArrowUpDown, Users2, FileText } from 'lucide-react';
+import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft, HelpCircle, ExternalLink, Search, Users2, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface SmartBriefPanelProps {
   user: User;
   onBack: () => void;
+}
+
+interface BriefCardProps {
+  brief: Brief;
+  onClick: (brief: Brief) => void;
+}
+
+function BriefCard({ brief, onClick }: BriefCardProps) {
+  return (
+    <Card
+      className="cursor-pointer relative overflow-hidden group p-5 hover:translate-y-0"
+      onClick={() => onClick(brief)}
+    >
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="flex items-start justify-between mb-2">
+        <h3 className="text-[14px] font-semibold text-text-primary flex-1 leading-snug line-clamp-2">
+          {brief.name}
+        </h3>
+        {brief.category && (
+          <Badge variant="secondary" className="ml-2 flex-shrink-0 text-[10px]">
+            {brief.category.name}
+          </Badge>
+        )}
+      </div>
+      {(brief.description || (brief.seo_config as any)?.description) && (
+        <p className="text-xs text-text-secondary line-clamp-2 mb-2">
+          {brief.description || (brief.seo_config as any)?.description}
+        </p>
+      )}
+      <div className="flex items-center gap-2 flex-wrap mb-2">
+        {brief.is_shared && (
+          <Badge variant="ai" className="text-[10px]">Shared</Badge>
+        )}
+        {(brief.seo_config as any)?.ai_instructions && (
+          <span className="flex items-center gap-1 text-[10px] text-ai-accent">
+            <Sparkles className="h-3 w-3" />
+            AI Configured
+          </span>
+        )}
+      </div>
+      {brief.updated_at && (
+        <div className="text-[10px] text-text-tertiary">
+          Updated {new Date(brief.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+        </div>
+      )}
+    </Card>
+  );
 }
 
 export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
@@ -30,9 +77,8 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   const [categoryId, setCategoryId] = useState<string>('');
   const [isShared, setIsShared] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isCreating, setIsCreating] = useState(false); // Track create mode
+  const [isCreating, setIsCreating] = useState(false);
 
-  // Description field for the editor
   const [briefDescription, setBriefDescription] = useState('');
 
   // Browser state
@@ -41,13 +87,13 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   const [browserLoading, setBrowserLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortKey, setSortKey] = useState<'last_modified' | 'date_created' | 'alpha_az' | 'alpha_za'>('last_modified');
-  
+
   // AI Configuration fields
   const [aiInstructions, setAiInstructions] = useState('');
   const [exampleUrls, setExampleUrls] = useState('');
   const [urlAnalysis, setUrlAnalysis] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
-  
+
   const supabase = createClient();
   const editorRef = useRef<any>(null);
 
@@ -79,6 +125,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
       setIsShared(selectedBrief.is_shared);
 
       const seoConfig = selectedBrief.seo_config as any;
+      // Fallback to seo_config.description for any records created before migration 00017
       setBriefDescription(selectedBrief.description || seoConfig?.description || '');
       setAiInstructions(seoConfig?.ai_instructions || '');
       setExampleUrls(seoConfig?.example_urls?.join('\n') || '');
@@ -171,7 +218,6 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
 
         if (error) throw error;
         if (!data) throw new Error('Failed to create SmartBrief');
-        // Navigate back to list so the new brief is visibly there
         await loadBriefs();
         setIsCreating(false);
         setSelectedBrief(null);
@@ -197,19 +243,9 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
       resetForm();
       loadBriefs();
       toast.success('SmartBrief deleted successfully!');
+    } else {
+      toast.error('Failed to delete SmartBrief');
     }
-  };
-
-  const startNewBrief = () => {
-    setSelectedBrief(null);
-    setBriefName('');
-    setBriefContent(null);
-    setCategoryId('');
-    setIsShared(false);
-    setAiInstructions('');
-    setExampleUrls('');
-    setUrlAnalysis(null);
-    setIsCreating(true);
   };
 
   const resetForm = () => {
@@ -248,13 +284,8 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   };
 
   const analyzeExampleUrls = async () => {
-    console.log('[SmartBrief] Analyze button clicked');
-    
     const urls = exampleUrls.split('\n').map(u => u.trim()).filter(Boolean);
-    
-    console.log('[SmartBrief] URLs to analyze:', urls);
-    console.log('[SmartBrief] AI Instructions:', aiInstructions.substring(0, 50) + '...');
-    
+
     if (urls.length === 0) {
       toast.warning('Please add at least one URL in the Training Stories field');
       return;
@@ -267,14 +298,11 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
 
     setAnalyzing(true);
     try {
-      console.log('[SmartBrief] Calling API...');
       const response = await fetch('/api/briefs/analyze-urls', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ urls, instructions: aiInstructions }),
       });
-
-      console.log('[SmartBrief] API response status:', response.status);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -282,7 +310,6 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
       }
 
       const result = await response.json();
-      console.log('[SmartBrief] Analysis complete, URLs analyzed:', result.urlsAnalyzed);
       setUrlAnalysis(result.analysis);
       toast.success(`Analysis complete! Analyzed ${result.urlsAnalyzed} of ${result.totalUrls} URLs.`);
     } catch (error: any) {
@@ -300,46 +327,6 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   // Computed sections for browser view
   const myBriefs = sortBriefs(filteredBriefs.filter((b) => b.created_by === user.id));
   const sharedBriefs = sortBriefs(filteredBriefs.filter((b) => b.created_by !== user.id && b.is_shared));
-
-  const BriefCard = ({ brief }: { brief: Brief }) => (
-    <Card
-      className="cursor-pointer relative overflow-hidden group p-5 hover:translate-y-0"
-      onClick={() => handleBriefSelect(brief)}
-    >
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className="flex items-start justify-between mb-2">
-        <h3 className="text-[14px] font-semibold text-text-primary flex-1 leading-snug line-clamp-2">
-          {brief.name}
-        </h3>
-        {brief.category && (
-          <Badge variant="secondary" className="ml-2 flex-shrink-0 text-[10px]">
-            {brief.category.name}
-          </Badge>
-        )}
-      </div>
-      {(brief.description || (brief.seo_config as any)?.description) && (
-        <p className="text-xs text-text-secondary line-clamp-2 mb-2">
-          {brief.description || (brief.seo_config as any)?.description}
-        </p>
-      )}
-      <div className="flex items-center gap-2 flex-wrap mb-2">
-        {brief.is_shared && (
-          <Badge variant="ai" className="text-[10px]">Shared</Badge>
-        )}
-        {(brief.seo_config as any)?.ai_instructions && (
-          <span className="flex items-center gap-1 text-[10px] text-ai-accent">
-            <Sparkles className="h-3 w-3" />
-            AI Configured
-          </span>
-        )}
-      </div>
-      {brief.updated_at && (
-        <div className="text-[10px] text-text-tertiary">
-          Updated {new Date(brief.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-        </div>
-      )}
-    </Card>
-  );
 
   return (
     <>
@@ -422,7 +409,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
                       )
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {myBriefs.map((brief) => <BriefCard key={brief.id} brief={brief} />)}
+                        {myBriefs.map((brief) => <BriefCard key={brief.id} brief={brief} onClick={handleBriefSelect} />)}
                       </div>
                     )}
                   </section>
@@ -442,7 +429,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
                       </p>
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {sharedBriefs.map((brief) => <BriefCard key={brief.id} brief={brief} />)}
+                        {sharedBriefs.map((brief) => <BriefCard key={brief.id} brief={brief} onClick={handleBriefSelect} />)}
                       </div>
                     )}
                   </section>
@@ -593,7 +580,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
                   Define your content structure. Add headings and other notes.
                 </p>
               </div>
-              
+
               <div className="border border-[#4a4a54] rounded-lg overflow-hidden bg-[#3a3a44]" style={{ height: '400px' }}>
                 <TipTapEditor
                   key={selectedBrief?.id ?? 'new'}
@@ -620,8 +607,8 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
               <div className="bg-bg-elevated border border-border-default rounded-lg p-4">
                 <p className="text-sm font-semibold mb-2 text-text-primary">Example:</p>
                 <p className="text-sm text-text-secondary leading-relaxed">
-                  Single Game Stories are focused on a single upcoming NFL game between two teams. They 
-                  should include betting odds, game analysis, betting insights, current team performance 
+                  Single Game Stories are focused on a single upcoming NFL game between two teams. They
+                  should include betting odds, game analysis, betting insights, current team performance
                   summaries, and predictions. The tone should be conversational but authoritative.
                 </p>
               </div>
@@ -657,13 +644,12 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
 
               {/* Analyze Button */}
               <div className="space-y-3">
-                {/* Helper text */}
                 {(!aiInstructions.trim() || !exampleUrls.trim()) && (
                   <p className="text-xs text-text-tertiary">
                     💡 Fill in both Instructions and Training Stories fields above to enable analysis
                   </p>
                 )}
-                
+
                 <div className="flex gap-3">
                   <Button
                     onClick={analyzeExampleUrls}
@@ -683,7 +669,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
                       </>
                     )}
                   </Button>
-                  
+
                   {urlAnalysis && (
                     <div className="flex items-center gap-2 text-sm text-success">
                       <CheckCircle2 className="h-4 w-4" />

@@ -9,6 +9,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [1.06.11] - 2026-02-19
 
 - **Fix Generate Content button blocked after setup wizard**: Removed the `fact_check_complete` gate from `canGenerate` and from `handleGenerateContent`. The button is now active as soon as a project and writer model are selected. Research/fact-checking can be done after content is generated, matching the intended workflow.
+- **SmartBrief code audit**: Removed dead `startNewBrief` function (never called, incomplete). Removed unused imports (`CardContent`, `CardHeader`, `CardTitle`, `ArrowUpDown`). Added error toast to `deleteBrief` failure case. Removed debug `console.log` statements from `analyzeExampleUrls`. Moved `BriefCard` outside the parent component to prevent unnecessary unmount/remount on every render.
+- **PostgREST schema reload**: Forced `NOTIFY pgrst, 'reload schema'` so the UPDATE path recognises the `description` column immediately after migration.
 
 ## [1.06.10] - 2026-02-19
 
