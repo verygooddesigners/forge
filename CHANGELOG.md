@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.06.05] - 2026-02-19
+
+- **Fix SmartBrief save button blocking UI (240ms)**: The TipTap editor in `SmartBriefPanel` had a bidirectional content sync — it received `briefContent` as a prop (updated every keystroke via `onChange`), which triggered an expensive `JSON.stringify` comparison in TipTap's internal `useEffect` on every keystroke, blocking the main thread. Fixed by: (1) adding `key={selectedBrief?.id ?? 'new'}` so the editor remounts cleanly when switching briefs (no programmatic `setContent` needed); (2) passing only the stable initial content (`selectedBrief?.content ?? null`) as the `content` prop so TipTap's sync effect no longer fires on every keystroke; (3) capturing the editor instance via `onEditorReady` + `editorRef`, so `saveBrief` reads content directly from `editorRef.current.getJSON()` instead of relying on React state — guaranteeing the latest editor content is always saved.
+
 ## [1.06.04] - 2026-02-19
 
 - **Teams feature — fully wired**: Complete Teams management system in the Admin panel. Managers+ can create, edit, and delete teams; click a team to open its members panel. Split-panel UI shows current members and available users — drag users onto the members panel (or click the + button) to add them instantly. HTML5 drag-and-drop with live drop-zone highlight. Includes 4 new API routes (`/api/admin/teams`, `/api/admin/teams/[teamId]`, `/api/admin/teams/[teamId]/members`, `/api/admin/teams/[teamId]/members/[userId]`) and `Team`/`TeamMember` types added to `types/index.ts`. RLS policies (manager+ can manage, team_leader+ can view) were already in place from migration 00014.

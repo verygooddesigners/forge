@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -49,6 +49,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   const [analyzing, setAnalyzing] = useState(false);
   
   const supabase = createClient();
+  const editorRef = useRef<any>(null);
 
   useEffect(() => {
     loadCategories();
@@ -135,13 +136,15 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
     };
 
     try {
+      const contentToSave = editorRef.current?.getJSON() ?? briefContent ?? {};
+
       if (selectedBrief) {
         const { error } = await supabase
           .from('briefs')
           .update({
             name: briefName,
             description: briefDescription.trim() || null,
-            content: briefContent,
+            content: contentToSave,
             category_id: categoryId || null,
             is_shared: isShared,
             seo_config: seoConfig,
@@ -157,7 +160,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
           .insert({
             name: briefName,
             description: briefDescription.trim() || null,
-            content: briefContent || {},
+            content: contentToSave,
             category_id: categoryId || null,
             is_shared: isShared,
             created_by: user.id,
@@ -591,8 +594,10 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
               
               <div className="border border-[#4a4a54] rounded-lg overflow-hidden bg-[#3a3a44]" style={{ height: '400px' }}>
                 <TipTapEditor
-                  content={briefContent}
+                  key={selectedBrief?.id ?? 'new'}
+                  content={selectedBrief?.content ?? null}
                   onChange={setBriefContent}
+                  onEditorReady={(editor) => { editorRef.current = editor; }}
                   placeholder="Create your SmartBrief structure here... Use headings, lists, and formatting to define your content scaffold."
                 />
               </div>
