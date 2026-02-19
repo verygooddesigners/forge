@@ -5,6 +5,9 @@
 -- Add column if it doesn't already exist
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS account_status TEXT DEFAULT 'awaiting_confirmation';
 
+-- Drop constraint first so the UPDATEs below are not blocked by the old allowed-values list
+ALTER TABLE public.users DROP CONSTRAINT IF EXISTS users_account_status_check;
+
 -- Migrate any old status values to the new two-value system
 UPDATE public.users
 SET account_status = CASE
@@ -18,8 +21,7 @@ UPDATE public.users SET account_status = 'awaiting_confirmation' WHERE account_s
 ALTER TABLE public.users ALTER COLUMN account_status SET NOT NULL;
 ALTER TABLE public.users ALTER COLUMN account_status SET DEFAULT 'awaiting_confirmation';
 
--- Replace constraint with correct values
-ALTER TABLE public.users DROP CONSTRAINT IF EXISTS users_account_status_check;
+-- Re-add constraint with the correct two allowed values
 ALTER TABLE public.users ADD CONSTRAINT users_account_status_check
   CHECK (account_status IN ('awaiting_confirmation', 'confirmed'));
 
