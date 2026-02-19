@@ -33,7 +33,7 @@ export function AdminPageClient({ user }: AdminPageClientProps) {
 
   return (
     <>
-      <div className="flex h-screen bg-bg-deepest overflow-hidden">
+      <div className="flex h-screen bg-bg-deepest overflow-hidden ml-[260px]">
         <AppSidebar
           user={user}
           onOpenProjects={() => router.push('/dashboard')}
