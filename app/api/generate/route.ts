@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
       wordCount,
       writerModelId,
       briefContent,
+      researchBrief,
     } = await request.json();
 
     // Validate required fields
@@ -199,9 +200,37 @@ export async function POST(request: NextRequest) {
       fullBrief = `${masterInstructions}\n\n${briefText}`;
     }
 
+    // Build research context from research brief if available
+    let researchContext = '';
+    if (researchBrief && researchBrief.fact_check_complete) {
+      const facts = researchBrief.verified_facts || [];
+      const articles = researchBrief.articles || [];
+
+      if (facts.length > 0) {
+        researchContext += '\n\nVERIFIED RESEARCH FACTS:\n';
+        researchContext += facts.map((f: any, i: number) =>
+          `${i + 1}. ${f.fact || f.claim} (Confidence: ${f.confidence || 'high'})`
+        ).join('\n');
+      }
+
+      if (articles.length > 0) {
+        researchContext += '\n\nRESEARCH SOURCES:\n';
+        researchContext += articles.slice(0, 5).map((a: any, i: number) =>
+          `${i + 1}. "${a.title}" — ${a.source} (${a.url})`
+        ).join('\n');
+      }
+
+      if (researchBrief.disputed_facts && researchBrief.disputed_facts.length > 0) {
+        researchContext += '\n\nDISPUTED/UNCERTAIN FACTS (avoid using these):\n';
+        researchContext += researchBrief.disputed_facts.map((f: any, i: number) =>
+          `${i + 1}. ${f.fact || f.claim} — ${f.reason || 'unverified'}`
+        ).join('\n');
+      }
+    }
+
     // Use Content Generation Agent
     const agentRequest: ContentGenerationRequest = {
-      brief: fullBrief,
+      brief: fullBrief + researchContext,
       primaryKeywords: [primaryKeyword],
       secondaryKeywords: secondaryKeywords || [],
       writerModelContext: writerContext,

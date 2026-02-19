@@ -154,6 +154,7 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
           wordCount: project.word_count_target || 800,
           writerModelId: modelId,
           briefContent: briefContent ? JSON.stringify(briefContent) : null,
+          researchBrief: project.research_brief || null,
         }),
       });
 

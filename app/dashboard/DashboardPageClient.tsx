@@ -18,9 +18,11 @@ export function DashboardPageClient({ user }: DashboardPageClientProps) {
   const projectId = searchParams.get('project');
   const writerModelId = searchParams.get('model');
   const [editorContent, setEditorContent] = useState<any>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleProjectUpdate = () => {
-    // Refresh or handle project updates
+    // Force EditorPanel to reload project data from DB
+    setRefreshKey(prev => prev + 1);
   };
 
   return (
@@ -43,7 +45,7 @@ export function DashboardPageClient({ user }: DashboardPageClientProps) {
               onOpenProjectModal={() => router.push('/projects')}
               onNewProject={() => router.push('/dashboard')}
               onContentChange={setEditorContent}
-              key={`editor-${projectId}`}
+              key={`editor-${projectId}-${refreshKey}`}
             />
 
             {/* Right Sidebar */}
