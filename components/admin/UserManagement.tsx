@@ -166,16 +166,18 @@ export function UserManagement({ adminUser }: UserManagementProps) {
     setLoading(true);
 
     try {
-      const { error } = await supabase
-        .from('users')
-        .update({
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           full_name: fullName,
           role,
           account_status: accountStatus,
-        })
-        .eq('id', userId);
+        }),
+      });
 
-      if (error) throw error;
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to update user');
 
       // Save per-user permission overrides if any were set
       await saveUserPermOverrides(userId);

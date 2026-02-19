@@ -126,55 +126,58 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
     if (!briefName.trim()) return;
 
     setLoading(true);
-    
+
     const urls = exampleUrls.split('\n').map(u => u.trim()).filter(Boolean);
     const seoConfig = {
       ai_instructions: aiInstructions.trim() || undefined,
       example_urls: urls.length > 0 ? urls : undefined,
       url_analysis: urlAnalysis || undefined,
     };
-    
-    if (selectedBrief) {
-      const { error } = await supabase
-        .from('briefs')
-        .update({
-          name: briefName,
-          description: briefDescription.trim() || null,
-          content: briefContent,
-          category_id: categoryId || null,
-          is_shared: isShared,
-          seo_config: seoConfig,
-        })
-        .eq('id', selectedBrief.id);
 
-      if (!error) {
-        // Brief updated successfully
+    try {
+      if (selectedBrief) {
+        const { error } = await supabase
+          .from('briefs')
+          .update({
+            name: briefName,
+            description: briefDescription.trim() || null,
+            content: briefContent,
+            category_id: categoryId || null,
+            is_shared: isShared,
+            seo_config: seoConfig,
+          })
+          .eq('id', selectedBrief.id);
+
+        if (error) throw error;
         toast.success('SmartBrief updated successfully!');
         loadBriefs();
-      }
-    } else {
-      const { data, error } = await supabase
-        .from('briefs')
-        .insert({
-          name: briefName,
-          description: briefDescription.trim() || null,
-          content: briefContent || {},
-          category_id: categoryId || null,
-          is_shared: isShared,
-          created_by: user.id,
-          seo_config: seoConfig,
-        })
-        .select()
-        .single();
+      } else {
+        const { data, error } = await supabase
+          .from('briefs')
+          .insert({
+            name: briefName,
+            description: briefDescription.trim() || null,
+            content: briefContent || {},
+            category_id: categoryId || null,
+            is_shared: isShared,
+            created_by: user.id,
+            seo_config: seoConfig,
+          })
+          .select()
+          .single();
 
-      if (!error && data) {
+        if (error) throw error;
+        if (!data) throw new Error('Failed to create SmartBrief');
         setSelectedBrief(data);
         toast.success('SmartBrief created successfully!');
         loadBriefs();
       }
+    } catch (error: any) {
+      console.error('[SmartBrief] Save error:', error);
+      toast.error(error.message || 'Failed to save SmartBrief');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const deleteBrief = async (briefId: string) => {

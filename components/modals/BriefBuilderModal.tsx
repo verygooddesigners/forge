@@ -71,12 +71,6 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
     }
   }, [selectedBrief]);
 
-  useEffect(() => {
-    // #region agent log
-    console.log('[DEBUG H3,H4] Categories state CHANGED', {categoriesCount:categories.length,categories:categories.map(c=>({id:c.id,name:c.name}))});
-    fetch('http://127.0.0.1:7242/ingest/a7ae02f6-4005-4442-b7e1-ec88bbaf3f7a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BriefBuilderModal.tsx:57',message:'Categories state CHANGED',data:{categoriesCount:categories.length,categories:categories.map(c=>({id:c.id,name:c.name}))},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H3,H4'})}).catch(()=>{});
-    // #endregion
-  }, [categories]);
 
   const loadBriefs = async () => {
     const { data, error } = await supabase
@@ -102,44 +96,18 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
   };
 
   const createCategory = async () => {
-    // #region agent log
-    console.log('[DEBUG H1] createCategory ENTRY', {newCategoryValue:newCategory,trimmed:newCategory.trim(),willReturn:!newCategory.trim()});
-    fetch('http://127.0.0.1:7242/ingest/a7ae02f6-4005-4442-b7e1-ec88bbaf3f7a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BriefBuilderModal.tsx:82',message:'createCategory ENTRY',data:{newCategoryValue:newCategory,trimmed:newCategory.trim(),willReturn:!newCategory.trim()},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
-    // #endregion
     if (!newCategory.trim()) return;
 
-    // #region agent log
-    console.log('[DEBUG H2] BEFORE database insert', {newCategory:newCategory,categoriesCount:categories.length,categoriesNames:categories.map(c=>c.name)});
-    fetch('http://127.0.0.1:7242/ingest/a7ae02f6-4005-4442-b7e1-ec88bbaf3f7a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BriefBuilderModal.tsx:84',message:'BEFORE database insert',data:{newCategory:newCategory,categoriesCount:categories.length,categoriesNames:categories.map(c=>c.name)},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2'})}).catch(()=>{});
-    // #endregion
     const { data, error } = await supabase
       .from('categories')
       .insert({ name: newCategory, type: 'brief' })
       .select()
       .single();
 
-    // #region agent log
-    console.log('[DEBUG H2,H5] AFTER database insert', {hasError:!!error,errorDetails:error,hasData:!!data,dataValue:data,dataId:data?.id});
-    fetch('http://127.0.0.1:7242/ingest/a7ae02f6-4005-4442-b7e1-ec88bbaf3f7a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BriefBuilderModal.tsx:88',message:'AFTER database insert',data:{hasError:!!error,errorDetails:error,hasData:!!data,dataValue:data,dataId:data?.id},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2,H5'})}).catch(()=>{});
-    // #endregion
-
     if (!error && data) {
-      // #region agent log
-      console.log('[DEBUG H3] BEFORE state update', {oldCategoriesCount:categories.length,oldCategories:categories.map(c=>({id:c.id,name:c.name})),newCategoryData:data});
-      fetch('http://127.0.0.1:7242/ingest/a7ae02f6-4005-4442-b7e1-ec88bbaf3f7a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BriefBuilderModal.tsx:90',message:'BEFORE state update',data:{oldCategoriesCount:categories.length,oldCategories:categories.map(c=>({id:c.id,name:c.name})),newCategoryData:data},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H3'})}).catch(()=>{});
-      // #endregion
       setCategories([...categories, data]);
       setCategoryId(data.id);
       setNewCategory('');
-      // #region agent log
-      console.log('[DEBUG H3] AFTER state update called', {setCategoriesTotalCount:categories.length+1,newCategoryId:data.id});
-      fetch('http://127.0.0.1:7242/ingest/a7ae02f6-4005-4442-b7e1-ec88bbaf3f7a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BriefBuilderModal.tsx:93',message:'AFTER state update called',data:{setCategoriesTotalCount:categories.length+1,newCategoryId:data.id},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H3'})}).catch(()=>{});
-      // #endregion
-    } else {
-      // #region agent log
-      console.log('[DEBUG H2] ERROR BRANCH - insert failed', {error:error});
-      fetch('http://127.0.0.1:7242/ingest/a7ae02f6-4005-4442-b7e1-ec88bbaf3f7a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BriefBuilderModal.tsx:95',message:'ERROR BRANCH - insert failed',data:{error:error},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2'})}).catch(()=>{});
-      // #endregion
     }
   };
 
@@ -354,16 +322,8 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
                       size="icon"
                       onClick={() => {
                         const name = prompt('New category name:');
-                        // #region agent log
-                        console.log('[DEBUG H1] Plus button clicked', {promptedName:name,hasName:!!name,currentNewCategoryState:newCategory});
-                        fetch('http://127.0.0.1:7242/ingest/a7ae02f6-4005-4442-b7e1-ec88bbaf3f7a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BriefBuilderModal.tsx:257',message:'Plus button clicked',data:{promptedName:name,hasName:!!name,currentNewCategoryState:newCategory},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
-                        // #endregion
                         if (name) {
                           setNewCategory(name);
-                          // #region agent log
-                          console.log('[DEBUG H1] AFTER setNewCategory, BEFORE setTimeout', {nameSetTo:name,newCategoryStateStillOldValue:newCategory});
-                          fetch('http://127.0.0.1:7242/ingest/a7ae02f6-4005-4442-b7e1-ec88bbaf3f7a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'BriefBuilderModal.tsx:259',message:'AFTER setNewCategory, BEFORE setTimeout',data:{nameSetTo:name,newCategoryStateStillOldValue:newCategory},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
-                          // #endregion
                           setTimeout(() => createCategory(), 0);
                         }
                       }}
