@@ -74,13 +74,12 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
   useEffect(() => {
     if (selectedBrief) {
       setBriefName(selectedBrief.name);
-      const seoConfig = selectedBrief.seo_config as any;
-      // description may be stored in seo_config (fallback) or as a top-level column once migrated
-      setBriefDescription(selectedBrief.description || seoConfig?.description || '');
+      setBriefDescription(selectedBrief.description || '');
       setBriefContent(selectedBrief.content);
       setCategoryId(selectedBrief.category_id || '');
       setIsShared(selectedBrief.is_shared);
 
+      const seoConfig = selectedBrief.seo_config as any;
       setAiInstructions(seoConfig?.ai_instructions || '');
       setExampleUrls(seoConfig?.example_urls?.join('\n') || '');
       setUrlAnalysis(seoConfig?.url_analysis || null);
@@ -131,8 +130,6 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
 
     const urls = exampleUrls.split('\n').map(u => u.trim()).filter(Boolean);
     const seoConfig = {
-      // Store description in seo_config until migration 00017 adds a proper column
-      description: briefDescription.trim() || undefined,
       ai_instructions: aiInstructions.trim() || undefined,
       example_urls: urls.length > 0 ? urls : undefined,
       url_analysis: urlAnalysis || undefined,
@@ -146,6 +143,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
           .from('briefs')
           .update({
             name: briefName,
+            description: briefDescription.trim() || null,
             content: contentToSave,
             category_id: categoryId || null,
             is_shared: isShared,
@@ -161,6 +159,7 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
           .from('briefs')
           .insert({
             name: briefName,
+            description: briefDescription.trim() || null,
             content: contentToSave,
             category_id: categoryId || null,
             is_shared: isShared,
@@ -316,9 +315,9 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
           </Badge>
         )}
       </div>
-      {(brief.description || (brief.seo_config as any)?.description) && (
+      {brief.description && (
         <p className="text-xs text-text-secondary line-clamp-2 mb-2">
-          {brief.description || (brief.seo_config as any)?.description}
+          {brief.description}
         </p>
       )}
       <div className="flex items-center gap-2 flex-wrap mb-2">

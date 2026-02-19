@@ -6,9 +6,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.06.07] - 2026-02-19
+
+- **Migration tooling**: Added `scripts/migrate.mjs` — a Management API-powered migration runner. Run `npm run migrate` to apply all SQL files in `supabase/migrations/`, or `npm run migrate 00017_add_description_to_briefs.sql` for a specific file. Requires `SUPABASE_ACCESS_TOKEN` in `.env.local`.
+- **Fix SmartBrief description column**: Applied migration `00017_add_description_to_briefs.sql` to add `description TEXT` to the `briefs` table via the Management API. Reverted the `seo_config` workaround — `description` now saves and loads directly from its proper column.
+
 ## [1.06.06] - 2026-02-19
 
-- **Fix SmartBrief save error ("description" column not found)**: The `briefs` table is missing a `description` column that the code was trying to write. Fixed by storing `description` inside the existing `seo_config` JSONB column (keyed as `seo_config.description`) so saves succeed immediately without a schema change. Loading reads from both locations (`brief.description` or `seo_config.description`) for forward compatibility. Migration `00017_add_description_to_briefs.sql` is included — once applied via the Supabase dashboard it will add the proper column and migrate existing data automatically.
+- **Fix SmartBrief save error ("description" column not found)**: Temporarily stored `description` in `seo_config` JSONB as a workaround while the proper migration was prepared.
 
 ## [1.06.05] - 2026-02-19
 

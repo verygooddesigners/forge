@@ -1,13 +1,14 @@
 {
   "name": "forge",
-  "version": "1.06.06",
+  "version": "1.06.07",
   "private": true,
   "scripts": {
     "dev": "next dev -p 5309",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "cursor:agent": "node scripts/cursor-remote-agent.mjs"
+    "cursor:agent": "node scripts/cursor-remote-agent.mjs",
+    "migrate": "node scripts/migrate.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
