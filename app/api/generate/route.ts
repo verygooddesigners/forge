@@ -4,6 +4,7 @@ import { findSimilarTrainingContent, buildContextFromExamples, buildContentGener
 import { generateContentStream, ContentGenerationRequest } from '@/lib/agents';
 import { hasMinimumRole } from '@/lib/auth-config';
 import type { UserRole } from '@/types';
+import { replaceTwigs, getDateTwigValues } from '@/lib/twigs';
 
 /**
  * Convert TipTap JSON to plain text
@@ -180,6 +181,17 @@ export async function POST(request: NextRequest) {
         briefText = 'Write a well-structured article with clear headings and paragraphs.';
       }
     }
+
+    // Replace twigs in the brief text with date values and any project data
+    const twigData: Record<string, string> = {
+      ...getDateTwigValues(),
+      'content.target_keyword': primaryKeyword,
+      'content.title': headline,
+    };
+    if (secondaryKeywords && secondaryKeywords.length > 0) {
+      twigData['content.secondary_keyword'] = secondaryKeywords[0];
+    }
+    briefText = replaceTwigs(briefText, twigData);
 
     // Build the brief with all context
     let fullBrief = briefText;

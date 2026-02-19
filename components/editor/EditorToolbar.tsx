@@ -18,6 +18,7 @@ import {
   Sparkles,
   Download,
 } from 'lucide-react';
+import { TwigInserter } from './TwigInserter';
 
 interface EditorToolbarProps {
   editor: Editor;
@@ -152,6 +153,15 @@ export function EditorToolbar({ editor, onGenerateContent, generating = false, c
       >
         <Quote className="h-4 w-4" />
       </ToolbarButton>
+
+      <Separator orientation="vertical" className="mx-1 h-6" />
+
+      {/* Twig Inserter */}
+      <TwigInserter
+        onInsert={(twigText) => {
+          editor.chain().focus().insertContent(twigText).run();
+        }}
+      />
       </div>
 
       {/* Action Buttons */}
