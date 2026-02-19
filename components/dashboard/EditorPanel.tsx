@@ -110,12 +110,6 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
       return;
     }
 
-    // Check if research is required and complete
-    if (!project.research_brief || !project.research_brief.fact_check_complete) {
-      toast.warning('Please complete story research before generating content. Click "Research Story" in the SEO Wizard.');
-      return;
-    }
-
     // Use writerModelId from prop or from project
     const modelId = writerModelId || project.writer_model_id;
     if (!modelId) {
@@ -494,7 +488,7 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
             placeholder={project ? "Start writing your content..." : "Start writing your content..."}
             onGenerateContent={handleGenerateContent}
             generating={generating}
-            canGenerate={!!writerModelId && !!project && !!project.research_brief?.fact_check_complete}
+            canGenerate={!!writerModelId && !!project}
             onExport={() => setShowExportModal(true)}
             onEditorReady={(editor) => { editorRef.current = editor; }}
           />

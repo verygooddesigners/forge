@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.06.11] - 2026-02-19
+
+- **Fix Generate Content button blocked after setup wizard**: Removed the `fact_check_complete` gate from `canGenerate` and from `handleGenerateContent`. The button is now active as soon as a project and writer model are selected. Research/fact-checking can be done after content is generated, matching the intended workflow.
+
 ## [1.06.10] - 2026-02-19
 
 - **Fix SmartBrief description column (final)**: Confirmed that the production Supabase project is `hjnmeaklpgcjwzafakwt` (not the dev DB in `.env.local`). Migration 00017 added the `description` column there. Reverted the `seo_config` workaround — `description` now saves and loads as a proper column. Old records that stored description in `seo_config` still display correctly via fallback read.
