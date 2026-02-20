@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.07.01] - 2026-02-20
+
+- **Super Admin bypass in `usePermissions`**: Super admin emails now bypass the DB permission lookup on the client side, granting full access to all admin dashboard menu items immediately. Extracted `isSuperAdmin` to `lib/super-admin.ts` (client-safe shared module) and updated `usePermissions` hook and `AdminPageClient` to use it.
+
 ## [1.07.00] - 2026-02-19
 
 - **Dynamic Roles System**: Replaced hardcoded enum-based roles (`super_admin`, `admin`, etc.) with a fully dynamic `roles` table. Role names are now human-readable strings ("Super Administrator", "Administrator", etc.) stored in the DB with full CRUD via the new Roles Editor admin screen.

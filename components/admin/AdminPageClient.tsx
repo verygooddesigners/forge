@@ -17,7 +17,7 @@ interface AdminPageClientProps {
 export function AdminPageClient({ user }: AdminPageClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { permissions, loading: permissionsLoading } = usePermissions(user.id);
+  const { permissions, loading: permissionsLoading } = usePermissions(user.id, user.email);
 
   const sectionParam = searchParams.get('section');
   const defaultSection = permissionsLoading ? 'users' : getDefaultSection(permissions);

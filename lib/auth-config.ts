@@ -3,17 +3,9 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { PermissionKey, User } from '@/types';
+import { isSuperAdmin } from '@/lib/super-admin';
 
-// Super admin emails — safety net regardless of DB role
-const SUPER_ADMIN_EMAILS = new Set([
-  'jeremy.botter@gdcgroup.com',
-  'jeremy.botter@gmail.com',
-]);
-
-export function isSuperAdmin(email: string | undefined | null): boolean {
-  if (!email) return false;
-  return SUPER_ADMIN_EMAILS.has(email);
-}
+export { isSuperAdmin };
 
 /**
  * Fetch all permissions for a user.
