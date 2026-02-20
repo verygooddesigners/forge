@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { NFLOddsPageClient } from './NFLOddsPageClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function NFLOddsPage() {
   const supabase = await createClient();
   

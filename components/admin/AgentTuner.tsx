@@ -14,8 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertCircle, CheckCircle2, Loader2, RotateCcw, Save } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AgentConfig, AgentKey } from '@/lib/agents/types';
-import { canTuneAgents, canToggleAgents } from '@/lib/auth-config';
-import { UserRole } from '@/types';
+import { usePermissions } from '@/hooks/use-permissions';
 
 interface AgentTunerProps {
   adminUser: User;
@@ -39,9 +38,9 @@ export function AgentTuner({ adminUser }: AgentTunerProps) {
   const [selectedAgent, setSelectedAgent] = useState<AgentKey>('content_generation');
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  const role = adminUser.role as UserRole;
-  const hasAccess = canTuneAgents(role);
-  const canToggle = canToggleAgents(role);
+  const { hasPermission } = usePermissions(adminUser.id);
+  const hasAccess = hasPermission('can_tune_ai_agents');
+  const canToggle = hasPermission('can_toggle_ai_agents');
 
   useEffect(() => {
     if (hasAccess) {

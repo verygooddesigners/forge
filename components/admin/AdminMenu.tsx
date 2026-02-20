@@ -2,7 +2,6 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { User } from '@/types';
-import { UserRole } from '@/types';
 import {
   Users,
   UsersRound,
@@ -41,13 +40,14 @@ export type AdminSectionId =
   | 'ai-agents'
   | 'trusted-sources'
   | 'tools'
-  | 'role-wizard'
+  | 'roles-editor'
   | 'odds-api'
   | 'audit-log'
   | 'system-health';
 
 interface AdminMenuProps {
   user: User;
+  permissions: Record<string, boolean>;
   collapsed: boolean;
   onToggleCollapse: () => void;
 }
@@ -56,52 +56,43 @@ interface MenuItem {
   id: AdminSectionId;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-  minRole: UserRole;
+  requiredPermission: string;
   group?: string;
 }
 
 const MENU_ITEMS: MenuItem[] = [
   // User Management
-  { id: 'users', label: 'Manage Users', icon: Users, minRole: 'manager', group: 'User Management' },
-  { id: 'teams', label: 'Teams', icon: UsersRound, minRole: 'manager', group: 'User Management' },
-  { id: 'role-wizard', label: 'Role Wizard', icon: ShieldCheck, minRole: 'super_admin', group: 'User Management' },
+  { id: 'users', label: 'Manage Users', icon: Users, requiredPermission: 'can_view_users', group: 'User Management' },
+  { id: 'teams', label: 'Teams', icon: UsersRound, requiredPermission: 'can_manage_teams', group: 'User Management' },
+  { id: 'roles-editor', label: 'Roles Editor', icon: ShieldCheck, requiredPermission: 'can_manage_role_permissions', group: 'User Management' },
 
   // AI & Content
-  { id: 'ai-tuner', label: 'AI Tuner', icon: Sliders, minRole: 'manager', group: 'AI & Content' },
-  { id: 'ai-agents', label: 'AI Agents', icon: Bot, minRole: 'team_leader', group: 'AI & Content' },
-  { id: 'ai-helper', label: 'AI Helper Bot', icon: MessageCircle, minRole: 'team_leader', group: 'AI & Content' },
-  { id: 'trusted-sources', label: 'Trusted Sources', icon: BookMarked, minRole: 'team_leader', group: 'AI & Content' },
+  { id: 'ai-tuner', label: 'AI Tuner', icon: Sliders, requiredPermission: 'can_edit_master_ai', group: 'AI & Content' },
+  { id: 'ai-agents', label: 'AI Agents', icon: Bot, requiredPermission: 'can_tune_ai_agents', group: 'AI & Content' },
+  { id: 'ai-helper', label: 'AI Helper Bot', icon: MessageCircle, requiredPermission: 'can_edit_master_ai', group: 'AI & Content' },
+  { id: 'trusted-sources', label: 'Trusted Sources', icon: BookMarked, requiredPermission: 'can_manage_trusted_sources', group: 'AI & Content' },
 
   // Integrations
-  { id: 'api-keys', label: 'API Keys', icon: Key, minRole: 'super_admin', group: 'Integrations' },
-  { id: 'sso', label: 'SSO Management', icon: Link2, minRole: 'admin', group: 'Integrations' },
-  { id: 'odds-api', label: 'Odds API', icon: TrendingUp, minRole: 'super_admin', group: 'Integrations' },
+  { id: 'api-keys', label: 'API Keys', icon: Key, requiredPermission: 'can_manage_api_keys', group: 'Integrations' },
+  { id: 'sso', label: 'SSO Management', icon: Link2, requiredPermission: 'can_manage_sso', group: 'Integrations' },
+  { id: 'odds-api', label: 'Odds API', icon: TrendingUp, requiredPermission: 'can_manage_api_keys', group: 'Integrations' },
 
   // Platform
-  { id: 'tools', label: 'Tools Management', icon: Wrench, minRole: 'super_admin', group: 'Platform' },
-  { id: 'audit-log', label: 'Audit Log', icon: ScrollText, minRole: 'admin', group: 'Platform' },
-  { id: 'system-health', label: 'System Health', icon: Activity, minRole: 'super_admin', group: 'Platform' },
+  { id: 'tools', label: 'Tools Management', icon: Wrench, requiredPermission: 'can_manage_tools', group: 'Platform' },
+  { id: 'audit-log', label: 'Audit Log', icon: ScrollText, requiredPermission: 'can_access_admin', group: 'Platform' },
+  { id: 'system-health', label: 'System Health', icon: Activity, requiredPermission: 'can_manage_api_keys', group: 'Platform' },
 ];
 
-const ROLE_LEVELS: Record<UserRole, number> = {
-  super_admin: 5,
-  admin: 4,
-  manager: 3,
-  team_leader: 2,
-  content_creator: 1,
-};
-
-function canAccessItem(role: UserRole | undefined | null, item: MenuItem): boolean {
-  if (!role) return false;
-  return ROLE_LEVELS[role] >= ROLE_LEVELS[item.minRole];
+function canAccessItem(permissions: Record<string, boolean>, item: MenuItem): boolean {
+  return permissions[item.requiredPermission] === true;
 }
 
-function getVisibleItems(role: UserRole): MenuItem[] {
-  return MENU_ITEMS.filter((item) => canAccessItem(role, item));
+function getVisibleItems(permissions: Record<string, boolean>): MenuItem[] {
+  return MENU_ITEMS.filter((item) => canAccessItem(permissions, item));
 }
 
-export function getDefaultSection(role: UserRole): AdminSectionId {
-  const visible = getVisibleItems(role);
+export function getDefaultSection(permissions: Record<string, boolean>): AdminSectionId {
+  const visible = getVisibleItems(permissions);
   return visible[0]?.id ?? 'users';
 }
 
@@ -122,12 +113,11 @@ export function setAdminMenuCollapsed(collapsed: boolean): void {
   }
 }
 
-export function AdminMenu({ user, collapsed, onToggleCollapse }: AdminMenuProps) {
+export function AdminMenu({ user, permissions, collapsed, onToggleCollapse }: AdminMenuProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentSection = (searchParams.get('section') as AdminSectionId) || getDefaultSection(user.role as UserRole);
-  const role = user.role as UserRole;
-  const visibleItems = getVisibleItems(role);
+  const currentSection = (searchParams.get('section') as AdminSectionId) || getDefaultSection(permissions);
+  const visibleItems = getVisibleItems(permissions);
 
   const setSection = (section: AdminSectionId) => {
     const params = new URLSearchParams(searchParams.toString());

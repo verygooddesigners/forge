@@ -1,27 +1,14 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
-import { canManageTeams } from '@/lib/auth-config';
-import { UserRole } from '@/types';
-
-async function getAdminUser() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { supabase, user: null, profile: null };
-  const { data: profile } = await supabase
-    .from('users')
-    .select('id, role')
-    .eq('id', user.id)
-    .single();
-  return { supabase, user, profile };
-}
+import { checkApiPermission } from '@/lib/auth-config';
 
 export async function GET() {
   try {
-    const { supabase, user, profile } = await getAdminUser();
-    if (!user || !profile) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { user, allowed } = await checkApiPermission('can_manage_teams');
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!allowed) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
+    const supabase = await createClient();
     const { data: teams, error } = await supabase
       .from('teams')
       .select(`
@@ -48,19 +35,16 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { supabase, user, profile } = await getAdminUser();
-    if (!user || !profile) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    if (!canManageTeams(profile.role as UserRole)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
+    const { user, allowed } = await checkApiPermission('can_manage_teams');
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!allowed) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
     const { name, description, managed_by } = await request.json();
     if (!name?.trim()) {
       return NextResponse.json({ error: 'Team name is required' }, { status: 400 });
     }
 
+    const supabase = await createClient();
     const { data: team, error } = await supabase
       .from('teams')
       .insert({

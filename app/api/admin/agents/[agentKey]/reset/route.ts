@@ -1,49 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
 import { AgentKey } from '@/lib/agents/types';
 import { isValidAgentKey, getDefaultAgentConfig } from '@/lib/agents/config';
-import { canTuneAgents } from '@/lib/auth-config';
-import { UserRole } from '@/types';
+import { checkApiPermission } from '@/lib/auth-config';
 
 interface RouteParams {
-  params: Promise<{
-    agentKey: string;
-  }>;
+  params: Promise<{ agentKey: string }>;
 }
 
 /**
  * POST /api/admin/agents/[agentKey]/reset
  * Reset agent to default configuration
- * Access: Super admin only
  */
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams
-) {
+export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
     const { agentKey } = await params;
-    
-    const user = await getCurrentUser();
-    if (!user || !canTuneAgents(user.role as UserRole)) {
-      return NextResponse.json(
-        { error: 'Unauthorized. Manager access or above required.' },
-        { status: 403 }
-      );
-    }
-    
+
+    const { user, allowed } = await checkApiPermission('can_tune_ai_agents');
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!allowed) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
     if (!isValidAgentKey(agentKey)) {
-      return NextResponse.json(
-        { error: 'Invalid agent key' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid agent key' }, { status: 400 });
     }
-    
-    // Get default config
+
     const defaultConfig = getDefaultAgentConfig(agentKey as AgentKey);
-    
     const supabase = await createClient();
-    
+
     const { data, error } = await supabase
       .from('agent_configs')
       .update({
@@ -59,22 +42,16 @@ export async function POST(
       .eq('agent_key', agentKey)
       .select()
       .single();
-    
-    if (error) {
-      throw error;
-    }
-    
-    return NextResponse.json({ 
+
+    if (error) throw error;
+
+    return NextResponse.json({
       success: true,
       message: `Agent ${agentKey} reset to default configuration`,
-      agent: data 
+      agent: data,
     });
   } catch (error) {
     console.error('Error resetting agent config:', error);
-    return NextResponse.json(
-      { error: 'Failed to reset agent configuration' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to reset agent configuration' }, { status: 500 });
   }
 }
-

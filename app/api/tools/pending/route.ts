@@ -4,35 +4,17 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { canManageTools } from '@/lib/auth-config';
-import { UserRole } from '@/types';
+import { checkApiPermission } from '@/lib/auth-config';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
+    const { user, allowed } = await checkApiPermission('can_manage_tools');
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!allowed) return NextResponse.json({ error: 'Forbidden: can_manage_tools required' }, { status: 403 });
+
     const supabase = await createClient();
-
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (userError || !userData || !canManageTools(userData.role as UserRole)) {
-      return NextResponse.json(
-        { error: 'Forbidden: Admin access required' },
-        { status: 403 }
-      );
-    }
 
     // Get all pending tools with author info
     const { data: pendingTools, error } = await supabase

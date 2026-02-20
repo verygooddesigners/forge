@@ -1,9 +1,10 @@
-// Centralized role-based permission configuration
-// Role hierarchy: super_admin > admin > manager > team_leader > content_creator
+// Centralized permission configuration
+// Roles are now dynamic (stored in DB). Permissions are DB-driven via role_permissions + user_permission_overrides.
 
-import { UserRole, ROLE_LEVELS } from '@/types';
+import { createClient } from '@/lib/supabase/server';
+import { PermissionKey, User } from '@/types';
 
-// Super admin emails — these users are automatically assigned super_admin role
+// Super admin emails — safety net regardless of DB role
 const SUPER_ADMIN_EMAILS = new Set([
   'jeremy.botter@gdcgroup.com',
   'jeremy.botter@gmail.com',
@@ -15,131 +16,92 @@ export function isSuperAdmin(email: string | undefined | null): boolean {
 }
 
 /**
- * Check if a role meets the minimum required role level
+ * Fetch all permissions for a user.
+ * Merges role_permissions + user_permission_overrides (overrides take precedence).
  */
-export function hasMinimumRole(userRole: UserRole | undefined | null, minimumRole: UserRole): boolean {
-  if (!userRole) return false;
-  return ROLE_LEVELS[userRole] >= ROLE_LEVELS[minimumRole];
-}
+export async function getUserPermissions(userId: string): Promise<Record<string, boolean>> {
+  const supabase = await createClient();
 
-/**
- * Get the maximum role a user can assign to others.
- * Super Admin can assign up to Super Admin.
- * Admin can assign up to Manager.
- * Manager can assign up to Team Leader.
- * Others cannot assign roles.
- */
-export function getMaxAssignableRole(userRole: UserRole): UserRole | null {
-  switch (userRole) {
-    case 'super_admin': return 'super_admin';
-    case 'admin': return 'manager';
-    case 'manager': return 'team_leader';
-    default: return null;
+  // Get user's role
+  const { data: profile } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', userId)
+    .single();
+
+  if (!profile) return {};
+
+  // Get role permissions
+  const { data: rolePerms } = await supabase
+    .from('role_permissions')
+    .select('permission_key, enabled')
+    .eq('role', profile.role);
+
+  // Get user overrides
+  const { data: overrides } = await supabase
+    .from('user_permission_overrides')
+    .select('permission_key, enabled')
+    .eq('user_id', userId);
+
+  const perms: Record<string, boolean> = {};
+
+  // Apply role permissions first
+  for (const row of rolePerms ?? []) {
+    perms[row.permission_key] = row.enabled;
   }
+
+  // Apply user overrides (take precedence)
+  for (const row of overrides ?? []) {
+    perms[row.permission_key] = row.enabled;
+  }
+
+  return perms;
 }
 
 /**
- * Get the list of roles a user can assign, from lowest to highest
+ * Check if a user has a specific permission. Async, hits the DB.
  */
-export function getAssignableRoles(userRole: UserRole): UserRole[] {
-  const maxRole = getMaxAssignableRole(userRole);
-  if (!maxRole) return [];
-
-  const allRoles: UserRole[] = ['content_creator', 'team_leader', 'manager', 'admin', 'super_admin'];
-  const maxLevel = ROLE_LEVELS[maxRole];
-  return allRoles.filter(r => ROLE_LEVELS[r] <= maxLevel);
+export async function hasPermission(userId: string, key: PermissionKey): Promise<boolean> {
+  const perms = await getUserPermissions(userId);
+  return perms[key] === true;
 }
 
-// ============================================================================
-// Permission check functions
-// ============================================================================
-
-/** Can access the admin panel (team_leader+) */
-export function canAccessAdmin(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'team_leader');
+/**
+ * Sync check from a pre-fetched permissions map.
+ */
+export function checkPermissionFromMap(perms: Record<string, boolean>, key: string): boolean {
+  return perms[key] === true;
 }
 
-/** Can view user list / Manage All Users (manager+) */
-export function canViewUsers(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'manager');
-}
+/**
+ * Helper for API routes: verifies auth, fetches user profile, checks permission.
+ * Returns { user, allowed } — the route handles the response.
+ */
+export async function checkApiPermission(
+  permissionKey: PermissionKey
+): Promise<{ user: User | null; allowed: boolean }> {
+  try {
+    const supabase = await createClient();
+    const { data: { user: authUser } } = await supabase.auth.getUser();
 
-/** Can manage/create/edit teams (manager+) */
-export function canManageTeams(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'manager');
-}
+    if (!authUser) return { user: null, allowed: false };
 
-/** Can create/invite users (manager+) */
-export function canCreateUsers(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'manager');
-}
+    const { data: profile } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', authUser.id)
+      .single();
 
-/** Can edit user profiles and change roles (admin+) */
-export function canEditUsers(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'admin');
-}
+    if (!profile) return { user: null, allowed: false };
 
-/** Can delete users (admin+) */
-export function canDeleteUsers(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'admin');
-}
+    // Super admin email check is always a fallback
+    if (isSuperAdmin(profile.email)) {
+      return { user: profile as User, allowed: true };
+    }
 
-/** Can edit master AI instructions / AI Tuner (manager+) */
-export function canEditMasterInstructions(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'manager');
-}
-
-/** Can tune individual AI agents — temperature, prompts, models (team_leader+) */
-export function canTuneAgents(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'team_leader');
-}
-
-/** Can enable/disable AI agents (admin+) */
-export function canToggleAgents(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'admin');
-}
-
-/** Can manage API keys (super_admin only) */
-export function canManageApiKeys(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'super_admin');
-}
-
-/** Can manage SSO configuration (admin+) */
-export function canManageSso(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'admin');
-}
-
-/** Can manage trusted sources (team_leader+) */
-export function canManageTrustedSources(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'team_leader');
-}
-
-/** Can access Cursor Remote (super_admin only) */
-export function canAccessCursorRemote(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'super_admin');
-}
-
-/** Can edit any brief (team_leader+ can edit any, content_creator only their own) */
-export function canEditAnyBrief(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'team_leader');
-}
-
-/** Can delete any brief (manager+) */
-export function canDeleteAnyBrief(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'manager');
-}
-
-/** Can manage tools (super_admin only) */
-export function canManageTools(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'super_admin');
-}
-
-/** Can view team analytics (team_leader+) */
-export function canViewTeamAnalytics(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'team_leader');
-}
-
-/** Can export analytics data (team_leader+) */
-export function canExportAnalytics(role: UserRole | undefined | null): boolean {
-  return hasMinimumRole(role, 'team_leader');
+    const perms = await getUserPermissions(authUser.id);
+    return { user: profile as User, allowed: perms[permissionKey] === true };
+  } catch {
+    return { user: null, allowed: false };
+  }
 }

@@ -21,16 +21,15 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { createClient } from '@/lib/supabase/client';
-import { WriterModel, Brief, Project, UserRole } from '@/types';
+import { WriterModel, Brief, Project } from '@/types';
 import { ArrowLeft, ArrowRight, Plus, Check, Sparkles, Loader2 } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
-import { hasMinimumRole } from '@/lib/auth-config';
 
 interface ProjectCreationModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   userId: string;
-  userRole?: UserRole;
+  userRole?: string;
   onProjectCreated?: (project: Project) => void;
 }
 
@@ -73,8 +72,8 @@ export function ProjectCreationModal({
   }, [open]);
 
   const loadData = async () => {
-    // Load writer models — admins see all, regular users see only their own
-    const isAdmin = hasMinimumRole(userRole, 'admin');
+    // Load writer models — RLS handles access control, admins see all via policy
+    const isAdmin = userRole === 'Administrator' || userRole === 'Super Administrator';
     const modelsQuery = supabase.from('writer_models').select('*').order('name');
     const { data: models } = isAdmin
       ? await modelsQuery

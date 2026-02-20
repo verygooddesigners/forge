@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, UserRole, AccountStatus, ROLE_LABELS, STATUS_LABELS } from '@/types';
+import { User, AccountStatus, STATUS_LABELS } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,12 +32,6 @@ import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
 import { Plus, Edit, Trash2, ChevronDown, ChevronUp, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
-import {
-  canCreateUsers,
-  canEditUsers,
-  canDeleteUsers,
-  getAssignableRoles,
-} from '@/lib/auth-config';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 
@@ -64,6 +58,7 @@ const ALL_PERMISSIONS = [
   { key: 'can_edit_users', label: 'Edit Users' },
   { key: 'can_delete_users', label: 'Delete Users' },
   { key: 'can_manage_teams', label: 'Manage Teams' },
+  { key: 'can_create_teams', label: 'Create Teams' },
   { key: 'can_access_admin', label: 'Access Admin Panel' },
   { key: 'can_manage_api_keys', label: 'Manage API Keys' },
   { key: 'can_manage_sso', label: 'Manage SSO' },
@@ -82,7 +77,7 @@ export function UserManagement({ adminUser }: UserManagementProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<UserRole>('content_creator');
+  const [role, setRole] = useState<string>('Content Creator');
   const [accountStatus, setAccountStatus] = useState<AccountStatus>('awaiting_confirmation');
   const [loading, setLoading] = useState(false);
   const [userPermOverrides, setUserPermOverrides] = useState<Record<string, boolean>>({});
@@ -90,11 +85,36 @@ export function UserManagement({ adminUser }: UserManagementProps) {
   const [permLoading, setPermLoading] = useState(false);
   const supabase = createClient();
 
-  const adminRole = adminUser.role as UserRole;
-  const assignableRoles = getAssignableRoles(adminRole);
-  const showCreateButton = canCreateUsers(adminRole);
-  const showEditButton = canEditUsers(adminRole);
-  const showDeleteButton = canDeleteUsers(adminRole);
+  const [availableRoles, setAvailableRoles] = useState<Array<{ id: string; name: string }>>([]);
+
+  useEffect(() => {
+    // Load available roles from the roles table
+    async function loadRoles() {
+      try {
+        const res = await fetch('/api/admin/roles');
+        if (res.ok) {
+          const data = await res.json();
+          setAvailableRoles(data);
+        }
+      } catch {
+        // Use default roles if API fails
+        setAvailableRoles([
+          { id: '1', name: 'Content Creator' },
+          { id: '2', name: 'Team Leader' },
+          { id: '3', name: 'Manager' },
+          { id: '4', name: 'Administrator' },
+          { id: '5', name: 'Super Administrator' },
+        ]);
+      }
+    }
+    loadRoles();
+  }, []);
+
+  // These are now controlled by the permissions system via checkApiPermission in API routes.
+  // The UI can optimistically show buttons; the API will enforce permissions.
+  const showCreateButton = true;
+  const showEditButton = true;
+  const showDeleteButton = true;
 
   useEffect(() => {
     loadUsers();
@@ -115,7 +135,7 @@ export function UserManagement({ adminUser }: UserManagementProps) {
     setEmail('');
     setPassword('');
     setFullName('');
-    setRole('content_creator');
+    setRole('Content Creator');
     setAccountStatus('awaiting_confirmation');
     setEditingUser(null);
   };
@@ -249,7 +269,7 @@ export function UserManagement({ adminUser }: UserManagementProps) {
     setEditingUser(user);
     setEmail(user.email);
     setFullName(user.full_name || '');
-    setRole(user.role as UserRole);
+    setRole(user.role);
     setAccountStatus(user.account_status as AccountStatus);
     setUserPermOverrides({});
     setShowPermOverrides(false);
@@ -258,8 +278,8 @@ export function UserManagement({ adminUser }: UserManagementProps) {
   };
 
   const getRoleBadgeVariant = (role: string): 'default' | 'secondary' | 'outline' => {
-    if (role === 'super_admin' || role === 'admin') return 'default';
-    if (role === 'manager' || role === 'team_leader') return 'secondary';
+    if (role === 'Super Administrator' || role === 'Administrator') return 'default';
+    if (role === 'Manager' || role === 'Team Leader') return 'secondary';
     return 'outline';
   };
 
@@ -308,7 +328,7 @@ export function UserManagement({ adminUser }: UserManagementProps) {
                   </TableCell>
                   <TableCell>
                     <Badge variant={getRoleBadgeVariant(user.role)}>
-                      {ROLE_LABELS[user.role as UserRole] || user.role}
+                      {user.role}
                     </Badge>
                   </TableCell>
                   <TableCell>{new Date(user.created_at).toLocaleDateString()}</TableCell>
@@ -410,14 +430,14 @@ export function UserManagement({ adminUser }: UserManagementProps) {
 
             <div className="space-y-2">
               <Label htmlFor="role">Role</Label>
-              <Select value={role} onValueChange={(value) => setRole(value as UserRole)}>
+              <Select value={role} onValueChange={(value) => setRole(value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {assignableRoles.map((r) => (
-                    <SelectItem key={r} value={r}>
-                      {ROLE_LABELS[r]}
+                  {availableRoles.map((r) => (
+                    <SelectItem key={r.id} value={r.name}>
+                      {r.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

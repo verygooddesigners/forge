@@ -1,26 +1,11 @@
-import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
-import { canEditUsers } from '@/lib/auth-config';
-import { UserRole } from '@/types';
+import { checkApiPermission } from '@/lib/auth-config';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: profile } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (!profile || !canEditUsers(profile.role as UserRole)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
+    const { user, allowed } = await checkApiPermission('can_edit_users');
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!allowed) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
     const { userId, email, newStatus } = await request.json();
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { User, Team, TeamMember, UserRole, ROLE_LABELS } from '@/types';
+import { User, Team, TeamMember } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,7 +42,6 @@ import {
   UserPlus,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { canManageTeams } from '@/lib/auth-config';
 
 interface TeamManagementProps {
   adminUser: User;
@@ -58,7 +57,7 @@ interface TeamMemberWithUser extends TeamMember {
 }
 
 export function TeamManagement({ adminUser }: TeamManagementProps) {
-  const canManage = canManageTeams(adminUser.role as UserRole);
+  const canManage = true; // Permission enforced by API routes
 
   const [teams, setTeams] = useState<TeamWithManager[]>([]);
   const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -290,8 +289,8 @@ export function TeamManagement({ adminUser }: TeamManagementProps) {
   );
 
   const getRoleBadgeVariant = (role: string): 'default' | 'secondary' | 'outline' => {
-    if (role === 'super_admin' || role === 'admin') return 'default';
-    if (role === 'manager' || role === 'team_leader') return 'secondary';
+    if (role === 'Super Administrator' || role === 'Administrator') return 'default';
+    if (role === 'Manager' || role === 'Team Leader') return 'secondary';
     return 'outline';
   };
 
@@ -385,7 +384,7 @@ export function TeamManagement({ adminUser }: TeamManagementProps) {
                           </TableCell>
                           <TableCell className="py-2">
                             <Badge variant={getRoleBadgeVariant(m.user?.role)}>
-                              {ROLE_LABELS[m.user?.role as UserRole] || m.user?.role}
+                              {m.user?.role}
                             </Badge>
                           </TableCell>
                           {canManage && (
@@ -453,7 +452,7 @@ export function TeamManagement({ adminUser }: TeamManagementProps) {
                           variant={getRoleBadgeVariant(u.role)}
                           className="text-xs shrink-0"
                         >
-                          {ROLE_LABELS[u.role as UserRole] || u.role}
+                          {u.role}
                         </Badge>
                         <Button
                           variant="ghost"
@@ -652,7 +651,7 @@ function TeamDialog({
   onClose,
 }: TeamDialogProps) {
   const managerCandidates = allUsers.filter((u) =>
-    ['super_admin', 'admin', 'manager'].includes(u.role)
+    ['Super Administrator', 'Administrator', 'Manager'].includes(u.role)
   );
 
   return (

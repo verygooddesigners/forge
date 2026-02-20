@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Space_Mono } from "next/font/google";
 import "./globals.css";
-import { PasswordResetHandler } from "@/components/PasswordResetHandler";
-import { Toaster } from "sonner";
+import { ClientInit } from "@/components/ClientInit";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -33,9 +32,8 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} ${spaceMono.variable} font-sans antialiased`}
       >
-        <PasswordResetHandler />
+        <ClientInit />
         {children}
-        <Toaster theme="dark" position="bottom-right" richColors />
       </body>
     </html>
   );

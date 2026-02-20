@@ -6,8 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import type { ApproveToolRequest } from '@/types/tools';
-import { canManageTools } from '@/lib/auth-config';
-import { UserRole } from '@/types';
+import { getUserPermissions } from '@/lib/auth-config';
 
 export const dynamic = 'force-dynamic';
 
@@ -56,13 +55,8 @@ export async function GET(
       }
 
       // Check if user is admin or author
-      const { data: userData } = await supabase
-        .from('users')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-
-      const isAdmin = canManageTools(userData?.role as UserRole);
+      const getPerms = await getUserPermissions(user.id);
+      const isAdmin = getPerms['can_manage_tools'] === true;
       const isAuthor = user.id === tool.author_id;
 
       if (!isAdmin && !isAuthor) {
@@ -135,13 +129,8 @@ export async function PUT(
     }
 
     // Check permissions
-    const { data: userData } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    const isAdmin = canManageTools(userData?.role as UserRole);
+    const putPerms = await getUserPermissions(user.id);
+    const isAdmin = putPerms['can_manage_tools'] === true;
     const isAuthor = user.id === tool.author_id;
 
     const body = await request.json();
@@ -265,15 +254,10 @@ export async function DELETE(
       );
     }
 
-    const { data: userData } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (!userData || !canManageTools(userData.role as UserRole)) {
+    const deletePerms = await getUserPermissions(user.id);
+    if (!deletePerms['can_manage_tools']) {
       return NextResponse.json(
-        { error: 'Forbidden: Admin access required' },
+        { error: 'Forbidden: can_manage_tools required' },
         { status: 403 }
       );
     }

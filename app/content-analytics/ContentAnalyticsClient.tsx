@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { format, subDays } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 import { User } from '@/types';
-import { UserRole, ROLE_LEVELS } from '@/types';
+import { usePermissions } from '@/hooks/use-permissions';
 import type { AnalyticsSummary, TeamMemberStats, SavedFilter, FilterConfig } from '@/types/analytics';
 import { AppSidebar } from '@/components/layout/AppSidebar';
 import { DateRangePicker } from '@/components/analytics/DateRangePicker';
@@ -40,7 +40,8 @@ type ViewTab = 'personal' | 'team';
 export function ContentAnalyticsClient({ user }: ContentAnalyticsClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const isTeamLeaderPlus = (ROLE_LEVELS[user.role as UserRole] || 0) >= 2;
+  const { hasPermission } = usePermissions(user.id);
+  const isTeamLeaderPlus = hasPermission('can_view_team_analytics');
 
   // State
   const [activeTab, setActiveTab] = useState<ViewTab>('personal');

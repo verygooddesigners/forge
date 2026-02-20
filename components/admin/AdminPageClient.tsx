@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { User, UserRole } from '@/types';
+import { User } from '@/types';
 import { AppSidebar } from '../layout/AppSidebar';
 import { AdminMenu, getDefaultSection, getAdminMenuCollapsed, setAdminMenuCollapsed, type AdminSectionId } from './AdminMenu';
 import { AdminDashboard } from './AdminDashboard';
 import { AIHelperWidget } from '@/components/ai/AIHelperWidget';
+import { usePermissions } from '@/hooks/use-permissions';
+import { Loader2 } from 'lucide-react';
 
 interface AdminPageClientProps {
   user: User;
@@ -15,8 +17,10 @@ interface AdminPageClientProps {
 export function AdminPageClient({ user }: AdminPageClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { permissions, loading: permissionsLoading } = usePermissions(user.id);
+
   const sectionParam = searchParams.get('section');
-  const defaultSection = getDefaultSection(user.role as UserRole);
+  const defaultSection = permissionsLoading ? 'users' : getDefaultSection(permissions);
   const activeSection = (sectionParam as AdminSectionId) || defaultSection;
 
   const [collapsed, setCollapsedState] = useState(false);
@@ -43,14 +47,27 @@ export function AdminPageClient({ user }: AdminPageClientProps) {
           projectCount={0}
         />
 
-        <AdminMenu
-          user={user}
-          collapsed={collapsed}
-          onToggleCollapse={onToggleCollapse}
-        />
+        {permissionsLoading ? (
+          <div className="w-[220px] flex items-center justify-center border-r border-border-subtle bg-bg-deep shrink-0">
+            <Loader2 className="w-5 h-5 animate-spin text-text-tertiary" />
+          </div>
+        ) : (
+          <AdminMenu
+            user={user}
+            permissions={permissions}
+            collapsed={collapsed}
+            onToggleCollapse={onToggleCollapse}
+          />
+        )}
 
         <main className="flex-1 overflow-auto p-8">
-          <AdminDashboard user={user} activeSection={activeSection} />
+          {permissionsLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <Loader2 className="w-6 h-6 animate-spin text-text-tertiary" />
+            </div>
+          ) : (
+            <AdminDashboard user={user} activeSection={activeSection} />
+          )}
         </main>
       </div>
 

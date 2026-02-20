@@ -20,8 +20,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
-import { canAccessAdmin } from '@/lib/auth-config';
-import { UserRole, ROLE_LABELS } from '@/types';
+import { usePermissions } from '@/hooks/use-permissions';
 
 interface AppSidebarProps {
   user: User;
@@ -44,6 +43,7 @@ export function AppSidebar({
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+  const { hasPermission } = usePermissions(user.id);
 
   // Close profile menu on outside click
   useEffect(() => {
@@ -91,7 +91,7 @@ export function AppSidebar({
     }`;
 
   const displayName = user.full_name || user.email;
-  const roleLabel = ROLE_LABELS[user.role as UserRole] || user.role;
+  const roleLabel = user.role;
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-[260px] bg-bg-deep border-r border-border-subtle flex flex-col z-[100]">
@@ -150,8 +150,8 @@ export function AppSidebar({
           </span>
         </div>
 
-        {/* Admin — visible to team_leader+ */}
-        {canAccessAdmin(user.role as UserRole) && (
+        {/* Admin — visible to users with admin access */}
+        {hasPermission('can_access_admin') && (
           <button
             onClick={() => router.push('/admin')}
             className={navLinkClass('/admin')}

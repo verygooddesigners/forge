@@ -6,6 +6,19 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.07.00] - 2026-02-19
+
+- **Dynamic Roles System**: Replaced hardcoded enum-based roles (`super_admin`, `admin`, etc.) with a fully dynamic `roles` table. Role names are now human-readable strings ("Super Administrator", "Administrator", etc.) stored in the DB with full CRUD via the new Roles Editor admin screen.
+- **Permission-Driven Access Control**: Replaced 16+ hardcoded `can*()` functions with a single `has_permission(user_id, permission_key)` SQL function and matching `checkApiPermission()` server-side helper. All 28 permissions are configurable per role.
+- **Roles Editor**: New admin screen replacing the old Role Wizard. Full CRUD for roles with permission toggles grouped by category (Content, AI & Tools, Analytics, User Management, Admin Access).
+- **`usePermissions` hook**: New React hook for client components to fetch and check permissions against the DB without individual queries.
+- **DB Migration (00018)**: Converts `users.role` from ENUM to TEXT, seeds 5 default roles, adds `is_tool_creator` field to users, rewrites all RLS policies to use `has_permission()`, adds `is_super_admin()` helper.
+- **RLS policies rewritten**: All policies now use `has_permission()` function — `agent_configs`, `trusted_sources`, `ai_settings`, `api_keys`, `tools`, `briefs`, `role_permissions`, `user_permission_overrides`, `cursor_remote_*`, and new `roles` table.
+- **Admin menu permission-driven**: `AdminMenu.tsx` now uses `requiredPermission` per item instead of `minRole` hierarchy. Menu visibility is driven by the user's actual permission set.
+- **UserManagement updated**: Role dropdown is now fetched dynamically from the `roles` table. `is_tool_creator` checkbox added to create/edit user dialogs.
+- **ClientInit component**: Extracted `PasswordResetHandler` and `Toaster` into a `ClientInit` wrapper using `next/dynamic` with `ssr: false` to prevent Radix UI hook errors during static prerendering.
+- **Build fixes**: Added `force-dynamic` to `/nfl-odds`, `/projects`, `/smartbriefs`, `/writer-factory` pages. Created custom `global-error.tsx` and `not-found.tsx` pages. Fixed `PasswordResetHandler` to use `window.location` instead of `usePathname()`.
+
 ## [1.06.11] - 2026-02-19
 
 - **Fix Generate Content button blocked after setup wizard**: Removed the `fact_check_complete` gate from `canGenerate` and from `handleGenerateContent`. The button is now active as soon as a project and writer model are selected. Research/fact-checking can be done after content is generated, matching the intended workflow.

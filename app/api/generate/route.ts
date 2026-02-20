@@ -2,8 +2,7 @@ import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { findSimilarTrainingContent, buildContextFromExamples, buildContentGenerationPrompt } from '@/lib/rag';
 import { generateContentStream, ContentGenerationRequest } from '@/lib/agents';
-import { hasMinimumRole } from '@/lib/auth-config';
-import type { UserRole } from '@/types';
+import { getUserPermissions } from '@/lib/auth-config';
 import { replaceTwigs, getDateTwigValues } from '@/lib/twigs';
 
 /**
@@ -110,8 +109,8 @@ export async function POST(request: NextRequest) {
         .eq('id', user.id)
         .single();
 
-      const role = profile?.role as UserRole | undefined;
-      const isAdminOrAbove = hasMinimumRole(role, 'admin');
+      const userPerms = profile ? await getUserPermissions(user.id) : {};
+      const isAdminOrAbove = userPerms['can_edit_users'] === true;
       const ownsModel = model.strategist_id === user.id || model.created_by === user.id;
 
       if (!isAdminOrAbove && !ownsModel) {

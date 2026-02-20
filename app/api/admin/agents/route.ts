@@ -1,38 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { getCurrentUser } from '@/lib/auth';
 import { AgentConfig } from '@/lib/agents/types';
-import { canTuneAgents } from '@/lib/auth-config';
-import { UserRole } from '@/types';
+import { checkApiPermission } from '@/lib/auth-config';
 
 /**
  * GET /api/admin/agents
  * List all agent configurations
- * Access: Manager+ (canTuneAgents)
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const user = await getCurrentUser();
-    if (!user || !canTuneAgents(user.role as UserRole)) {
-      return NextResponse.json(
-        { error: 'Unauthorized. Manager access or above required.' },
-        { status: 403 }
-      );
-    }
+    const { user, allowed } = await checkApiPermission('can_tune_ai_agents');
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!allowed) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
     const supabase = await createClient();
-
     const { data: configs, error } = await supabase
       .from('agent_configs')
       .select('*')
       .order('agent_key');
-    
-    if (error) {
-      throw error;
-    }
-    
-    // Transform database format to AgentConfig
-    const agentConfigs: AgentConfig[] = configs.map(config => ({
+
+    if (error) throw error;
+
+    const agentConfigs: AgentConfig[] = configs.map((config: any) => ({
       id: config.id,
       agentKey: config.agent_key,
       displayName: config.display_name,
@@ -48,45 +37,34 @@ export async function GET(request: NextRequest) {
       createdAt: config.created_at,
       updatedAt: config.updated_at,
     }));
-    
+
     return NextResponse.json({ agents: agentConfigs });
   } catch (error) {
     console.error('Error fetching agent configs:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch agent configurations' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch agent configurations' }, { status: 500 });
   }
 }
 
 /**
  * PUT /api/admin/agents
  * Bulk update multiple agent configurations
- * Access: Manager+ (canTuneAgents)
  */
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user || !canTuneAgents(user.role as UserRole)) {
-      return NextResponse.json(
-        { error: 'Unauthorized. Manager access or above required.' },
-        { status: 403 }
-      );
-    }
+    const { user, allowed } = await checkApiPermission('can_tune_ai_agents');
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!allowed) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
     const body = await request.json();
     const { agents } = body;
-    
+
     if (!Array.isArray(agents)) {
-      return NextResponse.json(
-        { error: 'Invalid request body. Expected agents array.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid request body. Expected agents array.' }, { status: 400 });
     }
-    
+
     const supabase = await createClient();
     const results = [];
-    
+
     for (const agent of agents) {
       const { data, error } = await supabase
         .from('agent_configs')
@@ -105,21 +83,17 @@ export async function PUT(request: NextRequest) {
         .eq('agent_key', agent.agentKey)
         .select()
         .single();
-      
+
       if (error) {
         results.push({ agentKey: agent.agentKey, success: false, error: error.message });
       } else {
         results.push({ agentKey: agent.agentKey, success: true, data });
       }
     }
-    
+
     return NextResponse.json({ results });
   } catch (error) {
     console.error('Error updating agent configs:', error);
-    return NextResponse.json(
-      { error: 'Failed to update agent configurations' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update agent configurations' }, { status: 500 });
   }
 }
-

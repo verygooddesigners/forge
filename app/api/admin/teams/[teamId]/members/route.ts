@@ -1,19 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
-import { canManageTeams } from '@/lib/auth-config';
-import { UserRole } from '@/types';
-
-async function getAdminUser() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { supabase, user: null, profile: null };
-  const { data: profile } = await supabase
-    .from('users')
-    .select('id, role')
-    .eq('id', user.id)
-    .single();
-  return { supabase, user, profile };
-}
+import { checkApiPermission } from '@/lib/auth-config';
 
 export async function GET(
   _request: NextRequest,
@@ -21,11 +8,10 @@ export async function GET(
 ) {
   try {
     const { teamId } = await params;
-    const { supabase, user } = await getAdminUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const { user } = await checkApiPermission('can_manage_teams');
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+    const supabase = await createClient();
     const { data: members, error } = await supabase
       .from('team_members')
       .select(`
@@ -52,19 +38,16 @@ export async function POST(
 ) {
   try {
     const { teamId } = await params;
-    const { supabase, user, profile } = await getAdminUser();
-    if (!user || !profile) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    if (!canManageTeams(profile.role as UserRole)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
+    const { user, allowed } = await checkApiPermission('can_manage_teams');
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!allowed) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
     const { user_id } = await request.json();
     if (!user_id) {
       return NextResponse.json({ error: 'user_id is required' }, { status: 400 });
     }
 
+    const supabase = await createClient();
     const { data: member, error } = await supabase
       .from('team_members')
       .insert({ team_id: teamId, user_id })

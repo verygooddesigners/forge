@@ -2,8 +2,7 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { AdminPageClient } from '@/components/admin/AdminPageClient';
-import { canAccessAdmin } from '@/lib/auth-config';
-import { UserRole } from '@/types';
+import { getUserPermissions, isSuperAdmin } from '@/lib/auth-config';
 
 // Force dynamic rendering to avoid SSR issues with Supabase
 export const dynamic = 'force-dynamic';
@@ -24,7 +23,20 @@ export default async function AdminPage() {
       .eq('id', user.id)
       .single();
 
-    if (!profile || !canAccessAdmin(profile.role as UserRole)) {
+    if (!profile) {
+      redirect('/dashboard');
+    }
+
+    // Super admin email is always allowed
+    const isSuper = isSuperAdmin(profile.email);
+    let canAccessAdmin = isSuper;
+
+    if (!isSuper) {
+      const perms = await getUserPermissions(user.id);
+      canAccessAdmin = perms['can_access_admin'] === true;
+    }
+
+    if (!canAccessAdmin) {
       redirect('/dashboard');
     }
 
@@ -34,9 +46,6 @@ export default async function AdminPage() {
       </Suspense>
     );
   } catch (error) {
-    // If Supabase is not configured, redirect to login
     redirect('/login');
   }
 }
-
-

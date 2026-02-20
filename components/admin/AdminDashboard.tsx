@@ -10,7 +10,7 @@ import { AIHelperAdmin } from './AIHelperAdmin';
 import { SSOConfigStatus } from './SSOConfigStatus';
 import { TrustedSourcesAdmin } from './TrustedSourcesAdmin';
 import { ToolsAdmin } from './ToolsAdmin';
-import { RoleWizard } from './RoleWizard';
+import { RolesEditor } from './RolesEditor';
 import { OddsApiManagement } from './OddsApiManagement';
 import { AuditLog } from './AuditLog';
 import { SystemHealth } from './SystemHealth';
@@ -41,8 +41,8 @@ export function AdminDashboard({ user, activeSection }: AdminDashboardProps) {
       return <TrustedSourcesAdmin />;
     case 'tools':
       return <ToolsAdmin />;
-    case 'role-wizard':
-      return <RoleWizard adminUser={user} />;
+    case 'roles-editor':
+      return <RolesEditor adminUser={user} />;
     case 'odds-api':
       return <OddsApiManagement />;
     case 'audit-log':

@@ -1,6 +1,6 @@
 'use client';
 
-import { User, UserRole } from '@/types';
+import { User } from '@/types';
 import { AppSidebar } from '../layout/AppSidebar';
 import { AdminDashboard } from './AdminDashboard';
 import { getDefaultSection, type AdminSectionId } from './AdminMenu';
@@ -14,7 +14,7 @@ export function AdminPageWrapper({ user }: AdminPageWrapperProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const sectionParam = searchParams.get('section');
-  const defaultSection = getDefaultSection(user.role as UserRole);
+  const defaultSection = getDefaultSection({});
   const activeSection = (sectionParam as AdminSectionId) || defaultSection;
 
   return (

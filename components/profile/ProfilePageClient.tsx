@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, UserRole, AccountStatus, ROLE_LABELS, STATUS_LABELS } from '@/types';
+import { User, AccountStatus, STATUS_LABELS } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -105,15 +105,15 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
 
   const getRoleBadgeVariant = (role: string) => {
     switch (role) {
-      case 'super_admin':
+      case 'Super Administrator':
         return 'text-red-400 border-red-500/30 bg-red-500/10';
-      case 'admin':
+      case 'Administrator':
         return 'text-violet-400 border-violet-500/30 bg-violet-500/10';
-      case 'manager':
+      case 'Manager':
         return 'text-blue-400 border-blue-500/30 bg-blue-500/10';
-      case 'team_leader':
+      case 'Team Leader':
         return 'text-green-400 border-green-500/30 bg-green-500/10';
-      case 'content_creator':
+      case 'Content Creator':
         return 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10';
       default:
         return 'text-text-secondary border-border-subtle bg-bg-elevated';
@@ -256,7 +256,7 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
                 Role
               </Label>
               <Badge variant="outline" className={getRoleBadgeVariant(user.role)}>
-                {ROLE_LABELS[user.role as UserRole] || user.role}
+                {user.role}
               </Badge>
               <p className="text-xs text-text-tertiary">Role is managed by administrators</p>
             </div>

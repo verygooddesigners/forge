@@ -1,25 +1,51 @@
 // Core type definitions for Forge
 
-export type UserRole = 'super_admin' | 'admin' | 'manager' | 'team_leader' | 'content_creator';
 export type AccountStatus = 'awaiting_confirmation' | 'confirmed';
 
-// Role hierarchy levels (higher = more privileged)
-export const ROLE_LEVELS: Record<UserRole, number> = {
-  super_admin: 5,
-  admin: 4,
-  manager: 3,
-  team_leader: 2,
-  content_creator: 1,
-};
+// All 28 permission keys in the system
+export type PermissionKey =
+  // Content
+  | 'can_create_projects'
+  | 'can_edit_own_projects'
+  | 'can_delete_own_projects'
+  | 'can_share_projects'
+  | 'can_use_smartbriefs'
+  | 'can_edit_any_brief'
+  | 'can_delete_any_brief'
+  | 'can_export_content'
+  | 'can_manage_own_writer_model'
+  // AI & Tools
+  | 'can_use_ai_agents'
+  | 'can_tune_ai_agents'
+  | 'can_toggle_ai_agents'
+  | 'can_edit_master_ai'
+  | 'can_manage_trusted_sources'
+  // Analytics
+  | 'can_view_analytics'
+  | 'can_view_team_analytics'
+  // User Management
+  | 'can_view_users'
+  | 'can_create_users'
+  | 'can_edit_users'
+  | 'can_delete_users'
+  | 'can_manage_teams'
+  | 'can_create_teams'
+  // Admin Access
+  | 'can_access_admin'
+  | 'can_view_user_guide'
+  | 'can_manage_api_keys'
+  | 'can_manage_sso'
+  | 'can_manage_tools'
+  | 'can_manage_role_permissions';
 
-// Display labels for roles
-export const ROLE_LABELS: Record<UserRole, string> = {
-  super_admin: 'Super Admin',
-  admin: 'Admin',
-  manager: 'Manager',
-  team_leader: 'Team Leader',
-  content_creator: 'Content Creator',
-};
+// Dynamic role — name is the display name (e.g. "Super Administrator")
+export interface Role {
+  id: string;
+  name: string;
+  description?: string;
+  created_at: string;
+  updated_at: string;
+}
 
 // Display labels for account status
 export const STATUS_LABELS: Record<AccountStatus, string> = {
@@ -30,8 +56,9 @@ export const STATUS_LABELS: Record<AccountStatus, string> = {
 export interface User {
   id: string;
   email: string;
-  role: UserRole;
+  role: string; // Display name, e.g. "Super Administrator", "Content Creator"
   account_status: AccountStatus;
+  is_tool_creator?: boolean;
   full_name?: string;
   job_title?: string;
   avatar_url?: string;

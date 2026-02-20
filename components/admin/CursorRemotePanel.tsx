@@ -9,8 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, Loader2, RefreshCw, Send } from 'lucide-react';
-import { canAccessCursorRemote } from '@/lib/auth-config';
-import { UserRole } from '@/types';
 
 interface CursorRemotePanelProps {
   adminUser: User;
@@ -64,7 +62,7 @@ export function CursorRemotePanel({ adminUser }: CursorRemotePanelProps) {
   const [commandText, setCommandText] = useState('');
   const [targetAgentId, setTargetAgentId] = useState('');
 
-  const hasAccess = useMemo(() => canAccessCursorRemote(adminUser.role as UserRole), [adminUser.role]);
+  const hasAccess = useMemo(() => adminUser.role === 'Super Administrator', [adminUser.role]);
 
   const loadData = async (isManual = false) => {
     if (!hasAccess) return;

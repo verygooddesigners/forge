@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth';
-import { canAccessCursorRemote } from '@/lib/auth-config';
-import { UserRole } from '@/types';
+import { isSuperAdmin } from '@/lib/auth-config';
 
 export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user || !canAccessCursorRemote(user.role as UserRole)) {
+    if (!user || !isSuperAdmin(user.email)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
@@ -28,24 +27,19 @@ export async function GET(request: NextRequest) {
     }
 
     const { data, error } = await query;
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     return NextResponse.json({ commands: data });
   } catch (error) {
     console.error('Error fetching cursor commands:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch commands' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch commands' }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user || !canAccessCursorRemote(user.role as UserRole)) {
+    if (!user || !isSuperAdmin(user.email)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
@@ -54,10 +48,7 @@ export async function POST(request: NextRequest) {
     const targetAgentId = body.targetAgentId ? String(body.targetAgentId).trim() : null;
 
     if (!commandText) {
-      return NextResponse.json(
-        { error: 'Command text is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Command text is required' }, { status: 400 });
     }
 
     const supabase = await createClient();
@@ -72,16 +63,11 @@ export async function POST(request: NextRequest) {
       .select()
       .single();
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     return NextResponse.json({ command: data });
   } catch (error) {
     console.error('Error creating cursor command:', error);
-    return NextResponse.json(
-      { error: 'Failed to create command' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create command' }, { status: 500 });
   }
 }

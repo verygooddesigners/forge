@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { WriterFactoryPageClient } from './WriterFactoryPageClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function WriterFactoryPage() {
   const supabase = await createClient();
   
