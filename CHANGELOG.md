@@ -9,6 +9,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [1.07.02] - 2026-02-20
 
 - **Fix Roles Editor errors**: Applied missing DB migrations to the Forge Supabase project. Created `roles` table, converted `users.role` from old enum to display-name TEXT, updated `role_permissions` to use display names, seeded `has_permission()` / `is_super_admin()` functions, and rewrote RLS policies. Updated Supabase connection credentials to point to the correct Forge project.
+- **Fix login fetch error**: Switched Supabase API keys from new `sb_publishable_` format to legacy JWT format for compatibility with `@supabase/supabase-js` v2.x.
 
 ## [1.07.01] - 2026-02-20
 
