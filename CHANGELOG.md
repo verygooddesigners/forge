@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.07.02] - 2026-02-20
+
+- **Fix Roles Editor errors**: Applied missing DB migrations to the Forge Supabase project. Created `roles` table, converted `users.role` from old enum to display-name TEXT, updated `role_permissions` to use display names, seeded `has_permission()` / `is_super_admin()` functions, and rewrote RLS policies. Updated Supabase connection credentials to point to the correct Forge project.
+
 ## [1.07.01] - 2026-02-20
 
 - **Super Admin bypass in `usePermissions`**: Super admin emails now bypass the DB permission lookup on the client side, granting full access to all admin dashboard menu items immediately. Extracted `isSuperAdmin` to `lib/super-admin.ts` (client-safe shared module) and updated `usePermissions` hook and `AdminPageClient` to use it.
