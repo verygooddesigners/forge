@@ -12,7 +12,11 @@ import { DateRangePicker } from '@/components/analytics/DateRangePicker';
 import { StatCard } from '@/components/analytics/StatCard';
 import { ChartCard } from '@/components/analytics/ChartCard';
 import { UserSelector } from '@/components/analytics/UserSelector';
-import { AnalyticsExportModal } from '@/components/analytics/AnalyticsExportModal';
+import dynamic from 'next/dynamic';
+const AnalyticsExportModal = dynamic(
+  () => import('@/components/analytics/AnalyticsExportModal').then(m => ({ default: m.AnalyticsExportModal })),
+  { ssr: false }
+);
 import { SaveFilterModal } from '@/components/analytics/SaveFilterModal';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

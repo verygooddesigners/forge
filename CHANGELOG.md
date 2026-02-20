@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.07.03] - 2026-02-20
+
+- **Fix Next.js 16 + React 19 prerender build failures**: Resolved critical `useContext = null` errors during static prerendering that blocked Vercel deployments. Converted all `'use client'` pages to Server Component wrappers (`page.tsx` → `*Client.tsx`) with `force-dynamic`. Added `mounted` pattern to `LoginForm`, `SmartBriefGuideClient`, `StyleGuideClient`, and `ClientInit` to prevent Radix UI hook calls during SSR. Replaced `nextDynamic + ssr:false` in `ClientInit` with the mounted pattern to avoid `BailoutToCSRError` in React 19. Fixed `jspdf`/`fflate` Node.js module bundling error in `ContentAnalyticsClient` by wrapping `AnalyticsExportModal` with `nextDynamic + ssr:false`. Upgraded Next.js to `16.2.0-canary.53`. All 30+ routes now build and deploy successfully.
+
 ## [1.07.02] - 2026-02-20
 
 - **Fix Roles Editor errors**: Applied missing DB migrations to the Forge Supabase project. Created `roles` table, converted `users.role` from old enum to display-name TEXT, updated `role_permissions` to use display names, seeded `has_permission()` / `is_super_admin()` functions, and rewrote RLS policies. Updated Supabase connection credentials to point to the correct Forge project.

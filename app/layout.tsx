@@ -17,6 +17,8 @@ const spaceMono = Space_Mono({
   display: "swap",
 });
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Forge - Editorial Command Center",
   description: "AI-powered content creation platform for sports betting and gaming content",

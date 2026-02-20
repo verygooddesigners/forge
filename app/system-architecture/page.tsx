@@ -1,5 +1,7 @@
 import { ArchitectureVisualization } from '@/components/architecture/ArchitectureVisualization';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'System Architecture | Forge',
   description: 'Interactive visualization of the Forge system architecture',

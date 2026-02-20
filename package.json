@@ -1,6 +1,6 @@
 {
   "name": "forge",
-  "version": "1.07.02",
+  "version": "1.07.03",
   "private": true,
   "scripts": {
     "dev": "next dev -p 5309",
@@ -40,7 +40,7 @@
     "jspdf": "^4.1.0",
     "jspdf-autotable": "^5.0.7",
     "lucide-react": "^0.553.0",
-    "next": "^16.0.7",
+    "next": "^16.2.0-canary.53",
     "react": "19.2.0",
     "react-day-picker": "^9.13.2",
     "react-dom": "19.2.0",

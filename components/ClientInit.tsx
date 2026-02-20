@@ -1,22 +1,22 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
-const PasswordResetHandler = dynamic(
-  () => import('./PasswordResetHandler').then((m) => ({ default: m.PasswordResetHandler })),
-  { ssr: false }
-);
-
-const DynamicToaster = dynamic(
-  () => import('sonner').then((m) => ({ default: m.Toaster })),
-  { ssr: false }
-);
+import { useState, useEffect } from 'react';
+import { Toaster } from 'sonner';
+import { PasswordResetHandler } from './PasswordResetHandler';
 
 export function ClientInit() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <>
       <PasswordResetHandler />
-      <DynamicToaster theme="dark" position="bottom-right" richColors />
+      <Toaster theme="dark" position="bottom-right" richColors />
     </>
   );
 }
