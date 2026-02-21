@@ -58,11 +58,14 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
 
       setAvatarUrl(publicUrl);
 
-      // Save immediately
-      await supabase
-        .from('users')
-        .update({ avatar_url: publicUrl })
-        .eq('id', user.id);
+      // Save immediately via API (RLS doesn't allow direct client update)
+      const res = await fetch('/api/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ avatar_url: publicUrl }),
+      });
+
+      if (!res.ok) throw new Error('Failed to save avatar');
 
       toast.success('Photo uploaded');
     } catch (error) {
@@ -76,15 +79,19 @@ export function ProfilePageClient({ user }: ProfilePageClientProps) {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const { error } = await supabase
-        .from('users')
-        .update({
-          full_name: fullName.trim() || null,
-          job_title: jobTitle.trim() || null,
-        })
-        .eq('id', user.id);
+      const res = await fetch('/api/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: fullName.trim(),
+          job_title: jobTitle.trim(),
+        }),
+      });
 
-      if (error) throw error;
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to update profile');
+      }
 
       toast.success('Profile updated successfully');
       setIsEditing(false);

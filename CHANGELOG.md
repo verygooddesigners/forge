@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.07.04] - 2026-02-20
+
+- **Fix Save Profile**: Profile updates (name, job title, avatar) were failing with "Failed to Update Profile" because the Supabase RLS policy on the `users` table only allows admins to update rows. Created `/api/profile` PATCH route that verifies the user's session then uses the service role client to update only the authenticated user's own `full_name`, `job_title`, and `avatar_url`. Updated `ProfilePageClient` to call this API route instead of querying Supabase directly.
+
 ## [1.07.03] - 2026-02-20
 
 - **Fix Next.js 16 + React 19 prerender build failures**: Resolved critical `useContext = null` errors during static prerendering that blocked Vercel deployments. Converted all `'use client'` pages to Server Component wrappers (`page.tsx` → `*Client.tsx`) with `force-dynamic`. Added `mounted` pattern to `LoginForm`, `SmartBriefGuideClient`, `StyleGuideClient`, and `ClientInit` to prevent Radix UI hook calls during SSR. Replaced `nextDynamic + ssr:false` in `ClientInit` with the mounted pattern to avoid `BailoutToCSRError` in React 19. Fixed `jspdf`/`fflate` Node.js module bundling error in `ContentAnalyticsClient` by wrapping `AnalyticsExportModal` with `nextDynamic + ssr:false`. Upgraded Next.js to `16.2.0-canary.53`. All 30+ routes now build and deploy successfully.
