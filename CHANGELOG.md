@@ -6,6 +6,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.07.09] - 2026-02-24
+
+Fix INP performance issue on user delete: replace blocking `confirm()` with async Dialog, move deletion to server-side API route with `can_delete_users` permission check and `auth.users` cleanup.
+
+---
+
 ## [1.07.08] - 2026-02-19
 
 Add "Create New..." button to sidebar navigation with animated dropdown for Project and SmartBrief creation. Clicking Project opens the existing creation wizard modal; clicking SmartBrief navigates to /smartbriefs and auto-opens the creation form.

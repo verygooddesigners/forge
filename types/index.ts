@@ -133,6 +133,7 @@ export interface Project {
   user_id: string;
   headline: string;
   file_name?: string;
+  description?: string;
   is_shared?: boolean;
   primary_keyword: string;
   secondary_keywords: string[];

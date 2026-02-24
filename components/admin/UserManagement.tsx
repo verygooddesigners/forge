@@ -83,6 +83,8 @@ export function UserManagement({ adminUser }: UserManagementProps) {
   const [userPermOverrides, setUserPermOverrides] = useState<Record<string, boolean>>({});
   const [showPermOverrides, setShowPermOverrides] = useState(false);
   const [permLoading, setPermLoading] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const supabase = createClient();
 
   const [availableRoles, setAvailableRoles] = useState<Array<{ id: string; name: string }>>([]);
@@ -213,19 +215,25 @@ export function UserManagement({ adminUser }: UserManagementProps) {
     }
   };
 
-  const handleDeleteUser = async (userId: string) => {
-    if (!confirm('Are you sure you want to delete this user?')) return;
+  const handleDeleteUser = async () => {
+    if (!deleteTarget) return;
+    setDeleteLoading(true);
 
-    const { error } = await supabase
-      .from('users')
-      .delete()
-      .eq('id', userId);
+    try {
+      const response = await fetch(`/api/admin/users/${deleteTarget.id}`, {
+        method: 'DELETE',
+      });
 
-    if (!error) {
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to delete user');
+
       toast.success('User deleted');
+      setDeleteTarget(null);
       await loadUsers();
-    } else {
-      toast.error('Failed to delete user');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to delete user');
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -347,7 +355,7 @@ export function UserManagement({ adminUser }: UserManagementProps) {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDeleteUser(user.id)}
+                          onClick={() => setDeleteTarget(user)}
                         >
                           <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
@@ -496,6 +504,26 @@ export function UserManagement({ adminUser }: UserManagementProps) {
               disabled={loading || !email || (!editingUser && !password)}
             >
               {loading ? 'Saving...' : (editingUser ? 'Update User' : 'Create User')}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete confirmation dialog */}
+      <Dialog open={!!deleteTarget} onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}>
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>Delete User</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete <span className="font-medium text-text-primary">{deleteTarget?.email}</span>? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button variant="outline" size="sm" onClick={() => setDeleteTarget(null)} disabled={deleteLoading}>
+              Cancel
+            </Button>
+            <Button variant="destructive" size="sm" onClick={handleDeleteUser} disabled={deleteLoading}>
+              {deleteLoading ? 'Deleting...' : 'Delete'}
             </Button>
           </div>
         </DialogContent>

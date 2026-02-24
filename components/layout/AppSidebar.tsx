@@ -22,7 +22,6 @@ import {
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { usePermissions } from '@/hooks/use-permissions';
-import { ProjectCreationModal } from '@/components/modals/ProjectCreationModal';
 
 interface AppSidebarProps {
   user: User;
@@ -44,7 +43,6 @@ export function AppSidebar({
   const pathname = usePathname();
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [createDropdownOpen, setCreateDropdownOpen] = useState(false);
-  const [showProjectModal, setShowProjectModal] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const createDropdownRef = useRef<HTMLDivElement>(null);
@@ -112,7 +110,6 @@ export function AppSidebar({
   const roleLabel = user.role;
 
   return (
-    <>
     <aside className="fixed left-0 top-0 h-screen w-[260px] bg-bg-deep border-r border-border-subtle flex flex-col z-[100]">
       {/* Logo */}
       <div className="p-5 border-b border-border-subtle flex items-center justify-center">
@@ -156,7 +153,7 @@ export function AppSidebar({
               <button
                 onClick={() => {
                   setCreateDropdownOpen(false);
-                  setShowProjectModal(true);
+                  router.push('/projects/new');
                 }}
                 className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
               >
@@ -314,17 +311,5 @@ export function AppSidebar({
         </button>
       </div>
     </aside>
-
-    <ProjectCreationModal
-      open={showProjectModal}
-      onOpenChange={setShowProjectModal}
-      userId={user.id}
-      userRole={user.role}
-      onProjectCreated={(project) => {
-        setShowProjectModal(false);
-        router.push('/projects');
-      }}
-    />
-    </>
   );
 }
