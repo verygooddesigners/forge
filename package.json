@@ -1,6 +1,6 @@
 {
   "name": "forge",
-  "version": "1.07.04",
+  "version": "1.07.05",
   "private": true,
   "scripts": {
     "dev": "next dev -p 5309",
@@ -24,8 +24,8 @@
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.2.8",
-    "@supabase/ssr": "^0.7.0",
-    "@supabase/supabase-js": "^2.81.1",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.97.0",
     "@tiptap/extension-character-count": "^3.10.7",
     "@tiptap/extension-placeholder": "^3.10.7",
     "@tiptap/react": "^3.10.7",

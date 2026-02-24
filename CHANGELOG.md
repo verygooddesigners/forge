@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.07.05] - 2026-02-24
+
+- **Fix login fetch error**: Upgraded `@supabase/supabase-js` from 2.81.1 → 2.97.0 and `@supabase/ssr` from 0.7.0 → 0.8.0 to resolve "Failed to execute 'fetch' on 'Window': Invalid value" error blocking login.
+
 ## [1.07.04] - 2026-02-20
 
 - **Fix Save Profile**: Profile updates (name, job title, avatar) were failing with "Failed to Update Profile" because the Supabase RLS policy on the `users` table only allows admins to update rows. Created `/api/profile` PATCH route that verifies the user's session then uses the service role client to update only the authenticated user's own `full_name`, `job_title`, and `avatar_url`. Updated `ProfilePageClient` to call this API route instead of querying Supabase directly.
