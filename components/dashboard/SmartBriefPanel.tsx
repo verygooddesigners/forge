@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 interface SmartBriefPanelProps {
   user: User;
   onBack: () => void;
+  autoCreate?: boolean;
 }
 
 interface BriefCardProps {
@@ -69,7 +70,7 @@ function BriefCard({ brief, onClick }: BriefCardProps) {
   );
 }
 
-export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
+export function SmartBriefPanel({ user, onBack, autoCreate = false }: SmartBriefPanelProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedBrief, setSelectedBrief] = useState<Brief | null>(null);
   const [briefName, setBriefName] = useState('');
@@ -101,6 +102,13 @@ export function SmartBriefPanel({ user, onBack }: SmartBriefPanelProps) {
     loadCategories();
     loadBriefs();
   }, []);
+
+  // Auto-open creation form when navigated here via "Create New > SmartBrief"
+  useEffect(() => {
+    if (autoCreate) {
+      setIsCreating(true);
+    }
+  }, [autoCreate]);
 
   useEffect(() => {
     if (searchQuery.trim() === '') {
