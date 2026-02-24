@@ -6,6 +6,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.07.07] - 2026-02-19
+
+Fix password reset redirect: added `?type=recovery` to the `redirectTo` URL in `resetPasswordForEmail` so Supabase preserves the recovery type through its auth redirect, allowing the callback to correctly route users to the reset-password page instead of the login screen.
+
+---
+
 ## [1.07.06] - 2026-02-24
 
 - **Fix login fetch error (root cause)**: Removed trailing `\n` garbage characters from `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` in Vercel environment variables. The corrupted URL was causing browser fetch to throw "Failed to execute 'fetch' on 'Window': Invalid value" on every login attempt. Rebuilt and redeployed with clean values.

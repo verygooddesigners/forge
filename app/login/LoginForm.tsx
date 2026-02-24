@@ -125,7 +125,7 @@ export default function LoginForm() {
     try {
       const supabase = createClient();
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
+        redirectTo: `${window.location.origin}/api/auth/callback?type=recovery`,
       });
 
       if (error) throw error;
