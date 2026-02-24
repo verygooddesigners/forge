@@ -6,6 +6,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.07.11] - 2026-02-24
+
+Fix user deletion failing on foreign key constraints. Add migration to set ON DELETE SET NULL for content tables (projects, briefs, writer_models, api_keys, ai_settings) and ON DELETE CASCADE for per-user data (ai_helper_entries, research_feedback). Update Project type to allow nullable `user_id`.
+
+---
+
 ## [1.07.10] - 2026-02-24
 
 Fix deployment build failure: remove `JSX.IntrinsicElements` reference in TipTap preview renderer (TypeScript namespace not available in Next.js 16). Refactor project creation flow to use dedicated `/projects/new` page instead of modal.

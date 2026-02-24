@@ -527,7 +527,7 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
         editor={editorRef.current}
         projectHeadline={project?.headline}
         projectId={project?.id}
-        userId={project?.user_id}
+        userId={project?.user_id ?? undefined}
       />
     </>
   );

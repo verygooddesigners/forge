@@ -130,7 +130,7 @@ export interface Brief {
 
 export interface Project {
   id: string;
-  user_id: string;
+  user_id: string | null;
   headline: string;
   file_name?: string;
   description?: string;
