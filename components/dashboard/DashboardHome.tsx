@@ -7,7 +7,6 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { InlineEdit } from '@/components/ui/inline-edit';
-import { ProjectCreationModal } from '@/components/modals/ProjectCreationModal';
 import { 
   Plus,
   FileText,
@@ -27,7 +26,6 @@ interface DashboardHomeProps {
 export function DashboardHome({ user }: DashboardHomeProps) {
   const router = useRouter();
   const [recentProjects, setRecentProjects] = useState<Project[]>([]);
-  const [showProjectCreationModal, setShowProjectCreationModal] = useState(false);
   const [stats, setStats] = useState({
     articlesThisWeek: 0,
     wordsGenerated: 0,
@@ -219,7 +217,7 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         <div className="grid grid-cols-3 gap-4">
           <Card 
             className="p-6 cursor-pointer relative overflow-hidden group hover:translate-y-0"
-            onClick={() => setShowProjectCreationModal(true)}
+            onClick={() => router.push('/projects/new')}
           >
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="w-11 h-11 rounded-[10px] bg-accent-muted flex items-center justify-center text-accent-primary mb-4">
@@ -344,16 +342,6 @@ export function DashboardHome({ user }: DashboardHomeProps) {
         </span>
       </div>
 
-      <ProjectCreationModal
-        open={showProjectCreationModal}
-        onOpenChange={setShowProjectCreationModal}
-        userId={user.id}
-        userRole={user.role as any}
-        onProjectCreated={(project) => {
-          setShowProjectCreationModal(false);
-          router.push(`/dashboard?project=${project.id}&model=${project.writer_model_id}`);
-        }}
-      />
     </div>
   );
 }

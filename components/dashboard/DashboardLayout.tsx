@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { User, Project } from '@/types';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { User } from '@/types';
 import { AppSidebar } from '../layout/AppSidebar';
 import { DashboardHome } from './DashboardHome';
 import { ProjectsPanel } from './ProjectsPanel';
@@ -10,7 +11,6 @@ import { NFLOddsPanel } from './NFLOddsPanel';
 import { RightSidebar } from './RightSidebar';
 import { EditorPanel } from './EditorPanel';
 import { SmartBriefPanel } from './SmartBriefPanel';
-import { ProjectCreationModal } from '@/components/modals/ProjectCreationModal';
 import { UserGuideModal } from '@/components/modals/UserGuideModal';
 import { AIHelperWidget } from '@/components/ai/AIHelperWidget';
 
@@ -21,6 +21,7 @@ interface DashboardLayoutProps {
 type DashboardView = 'home' | 'projects' | 'writer-factory' | 'nfl-odds' | 'editor' | 'smartbriefs';
 
 export function DashboardLayout({ user }: DashboardLayoutProps) {
+  const router = useRouter();
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [selectedWriterModel, setSelectedWriterModel] = useState<string | null>(null);
   const [editorContent, setEditorContent] = useState<any>(null);
@@ -28,9 +29,6 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
   const [projectCount, setProjectCount] = useState(0);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [projectRefreshTrigger, setProjectRefreshTrigger] = useState(0);
-  
-  // Modal states
-  const [showProjectCreationModal, setShowProjectCreationModal] = useState(false);
   const [showUserGuideModal, setShowUserGuideModal] = useState(false);
 
   const handleProjectUpdate = () => {
@@ -44,12 +42,6 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
   //     setShowInitialModal(true);
   //   }
   // }, [selectedProject]);
-
-  const handleProjectCreated = (project: Project) => {
-    setSelectedProject(project.id);
-    setSelectedWriterModel(project.writer_model_id);
-    setActiveView('editor');
-  };
 
   const handleSelectProject = (projectId: string, writerModelId: string) => {
     setSelectedProject(projectId);
@@ -105,7 +97,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
             <ProjectsPanel 
               user={user}
               onSelectProject={handleSelectProject}
-              onCreateProject={() => setShowProjectCreationModal(true)}
+              onCreateProject={() => router.push('/projects/new')}
             />
           ) : activeView === 'writer-factory' ? (
             <WriterFactoryPanel user={user} />
@@ -123,7 +115,7 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
                 projectId={selectedProject}
                 writerModelId={selectedWriterModel}
                 onOpenProjectModal={handleOpenProjects}
-                onNewProject={() => setShowProjectCreationModal(true)}
+                onNewProject={() => router.push('/projects/new')}
                 onContentChange={setEditorContent}
                 key={`editor-${selectedProject}-${projectRefreshTrigger}`}
               />
@@ -141,14 +133,6 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
       </div>
 
       {/* Modals */}
-      <ProjectCreationModal
-        open={showProjectCreationModal}
-        onOpenChange={setShowProjectCreationModal}
-        userId={user.id}
-        userRole={user.role as any}
-        onProjectCreated={handleProjectCreated}
-      />
-
       <UserGuideModal
         open={showUserGuideModal}
         onOpenChange={setShowUserGuideModal}

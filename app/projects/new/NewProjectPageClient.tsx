@@ -42,13 +42,12 @@ function renderTipTapNode(node: any, key: number): React.ReactNode {
     return <div key={k} className="space-y-1">{children}</div>;
   }
   if (node.type === 'heading') {
-    const level = node.attrs?.level ?? 2;
+    const level = Math.min(6, node.attrs?.level ?? 2);
     const children = (node.content as any[])?.map((c, i) => renderTipTapNode(c, i)) ?? [];
-    const Tag = `h${Math.min(6, level)}` as keyof JSX.IntrinsicElements;
     return (
-      <Tag key={k} className="font-semibold text-[10px] mt-2 first:mt-0">
+      <div key={k} className="font-semibold text-[10px] mt-2 first:mt-0" data-heading-level={level}>
         {children}
-      </Tag>
+      </div>
     );
   }
   if (node.type === 'paragraph') {
