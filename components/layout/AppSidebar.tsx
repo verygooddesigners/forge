@@ -112,6 +112,7 @@ export function AppSidebar({
   const roleLabel = user.role;
 
   return (
+    <>
     <aside className="fixed left-0 top-0 h-screen w-[260px] bg-bg-deep border-r border-border-subtle flex flex-col z-[100]">
       {/* Logo */}
       <div className="p-5 border-b border-border-subtle flex items-center justify-center">
@@ -324,5 +325,6 @@ export function AppSidebar({
         router.push('/projects');
       }}
     />
+    </>
   );
 }
