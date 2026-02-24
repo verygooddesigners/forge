@@ -6,9 +6,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.07.06] - 2026-02-24
+
+- **Fix login fetch error (root cause)**: Removed trailing `\n` garbage characters from `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` in Vercel environment variables. The corrupted URL was causing browser fetch to throw "Failed to execute 'fetch' on 'Window': Invalid value" on every login attempt. Rebuilt and redeployed with clean values.
+
 ## [1.07.05] - 2026-02-24
 
-- **Fix login fetch error**: Upgraded `@supabase/supabase-js` from 2.81.1 → 2.97.0 and `@supabase/ssr` from 0.7.0 → 0.8.0 to resolve "Failed to execute 'fetch' on 'Window': Invalid value" error blocking login.
+- **Upgrade Supabase packages**: Upgraded `@supabase/supabase-js` from 2.81.1 → 2.97.0 and `@supabase/ssr` from 0.7.0 → 0.8.0.
 
 ## [1.07.04] - 2026-02-20
 
