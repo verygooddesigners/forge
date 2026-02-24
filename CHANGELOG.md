@@ -6,6 +6,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.07.12] - 2026-02-24
+
+- Center the Create New Project form in the content panel so it adapts to screen width instead of being left-aligned.
+
 ## [1.07.11] - 2026-02-24
 
 Fix user deletion failing on foreign key constraints. Add migration to set ON DELETE SET NULL for content tables (projects, briefs, writer_models, api_keys, ai_settings) and ON DELETE CASCADE for per-user data (ai_helper_entries, research_feedback). Update Project type to allow nullable `user_id`.

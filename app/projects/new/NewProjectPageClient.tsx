@@ -242,7 +242,7 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
         </div>
 
         {/* Scrollable form */}
-        <div className="flex-1 overflow-y-auto p-6 max-w-4xl">
+        <div className="flex-1 overflow-y-auto p-6 max-w-4xl mx-auto">
           <p className="text-sm text-text-secondary mb-6">
             Fill in the details below to set up your AI-generated content project.
           </p>
