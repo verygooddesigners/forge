@@ -2612,7 +2612,7 @@ export default function UserGuidePage() {
   );
 
   return (
-    <div className="min-h-screen bg-bg-deepest">
+    <div className="h-full flex flex-col bg-bg-deepest overflow-hidden">
       {/* Header */}
       <header className="bg-bg-deep border-b border-border-default sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
@@ -2732,8 +2732,8 @@ export default function UserGuidePage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto p-3 sm:p-6">
-        <div className="bg-bg-surface rounded-lg border border-border-default overflow-hidden lg:flex" style={{ minHeight: 'calc(100vh - 120px)' }}>
+      <div className="max-w-7xl mx-auto p-3 sm:p-6 flex-1 min-h-0 flex flex-col w-full">
+        <div className="bg-bg-surface rounded-lg border border-border-default overflow-hidden lg:flex flex-1 min-h-0">
           
           {/* Desktop Sidebar - Hidden on Mobile */}
           <div className="hidden lg:flex lg:w-80 border-r border-border-default flex-col bg-bg-deep">

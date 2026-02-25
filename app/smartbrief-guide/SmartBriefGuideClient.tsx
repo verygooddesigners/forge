@@ -54,7 +54,7 @@ export default function SmartBriefGuideClient() {
   };
 
   return (
-    <div className="min-h-screen bg-bg-deepest">
+    <div className="h-full flex flex-col bg-bg-deepest overflow-hidden">
       {/* Header */}
       <header className="border-b border-border-default bg-bg-surface sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
@@ -70,9 +70,9 @@ export default function SmartBriefGuideClient() {
         </div>
       </header>
 
-      <div className="flex">
+      <div className="flex flex-1 min-h-0">
         {/* Table of Contents - Sticky Sidebar */}
-        <aside className="w-64 border-r border-border-default bg-bg-surface p-6 sticky top-[73px] h-[calc(100vh-73px)] overflow-y-auto hidden lg:block">
+        <aside className="w-64 border-r border-border-default bg-bg-surface p-6 h-full overflow-y-auto hidden lg:block">
           <nav className="space-y-1">
             {sections.map((section) => (
               <button

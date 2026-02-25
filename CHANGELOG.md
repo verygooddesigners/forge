@@ -4,6 +4,12 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.09.01] - 2026-02-25
+
+### Bug Fix — Guide Page Scrolling
+- Fixed User Guide and SmartBrief Guide pages not scrolling within the glassmorphism container
+- Replaced `min-h-screen` with proper flex layout and `overflow-y-auto` so content scrolls correctly inside the fixed-height app shell
+
 ## [1.09.00] - 2026-02-25
 
 ### Major Redesign — Glassmorphism UI
