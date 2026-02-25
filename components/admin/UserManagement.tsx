@@ -284,11 +284,11 @@ export function UserManagement({ adminUser }: UserManagementProps) {
 
   const openEditDialog = (user: User) => {
     setEditingUser(user);
-    setEmail(user.email);
+    setEmail(user.email ?? '');
     setFullName(user.full_name || '');
-    setRole(user.role);
-    setAccountStatus(user.account_status as AccountStatus);
-    setDefaultWriterModelId((user as User & { default_writer_model_id?: string }).default_writer_model_id || '');
+    setRole(user.role || 'Content Creator');
+    setAccountStatus((user.account_status as AccountStatus) || 'awaiting_confirmation');
+    setDefaultWriterModelId(user.default_writer_model_id || '');
     setUserPermOverrides({});
     setShowPermOverrides(false);
     setShowDialog(true);
@@ -435,7 +435,10 @@ export function UserManagement({ adminUser }: UserManagementProps) {
             {editingUser && (
               <div className="space-y-2">
                 <Label htmlFor="accountStatus">Account Status</Label>
-                <Select value={accountStatus} onValueChange={(value) => setAccountStatus(value as AccountStatus)}>
+                <Select
+                  value={accountStatus === 'confirmed' ? 'confirmed' : 'awaiting_confirmation'}
+                  onValueChange={(value) => setAccountStatus(value as AccountStatus)}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -449,7 +452,10 @@ export function UserManagement({ adminUser }: UserManagementProps) {
 
             <div className="space-y-2">
               <Label htmlFor="role">Role</Label>
-              <Select value={role} onValueChange={(value) => setRole(value)}>
+              <Select
+                value={availableRoles.some((r) => r.name === role) ? role : (availableRoles[0]?.name ?? 'Content Creator')}
+                onValueChange={(value) => setRole(value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -467,7 +473,12 @@ export function UserManagement({ adminUser }: UserManagementProps) {
               <div className="space-y-2">
                 <Label htmlFor="defaultWriterModel">Default Writer Model</Label>
                 <Select
-                  value={defaultWriterModelId}
+                  value={
+                    defaultWriterModelId &&
+                    writerModels.some((m) => m.id === defaultWriterModelId)
+                      ? defaultWriterModelId
+                      : ''
+                  }
                   onValueChange={setDefaultWriterModelId}
                 >
                   <SelectTrigger id="defaultWriterModel">

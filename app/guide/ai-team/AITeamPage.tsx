@@ -436,7 +436,7 @@ export default function AITeamPage() {
                       6
                     </div>
                     <h4 className="font-bold text-lg text-text-primary">
-                      Creative Features Agent
+                      Research Orchestrator Agent
                     </h4>
                   </div>
                   <p className="text-text-secondary leading-relaxed mb-3">
@@ -887,7 +887,7 @@ export default function AITeamPage() {
                         </td>
                       </tr>
                       <tr>
-                        <td className="py-3 px-4 font-medium">Creative Features</td>
+                        <td className="py-3 px-4 font-medium">Research Orchestrator</td>
                         <td className="py-3 px-4 text-text-secondary">
                           <code className="text-xs bg-bg-hover px-1 rounded">
                             cannot_bypass_agents
@@ -1032,7 +1032,7 @@ export default function AITeamPage() {
                       Persona
                     </span>
                     <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-medium">
-                      Creative
+                      Research
                     </span>
                     <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-medium">
                       Visual
@@ -1227,7 +1227,7 @@ export default function AITeamPage() {
                         <td className="py-3 px-4 text-text-secondary">—</td>
                       </tr>
                       <tr>
-                        <td className="py-3 px-4 font-medium">Creative Features</td>
+                        <td className="py-3 px-4 font-medium">Research Orchestrator</td>
                         <td className="py-3 px-4 font-mono">0.6</td>
                         <td className="py-3 px-4 font-mono">3,000</td>
                         <td className="py-3 px-4 text-text-secondary">—</td>

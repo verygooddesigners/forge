@@ -66,13 +66,13 @@ const agents: AgentNode[] = [
   },
   {
     id: 6,
-    name: 'Creative Features',
-    shortName: 'Creative',
+    name: 'Research Orchestrator',
+    shortName: 'Research',
     color: 'text-indigo-900',
     bgColor: 'bg-indigo-500',
     borderColor: 'border-indigo-500',
-    description: 'Orchestrates complex multi-agent workflows',
-    capabilities: ['Workflow Management', 'Multi-Agent Tasks', 'Data Transform'],
+    description: 'Runs the research pipeline: Tavily search, relevance evaluation, fact verification, keyword suggestions',
+    capabilities: ['Tavily Search', 'Fact Verification Loop', 'Keyword Suggestions'],
   },
   {
     id: 7,
@@ -267,20 +267,20 @@ export default function AgentDiagram() {
               review
             </text>
 
-            {/* Creative Features - Bottom Left */}
+            {/* Research Orchestrator - Bottom Left */}
             <g transform="translate(250, 420)">
               <circle r="45" fill="#6366f1" className="drop-shadow-md" />
-              <text x="0" y="-5" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">
-                Creative
+              <text x="0" y="-2" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">
+                Research
               </text>
-              <text x="0" y="10" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">
-                Features
+              <text x="0" y="12" textAnchor="middle" fill="white" fontSize="11" fontWeight="bold">
+                Orchestrator
               </text>
               <text x="0" y="25" textAnchor="middle" fill="white" fontSize="10" opacity="0.9">
                 #6
               </text>
             </g>
-            {/* Arrow from Creative to Content */}
+            {/* Arrow from Research to Content */}
             <path
               d="M 290 390 Q 360 340 410 300"
               fill="none"
@@ -306,7 +306,7 @@ export default function AgentDiagram() {
                 #7
               </text>
             </g>
-            {/* Arrow from Visual to Creative */}
+            {/* Arrow from Visual to Research */}
             <path
               d="M 605 420 L 300 420"
               fill="none"
@@ -421,7 +421,7 @@ export default function AgentDiagram() {
                   <div className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-xs">
                     #6
                   </div>
-                  <span className="text-xs mt-1">Creative</span>
+                  <span className="text-xs mt-1">Research</span>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 bg-cyan-500 rounded-full flex items-center justify-center text-white font-bold text-xs">

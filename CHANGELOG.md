@@ -4,6 +4,13 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.01] - 2026-02-25
+
+### Documentation — User Guide, AI architecture, SmartBrief guide
+- User Guide: Research Orchestrator (replaces Creative Features), Research Pipeline & Research Hub flow, keyword pills, Insert Internal Links, no Auto-Optimize, Project Settings, Generation Context
+- AI Team page & AgentDiagram: Research Orchestrator; architecture-data: 8 agents, research pipeline API
+- Docs: app-overview, api-key-setup-guide, ai-models-api-requirements, rotowrite-content-engine updated for 8 agents and Research Orchestrator
+
 ## [1.10.00] - 2026-02-25
 
 ### Project Creation and Content Generation Workflow Overhaul

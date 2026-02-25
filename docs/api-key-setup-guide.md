@@ -10,7 +10,7 @@ This document provides exact instructions for setting up API keys required for t
 
 | API Key | Provider | Required | Already Have? | Purpose |
 |---------|----------|----------|---------------|---------|
-| Claude API | Anthropic | Yes | Check | Primary model for all 7 agents |
+| Claude API | Anthropic | Yes | Check | Primary model for all 8 agents |
 | OpenAI API | OpenAI | Yes | Yes (existing) | Embeddings + GPT-4o Vision fallback |
 | LanguageTool API | LanguageTool | Optional | No (FREE) | Grammar checking supplement |
 | Tavily API | Tavily | Yes | Yes (existing) | NewsEngine search |
@@ -39,7 +39,7 @@ Ensure your account has access to:
 
 | Model | Model ID | Required For |
 |-------|----------|--------------|
-| Claude Sonnet 4 | `claude-sonnet-4-20250514` | All 7 agents |
+| Claude Sonnet 4 | `claude-sonnet-4-20250514` | All 8 agents |
 | Vision API | (included with Sonnet 4) | Agent #7 (Visual Extraction) |
 
 **Note:** Claude Sonnet 4 includes vision capabilities by default. No separate vision model access is needed.
@@ -239,7 +239,7 @@ Add these environment variables in Vercel Dashboard:
 | #4 Quality Assurance | `CLAUDE_API_KEY` | claude-sonnet-4-20250514 | Substantive editing, style |
 | #4 Quality Assurance | `LANGUAGETOOL_API_KEY` | LanguageTool API | Grammar/spelling verification |
 | #5 Persona & Tone | `CLAUDE_API_KEY` | claude-sonnet-4-20250514 | Tone adjustment |
-| #6 Creative Features | `CLAUDE_API_KEY` | claude-sonnet-4-20250514 | Workflow coordination |
+| #6 Research Orchestrator | `CLAUDE_API_KEY` | claude-sonnet-4-20250514 | Research pipeline (Tavily, fact verify, keywords) |
 | #7 Visual Extraction | `CLAUDE_API_KEY` | claude-sonnet-4-20250514 | Vision/image processing (primary) |
 | #7 Visual Extraction | `OPENAI_API_KEY` | gpt-4o | Vision OCR fallback (secondary) |
 

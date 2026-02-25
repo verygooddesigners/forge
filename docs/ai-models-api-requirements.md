@@ -107,7 +107,7 @@ Forge is transitioning from a single-AI-model architecture to a specialized mult
 ### Essential (Must Have)
 
 1. **Anthropic Claude API** - `CLAUDE_API_KEY` or `ANTHROPIC_API_KEY`
-   - Powers 7 out of 7 agents
+   - Powers 8 out of 8 agents
    - Single key for all core functionality
    - Estimated monthly cost: $10-$50 depending on usage (extremely cost-effective)
 

@@ -47,7 +47,7 @@ export default function UserGuidePage() {
     { id: 'creating-projects', title: 'Creating Projects', icon: Target },
     { id: 'nfl-odds-extractor', title: 'NFL Odds Extractor', icon: Target },
     { id: 'seo-package', title: 'Understanding SEO Package', icon: Target },
-    { id: 'research-story', title: 'Research Story & Fact Verification', icon: Search },
+    { id: 'research-story', title: 'Research Pipeline & Fact Verification', icon: Search },
     { id: 'seo-wizard', title: 'SEO Wizard Tools', icon: Zap },
     { id: 'content-generation', title: 'Content Generation', icon: Sparkles },
     { id: 'editing', title: 'Editing & Real-time Analysis', icon: FileText },
@@ -278,17 +278,18 @@ export default function UserGuidePage() {
                 <div className="w-10 h-10 bg-ai-accent text-white rounded-full flex items-center justify-center font-bold text-lg">
                   6
                 </div>
-                <h4 className="font-bold text-lg text-text-primary">Creative Features Agent</h4>
+                <h4 className="font-bold text-lg text-text-primary">Research Orchestrator Agent</h4>
               </div>
               <p className="text-text-secondary leading-relaxed mb-3">
-                Your workflow coordinator. When complex tasks require multiple agents working together, 
-                this agent orchestrates the process – routing tasks to the right specialists and combining 
-                their outputs into cohesive results.
+                Your research pipeline. When you create a new project, this agent runs automatically: it searches 
+                for relevant news (Tavily), evaluates relevance, verifies facts with the Fact Verification Agent, 
+                and suggests keywords. Results appear in the Research Hub and then in the editor sidebar for you 
+                to select stories and keywords before generating content.
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 bg-ai-muted border border-ai-accent text-ai-accent rounded text-xs font-medium">Workflow Management</span>
-                <span className="px-2 py-1 bg-ai-muted border border-ai-accent text-ai-accent rounded text-xs font-medium">Multi-Agent Tasks</span>
-                <span className="px-2 py-1 bg-ai-muted border border-ai-accent text-ai-accent rounded text-xs font-medium">Data Transform</span>
+                <span className="px-2 py-1 bg-ai-muted border border-ai-accent text-ai-accent rounded text-xs font-medium">Tavily Search</span>
+                <span className="px-2 py-1 bg-ai-muted border border-ai-accent text-ai-accent rounded text-xs font-medium">Fact Verification Loop</span>
+                <span className="px-2 py-1 bg-ai-muted border border-ai-accent text-ai-accent rounded text-xs font-medium">Keyword Suggestions</span>
               </div>
             </div>
 
@@ -1004,114 +1005,84 @@ export default function UserGuidePage() {
         <div className="space-y-6">
           <p className="text-lg leading-relaxed">
             Projects are where you create individual content pieces. Each project combines your SEO 
-            requirements, writer model, and brief template to generate optimized content in your voice.
+            requirements, writer model, and brief template. When you create a project, the Research Hub 
+            runs automatically, then you land in the editor to select research and generate content.
           </p>
 
-          <h3 className="text-xl font-semibold mt-8 mb-4">The 9-Step Project Creation Process</h3>
+          <h3 className="text-xl font-semibold mt-8 mb-4">The Project Creation Form</h3>
 
           <div className="space-y-6">
-            {/* Step 1 */}
             <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 1: Project Name</h4>
+              <h4 className="font-semibold text-lg mb-2">Project Name</h4>
               <p className="text-muted-foreground leading-relaxed">
-                Give your project a descriptive name for easy identification 
-                (e.g., "Ravens Playoff Analysis 2024")
+                A descriptive name for easy identification (e.g., &quot;Ravens Playoff Analysis 2024&quot;).
               </p>
             </div>
-
-            {/* Step 2 */}
             <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 2: Headline (H1)</h4>
+              <h4 className="font-semibold text-lg mb-2">Headline (H1)</h4>
               <p className="text-muted-foreground leading-relaxed">
-                Your main headline that will appear at the top of your content. This becomes part of your 
-                SEO Package and should include your primary keyword when possible.
+                Your main headline; include your primary keyword when possible.
               </p>
             </div>
-
-            {/* Step 3 */}
             <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 3: Primary Keyword</h4>
+              <h4 className="font-semibold text-lg mb-2">Primary Keyword</h4>
               <p className="text-muted-foreground leading-relaxed">
-                The main search term you want to rank for (e.g., "Baltimore Ravens playoffs"). 
-                This keyword will be prioritized in your content.
+                The main search term you want to rank for (e.g., &quot;Baltimore Ravens playoffs&quot;).
               </p>
             </div>
-
-            {/* Step 4 */}
             <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 4: Secondary Keywords</h4>
+              <h4 className="font-semibold text-lg mb-2">Secondary Keywords & Topic</h4>
               <p className="text-muted-foreground leading-relaxed">
-                Additional keywords separated by commas (e.g., "AFC North, NFL playoffs, playoff seeding"). 
-                These support your primary keyword and provide additional ranking opportunities.
+                Additional keywords and topic area; these feed the research pipeline and SEO.
               </p>
             </div>
-
-            {/* Step 5 */}
             <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 5: Additional Details</h4>
+              <h4 className="font-semibold text-lg mb-2">Additional Details</h4>
               <p className="text-muted-foreground leading-relaxed">
-                Any extra context, angle, or specific requirements for the content. This helps the AI 
-                understand your content goals and approach.
+                Extra context or requirements for the content and for research.
               </p>
             </div>
-
-            {/* Step 6 */}
             <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 6: Writer Model</h4>
+              <h4 className="font-semibold text-lg mb-2">Writer Model</h4>
               <p className="text-muted-foreground leading-relaxed">
-                Select which writer model to use. If you have a personal model, it's auto-selected. 
-                The percentage next to each model shows training progress.
+                The dropdown is grouped into <strong>Your Model</strong> (your personal writer model) and 
+                <strong> RotoWire Models</strong> (house models available to everyone). Your default writer 
+                model (set by an admin) is auto-selected; you can change it for this project.
               </p>
             </div>
-
-            {/* Step 7 */}
             <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 7: Brief Template</h4>
+              <h4 className="font-semibold text-lg mb-2">Brief Template</h4>
               <p className="text-muted-foreground leading-relaxed">
-                Choose a brief that defines your content structure. You can create a new brief on-the-fly 
+                Choose a SmartBrief that defines your content structure. You can create a new brief on-the-fly 
                 using the plus icon.
               </p>
             </div>
-
-            {/* Step 8 */}
             <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 8: Word Count Target</h4>
+              <h4 className="font-semibold text-lg mb-2">Word Count Target</h4>
               <p className="text-muted-foreground leading-relaxed">
-                Set your target word count (e.g., 800, 1500, 3000). This guides content generation 
-                and is tracked in the SEO Wizard.
-              </p>
-            </div>
-
-            {/* Step 9 */}
-            <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 9: Confirmation</h4>
-              <p className="text-muted-foreground leading-relaxed">
-                Review all your project details. You can go back to any step to make changes before 
-                clicking <strong>Start Project</strong>.
+                Set your target word count (e.g., 800, 1500, 3000). Tracked in the SEO panel.
               </p>
             </div>
           </div>
 
           <div className="bg-success-muted border-l-4 border-success p-5 rounded-r-lg mt-8">
-            <p className="text-sm font-medium text-text-primary mb-2">✅ Project Created!</p>
+            <p className="text-sm font-medium text-text-primary mb-2">✅ After You Click Create</p>
             <p className="text-sm text-text-secondary">
-              Once you click Start Project, your dashboard loads with all project information displayed 
-              in the left sidebar and the editor ready in the center.
+              The project is saved and you are taken to the <strong>Research Hub</strong>, where the Research 
+              Orchestrator runs (Tavily search, relevance evaluation, fact verification, keyword suggestions). 
+              When research completes, you are automatically taken to the editor. There you can select which 
+              research stories and suggested keywords to use, then click <strong>Generate Content</strong> in 
+              the Generation Context strip.
             </p>
           </div>
 
-          <h3 className="text-xl font-semibold mt-8 mb-4">Editing Project Details</h3>
+          <h3 className="text-xl font-semibold mt-8 mb-4">Editing Project Settings</h3>
 
           <p className="leading-relaxed">
-            After creating a project, you can edit any field directly from the left sidebar:
+            In the editor, click the <strong>Project Settings</strong> button (settings icon next to Twigs) to 
+            open a panel where you can change the project name, description, headline, primary keyword, writer 
+            model, and SmartBrief without leaving the editor.
           </p>
-
-          <ol className="list-decimal list-inside space-y-2 ml-4 mt-4">
-            <li className="leading-relaxed">Click the edit icon next to any field</li>
-            <li className="leading-relaxed">Make your changes</li>
-            <li className="leading-relaxed">Click save (✓) or cancel (×)</li>
-            <li className="leading-relaxed">Changes are saved to your project immediately</li>
-          </ol>
         </div>
       ),
     },
@@ -1318,8 +1289,8 @@ export default function UserGuidePage() {
               <div>
                 <h4 className="font-semibold mb-1">Content Generation</h4>
                 <p className="text-muted-foreground leading-relaxed">
-                  When you click "Create Content," the AI uses the complete SEO Package (including selected 
-                  keywords) along with your Writer Model and Brief to generate optimized content.
+                  When you click Generate Content, the AI uses the complete SEO Package (including selected 
+                  keywords and research stories) along with your Writer Model and Brief to generate optimized content.
                 </p>
               </div>
             </div>
@@ -1338,156 +1309,79 @@ export default function UserGuidePage() {
     },
 
     'research-story': {
-      title: 'Research Story & Fact Verification',
+      title: 'Research Pipeline & Fact Verification',
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed">
-            The Research Story feature ensures content accuracy by gathering news from trusted sources 
-            and using AI to verify facts before content generation. This mandatory step guarantees that 
-            all generated content is based on verified, up-to-date information.
+            When you create a new project, Forge automatically runs a <strong>research pipeline</strong> that 
+            gathers news from trusted sources, evaluates relevance, verifies facts, and suggests keywords. You 
+            then choose which stories and keywords to use before generating content. This ensures every article 
+            is based on verified, up-to-date information.
           </p>
 
           <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
-            <h3 className="text-lg font-semibold mb-3 text-green-800">Why Research Story Matters</h3>
+            <h3 className="text-lg font-semibold mb-3 text-green-800">Why Research Matters</h3>
             <p className="leading-relaxed text-green-900">
-              <strong>Accuracy is non-negotiable.</strong> The Research Story workflow prevents the generation 
-              of content with outdated stats, incorrect facts, or unreliable information. By requiring research 
-              before generation, Forge ensures every article is built on a foundation of verified facts.
+              <strong>Accuracy is non-negotiable.</strong> The Research Orchestrator (Agent #6) runs as soon as 
+              you create a project. It searches (Tavily), filters by relevance, verifies facts with the Fact 
+              Verification Agent, and suggests keywords. You then select which research to use, so every 
+              generated article is built on a foundation of verified facts.
             </p>
           </div>
 
-          <h3 className="text-xl font-semibold mt-8 mb-4">The 5-Step Research Workflow</h3>
+          <h3 className="text-xl font-semibold mt-8 mb-4">The Research Hub (Right After Create)</h3>
 
-          <div className="space-y-6">
-            {/* Step 1 */}
-            <div className="border-l-4 border-green-500 pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 1: Click "Research Story"</h4>
-              <p className="text-muted-foreground leading-relaxed">
-                In the SEO Wizard (right sidebar), before generating content, click the <strong>"Research Story"</strong> button. 
-                This triggers an AI-powered news search using Tavily API.
-              </p>
-            </div>
+          <p className="leading-relaxed mb-4">
+            After you click <strong>Create</strong> on the new project form, you are taken to the <strong>Research Hub</strong> — 
+            a full-screen view that shows a live activity feed as the Research Orchestrator runs. You see 
+            messages like &quot;Searching for stories...&quot;, &quot;Evaluating relevance...&quot;, &quot;Verifying facts...&quot;, 
+            &quot;Discovering keywords...&quot;. When research is complete, the screen automatically transitions to the editor.
+          </p>
 
-            {/* Step 2 */}
-            <div className="border-l-4 border-green-500 pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 2: Review Research Results</h4>
-              <p className="text-muted-foreground leading-relaxed mb-3">
-                A full-screen modal displays 15 articles from the past 3 weeks. Each article card shows:
-              </p>
-              <ul className="text-sm space-y-2 ml-4">
-                <li className="text-muted-foreground">
-                  <strong>Trust Badge:</strong> Green "Trusted" (ESPN, NFL.com), Blue "Verified" (CBS Sports), 
-                  Orange "Unverified" (unknown sources)
-                </li>
-                <li className="text-muted-foreground">
-                  <strong>Relevance Score:</strong> Percentage showing how relevant the article is to your topic
-                </li>
-                <li className="text-muted-foreground">
-                  <strong>Source & Date:</strong> Publication name and date (e.g., "2 days ago")
-                </li>
-                <li className="text-muted-foreground">
-                  <strong>Article Snippet:</strong> Expandable preview with "Read more" option
-                </li>
-                <li className="text-muted-foreground">
-                  <strong>Thumbs Up/Down:</strong> Buttons to flag inaccurate articles
-                </li>
-              </ul>
-            </div>
+          <h3 className="text-xl font-semibold mt-8 mb-4">Editor: Research Sidebar & Keyword Pills</h3>
 
-            {/* Step 3 */}
-            <div className="border-l-4 border-green-500 pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 3: Flag Inaccurate Sources</h4>
-              <p className="text-muted-foreground leading-relaxed mb-3">
-                Click the <strong>thumbs down button</strong> on any article that contains:
-              </p>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-bg-elevated border border-border-default rounded p-3">
-                  <div className="font-medium text-sm mb-1">Inaccurate Information</div>
-                  <div className="text-xs text-muted-foreground">Contains factual errors or false claims</div>
-                </div>
-                <div className="bg-bg-elevated border border-border-default rounded p-3">
-                  <div className="font-medium text-sm mb-1">Outdated Information</div>
-                  <div className="text-xs text-muted-foreground">No longer current or relevant</div>
-                </div>
-                <div className="bg-bg-elevated border border-border-default rounded p-3">
-                  <div className="font-medium text-sm mb-1">Unreliable Source</div>
-                  <div className="text-xs text-muted-foreground">Lacks credibility or trustworthiness</div>
-                </div>
-                <div className="bg-bg-elevated border border-border-default rounded p-3">
-                  <div className="font-medium text-sm mb-1">Off-Topic</div>
-                  <div className="text-xs text-muted-foreground">Doesn't relate to story topic</div>
-                </div>
-              </div>
-            </div>
+          <p className="leading-relaxed mb-4">
+            On the editor screen, the <strong>right sidebar</strong> includes a <strong>Research</strong> section with story cards. 
+            Each card shows title (clickable to open the source URL), source name, synopsis, and a verification 
+            badge (Verified / Unresolved Conflict). Use the checkmark on each card to include or exclude that 
+            story from content generation; a few are pre-selected by default.
+          </p>
 
-            {/* Step 4 */}
-            <div className="border-l-4 border-green-500 pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 4: AI Verifies Facts</h4>
-              <p className="text-muted-foreground leading-relaxed mb-3">
-                Click <strong>"Verify Facts"</strong> to trigger the Fact Verification Agent (#8). This AI agent:
-              </p>
-              <ul className="text-sm space-y-1 ml-4">
-                <li className="text-muted-foreground">• Extracts factual claims from unflagged articles</li>
-                <li className="text-muted-foreground">• Cross-references facts across multiple sources</li>
-                <li className="text-muted-foreground">• Assigns confidence levels (HIGH/MEDIUM/LOW)</li>
-                <li className="text-muted-foreground">• Flags disputed or single-source facts</li>
-                <li className="text-muted-foreground">• Calculates overall confidence score (0-100%)</li>
-              </ul>
-            </div>
+          <p className="leading-relaxed mb-4">
+            In the <strong>SEO</strong> panel (Guidelines or Brief tab), before you have content, you see 
+            <strong>Suggested Keywords</strong> as pills — green (high importance), amber (medium), gray (low). 
+            Click a pill to toggle it as selected; selected keywords are sent to the Content Generation Agent 
+            along with your selected research stories.
+          </p>
 
-            {/* Step 5 */}
-            <div className="border-l-4 border-green-500 pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 5: Research Complete</h4>
-              <p className="text-muted-foreground leading-relaxed">
-                The modal displays verification results showing verified facts count, disputed facts count, 
-                and confidence score. Click <strong>"Use Research for Content Generation"</strong> to close 
-                the modal. The Generate Content button is now enabled.
-              </p>
-            </div>
-          </div>
+          <h3 className="text-xl font-semibold mt-8 mb-4">Generation Context Strip & Generate</h3>
 
-          <h3 className="text-xl font-semibold mt-8 mb-4">Trust Badges Explained</h3>
+          <p className="leading-relaxed mb-4">
+            Above the editor, a <strong>Generation Context</strong> strip shows how many stories and keywords you have 
+            selected, plus the current SmartBrief and Writer Model. The <strong>Generate Content</strong> button 
+            is here. When you click it, the AI uses your selected research stories, selected keywords, brief, 
+            and writer model to produce the article.
+          </p>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">Verification Badges on Stories</h3>
 
           <div className="space-y-3">
             <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
               <div className="px-3 py-1 bg-green-500 text-white rounded font-medium text-sm flex items-center gap-1">
                 <ShieldCheck className="h-4 w-4" />
-                TRUSTED
+                Verified
               </div>
               <div className="flex-1">
-                <div className="font-semibold text-green-800">High Trust Sources</div>
-                <div className="text-sm text-green-700">
-                  Official league sites (NFL.com, NBA.com), major sports networks (ESPN), 
-                  established publications (The Athletic, Sports Illustrated)
-                </div>
+                <div className="font-semibold text-green-800">Key facts supported by multiple sources</div>
               </div>
             </div>
-
-            <div className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="px-3 py-1 bg-blue-500 text-white rounded font-medium text-sm flex items-center gap-1">
-                <Shield className="h-4 w-4" />
-                VERIFIED
-              </div>
-              <div className="flex-1">
-                <div className="font-semibold text-blue-800">Medium Trust Sources</div>
-                <div className="text-sm text-blue-700">
-                  Reputable sports media (CBS Sports, FOX Sports, Bleacher Report) - generally reliable 
-                  but fact-check important claims
-                </div>
-              </div>
-            </div>
-
             <div className="flex items-center gap-3 p-4 bg-orange-50 border border-orange-200 rounded-lg">
               <div className="px-3 py-1 bg-orange-500 text-white rounded font-medium text-sm flex items-center gap-1">
                 <AlertTriangle className="h-4 w-4" />
-                UNVERIFIED
+                Unresolved Conflict
               </div>
               <div className="flex-1">
-                <div className="font-semibold text-orange-800">Unknown or Low Trust Sources</div>
-                <div className="text-sm text-orange-700">
-                  Social media (Twitter/X, Reddit), blogs, or sources not in trusted database - 
-                  use with extra caution
-                </div>
+                <div className="font-semibold text-orange-800">Some facts conflict with other sources; use with caution</div>
               </div>
             </div>
           </div>
@@ -1522,14 +1416,6 @@ export default function UserGuidePage() {
                 <span className="leading-relaxed">Search and filter by trust level</span>
               </li>
             </ul>
-          </div>
-
-          <div className="bg-warning-muted border-l-4 border-warning p-5 rounded-r-lg mt-6">
-            <p className="text-sm font-medium text-text-primary mb-2">⚡ Research is Mandatory</p>
-            <p className="text-sm text-text-secondary">
-              The "Generate Content" button remains disabled until you complete the Research Story workflow. 
-              This ensures every article is built on verified facts from trusted sources.
-            </p>
           </div>
         </div>
       ),
@@ -1691,41 +1577,20 @@ export default function UserGuidePage() {
                 <Sparkles className="h-5 w-5 text-primary" />
                 Suggested Keywords
               </h4>
-              
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                After analyzing your SEO Package, the AI suggests keywords with color-coded priority levels:
+              <p className="text-muted-foreground leading-relaxed mb-3">
+                After the research pipeline runs, the SEO panel shows suggested keywords as clickable pills:{' '}
+                <span className="text-green-600 font-medium">green (high)</span>,{' '}
+                <span className="text-amber-600 font-medium">amber (medium)</span>,{' '}
+                <span className="text-gray-600 font-medium">gray (low)</span>. Click a pill to include or 
+                exclude it from content generation. Once you have content, the Terms section shows usage for 
+                these and your project keywords.
               </p>
-
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded">
-                  <div className="px-3 py-1 bg-green-500 text-white rounded font-medium text-sm">HIGH</div>
-                  <div className="text-sm">
-                    <strong className="text-green-800">Green Keywords:</strong> Critical for SEO success. Use these prominently in your content.
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 bg-orange-50 border border-orange-200 rounded">
-                  <div className="px-3 py-1 bg-orange-500 text-white rounded font-medium text-sm">MED</div>
-                  <div className="text-sm">
-                    <strong className="text-orange-800">Orange Keywords:</strong> Good to include but not required. Strengthens relevance.
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 p-3 bg-red-50 border border-red-200 rounded">
-                  <div className="px-3 py-1 bg-red-500 text-white rounded font-medium text-sm">LOW</div>
-                  <div className="text-sm">
-                    <strong className="text-red-800">Red Keywords:</strong> Consider avoiding. May dilute focus or attract wrong audience.
-                  </div>
-                </div>
-              </div>
-
               <div className="mt-4 p-4 bg-bg-elevated border border-border-default rounded">
-                <p className="text-sm font-medium mb-2">💡 Using Suggested Keywords</p>
+                <p className="text-sm font-medium mb-2">💡 Using Keyword Pills</p>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• Click a keyword to add it to your SEO Package</li>
-                  <li>• Selected keywords are automatically tracked in Terms Analysis</li>
-                  <li>• Keywords dynamically update the SEO Package for content generation</li>
-                  <li>• Target density is calculated based on your word count</li>
+                  <li>• Click a pill to include it in the set sent to the Content Generation Agent</li>
+                  <li>• Selected keywords are used when you click Generate Content in the Generation Context strip</li>
+                  <li>• After generation, Terms Analysis tracks usage vs targets</li>
                 </ul>
               </div>
             </div>
@@ -1736,26 +1601,19 @@ export default function UserGuidePage() {
               
               <div className="space-y-4">
                 <div>
-                  <div className="font-semibold mb-1 text-primary">Auto-Optimize</div>
-                  <p className="text-sm text-muted-foreground">
-                    AI analyzes your content and suggests specific optimizations: add keywords, 
-                    adjust headings, add paragraphs/images, and optimize term usage.
-                  </p>
-                </div>
-
-                <div>
                   <div className="font-semibold mb-1 text-primary">Insert Internal Links</div>
                   <p className="text-sm text-muted-foreground">
-                    Analyzes your content for internal link opportunities and suggests relevant links 
-                    based on keywords and topic relevance.
+                    Click to open a modal that suggests relevant RotoWire internal links based on your 
+                    content. Each suggestion shows title, reason, anchor text, and a copy button for the URL.
                   </p>
                 </div>
 
                 <div>
-                  <div className="font-semibold mb-1 text-primary">Analyze SEO Package</div>
+                  <div className="font-semibold mb-1 text-primary">SEO Panel Tabs</div>
                   <p className="text-sm text-muted-foreground">
-                    Appears before first content generation. Analyzes your project's SEO Package and 
-                    populates the wizard with keyword suggestions and target ranges.
+                    The right-side SEO panel has <strong>Guidelines</strong> (content score, structure, terms, 
+                    keyword pills) and <strong>Brief</strong> (embedded SmartBrief preview). Use Project Settings 
+                    (toolbar) to change writer model or brief.
                   </p>
                 </div>
               </div>
@@ -1798,17 +1656,8 @@ export default function UserGuidePage() {
               <h4 className="font-semibold mb-2">AI-Powered Suggestions</h4>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 When you request SEO suggestions, the Engine uses Claude to analyze your content against your 
-                SEO Package and current score. It provides 5-7 specific, actionable recommendations like 
-                "Add your primary keyword to the H2 in paragraph 3" rather than generic advice.
-              </p>
-            </div>
-
-            <div className="border-l-4 border-violet-400 pl-5">
-              <h4 className="font-semibold mb-2">Auto-Optimization</h4>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                The Auto-Optimize feature uses AI to actually rewrite portions of your content to implement 
-                SEO suggestions. It preserves your writing style and tone while improving keyword placement, 
-                heading structure, and overall optimization—all powered by the same Writer Model that generated your content.
+                SEO Package and current score. It provides specific, actionable recommendations to improve 
+                keyword placement, headings, and structure.
               </p>
             </div>
 
@@ -1929,50 +1778,31 @@ export default function UserGuidePage() {
                 1
               </div>
               <div>
-                <h4 className="font-semibold mb-2">Research Story (Required First)</h4>
+                <h4 className="font-semibold mb-2">Research Runs When You Create the Project</h4>
                 <p className="text-muted-foreground leading-relaxed mb-3">
-                  Click <strong>"Research Story"</strong> in the SEO Wizard to gather and verify information:
+                  When you click <strong>Create</strong> on the new project form, the Research Hub runs automatically 
+                  (Tavily search → relevance evaluation → fact verification → keyword suggestions). When it finishes, 
+                  you land in the editor. In the right sidebar, select which <strong>research stories</strong> to use 
+                  (checkmarks on story cards) and which <strong>suggested keywords</strong> to include (click the 
+                  keyword pills in the SEO panel). The Generation Context strip above the editor shows your selections.
                 </p>
-                <div className="bg-bg-elevated border border-border-default rounded-lg p-4 space-y-3">
-                  <div className="text-sm">
-                    <strong className="text-green-600">Step 1:</strong> AI searches 15 news articles from past 3 weeks using Tavily
-                  </div>
-                  <div className="text-sm">
-                    <strong className="text-green-600">Step 2:</strong> Modal displays articles with trust badges (ESPN, NFL.com = High Trust)
-                  </div>
-                  <div className="text-sm">
-                    <strong className="text-green-600">Step 3:</strong> You review and flag inaccurate/outdated articles (thumbs down)
-                  </div>
-                  <div className="text-sm">
-                    <strong className="text-green-600">Step 4:</strong> Click "Verify Facts" - AI Agent #8 cross-references remaining articles
-                  </div>
-                  <div className="text-sm">
-                    <strong className="text-green-600">Step 5:</strong> Verified facts stored in research brief, ready for generation
-                  </div>
-                </div>
-                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
-                  <p className="text-sm font-medium text-blue-900">
-                    🛡️ <strong>Accuracy First:</strong> Content generation is disabled until research is complete. 
-                    This ensures all generated content uses verified, fact-checked information.
-                  </p>
-                </div>
               </div>
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-accent-muted0 text-white rounded-full flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-primary text-white rounded-full flex items-center justify-center font-bold">
                 2
               </div>
               <div>
-                <h4 className="font-semibold mb-2">Generate Content with Verified Facts</h4>
+                <h4 className="font-semibold mb-2">Generate Content</h4>
                 <p className="text-muted-foreground leading-relaxed mb-2">
-                  After research is complete, click <strong>"Create Content"</strong>. The AI generates using:
+                  Click <strong>Generate Content</strong> in the Generation Context strip. The AI uses:
                 </p>
                 <ul className="text-sm space-y-1 ml-4">
                   <li className="text-muted-foreground">• Loads your Writer Model's training data</li>
                   <li className="text-muted-foreground">• Analyzes your Brief structure</li>
                   <li className="text-muted-foreground">• Incorporates all SEO Package keywords</li>
-                  <li className="text-muted-foreground">• <strong className="text-green-600">Uses only verified facts from research</strong></li>
+                  <li className="text-muted-foreground">• <strong className="text-green-600">Uses your selected research stories and verified facts</strong></li>
                   <li className="text-muted-foreground">• Cites sources naturally in the text</li>
                   <li className="text-muted-foreground">• Generates content matching your voice and structure</li>
                 </ul>
@@ -1980,8 +1810,8 @@ export default function UserGuidePage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-accent-muted0 text-white rounded-full flex items-center justify-center font-bold">
-                4
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-primary text-white rounded-full flex items-center justify-center font-bold">
+                3
               </div>
               <div>
                 <h4 className="font-semibold mb-2">Content Streams In</h4>
@@ -1993,8 +1823,8 @@ export default function UserGuidePage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-accent-muted0 text-white rounded-full flex items-center justify-center font-bold">
-                5
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-primary text-white rounded-full flex items-center justify-center font-bold">
+                4
               </div>
               <div>
                 <h4 className="font-semibold mb-2">SEO Meter Activates</h4>
@@ -2007,8 +1837,8 @@ export default function UserGuidePage() {
             </div>
 
             <div className="flex gap-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-accent-muted0 text-white rounded-full flex items-center justify-center font-bold">
-                6
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-primary text-white rounded-full flex items-center justify-center font-bold">
+                5
               </div>
               <div>
                 <h4 className="font-semibold mb-2">Auto-Save</h4>
@@ -2118,31 +1948,14 @@ export default function UserGuidePage() {
             </div>
           </div>
 
-          <h3 className="text-xl font-semibold mt-8 mb-4">Using Auto-Optimize</h3>
+          <h3 className="text-xl font-semibold mt-8 mb-4">Insert Internal Links</h3>
 
           <div className="border-2 border-primary rounded-lg p-6">
-            <h4 className="font-semibold mb-3 text-lg">How Auto-Optimize Works</h4>
-            
-            <ol className="space-y-3 list-decimal list-inside">
-              <li className="leading-relaxed">
-                <strong>Click Auto-Optimize</strong> button in the SEO Wizard
-              </li>
-              <li className="leading-relaxed">
-                <strong>AI analyzes</strong> your current content against best practices
-              </li>
-              <li className="leading-relaxed">
-                <strong>Receives suggestions</strong> for specific improvements:
-                <ul className="ml-8 mt-2 space-y-1 text-sm text-muted-foreground">
-                  <li>• Where to add missing keywords</li>
-                  <li>• Suggestions for additional headings</li>
-                  <li>• Recommendations for paragraph breaks</li>
-                  <li>• Image placement suggestions</li>
-                </ul>
-              </li>
-              <li className="leading-relaxed">
-                <strong>Apply or ignore</strong> each suggestion individually
-              </li>
-            </ol>
+            <p className="text-muted-foreground leading-relaxed mb-3">
+              In the SEO panel, click <strong>Insert Internal Links</strong> to open a modal that suggests 
+              relevant RotoWire articles based on your content. Each suggestion shows title, reason, anchor 
+              text, and a copy button for the URL so you can add links where they fit best.
+            </p>
           </div>
 
           <h3 className="text-xl font-semibold mt-8 mb-4">Best Editing Practices</h3>
@@ -2180,8 +1993,8 @@ export default function UserGuidePage() {
               <li className="flex items-start gap-2">
                 <span className="text-primary font-bold mt-1">5.</span>
                 <div>
-                  <strong>Use Auto-Optimize for ideas</strong>
-                  <p className="text-sm text-muted-foreground">Let AI suggest improvements you might have missed</p>
+                  <strong>Use Insert Internal Links</strong>
+                  <p className="text-sm text-muted-foreground">Add relevant RotoWire links suggested by the AI based on your content</p>
                 </div>
               </li>
             </ul>
@@ -2271,7 +2084,7 @@ export default function UserGuidePage() {
             <p className="text-sm font-medium text-text-primary mb-2">💡 Export Best Practices</p>
             <ul className="text-sm text-text-secondary space-y-2">
               <li>• Always run SEO Wizard before exporting to maximize ranking potential</li>
-              <li>• Use Auto-Optimize for last-minute improvements</li>
+              <li>• Use Insert Internal Links to add relevant RotoWire links</li>
               <li>• Verify all statistics, dates, and factual claims</li>
               <li>• Check that all placeholder text (like "X" in predictions) is replaced</li>
               <li>• Use HTML format for RotoWire CMS to preserve tables and formatting</li>
@@ -2415,61 +2228,37 @@ export default function UserGuidePage() {
 
               <div className="flex gap-3">
                 <div className="font-bold text-green-600">3.</div>
-                <p className="leading-relaxed">Click <strong>Start Project</strong></p>
+                <p className="leading-relaxed">Click <strong>Create</strong> — the Research Hub runs, then you’re taken to the editor</p>
               </div>
             </div>
           </div>
 
           {/* Phase 4 */}
           <div className="border-l-4 border-orange-500 pl-6 py-4 bg-warning-muted/50 mt-6">
-            <h3 className="text-xl font-bold mb-3 text-orange-900">Phase 4: Research & Verify Facts</h3>
+            <h3 className="text-xl font-bold mb-3 text-orange-900">Phase 4: Research, Select & Generate</h3>
             
             <div className="space-y-3">
               <div className="flex gap-3">
                 <div className="font-bold text-orange-600">1.</div>
                 <div>
-                  <p className="leading-relaxed">Look at the right sidebar – find the SEO Wizard</p>
-                  <p className="text-sm text-muted-foreground mt-1">You'll see your Writer Model and Brief at the top</p>
+                  <p className="leading-relaxed">After you click Create, the <strong>Research Hub</strong> runs automatically</p>
+                  <p className="text-sm text-muted-foreground mt-1">Watch the activity feed; when complete, you’re taken to the editor</p>
                 </div>
               </div>
               
               <div className="flex gap-3">
                 <div className="font-bold text-orange-600">2.</div>
                 <div>
-                  <p className="leading-relaxed">Click <strong>"Research Story"</strong> button</p>
-                  <p className="text-sm text-muted-foreground mt-1">⚠️ This is REQUIRED before generating content</p>
+                  <p className="leading-relaxed">In the right sidebar: check the <strong>Research</strong> story cards you want to use</p>
+                  <p className="text-sm text-muted-foreground mt-1">In the SEO panel, click <strong>keyword pills</strong> to select suggested keywords</p>
                 </div>
               </div>
 
               <div className="flex gap-3">
                 <div className="font-bold text-orange-600">3.</div>
                 <div>
-                  <p className="leading-relaxed">A modal opens showing 15 research articles with trust badges</p>
-                  <p className="text-sm text-muted-foreground mt-1">Green "Trusted" badges = ESPN, NFL.com, official sources</p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="font-bold text-orange-600">4.</div>
-                <div>
-                  <p className="leading-relaxed">Review articles and click thumbs down on any inaccurate/outdated ones</p>
-                  <p className="text-sm text-muted-foreground mt-1">Select a reason (Inaccurate Information, Outdated, etc.)</p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="font-bold text-orange-600">5.</div>
-                <div>
-                  <p className="leading-relaxed">Click <strong>"Verify Facts"</strong> - AI Agent #8 cross-checks remaining articles</p>
-                  <p className="text-sm text-muted-foreground mt-1">Takes 10-20 seconds to verify facts across sources</p>
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="font-bold text-orange-600">6.</div>
-                <div>
-                  <p className="leading-relaxed">See verification results (verified facts, confidence score)</p>
-                  <p className="text-sm text-muted-foreground mt-1">Click "Use Research for Content Generation" to close modal</p>
+                  <p className="leading-relaxed">Click <strong>Generate Content</strong> in the Generation Context strip above the editor</p>
+                  <p className="text-sm text-muted-foreground mt-1">The AI uses your selected stories, keywords, brief, and writer model</p>
                 </div>
               </div>
             </div>
@@ -2548,8 +2337,8 @@ export default function UserGuidePage() {
               <div className="flex gap-3">
                 <div className="font-bold text-[#ec4899]">5.</div>
                 <div>
-                  <p className="leading-relaxed">Use <strong>Auto-Optimize</strong> for AI suggestions</p>
-                  <p className="text-sm text-muted-foreground mt-1">Get specific recommendations on where to add keywords, headings, or paragraphs</p>
+                  <p className="leading-relaxed">Use <strong>Insert Internal Links</strong> for relevant RotoWire links</p>
+                  <p className="text-sm text-muted-foreground mt-1">Get AI-suggested internal links with anchor text and copy-to-clipboard URLs</p>
                 </div>
               </div>
 

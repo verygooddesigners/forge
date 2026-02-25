@@ -13,7 +13,7 @@ Forge does not rely on a single, generic AI model. Instead, it uses a team of sp
 - **SEO Optimization Agent** enforces keyword coverage and on-page best practices.
 - **Quality Assurance Agent** checks grammar, clarity, and consistency.
 - **Persona & Tone Agent** ensures the article matches the intended voice and audience.
-- **Creative Orchestration Agent** coordinates specialized steps and formatting rules.
+- **Research Orchestrator Agent** runs the research pipeline when a project is created: Tavily search, relevance evaluation, fact verification, and keyword suggestions.
 - **Visual Data Extraction Agent** converts screenshots or visual data into usable content blocks.
 - **Fact Verification Agent** cross-references factual claims across multiple sources before publication.
 
