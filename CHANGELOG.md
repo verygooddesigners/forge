@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.02] - 2026-02-25
+
+### Bug fix — Admin User Edit dialog
+- Fix black-screen error when clicking Edit on any user: roles API 403 left availableRoles empty; Role Select now uses DEFAULT_ROLES fallback and always has a valid value in the options list.
+
 ## [1.10.01] - 2026-02-25
 
 ### Documentation — User Guide, AI architecture, SmartBrief guide

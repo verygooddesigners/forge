@@ -66,6 +66,14 @@ const ALL_PERMISSIONS = [
   { key: 'can_manage_role_permissions', label: 'Manage Role Permissions' },
 ];
 
+const DEFAULT_ROLES = [
+  { id: '1', name: 'Content Creator' },
+  { id: '2', name: 'Team Leader' },
+  { id: '3', name: 'Manager' },
+  { id: '4', name: 'Administrator' },
+  { id: '5', name: 'Super Administrator' },
+];
+
 interface UserManagementProps {
   adminUser: User;
 }
@@ -92,23 +100,17 @@ export function UserManagement({ adminUser }: UserManagementProps) {
   const [availableRoles, setAvailableRoles] = useState<Array<{ id: string; name: string }>>([]);
 
   useEffect(() => {
-    // Load available roles from the roles table
     async function loadRoles() {
       try {
         const res = await fetch('/api/admin/roles');
         if (res.ok) {
           const data = await res.json();
-          setAvailableRoles(data);
+          setAvailableRoles(Array.isArray(data) ? data : DEFAULT_ROLES);
+        } else {
+          setAvailableRoles(DEFAULT_ROLES);
         }
       } catch {
-        // Use default roles if API fails
-        setAvailableRoles([
-          { id: '1', name: 'Content Creator' },
-          { id: '2', name: 'Team Leader' },
-          { id: '3', name: 'Manager' },
-          { id: '4', name: 'Administrator' },
-          { id: '5', name: 'Super Administrator' },
-        ]);
+        setAvailableRoles(DEFAULT_ROLES);
       }
     }
     loadRoles();
@@ -453,14 +455,20 @@ export function UserManagement({ adminUser }: UserManagementProps) {
             <div className="space-y-2">
               <Label htmlFor="role">Role</Label>
               <Select
-                value={availableRoles.some((r) => r.name === role) ? role : (availableRoles[0]?.name ?? 'Content Creator')}
+                value={
+                  availableRoles.length === 0
+                    ? (DEFAULT_ROLES.some((r) => r.name === role) ? role : 'Content Creator')
+                    : availableRoles.some((r) => r.name === role)
+                      ? role
+                      : (availableRoles[0]?.name ?? 'Content Creator')
+                }
                 onValueChange={(value) => setRole(value)}
               >
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Select role" />
                 </SelectTrigger>
                 <SelectContent>
-                  {availableRoles.map((r) => (
+                  {(availableRoles.length === 0 ? DEFAULT_ROLES : availableRoles).map((r) => (
                     <SelectItem key={r.id} value={r.name}>
                       {r.name}
                     </SelectItem>
