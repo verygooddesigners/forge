@@ -1,8 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { Editor } from '@tiptap/react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Bold,
   Italic,
@@ -15,10 +21,11 @@ import {
   Undo,
   Redo,
   Code,
-  Sparkles,
   Download,
+  Settings,
 } from 'lucide-react';
 import { TwigInserter } from './TwigInserter';
+import { ProjectSettingsPanel } from './ProjectSettingsPanel';
 
 interface EditorToolbarProps {
   editor: Editor;
@@ -26,9 +33,24 @@ interface EditorToolbarProps {
   generating?: boolean;
   canGenerate?: boolean;
   onExport?: () => void;
+  projectId?: string | null;
+  writerModelId?: string | null;
+  userId?: string;
+  onProjectUpdate?: () => void;
 }
 
-export function EditorToolbar({ editor, onGenerateContent, generating = false, canGenerate = false, onExport }: EditorToolbarProps) {
+export function EditorToolbar({
+  editor,
+  onGenerateContent,
+  generating = false,
+  canGenerate = false,
+  onExport,
+  projectId,
+  writerModelId,
+  userId,
+  onProjectUpdate,
+}: EditorToolbarProps) {
+  const [settingsOpen, setSettingsOpen] = useState(false);
   if (!editor) {
     return null;
   }
@@ -162,31 +184,43 @@ export function EditorToolbar({ editor, onGenerateContent, generating = false, c
           editor.chain().focus().insertContent(twigText).run();
         }}
       />
+
+      <Separator orientation="vertical" className="mx-1 h-6" />
+
+      {/* Project Settings */}
+      {projectId && writerModelId && userId && (
+        <Popover open={settingsOpen} onOpenChange={setSettingsOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2 gap-1 text-xs"
+              title="Project settings"
+            >
+              <Settings className="h-4 w-4" />
+              <span className="hidden sm:inline">Project Settings</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start" className="p-0 w-auto">
+            <ProjectSettingsPanel
+              projectId={projectId}
+              writerModelId={writerModelId}
+              userId={userId}
+              onSave={onProjectUpdate}
+              onClose={() => setSettingsOpen(false)}
+            />
+          </PopoverContent>
+        </Popover>
+      )}
       </div>
 
       {/* Action Buttons */}
       <div className="flex gap-2 flex-shrink-0">
-        {/* Export Button */}
         {onExport && (
-          <Button
-            onClick={onExport}
-            variant="outline"
-            className="gap-2"
-          >
+          <Button onClick={onExport} variant="outline" className="gap-2">
             <Download className="h-4 w-4" />
             Export
-          </Button>
-        )}
-
-        {/* Generate Content Button */}
-        {onGenerateContent && (
-          <Button
-            onClick={onGenerateContent}
-            disabled={generating || !canGenerate}
-            className="gap-2"
-          >
-            <Sparkles className="h-4 w-4" />
-            {generating ? 'Generating...' : 'Generate Content'}
           </Button>
         )}
       </div>

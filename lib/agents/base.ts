@@ -75,8 +75,8 @@ function getDefaultSystemPrompt(agentKey: AgentKey): string {
       return prompts.QUALITY_ASSURANCE_PROMPT;
     case 'persona_tone':
       return prompts.PERSONA_TONE_PROMPT;
-    case 'creative_features':
-      return prompts.CREATIVE_FEATURES_PROMPT;
+    case 'research_orchestrator':
+      return prompts.RESEARCH_ORCHESTRATOR_PROMPT;
     case 'visual_extraction':
       return prompts.VISUAL_EXTRACTION_PROMPT;
     case 'fact_verification':

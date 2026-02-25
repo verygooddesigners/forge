@@ -16,7 +16,9 @@ import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
@@ -72,14 +74,13 @@ export function ProjectCreationModal({
   }, [open]);
 
   const loadData = async () => {
-    // Load writer models — RLS handles access control, admins see all via policy
-    const isAdmin = userRole === 'Administrator' || userRole === 'Super Administrator';
-    const modelsQuery = supabase.from('writer_models').select('*').order('name');
-    const { data: models } = isAdmin
-      ? await modelsQuery
-      : await modelsQuery.eq('strategist_id', userId);
-    
-    // Load briefs (shared or owned by user)
+    // User can see: personal model (strategist_id = userId) + all house models (is_house_model = true)
+    const { data: models } = await supabase
+      .from('writer_models')
+      .select('*')
+      .or(`strategist_id.eq.${userId},is_house_model.eq.true`)
+      .order('name');
+
     const { data: briefsData } = await supabase
       .from('briefs')
       .select('*')
@@ -88,15 +89,24 @@ export function ProjectCreationModal({
 
     if (models) {
       setWriterModels(models);
-      
-      // Auto-select user's writer model if it exists
-      const userModel = models.find(m => m.strategist_id === userId);
-      if (userModel) {
-        setSelectedModelId(userModel.id);
+      const { data: userRow } = await supabase
+        .from('users')
+        .select('default_writer_model_id')
+        .eq('id', userId)
+        .single();
+      const defaultId = userRow?.default_writer_model_id;
+      const personalModel = models.find((m) => m.strategist_id === userId);
+      if (defaultId && models.some((m) => m.id === defaultId)) {
+        setSelectedModelId(defaultId);
+      } else if (personalModel) {
+        setSelectedModelId(personalModel.id);
       }
     }
     if (briefsData) setBriefs(briefsData);
   };
+
+  const personalModels = writerModels.filter((m) => m.strategist_id === userId);
+  const houseModels = writerModels.filter((m) => m.is_house_model);
 
   const resetForm = () => {
     setStep(1);
@@ -351,16 +361,31 @@ export function ProjectCreationModal({
                     <SelectValue placeholder="Select a writer model" />
                   </SelectTrigger>
                   <SelectContent>
-                    {writerModels.map((model) => (
-                      <SelectItem key={model.id} value={model.id}>
-                        <div className="flex items-center gap-2">
-                          <span>{model.name}</span>
-                          <span className="text-xs text-muted-foreground">
-                            ({getTrainingPercentage(model)}% trained)
-                          </span>
-                        </div>
-                      </SelectItem>
-                    ))}
+                    {personalModels.length > 0 && (
+                      <SelectGroup>
+                        <SelectLabel>Your Model</SelectLabel>
+                        {personalModels.map((model) => (
+                          <SelectItem key={model.id} value={model.id}>
+                            <div className="flex items-center gap-2">
+                              <span>{model.name}</span>
+                              <span className="text-xs text-muted-foreground">
+                                ({getTrainingPercentage(model)}% trained)
+                              </span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    )}
+                    {houseModels.length > 0 && (
+                      <SelectGroup>
+                        <SelectLabel>RotoWire Models</SelectLabel>
+                        {houseModels.map((model) => (
+                          <SelectItem key={model.id} value={model.id}>
+                            {model.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    )}
                   </SelectContent>
                 </Select>
                 {writerModels.length === 0 && (

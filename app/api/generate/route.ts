@@ -50,6 +50,8 @@ export async function POST(request: NextRequest) {
       writerModelId,
       briefContent,
       researchBrief,
+      selectedStoryIds,
+      selectedKeywords,
     } = await request.json();
 
     // Validate required fields
@@ -199,26 +201,49 @@ export async function POST(request: NextRequest) {
       fullBrief = `${masterInstructions}\n\n${briefText}`;
     }
 
-    // Build research context from research brief if available
+    // Build research context: use project_research selected stories/keywords when projectId is set
     let researchContext = '';
+    let idsToUse: string[] = Array.isArray(selectedStoryIds) ? selectedStoryIds : [];
+    let keywordsToUse: string[] = Array.isArray(selectedKeywords) ? selectedKeywords : [];
+
+    if (projectId) {
+      const { data: pr } = await supabase
+        .from('project_research')
+        .select('stories, selected_story_ids, selected_keywords')
+        .eq('project_id', projectId)
+        .single();
+      if (pr) {
+        if (idsToUse.length === 0 && Array.isArray(pr.selected_story_ids)) idsToUse = pr.selected_story_ids;
+        if (keywordsToUse.length === 0 && Array.isArray(pr.selected_keywords)) keywordsToUse = pr.selected_keywords;
+        if (pr.stories && Array.isArray(pr.stories) && idsToUse.length > 0) {
+          const selectedStories = (pr.stories as any[]).filter((s) => idsToUse.includes(s.id));
+          if (selectedStories.length > 0) {
+            researchContext += '\n\nREFERENCE STORIES (use for facts and context):\n';
+            selectedStories.forEach((a: any, i: number) => {
+              researchContext += `${i + 1}. "${a.title}" — ${a.source || a.url || ''}\n`;
+              if (a.synopsis) researchContext += `   Summary: ${a.synopsis}\n`;
+              else if (a.description) researchContext += `   ${(a.description || '').slice(0, 300)}\n`;
+            });
+          }
+        }
+      }
+    }
+
     if (researchBrief && researchBrief.fact_check_complete) {
       const facts = researchBrief.verified_facts || [];
       const articles = researchBrief.articles || [];
-
       if (facts.length > 0) {
         researchContext += '\n\nVERIFIED RESEARCH FACTS:\n';
         researchContext += facts.map((f: any, i: number) =>
           `${i + 1}. ${f.fact || f.claim} (Confidence: ${f.confidence || 'high'})`
         ).join('\n');
       }
-
-      if (articles.length > 0) {
+      if (articles.length > 0 && !researchContext.includes('REFERENCE STORIES')) {
         researchContext += '\n\nRESEARCH SOURCES:\n';
         researchContext += articles.slice(0, 5).map((a: any, i: number) =>
           `${i + 1}. "${a.title}" — ${a.source} (${a.url})`
         ).join('\n');
       }
-
       if (researchBrief.disputed_facts && researchBrief.disputed_facts.length > 0) {
         researchContext += '\n\nDISPUTED/UNCERTAIN FACTS (avoid using these):\n';
         researchContext += researchBrief.disputed_facts.map((f: any, i: number) =>
@@ -227,11 +252,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    const allSecondary = [...(secondaryKeywords || []), ...keywordsToUse];
+    const uniqueSecondary = Array.from(new Set(allSecondary));
+
     // Use Content Generation Agent
     const agentRequest: ContentGenerationRequest = {
       brief: fullBrief + researchContext,
       primaryKeywords: [primaryKeyword],
-      secondaryKeywords: secondaryKeywords || [],
+      secondaryKeywords: uniqueSecondary,
       writerModelContext: writerContext,
       targetWordCount: wordCount || 800,
       additionalInstructions: `Write an article with the headline: "${headline}"`,

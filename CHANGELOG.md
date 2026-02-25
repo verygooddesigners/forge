@@ -4,6 +4,14 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.00] - 2026-02-25
+
+### Project Creation and Content Generation Workflow Overhaul
+- Research pipeline: new project_research table, Research Orchestrator agent (replaces Creative Features), SSE pipeline API, Research Hub with live activity feed
+- Writer models: is_house_model, user default_writer_model_id, grouped dropdown (Your Model / RotoWire Models) and auto-select on new project and in Project Settings
+- Editor: ProjectSettingsPanel, GenerationContext strip (selected stories/keywords, brief, model), Research story cards in right sidebar, SEO keyword pills (pre/post generation), Internal Links modal, Generate API uses selected stories and keywords
+- Admin: default writer model assignment in User Management; Agent Tuner shows Research agent instead of Creative
+
 ## [1.09.01] - 2026-02-25
 
 ### Bug Fix — Guide Page Scrolling

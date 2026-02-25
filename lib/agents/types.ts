@@ -4,7 +4,7 @@ export type AgentKey =
   | 'seo_optimization'
   | 'quality_assurance'
   | 'persona_tone'
-  | 'creative_features'
+  | 'research_orchestrator'
   | 'visual_extraction'
   | 'fact_verification';
 

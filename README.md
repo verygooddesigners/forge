@@ -265,5 +265,5 @@ Built with:
 ---
 
 **Forge** - AI-Powered Content Creation Platform
-Version v1.09.01 | Built with ❤️ for RotoWire
+Version v1.10.00 | Built with ❤️ for RotoWire
 # Test webhook trigger

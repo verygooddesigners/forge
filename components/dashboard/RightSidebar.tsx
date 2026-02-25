@@ -5,10 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { Newspaper, TrendingUp, RefreshCw } from 'lucide-react';
-import { NewsArticle, WriterModel, Project, Brief } from '@/types';
+import { NewsArticle, Project, Brief } from '@/types';
+import type { ProjectResearch, ResearchStory } from '@/types';
 import { NewsCard } from './NewsCard';
+import { ResearchStoryCard } from '@/components/research/ResearchStoryCard';
 import { SEOOptimizationSidebar } from './SEOOptimizationSidebar';
 import { createClient } from '@/lib/supabase/client';
 
@@ -30,24 +31,19 @@ export function RightSidebar({
   const [activeTab, setActiveTab] = useState('seo');
   const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([]);
   const [loadingNews, setLoadingNews] = useState(false);
-  const [writerModel, setWriterModel] = useState<WriterModel | null>(null);
-  const [trainingCount, setTrainingCount] = useState<number>(0);
   const [project, setProject] = useState<Project | null>(null);
   const [brief, setBrief] = useState<Brief | null>(null);
+  const [projectResearch, setProjectResearch] = useState<ProjectResearch | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
-    // Reset writer model when project changes
-    setWriterModel(null);
-    setTrainingCount(0);
-    
     if (projectId) {
       loadProject();
     } else {
       setProject(null);
+      setProjectResearch(null);
     }
   }, [projectId]);
-
 
   useEffect(() => {
     if (project && (project.headline || project.primary_keyword)) {
@@ -55,30 +51,10 @@ export function RightSidebar({
     }
   }, [project]);
 
-  useEffect(() => {
-    console.log('writerModelId changed:', writerModelId);
-    if (writerModelId) {
-      loadWriterModel();
-    } else if (!project?.writer_model_id) {
-      // Only clear if project doesn't have writer_model_id either
-      setWriterModel(null);
-      setTrainingCount(0);
-    }
-  }, [writerModelId]);
-
-  // Also try loading from project if writerModelId prop is not set
-  useEffect(() => {
-    if (project?.writer_model_id && !writerModelId) {
-      console.log('Loading writer model from project:', project.writer_model_id);
-      loadWriterModelById(project.writer_model_id);
-    }
-  }, [project?.writer_model_id, writerModelId]);
-
   const loadProject = async () => {
     if (!projectId) return;
 
     try {
-      console.log('Loading project:', projectId);
       const { data, error } = await supabase
         .from('projects')
         .select(`
@@ -94,78 +70,45 @@ export function RightSidebar({
       }
 
       if (data) {
-        console.log('Project loaded:', data.headline, 'Writer Model ID:', data.writer_model_id);
         setProject(data as Project);
         if (data.brief) {
           setBrief(data.brief as Brief);
         }
-        
-        // Load writer model from project if writerModelId prop not set
-        if (data.writer_model_id && !writerModelId) {
-          console.log('Loading writer model from project data');
-          loadWriterModelById(data.writer_model_id);
-        }
+      }
+
+      const { data: research } = await supabase
+        .from('project_research')
+        .select('*')
+        .eq('project_id', projectId)
+        .single();
+      if (research) {
+        setProjectResearch({
+          ...research,
+          stories: (research.stories as ResearchStory[]) || [],
+          suggested_keywords: research.suggested_keywords || [],
+          selected_story_ids: research.selected_story_ids || [],
+          selected_keywords: research.selected_keywords || [],
+          orchestrator_log: research.orchestrator_log || [],
+        } as ProjectResearch);
+      } else {
+        setProjectResearch(null);
       }
     } catch (error) {
       console.error('Error loading project:', error);
     }
   };
 
-  const loadWriterModelById = async (modelId: string) => {
-    if (!modelId) {
-      console.log('loadWriterModelById: No modelId provided');
-      return;
-    }
-
-    console.log('Loading writer model:', modelId);
-    try {
-      // Load writer model
-      const { data: model, error: modelError } = await supabase
-        .from('writer_models')
-        .select('*')
-        .eq('id', modelId)
-        .single();
-
-      if (modelError) {
-        console.error('Error loading writer model:', modelError);
-        return;
-      }
-
-      if (model) {
-        console.log('Writer model loaded:', model.name);
-        setWriterModel(model);
-      } else {
-        console.log('No writer model found for ID:', modelId);
-      }
-
-      // Load training count
-      const { count, error: countError } = await supabase
-        .from('training_content')
-        .select('*', { count: 'exact', head: true })
-        .eq('model_id', modelId);
-
-      if (countError) {
-        console.error('Error loading training count:', countError);
-      } else if (count !== null) {
-        console.log('Training count:', count);
-        setTrainingCount(count);
-      }
-    } catch (error) {
-      console.error('Error loading writer model:', error);
-    }
-  };
-
-  const loadWriterModel = async () => {
-    if (!writerModelId) return;
-    await loadWriterModelById(writerModelId);
-  };
-
-  const getInitials = (name: string): string => {
-    const parts = name.trim().split(' ');
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
+  const toggleStorySelection = async (storyId: string) => {
+    if (!projectId || !projectResearch) return;
+    const current = projectResearch.selected_story_ids || [];
+    const next = current.includes(storyId)
+      ? current.filter((id) => id !== storyId)
+      : [...current, storyId];
+    await supabase
+      .from('project_research')
+      .update({ selected_story_ids: next, updated_at: new Date().toISOString() })
+      .eq('project_id', projectId);
+    setProjectResearch((prev) => (prev ? { ...prev, selected_story_ids: next } : null));
   };
 
   const fetchNews = async () => {
@@ -197,43 +140,28 @@ export function RightSidebar({
 
   return (
     <div className="w-80 flex flex-col gap-3">
-      {/* Writer Model & Brief Display */}
+      {/* Research: story cards from project_research */}
       {projectId && (
-        <Card className="bg-bg-surface border-border-subtle shadow-lg hover:translate-y-0">
-          <CardContent className="pt-6 space-y-3">
-            {/* Writer Model */}
-            <div>
-              <p className="text-xs font-medium text-muted-foreground mb-2">Writer Model</p>
-              {writerModel ? (
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="text-xs font-semibold text-primary">
-                      {getInitials(writerModel.name)}
-                    </span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{writerModel.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {trainingCount} training {trainingCount === 1 ? 'piece' : 'pieces'}
-                    </p>
-                  </div>
-                </div>
-              ) : writerModelId ? (
-                <p className="text-sm text-muted-foreground">Loading model...</p>
-              ) : (
-                <p className="text-sm text-muted-foreground">No model selected</p>
-              )}
-            </div>
-
-            {/* SmartBrief Name */}
-            {brief && (
-              <>
-                <Separator className="my-3" />
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-2">SmartBrief</p>
-                  <p className="text-sm font-medium">{brief.name}</p>
-                </div>
-              </>
+        <Card className="bg-bg-surface border-border-subtle shadow-lg">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Research</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            {!projectResearch ? (
+              <p className="text-xs text-text-tertiary">No research yet for this project.</p>
+            ) : projectResearch.stories.length === 0 ? (
+              <p className="text-xs text-text-tertiary">No stories found.</p>
+            ) : (
+              <div className="space-y-2 max-h-80 overflow-y-auto">
+                {projectResearch.stories.map((story) => (
+                  <ResearchStoryCard
+                    key={story.id}
+                    story={story}
+                    selected={projectResearch.selected_story_ids?.includes(story.id)}
+                    onToggleSelect={toggleStorySelection}
+                  />
+                ))}
+              </div>
             )}
           </CardContent>
         </Card>

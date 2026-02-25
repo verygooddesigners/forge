@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, AccountStatus, STATUS_LABELS } from '@/types';
+import { User, AccountStatus, STATUS_LABELS, WriterModel } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -85,6 +85,8 @@ export function UserManagement({ adminUser }: UserManagementProps) {
   const [permLoading, setPermLoading] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [defaultWriterModelId, setDefaultWriterModelId] = useState<string>('');
+  const [writerModels, setWriterModels] = useState<WriterModel[]>([]);
   const supabase = createClient();
 
   const [availableRoles, setAvailableRoles] = useState<Array<{ id: string; name: string }>>([]);
@@ -139,6 +141,7 @@ export function UserManagement({ adminUser }: UserManagementProps) {
     setFullName('');
     setRole('Content Creator');
     setAccountStatus('awaiting_confirmation');
+    setDefaultWriterModelId('');
     setEditingUser(null);
   };
 
@@ -195,6 +198,7 @@ export function UserManagement({ adminUser }: UserManagementProps) {
           full_name: fullName,
           role,
           account_status: accountStatus,
+          default_writer_model_id: defaultWriterModelId || null,
         }),
       });
 
@@ -273,16 +277,23 @@ export function UserManagement({ adminUser }: UserManagementProps) {
     }
   };
 
+  const loadWriterModels = async () => {
+    const { data } = await supabase.from('writer_models').select('*').order('name');
+    setWriterModels(data ?? []);
+  };
+
   const openEditDialog = (user: User) => {
     setEditingUser(user);
     setEmail(user.email);
     setFullName(user.full_name || '');
     setRole(user.role);
     setAccountStatus(user.account_status as AccountStatus);
+    setDefaultWriterModelId((user as User & { default_writer_model_id?: string }).default_writer_model_id || '');
     setUserPermOverrides({});
     setShowPermOverrides(false);
     setShowDialog(true);
     loadUserPermOverrides(user.id);
+    loadWriterModels();
   };
 
   const getRoleBadgeVariant = (role: string): 'default' | 'secondary' | 'outline' => {
@@ -451,6 +462,32 @@ export function UserManagement({ adminUser }: UserManagementProps) {
                 </SelectContent>
               </Select>
             </div>
+
+            {editingUser && (
+              <div className="space-y-2">
+                <Label htmlFor="defaultWriterModel">Default Writer Model</Label>
+                <Select
+                  value={defaultWriterModelId}
+                  onValueChange={setDefaultWriterModelId}
+                >
+                  <SelectTrigger id="defaultWriterModel">
+                    <SelectValue placeholder="None" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">None</SelectItem>
+                    {writerModels.map((m) => (
+                      <SelectItem key={m.id} value={m.id}>
+                        {m.name}
+                        {m.is_house_model ? ' (RotoWire)' : ''}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-text-tertiary">
+                  This model is auto-selected when the user creates or opens a project.
+                </p>
+              </div>
+            )}
 
             {/* Per-user permission overrides (edit mode only) */}
             {editingUser && (

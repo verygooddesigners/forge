@@ -6,10 +6,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, Link as LinkIcon, Settings, Search, ChevronDown, ArrowUp, ArrowDown, Check, Info, HelpCircle } from 'lucide-react';
+import { Link as LinkIcon, Settings, Search, ChevronDown, ArrowUp, ArrowDown, Check, Info, HelpCircle } from 'lucide-react';
 import { Project, ResearchBrief } from '@/types';
+import type { ProjectResearch, SuggestedKeyword as SuggestedKeywordType } from '@/types';
 import { useDebounce } from '@/hooks/use-debounce';
 import { ResearchResultsModal } from '@/components/modals/ResearchResultsModal';
+import { InternalLinksModal } from '@/components/modals/InternalLinksModal';
+import { createClient } from '@/lib/supabase/client';
 
 interface SEOOptimizationSidebarProps {
   projectId: string | null;
@@ -56,7 +59,10 @@ export function SEOOptimizationSidebar({
   const [analyzing, setAnalyzing] = useState(false);
   const [researchModalOpen, setResearchModalOpen] = useState(false);
   const [researchComplete, setResearchComplete] = useState(false);
-  
+  const [projectResearch, setProjectResearch] = useState<ProjectResearch | null>(null);
+  const [internalLinksOpen, setInternalLinksOpen] = useState(false);
+  const supabase = createClient();
+
   const [metrics, setMetrics] = useState<ContentMetrics>({
     words: 0,
     headings: 0,
@@ -137,6 +143,30 @@ export function SEOOptimizationSidebar({
   const [suggestedKeywords, setSuggestedKeywords] = useState<SuggestedKeyword[]>([]);
   
   const debouncedContent = useDebounce(content, 2000);
+
+  const hasContent = useMemo(() => {
+    if (!content?.content?.length) return false;
+    let words = 0;
+    const count = (node: any) => {
+      if (node.text) words += node.text.split(/\s+/).filter(Boolean).length;
+      node.content?.forEach(count);
+    };
+    content.content.forEach(count);
+    return words > 0;
+  }, [content]);
+
+  useEffect(() => {
+    if (projectId) {
+      supabase
+        .from('project_research')
+        .select('*')
+        .eq('project_id', projectId)
+        .single()
+        .then(({ data }) => setProjectResearch(data as ProjectResearch | null));
+    } else {
+      setProjectResearch(null);
+    }
+  }, [projectId, supabase]);
 
   // Extract metrics from content
   useEffect(() => {
@@ -412,11 +442,24 @@ export function SEOOptimizationSidebar({
   };
 
   const toggleKeywordSelection = (keyword: string) => {
-    setSuggestedKeywords(prev => 
-      prev.map(kw => 
+    setSuggestedKeywords(prev =>
+      prev.map(kw =>
         kw.keyword === keyword ? { ...kw, selected: !kw.selected } : kw
       )
     );
+  };
+
+  const toggleResearchKeyword = async (keyword: string) => {
+    if (!projectId || !projectResearch) return;
+    const current = projectResearch.selected_keywords || [];
+    const next = current.includes(keyword)
+      ? current.filter((k) => k !== keyword)
+      : [...current, keyword];
+    await supabase
+      .from('project_research')
+      .update({ selected_keywords: next, updated_at: new Date().toISOString() })
+      .eq('project_id', projectId);
+    setProjectResearch((prev) => (prev ? { ...prev, selected_keywords: next } : null));
   };
 
   const filteredTerms = terms.filter(term => {
@@ -430,17 +473,44 @@ export function SEOOptimizationSidebar({
   const scoreColor = seoScore >= 70 ? 'text-green-600' : seoScore >= 40 ? 'text-orange-500' : 'text-red-500';
   const gaugeColor = seoScore >= 70 ? '#16a34a' : seoScore >= 40 ? '#f97316' : '#dc2626';
 
+  function renderBriefPreview(doc: any): React.ReactNode {
+    if (!doc?.content?.length) return null;
+    return (
+      <div className="space-y-1">
+        {doc.content.map((node: any, i: number) => {
+          if (node.type === 'paragraph' && node.content) {
+            const text = node.content.map((c: any) => c.text || '').join('');
+            return <p key={i} className="mb-1">{text}</p>;
+          }
+          if (node.type === 'heading' && node.content) {
+            const text = node.content.map((c: any) => c.text || '').join('');
+            const Tag = `h${node.attrs?.level || 2}` as 'h2' | 'h3';
+            return <Tag key={i} className="font-semibold mt-2 mb-1">{text}</Tag>;
+          }
+          if (node.type === 'bulletList' && node.content) {
+            return (
+              <ul key={i} className="list-disc list-inside ml-2 space-y-0.5">
+                {node.content.map((li: any, j: number) => {
+                  const t = li.content?.[0]?.content?.map((c: any) => c.text || '').join('') || '';
+                  return <li key={j}>{t}</li>;
+                })}
+              </ul>
+            );
+          }
+          return null;
+        })}
+      </div>
+    );
+  }
+
   return (
     <div className="w-80 flex flex-col gap-3">
       <Card className="bg-white shadow-lg">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <CardHeader className="pb-3">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="guidelines" className="text-xs uppercase">
                 Guidelines
-              </TabsTrigger>
-              <TabsTrigger value="outline" className="text-xs uppercase">
-                Outline
               </TabsTrigger>
               <TabsTrigger value="brief" className="text-xs uppercase">
                 Brief
@@ -450,93 +520,99 @@ export function SEOOptimizationSidebar({
 
           <CardContent className="space-y-4">
             <TabsContent value="guidelines" className="mt-0 space-y-4">
-              {/* Content Score Section */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold flex items-center gap-1">
-                    Content Score
-                    <Info className="h-3 w-3 text-muted-foreground" />
-                  </h3>
-                </div>
-
-                {/* Semi-circular Gauge */}
-                <div className="flex flex-col items-center py-4">
-                  <div className="relative w-48 h-24">
-                    <svg viewBox="0 0 200 100" className="w-full h-full">
-                      {/* Background arc */}
-                      <path
-                        d="M 20 90 A 80 80 0 0 1 180 90"
-                        fill="none"
-                        stroke="#e5e7eb"
-                        strokeWidth="12"
-                        strokeLinecap="round"
-                      />
-                      {/* Score arc */}
-                      <path
-                        d="M 20 90 A 80 80 0 0 1 180 90"
-                        fill="none"
-                        stroke={gaugeColor}
-                        strokeWidth="12"
-                        strokeLinecap="round"
-                        strokeDasharray={`${(seoScore / 100) * 251.2} 251.2`}
-                        style={{ transition: 'stroke-dasharray 0.5s ease' }}
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex items-end justify-center pb-2">
-                      <span className={`text-3xl font-bold ${scoreColor}`}>
-                        {seoScore}
-                      </span>
-                      <span className="text-sm text-muted-foreground ml-1">/100</span>
-                    </div>
+              {/* Pre-generation: show only suggested keywords from project_research */}
+              {!hasContent && projectResearch?.suggested_keywords?.length ? (
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold">Suggested Keywords</h3>
+                  <p className="text-xs text-muted-foreground">
+                    Click a keyword to include it when generating content.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {(projectResearch.suggested_keywords as SuggestedKeywordType[]).map((kw, index) => {
+                      const selected = projectResearch.selected_keywords?.includes(kw.keyword);
+                      const pillClass =
+                        kw.importance === 'high'
+                          ? 'bg-green-100 text-green-800 border-green-300 dark:bg-green-950 dark:text-green-200'
+                          : kw.importance === 'medium'
+                            ? 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-950 dark:text-amber-200'
+                            : 'bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-800 dark:text-gray-300';
+                      return (
+                        <Badge
+                          key={index}
+                          variant="outline"
+                          className={`cursor-pointer text-xs px-2 py-1 ${pillClass} ${selected ? 'ring-2 ring-offset-1 ring-primary' : ''}`}
+                          onClick={() => toggleResearchKeyword(kw.keyword)}
+                        >
+                          {kw.keyword}
+                          <span className="ml-1 opacity-70 text-[10px]">
+                            ({kw.importance === 'high' ? 'High' : kw.importance === 'medium' ? 'Med' : 'Low'})
+                          </span>
+                        </Badge>
+                      );
+                    })}
                   </div>
-                  
-                  <div className="flex gap-4 mt-2">
-                    <div className="text-center">
-                      <p className="text-xs text-muted-foreground">Avg</p>
-                      <p className="text-sm font-semibold">{avgScore}</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-xs text-muted-foreground">Top</p>
-                      <p className="text-sm font-semibold">{topScore}</p>
-                    </div>
-                  </div>
-                  
-                  {showDetails && (
-                    <div className="mt-3 text-xs text-muted-foreground">
-                      <p>Score breakdown coming soon...</p>
-                    </div>
-                  )}
                 </div>
+              ) : null}
 
-                {/* Action Buttons */}
-                {metrics.words > 0 && (
-                  <div className="space-y-2">
-                    <Button className="w-full gap-2" disabled>
-                      <Sparkles className="h-4 w-4" />
-                      Auto-Optimize
-                    </Button>
-                    <Button variant="outline" className="w-full gap-2" disabled>
+              {/* Post-generation: Content Score, Structure, Insert Internal Links */}
+              {hasContent && (
+                <>
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-semibold flex items-center gap-1">
+                      Content Score
+                      <Info className="h-3 w-3 text-muted-foreground" />
+                    </h3>
+                    <div className="flex flex-col items-center py-4">
+                      <div className="relative w-48 h-24">
+                        <svg viewBox="0 0 200 100" className="w-full h-full">
+                          <path
+                            d="M 20 90 A 80 80 0 0 1 180 90"
+                            fill="none"
+                            stroke="#e5e7eb"
+                            strokeWidth="12"
+                            strokeLinecap="round"
+                          />
+                          <path
+                            d="M 20 90 A 80 80 0 0 1 180 90"
+                            fill="none"
+                            stroke={gaugeColor}
+                            strokeWidth="12"
+                            strokeLinecap="round"
+                            strokeDasharray={`${(seoScore / 100) * 251.2} 251.2`}
+                            style={{ transition: 'stroke-dasharray 0.5s ease' }}
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex items-end justify-center pb-2">
+                          <span className={`text-3xl font-bold ${scoreColor}`}>{seoScore}</span>
+                          <span className="text-sm text-muted-foreground ml-1">/100</span>
+                        </div>
+                      </div>
+                      <div className="flex gap-4 mt-2">
+                        <div className="text-center">
+                          <p className="text-xs text-muted-foreground">Avg</p>
+                          <p className="text-sm font-semibold">{avgScore}</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs text-muted-foreground">Top</p>
+                          <p className="text-sm font-semibold">{topScore}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      className="w-full gap-2"
+                      onClick={() => setInternalLinksOpen(true)}
+                    >
                       <LinkIcon className="h-4 w-4" />
                       Insert internal links
                     </Button>
                   </div>
-                )}
+                  <div className="divider" />
+                </>
+              )}
 
-                {/* Research Story Button (before content) */}
-                {!researchComplete && metrics.words === 0 && (
-                  <Button 
-                    className="w-full gap-2" 
-                    onClick={handleResearchStory}
-                    disabled={!project}
-                  >
-                    <Search className="h-4 w-4" />
-                    Research Story
-                  </Button>
-                )}
-              </div>
-
-              {/* Suggested Keywords Section */}
-              {analyzed && suggestedKeywords.length > 0 && (
+              {/* Suggested Keywords from analyze (post-generation) */}
+              {hasContent && analyzed && suggestedKeywords.length > 0 && (
                 <>
                   <div className="divider" />
                   <div className="space-y-3">
@@ -587,11 +663,7 @@ export function SEOOptimizationSidebar({
                 </>
               )}
 
-              {/* Divider */}
-              <div className="divider" />
-
-              {/* Content Structure */}
-              {(analyzed || metrics.words > 0) && (
+              {hasContent && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-semibold">Content Structure</h3>
@@ -660,10 +732,10 @@ export function SEOOptimizationSidebar({
                 </div>
               )}
 
-              {/* Terms Section */}
-              {analyzed && terms.length > 0 && (
+              {hasContent && analyzed && terms.length > 0 && (
                 <>
                   <div className="divider" />
+                  {/* Terms Section */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <h3 className="text-sm font-semibold">Terms</h3>
@@ -749,12 +821,14 @@ export function SEOOptimizationSidebar({
               )}
             </TabsContent>
 
-            <TabsContent value="outline" className="mt-0">
-              <p className="text-sm text-muted-foreground">Outline view coming soon...</p>
-            </TabsContent>
-
             <TabsContent value="brief" className="mt-0">
-              <p className="text-sm text-muted-foreground">Brief view coming soon...</p>
+              {project?.brief?.content ? (
+                <div className="text-xs text-text-secondary prose prose-sm max-w-none max-h-96 overflow-y-auto">
+                  {renderBriefPreview(project.brief.content)}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">No brief selected.</p>
+              )}
             </TabsContent>
           </CardContent>
         </Tabs>
@@ -777,6 +851,16 @@ export function SEOOptimizationSidebar({
           projectId={projectId}
           project={project}
           onResearchComplete={handleResearchComplete}
+        />
+      )}
+
+      {/* Internal Links Modal */}
+      {projectId && content && (
+        <InternalLinksModal
+          open={internalLinksOpen}
+          onOpenChange={setInternalLinksOpen}
+          projectId={projectId}
+          content={content}
         />
       )}
     </div>

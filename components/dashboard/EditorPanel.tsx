@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Save, Sparkles } from 'lucide-react';
 import { TipTapEditor } from '@/components/editor/TipTapEditor';
+import { GenerationContext } from '@/components/editor/GenerationContext';
 import { ExportModal } from '@/components/modals/ExportModal';
 import { createClient } from '@/lib/supabase/client';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -480,17 +481,25 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
   return (
     <>
       <div className="flex-1 bg-white border border-border-subtle rounded-xl flex flex-col">
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden flex flex-col">
+          <GenerationContext
+            projectId={projectId}
+            writerModelId={writerModelId}
+            onGenerateContent={handleGenerateContent}
+            generating={generating}
+            canGenerate={!!writerModelId && !!project}
+          />
           <TipTapEditor
             content={content}
             onChange={handleContentChange}
             onWordCountChange={handleWordCountChange}
             placeholder={project ? "Start writing your content..." : "Start writing your content..."}
-            onGenerateContent={handleGenerateContent}
-            generating={generating}
-            canGenerate={!!writerModelId && !!project}
             onExport={() => setShowExportModal(true)}
             onEditorReady={(editor) => { editorRef.current = editor; }}
+            projectId={projectId}
+            writerModelId={writerModelId}
+            userId={project?.user_id ?? undefined}
+            onProjectUpdate={loadProject}
           />
         </div>
 

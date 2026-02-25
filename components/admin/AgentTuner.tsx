@@ -26,7 +26,7 @@ const AGENT_TABS = [
   { key: 'seo_optimization', label: 'SEO' },
   { key: 'quality_assurance', label: 'QA' },
   { key: 'persona_tone', label: 'Persona' },
-  { key: 'creative_features', label: 'Creative' },
+  { key: 'research_orchestrator', label: 'Research' },
   { key: 'visual_extraction', label: 'Visual' },
   { key: 'fact_verification', label: 'Fact Check' },
 ] as const;

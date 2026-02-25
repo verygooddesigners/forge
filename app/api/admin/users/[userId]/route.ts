@@ -25,7 +25,7 @@ export async function PATCH(
     if (!allowed) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
     const body = await request.json();
-    const { full_name, role, account_status, is_tool_creator } = body;
+    const { full_name, role, account_status, is_tool_creator, default_writer_model_id } = body;
 
     const adminClient = getAdminClient();
     if (!adminClient) {
@@ -37,6 +37,7 @@ export async function PATCH(
     if (role !== undefined) updatePayload.role = role;
     if (account_status !== undefined) updatePayload.account_status = account_status;
     if (is_tool_creator !== undefined) updatePayload.is_tool_creator = is_tool_creator;
+    if (default_writer_model_id !== undefined) updatePayload.default_writer_model_id = default_writer_model_id || null;
 
     const { error } = await adminClient
       .from('users')

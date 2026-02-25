@@ -18,6 +18,10 @@ interface TipTapEditorProps {
   canGenerate?: boolean;
   onExport?: () => void;
   onEditorReady?: (editor: any) => void;
+  projectId?: string | null;
+  writerModelId?: string | null;
+  userId?: string;
+  onProjectUpdate?: () => void;
 }
 
 export function TipTapEditor({
@@ -31,6 +35,10 @@ export function TipTapEditor({
   canGenerate = false,
   onExport,
   onEditorReady,
+  projectId,
+  writerModelId,
+  userId,
+  onProjectUpdate,
 }: TipTapEditorProps) {
   const editor = useEditor({
     extensions: [
@@ -82,12 +90,16 @@ export function TipTapEditor({
 
   return (
     <div className="flex flex-col h-full bg-white">
-      <EditorToolbar 
+      <EditorToolbar
         editor={editor}
         onGenerateContent={onGenerateContent}
         generating={generating}
         canGenerate={canGenerate}
         onExport={onExport}
+        projectId={projectId}
+        writerModelId={writerModelId}
+        userId={userId}
+        onProjectUpdate={onProjectUpdate}
       />
       <div className="flex-1 overflow-y-auto px-6 py-4 bg-white">
         <EditorContent editor={editor} className="h-full" />

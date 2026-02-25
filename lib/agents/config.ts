@@ -101,22 +101,21 @@ export const DEFAULT_AGENT_CONFIGS: Record<AgentKey, Omit<AgentConfig, 'id' | 'c
     ],
     specialConfig: {}
   },
-  creative_features: {
-    agentKey: 'creative_features',
-    displayName: 'Creative Features',
-    description: 'Orchestrates specialized workflows',
+  research_orchestrator: {
+    agentKey: 'research_orchestrator',
+    displayName: 'Research Orchestrator',
+    description: 'Orchestrates research pipeline with adaptive follow-up',
     systemPrompt: '',
-    temperature: 0.6,
-    maxTokens: 3000,
+    temperature: 0.3,
+    maxTokens: 4000,
     model: 'claude-sonnet-4-20250514',
     enabled: true,
     guardrails: [
-      'cannot_modify_database',
-      'cannot_bypass_agents',
-      'cannot_skip_validation',
-      'cannot_access_admin'
+      'cannot_generate_articles',
+      'cannot_modify_user_data',
+      'cannot_skip_verification'
     ],
-    specialConfig: {}
+    specialConfig: { maxLoops: 4 }
   },
   visual_extraction: {
     agentKey: 'visual_extraction',

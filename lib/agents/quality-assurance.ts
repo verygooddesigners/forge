@@ -1,6 +1,7 @@
 import { loadAgentConfig, callClaude } from './base';
 import { AgentMessage, AgentResponse, QualityAssuranceSpecialConfig } from './types';
 import { checkGrammar, LanguageToolResult } from '../languagetool';
+import type { ResearchArticle } from '@/types';
 
 export interface QualityCheckRequest {
   content: string;
@@ -101,5 +102,68 @@ export async function checkQuality(
     error: claudeResponse.error,
     metadata: claudeResponse.metadata,
   };
+}
+
+export interface EvaluateResearchRelevanceInput {
+  articles: ResearchArticle[];
+  headline: string;
+  topic?: string;
+}
+
+/**
+ * QA Agent: Evaluate research articles for timeliness and topical relevance.
+ * Returns the subset of article IDs that pass (recent and relevant to the story).
+ */
+export async function evaluateResearchRelevance(
+  input: EvaluateResearchRelevanceInput
+): Promise<ResearchArticle[]> {
+  const { articles, headline, topic } = input;
+  if (articles.length === 0) return [];
+
+  const config = await loadAgentConfig('quality_assurance');
+  if (!config.enabled) {
+    return articles;
+  }
+
+  const articlesSummary = articles.map((a, i) => ({
+    id: a.id,
+    title: a.title,
+    source: a.source,
+    published_date: a.published_date,
+    relevance_score: a.relevance_score,
+  }));
+
+  const userMessage = `You are evaluating news articles for a story. Keep only articles that are:
+1. TIMELY: Published within the last 3 weeks (or clearly about recent events).
+2. RELEVANT: Directly related to the headline and topic below.
+
+HEADLINE: ${headline}
+TOPIC: ${topic || 'Not specified'}
+
+ARTICLES (with id):
+${JSON.stringify(articlesSummary, null, 2)}
+
+Respond with JSON only: { "keepIds": ["id1", "id2", ...] } — the array of article ids to KEEP. Prefer keeping more rather than fewer if in doubt.`;
+
+  const messages: AgentMessage[] = [
+    { role: 'system', content: config.systemPrompt },
+    { role: 'user', content: userMessage },
+  ];
+
+  const response = await callClaude(messages, config);
+  if (!response.success || !response.content) {
+    return articles;
+  }
+
+  try {
+    const jsonMatch = response.content.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return articles;
+    const parsed = JSON.parse(jsonMatch[0]);
+    const keepIds = Array.isArray(parsed.keepIds) ? parsed.keepIds : [];
+    const idSet = new Set(keepIds);
+    return articles.filter((a) => idSet.has(a.id));
+  } catch {
+    return articles;
+  }
 }
 

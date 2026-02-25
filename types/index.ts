@@ -63,6 +63,7 @@ export interface User {
   job_title?: string;
   avatar_url?: string;
   auth_provider?: 'email' | 'azure' | 'google' | 'github';
+  default_writer_model_id?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -80,6 +81,7 @@ export interface WriterModel {
   name: string;
   strategist_id?: string;
   created_by: string;
+  is_house_model?: boolean;
   metadata?: {
     description?: string;
     total_training_pieces?: number;
@@ -176,6 +178,46 @@ export interface ResearchArticle extends NewsArticle {
   is_flagged: boolean;
   feedback_reason?: string;
   full_content?: string;
+}
+
+export type KeywordImportance = 'high' | 'medium' | 'low';
+
+export interface SuggestedKeyword {
+  keyword: string;
+  importance: KeywordImportance;
+  source?: string;
+}
+
+export type OrchestratorLogType = 'search' | 'evaluate' | 'verify' | 'followup' | 'keywords' | 'complete' | 'error';
+
+export interface OrchestratorLogEntry {
+  timestamp: string; // ISO
+  message: string;
+  type: OrchestratorLogType;
+}
+
+export type VerificationStatus = 'verified' | 'unresolved' | 'pending';
+
+export interface ResearchStory extends ResearchArticle {
+  synopsis?: string;
+  is_selected?: boolean;
+  verification_status?: VerificationStatus;
+}
+
+export type ProjectResearchStatus = 'pending' | 'running' | 'completed' | 'failed';
+
+export interface ProjectResearch {
+  id: string;
+  project_id: string;
+  stories: ResearchStory[];
+  suggested_keywords: SuggestedKeyword[];
+  selected_story_ids: string[];
+  selected_keywords: string[];
+  orchestrator_log: OrchestratorLogEntry[];
+  loops_completed: number;
+  status: ProjectResearchStatus;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface VerifiedFact {

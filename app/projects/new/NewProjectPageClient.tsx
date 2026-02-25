@@ -13,7 +13,9 @@ import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
@@ -118,11 +120,12 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
 
   const loadData = async () => {
     setDataLoading(true);
-    const isAdmin = userRole === 'Administrator' || userRole === 'Super Administrator';
-    const modelsQuery = supabase.from('writer_models').select('*').order('name');
-    const { data: models } = isAdmin
-      ? await modelsQuery
-      : await modelsQuery.eq('strategist_id', userId);
+    // User can see: their personal model (strategist_id = userId) + all house models (is_house_model = true)
+    const { data: models } = await supabase
+      .from('writer_models')
+      .select('*')
+      .or(`strategist_id.eq.${userId},is_house_model.eq.true`)
+      .order('name');
 
     const { data: briefsData } = await supabase
       .from('briefs')
@@ -132,8 +135,13 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
 
     if (models) {
       setWriterModels(models);
-      const userModel = models.find((m) => m.strategist_id === userId);
-      if (userModel) setSelectedModelId(userModel.id);
+      const defaultId = (user as User & { default_writer_model_id?: string }).default_writer_model_id;
+      const personalModel = models.find((m) => m.strategist_id === userId);
+      if (defaultId && models.some((m) => m.id === defaultId)) {
+        setSelectedModelId(defaultId);
+      } else if (personalModel) {
+        setSelectedModelId(personalModel.id);
+      }
     }
     if (briefsData) setBriefs(briefsData);
     setDataLoading(false);
@@ -142,6 +150,8 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
   const myBriefs = briefs.filter((b) => b.created_by === userId);
   const sharedBriefs = briefs.filter((b) => b.created_by !== userId && b.is_shared);
   const selectedBrief = selectedBriefId ? briefs.find((b) => b.id === selectedBriefId) : null;
+  const personalModels = writerModels.filter((m) => m.strategist_id === userId);
+  const houseModels = writerModels.filter((m) => m.is_house_model);
 
   const addSecondaryKeyword = () => {
     const raw = secondaryKeywordInput.trim();
@@ -191,7 +201,7 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
         trackEvent(supabase, userId, 'project_created', data.id, 'project', {
           word_count_target: parseInt(wordCount, 10) || 800,
         });
-        router.push(`/dashboard?project=${data.id}&model=${data.writer_model_id}`);
+        router.push(`/dashboard?project=${data.id}&model=${data.writer_model_id}&research=true`);
       }
     } catch (err) {
       console.error('Error creating project:', err);
@@ -395,11 +405,26 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
                   <SelectValue placeholder="Select a writer model" />
                 </SelectTrigger>
                 <SelectContent>
-                  {writerModels.map((model) => (
-                    <SelectItem key={model.id} value={model.id}>
-                      {model.name}
-                    </SelectItem>
-                  ))}
+                  {personalModels.length > 0 && (
+                    <SelectGroup>
+                      <SelectLabel>Your Model</SelectLabel>
+                      {personalModels.map((model) => (
+                        <SelectItem key={model.id} value={model.id}>
+                          {model.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  )}
+                  {houseModels.length > 0 && (
+                    <SelectGroup>
+                      <SelectLabel>RotoWire Models</SelectLabel>
+                      {houseModels.map((model) => (
+                        <SelectItem key={model.id} value={model.id}>
+                          {model.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  )}
                 </SelectContent>
               </Select>
               {writerModels.length === 0 && !dataLoading && (

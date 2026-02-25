@@ -56,10 +56,18 @@ export async function POST(request: NextRequest) {
     });
 
     const suggestions = await seoEngine.suggestInternalLinks(availableArticles);
+    const byTitle = new Map(availableArticles.map((a) => [a.title.toLowerCase().trim(), a]));
+    const withUrls = suggestions.map((s: { anchor_text: string; target_article: string; reason: string }) => {
+      const article = byTitle.get(s.target_article.toLowerCase().trim());
+      return {
+        ...s,
+        url: article?.url ?? '',
+      };
+    });
 
     return NextResponse.json({
       success: true,
-      suggestions,
+      suggestions: withUrls,
     });
   } catch (error) {
     console.error('Error generating internal links:', error);

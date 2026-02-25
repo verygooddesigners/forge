@@ -37,8 +37,10 @@ export {
 // Agent #4: Quality Assurance
 export {
   checkQuality,
+  evaluateResearchRelevance,
   type QualityCheckRequest,
   type QualityCheckResult,
+  type EvaluateResearchRelevanceInput,
 } from './quality-assurance';
 
 // Agent #5: Persona & Tone
@@ -48,13 +50,12 @@ export {
   type ToneAdaptationRequest,
 } from './persona-tone';
 
-// Agent #6: Creative Features
+// Agent #6: Research Orchestrator
 export {
-  orchestrateWorkflow,
-  transformData,
-  type WorkflowRequest,
-  type WorkflowStep,
-} from './creative-features';
+  runResearchPipeline,
+  type ResearchPipelineInput,
+  type ResearchPipelineProgressEvent,
+} from './research-orchestrator';
 
 // Agent #7: Visual Extraction
 export {
