@@ -14,7 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { createClient } from '@/lib/supabase/client';
 import { Brief, Category, User } from '@/types';
 import { TipTapEditor } from '@/components/editor/TipTapEditor';
-import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft, HelpCircle, ExternalLink, Search, Users2, FileText } from 'lucide-react';
+import { BookOpen, Plus, Save, Trash2, Sparkles, Loader2, CheckCircle2, ArrowLeft, HelpCircle, ExternalLink, Search, Users2, FileText, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface SmartBriefPanelProps {
@@ -94,6 +94,10 @@ export function SmartBriefPanel({ user, onBack, autoCreate = false }: SmartBrief
   const [exampleUrls, setExampleUrls] = useState('');
   const [urlAnalysis, setUrlAnalysis] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
+
+  // AutoBuilder state
+  const [autoBuildUrl, setAutoBuildUrl] = useState('');
+  const [autoBuilding, setAutoBuilding] = useState(false);
 
   const supabase = createClient();
   const editorRef = useRef<any>(null);
@@ -328,6 +332,37 @@ export function SmartBriefPanel({ user, onBack, autoCreate = false }: SmartBrief
     }
   };
 
+  const autoBuild = async () => {
+    if (!autoBuildUrl.trim()) return;
+    setAutoBuilding(true);
+    try {
+      const response = await fetch('/api/briefs/auto-build', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: autoBuildUrl.trim() }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to auto-build SmartBrief');
+      }
+
+      const result = await response.json();
+      setBriefName(result.name || '');
+      setBriefDescription(result.description || '');
+      setAiInstructions(result.aiInstructions || '');
+      if (result.scaffold && editorRef.current) {
+        editorRef.current.commands.setContent(result.scaffold);
+      }
+      toast.success('SmartBrief built! Review and edit the details below.');
+    } catch (error: any) {
+      console.error('[AutoBuild] Error:', error);
+      toast.error(error.message || 'Failed to auto-build SmartBrief');
+    } finally {
+      setAutoBuilding(false);
+    }
+  };
+
   const canEditBrief = (brief: Brief) => {
     return brief.created_by === user.id || ['super_admin', 'admin', 'manager', 'team_leader'].includes(user.role);
   };
@@ -378,6 +413,10 @@ export function SmartBriefPanel({ user, onBack, autoCreate = false }: SmartBrief
                 <option value="alpha_za">Z → A</option>
               </select>
 
+              <Button onClick={startNewBriefFull} size="sm" variant="outline" className="gap-2">
+                <Wand2 className="w-4 h-4" />
+                SmartBrief AutoBuilder
+              </Button>
               <Button onClick={startNewBriefFull} size="sm" className="gap-2">
                 <Plus className="w-4 h-4" />
                 Create New SmartBrief
@@ -468,6 +507,50 @@ export function SmartBriefPanel({ user, onBack, autoCreate = false }: SmartBrief
                       View Guide
                       <ExternalLink className="h-3 w-3 ml-1" />
                     </a>
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* SmartBrief AutoBuilder Section */}
+            {!selectedBrief && (
+              <div className="rounded-xl border border-violet-500/25 bg-violet-500/8 p-5 space-y-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Wand2 className="h-4 w-4 text-violet-400" />
+                    <h3 className="text-sm font-semibold text-violet-300 uppercase tracking-wide">
+                      SmartBrief AutoBuilder
+                    </h3>
+                  </div>
+                  <p className="text-sm text-text-secondary leading-relaxed">
+                    Paste the URL of an existing story below and the SmartBrief AI Agent will analyze its content and automatically construct a SmartBrief for you. You can review and edit all fields after the build is complete.
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    value={autoBuildUrl}
+                    onChange={(e) => setAutoBuildUrl(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') autoBuild(); }}
+                    placeholder="https://example.com/story-url"
+                    className="flex-1 bg-bg-surface"
+                    disabled={autoBuilding}
+                  />
+                  <Button
+                    onClick={autoBuild}
+                    disabled={autoBuilding || !autoBuildUrl.trim()}
+                    className="gap-2 bg-violet-600 hover:bg-violet-700 text-white border-0 shrink-0"
+                  >
+                    {autoBuilding ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Building...
+                      </>
+                    ) : (
+                      <>
+                        <Wand2 className="h-4 w-4" />
+                        AutoBuild
+                      </>
+                    )}
                   </Button>
                 </div>
               </div>

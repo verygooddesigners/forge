@@ -4,6 +4,14 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.08.00] - 2026-02-24
+
+SmartBrief AutoBuilder: paste any story URL and the AI Agent auto-constructs a SmartBrief scaffold, AI instructions, name, and description.
+
+- New API route `/api/briefs/auto-build` fetches the URL content and uses Claude to reverse-engineer a complete SmartBrief
+- AutoBuilder section (violet-themed) added to the Create SmartBrief screen above the form
+- AutoBuilder button added to the SmartBriefs browser header, next to Create New SmartBrief
+
 ---
 
 ## [1.07.12] - 2026-02-24
