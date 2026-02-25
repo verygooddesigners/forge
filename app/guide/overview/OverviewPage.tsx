@@ -304,7 +304,7 @@ export default function OverviewPage() {
                 
                 <div className="bg-bg-surface rounded-xl p-8 shadow-sm border border-border-default">
                   <p className="text-lg text-text-secondary leading-relaxed mb-6">
-                    Built on a modern tech stack featuring Next.js 14, React 19, Supabase PostgreSQL, and Claude AI (Anthropic's Sonnet model), Forge delivers enterprise-grade performance with sophisticated security features.
+                    Built on a modern tech stack featuring Next.js 16, React 19, Supabase PostgreSQL, and Claude AI (Anthropic's Sonnet 4 model), Forge delivers enterprise-grade performance with sophisticated security features.
                   </p>
 
                   <div className="grid md:grid-cols-2 gap-6">

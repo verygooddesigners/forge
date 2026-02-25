@@ -154,15 +154,15 @@ export default function UserGuidePage() {
       content: (
         <div className="space-y-6">
           <p className="text-lg leading-relaxed">
-            Forge is powered by a sophisticated <strong>Multi-Agent AI System</strong> – a team of 7 specialized 
-            AI agents that work together to produce high-quality, SEO-optimized content in your unique voice. 
-            Each agent has a specific role and expertise, making the whole system more powerful than any single AI could be.
+          Forge is powered by a sophisticated <strong>Multi-Agent AI System</strong> – a team of 8 specialized 
+          AI agents that work together to produce high-quality, SEO-optimized content in your unique voice. 
+          Each agent has a specific role and expertise, making the whole system more powerful than any single AI could be.
           </p>
 
           <div className="bg-accent-muted border border-accent-primary rounded-lg p-8 my-8">
             <h3 className="text-xl font-bold mb-4 text-center flex items-center justify-center gap-2">
               <Cpu className="h-6 w-6 text-accent-primary" />
-              <span className="text-text-primary">The 7-Agent Orchestra</span>
+              <span className="text-text-primary">The 8-Agent Orchestra</span>
             </h3>
             <p className="text-center text-text-secondary mb-6">
               Just like a symphony orchestra has different sections working in harmony, 
@@ -309,6 +309,26 @@ export default function UserGuidePage() {
                 <span className="px-2 py-1 bg-[rgba(6,182,212,0.2)] border border-[#06b6d4] text-[#67e8f9] rounded text-xs font-medium">Image Analysis</span>
                 <span className="px-2 py-1 bg-[rgba(6,182,212,0.2)] border border-[#06b6d4] text-[#67e8f9] rounded text-xs font-medium">Data Extraction</span>
                 <span className="px-2 py-1 bg-[rgba(6,182,212,0.2)] border border-[#06b6d4] text-[#67e8f9] rounded text-xs font-medium">Table Parsing</span>
+              </div>
+            </div>
+
+            {/* Agent 8 */}
+            <div className="border-l-4 border-[#10b981] pl-6 py-4 bg-[rgba(16,185,129,0.15)] rounded-r-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-[#10b981] text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  8
+                </div>
+                <h4 className="font-bold text-lg text-text-primary">Fact Verification Agent</h4>
+              </div>
+              <p className="text-text-secondary leading-relaxed mb-3">
+                Your accuracy guardian. This agent cross-references factual claims across multiple sources, 
+                verifies statistics and dates, flags discrepancies, and ensures content accuracy before publication. 
+                Requires at least 3 independent sources for high-confidence verification.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-[rgba(16,185,129,0.2)] border border-[#10b981] text-[#34d399] rounded text-xs font-medium">Fact Checking</span>
+                <span className="px-2 py-1 bg-[rgba(16,185,129,0.2)] border border-[#10b981] text-[#34d399] rounded text-xs font-medium">Cross-Referencing</span>
+                <span className="px-2 py-1 bg-[rgba(16,185,129,0.2)] border border-[#10b981] text-[#34d399] rounded text-xs font-medium">Source Verification</span>
               </div>
             </div>
           </div>
@@ -704,7 +724,7 @@ export default function UserGuidePage() {
             <div className="border border-border-default rounded-lg p-5 bg-accent-muted">
               <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-primary" />
-                🤖 AI Configuration Tab (NEW!)
+                🤖 AI Configuration Tab
               </h4>
               <p className="text-muted-foreground leading-relaxed">
                 Teach the AI what this SmartBrief is about by providing instructions and example URLs. 
@@ -871,6 +891,42 @@ export default function UserGuidePage() {
             <p className="text-sm text-text-secondary">
               Create multiple brief templates for different content types (team analysis, player profiles,
               game previews, etc.) to maintain consistency across your content library.
+            </p>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">SmartBrief AutoBuilder</h3>
+
+          <div className="bg-success-muted border-l-4 border-success p-5 rounded-r-lg mb-4">
+            <p className="text-sm font-medium text-text-primary mb-2">⚡ New Feature</p>
+            <p className="text-sm text-text-secondary">
+              The AutoBuilder lets you create a complete SmartBrief scaffold from a single article URL — 
+              no manual setup required.
+            </p>
+          </div>
+
+          <p className="leading-relaxed mb-4">
+            Instead of building a SmartBrief from scratch, paste the URL of any publicly accessible article 
+            and the AI will analyze it to generate a ready-to-use template, including a name, description, 
+            AI instructions, and a structured content scaffold.
+          </p>
+
+          <div className="bg-bg-elevated border border-border-default rounded-lg p-5 my-4">
+            <h5 className="font-semibold mb-3 text-accent-primary">How to Use AutoBuilder</h5>
+            <ol className="list-decimal list-inside space-y-2 text-sm">
+              <li className="leading-relaxed">Open the <strong>SmartBrief Builder</strong> and click <strong>New SmartBrief</strong></li>
+              <li className="leading-relaxed">Click <strong>AutoBuilder</strong> and paste a URL to a representative article</li>
+              <li className="leading-relaxed">The AI fetches the article, reverse-engineers its structure, and fills in all fields automatically</li>
+              <li className="leading-relaxed">Review the generated name, description, AI instructions, and scaffold</li>
+              <li className="leading-relaxed">Edit as needed, then save — your SmartBrief is ready to use</li>
+            </ol>
+          </div>
+
+          <div className="bg-[rgba(59,130,246,0.15)] border-l-4 border-[#3b82f6] p-5 rounded-r-lg mb-6">
+            <p className="text-sm font-medium text-text-primary mb-2">💡 Pro Tip</p>
+            <p className="text-sm text-text-secondary">
+              Use one of your best published articles as the source URL. The AI learns directly from proven work, 
+              producing templates that immediately reflect your editorial standards. You can still add example URLs 
+              in the AI Configuration tab after auto-building.
             </p>
           </div>
 

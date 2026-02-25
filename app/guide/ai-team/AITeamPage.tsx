@@ -755,6 +755,19 @@ export default function AITeamPage() {
                         </p>
                       </div>
                     </div>
+
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0 w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                        6
+                      </div>
+                      <div>
+                        <h5 className="font-semibold">Fact Verification Confirms Accuracy</h5>
+                        <p className="text-sm text-text-secondary">
+                          Agent #8 cross-references factual claims across multiple sources,
+                          verifying statistics, dates, and key facts before final output.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -897,6 +910,22 @@ export default function AITeamPage() {
                           </code>
                         </td>
                       </tr>
+                      <tr>
+                        <td className="py-3 px-4 font-medium">Fact Verification</td>
+                        <td className="py-3 px-4 text-text-secondary">
+                          <code className="text-xs bg-bg-hover px-1 rounded">
+                            cannot_generate_content
+                          </code>
+                          ,{' '}
+                          <code className="text-xs bg-bg-hover px-1 rounded">
+                            cannot_make_editorial_decisions
+                          </code>
+                          ,{' '}
+                          <code className="text-xs bg-bg-hover px-1 rounded">
+                            cannot_train_models
+                          </code>
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -983,8 +1012,8 @@ export default function AITeamPage() {
                     Per-Agent Customization
                   </h4>
                   <p className="text-sm text-text-secondary mb-4">
-                    Each of the 7 agents has its own configuration tab, allowing independent
-                    tuning:
+                  Each of the 8 agents has its own configuration tab, allowing independent
+                  tuning:
                   </p>
                   <div className="flex flex-wrap gap-2">
                     <span className="px-3 py-1 bg-accent-muted text-accent-primary rounded-full text-xs font-medium">
@@ -1007,6 +1036,9 @@ export default function AITeamPage() {
                     </span>
                     <span className="px-3 py-1 bg-cyan-100 text-cyan-700 rounded-full text-xs font-medium">
                       Visual
+                    </span>
+                    <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium">
+                      Fact Check
                     </span>
                   </div>
                   <p className="text-sm text-text-tertiary mt-4">
@@ -1050,7 +1082,7 @@ export default function AITeamPage() {
                         </div>
                         <div>
                           <span className="text-text-tertiary">Agents Powered:</span>
-                          <span className="ml-2 font-medium">7 of 7</span>
+                          <span className="ml-2 font-medium">8 of 8</span>
                         </div>
                         <div>
                           <span className="text-text-tertiary">API Version:</span>
@@ -1208,6 +1240,14 @@ export default function AITeamPage() {
                           Confidence: 85%, Fallback enabled
                         </td>
                       </tr>
+                      <tr>
+                        <td className="py-3 px-4 font-medium">Fact Verification</td>
+                        <td className="py-3 px-4 font-mono">0.2</td>
+                        <td className="py-3 px-4 font-mono">3,000</td>
+                        <td className="py-3 px-4 text-text-secondary">
+                          Min sources (high): 3, Min sources (medium): 2
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -1226,7 +1266,7 @@ export default function AITeamPage() {
 
                 <div className="bg-bg-deepest rounded-lg p-6 overflow-x-auto">
                   <pre className="text-sm text-text-primary">
-                    <code>{`# Required - Powers all 7 agents
+                    <code>{`# Required - Powers all 8 agents
 CLAUDE_API_KEY=sk-ant-api03-...
 # Alternative name (either works)
 ANTHROPIC_API_KEY=sk-ant-api03-...

@@ -4,6 +4,18 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.08.01] - 2026-02-24
+
+Documentation update: User Guide, SmartBrief Guide, AI Agent docs, and rotowrite-content-engine.md brought fully in sync with current codebase.
+
+- User Guide: Fixed agent count (7→8), added Fact Verification Agent, added SmartBrief AutoBuilder section, removed stale "NEW!" label from AI Configuration tab
+- AI Team Page: Updated all agent count references (7→8), added Fact Verification to model config table, guardrails table, and workflow steps; added Fact Check pill to agent list
+- Overview Page: Corrected Next.js version (14→16) and updated Claude model name
+- rotowrite-content-engine.md: Added Fact Verification Agent, added AutoBuilder feature description
+- SmartBrief Guide: Added AutoBuilder section with step-by-step instructions
+
+---
+
 ## [1.08.00] - 2026-02-24
 
 SmartBrief AutoBuilder: paste any story URL and the AI Agent auto-constructs a SmartBrief scaffold, AI instructions, name, and description.

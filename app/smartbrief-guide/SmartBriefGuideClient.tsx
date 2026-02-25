@@ -8,6 +8,7 @@ import { BookOpen } from 'lucide-react';
 const sections = [
   { id: 'what-is', title: 'What is a SmartBrief?' },
   { id: 'two-tab-system', title: 'Two-Tab System' },
+  { id: 'auto-builder', title: 'AutoBuilder' },
   { id: 'tab-1-structure', title: 'Tab 1: Content Template' },
   { id: 'tab-2-ai-config', title: 'Tab 2: AI Configuration' },
   { id: 'step-by-step', title: 'Step-by-Step Creation' },
@@ -141,6 +142,59 @@ export default function SmartBriefGuideClient() {
                       </p>
                     </CardContent>
                   </Card>
+                </div>
+              </section>
+
+              {/* Section: AutoBuilder */}
+              <section id="guide-auto-builder">
+                <h2 className="text-2xl font-bold text-text-primary mb-4">AutoBuilder: Create from a URL</h2>
+                <div className="space-y-4 text-text-secondary">
+                  <p className="leading-relaxed">
+                    Instead of building a SmartBrief from scratch, use the <strong>AutoBuilder</strong> to generate 
+                    a complete template from a single article URL. Paste a link to any representative article and 
+                    the AI analyzes it to produce a ready-to-use SmartBrief in seconds.
+                  </p>
+
+                  <div className="bg-accent-muted border-l-4 border-accent-primary p-4 rounded-r-lg">
+                    <h3 className="font-semibold text-text-primary mb-2">AutoBuilder Generates:</h3>
+                    <ul className="space-y-2">
+                      <li>📝 <strong>Name:</strong> A descriptive template name based on the article type</li>
+                      <li>📋 <strong>Description:</strong> One-sentence summary shown in the brief browser</li>
+                      <li>🤖 <strong>AI Instructions:</strong> Detailed tone, style, and content guidance extracted from the source</li>
+                      <li>📐 <strong>Scaffold:</strong> A structured content outline mirroring the article's section hierarchy</li>
+                    </ul>
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-text-primary mb-3 mt-6">How to Use AutoBuilder</h3>
+
+                  <div className="space-y-3">
+                    <div className="border-l-4 border-accent-primary pl-6 py-2">
+                      <h4 className="font-semibold text-text-primary mb-1">Step 1: Open AutoBuilder</h4>
+                      <p className="text-sm">Click <strong>New SmartBrief</strong>, then select the <strong>AutoBuilder</strong> option</p>
+                    </div>
+                    <div className="border-l-4 border-accent-primary pl-6 py-2">
+                      <h4 className="font-semibold text-text-primary mb-1">Step 2: Paste a URL</h4>
+                      <p className="text-sm">Enter the URL of a publicly accessible article that represents the content type you want to template</p>
+                    </div>
+                    <div className="border-l-4 border-accent-primary pl-6 py-2">
+                      <h4 className="font-semibold text-text-primary mb-1">Step 3: Review the Result</h4>
+                      <p className="text-sm">The AI populates all SmartBrief fields automatically — review and edit anything before saving</p>
+                    </div>
+                    <div className="border-l-4 border-accent-primary pl-6 py-2">
+                      <h4 className="font-semibold text-text-primary mb-1">Step 4: Refine & Save</h4>
+                      <p className="text-sm">Add additional example URLs in the AI Configuration tab, then save your new SmartBrief</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mt-4">
+                    <h4 className="font-semibold text-blue-900 mb-2">💡 Best Source URLs</h4>
+                    <ul className="text-sm text-blue-800 space-y-1">
+                      <li>✅ Use your best published articles for templates that match your standards</li>
+                      <li>✅ Pages must be publicly accessible (no paywalls)</li>
+                      <li>✅ One URL is enough — you can add more example URLs afterward</li>
+                      <li>❌ Avoid pages that require JavaScript to render (the AI reads HTML directly)</li>
+                    </ul>
+                  </div>
                 </div>
               </section>
 

@@ -15,8 +15,9 @@ Forge does not rely on a single, generic AI model. Instead, it uses a team of sp
 - **Persona & Tone Agent** ensures the article matches the intended voice and audience.
 - **Creative Orchestration Agent** coordinates specialized steps and formatting rules.
 - **Visual Data Extraction Agent** converts screenshots or visual data into usable content blocks.
+- **Fact Verification Agent** cross-references factual claims across multiple sources before publication.
 
-Each agent is tuned for its job and constrained from doing unrelated tasks. This results in consistent, repeatable output that is production-ready for Forge.com.
+Each agent is tuned for its job and constrained from doing unrelated tasks. This results in consistent, repeatable output that is production-ready for Forge.com. Agents run on Claude Sonnet 4 and are fully configurable by administrators via the Admin Dashboard.
 
 ## Writer Modeling: Authentic Voice at Scale
 
@@ -32,6 +33,10 @@ SmartBriefs are not simple outlines. They are AI-enhanced templates that include
 - SEO and formatting constraints
 
 When a SmartBrief is selected, the system extracts patterns from real examples and encodes them as reusable guidance. This lets Forge produce consistent articles that match proven formats on Forge.com, while still adapting to new topics and data.
+
+### SmartBrief AutoBuilder
+
+The AutoBuilder feature accelerates template creation: paste the URL of any publicly accessible article and the AI reverse-engineers a complete SmartBrief scaffold — including name, description, AI instructions, and section structure. This eliminates manual template setup for recurring content types.
 
 ## End-to-End Content Flow for Forge.com
 
