@@ -18,7 +18,7 @@ export function getDevUser(): User | null {
     email: 'jeremy.botter@gmail.com',
     full_name: 'Jeremy Botter',
     role: 'Super Administrator',
-    account_status: 'active',
+    account_status: 'confirmed' as const,
     avatar_url: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
