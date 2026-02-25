@@ -37,7 +37,7 @@ export function AdminPageClient({ user }: AdminPageClientProps) {
 
   return (
     <>
-      <div className="flex h-screen bg-bg-deepest overflow-hidden ml-[260px]">
+      <div className="flex h-full w-full overflow-hidden">
         <AppSidebar
           user={user}
           onOpenProjects={() => router.push('/dashboard')}
@@ -60,7 +60,7 @@ export function AdminPageClient({ user }: AdminPageClientProps) {
           />
         )}
 
-        <main className="flex-1 overflow-auto p-8">
+        <main className="flex-1 overflow-auto p-8" style={{ background: 'linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%)' }}>
           {permissionsLoading ? (
             <div className="flex items-center justify-center h-full">
               <Loader2 className="w-6 h-6 animate-spin text-text-tertiary" />
