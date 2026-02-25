@@ -1,10 +1,14 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { getDevUser } from '@/lib/dev-user';
 import { ProfilePageClient } from '@/components/profile/ProfilePageClient';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ProfilePage() {
+  const devUser = getDevUser();
+  if (devUser) return <ProfilePageClient user={devUser} />;
+
   const supabase = await createClient();
 
   const {

@@ -100,39 +100,48 @@ export function AppSidebar({
   };
 
   const navLinkClass = (path: string) =>
-    `w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+    `w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
       isActive(path)
-        ? 'bg-accent-muted text-accent-primary'
-        : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
+        ? 'bg-accent-primary/15 text-accent-primary'
+        : 'text-text-secondary hover:bg-black/5 hover:text-text-primary'
     }`;
 
   const displayName = user.full_name || user.email;
   const roleLabel = user.role;
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[260px] bg-bg-deep border-r border-border-subtle flex flex-col z-[100]">
-      {/* Logo */}
-      <div className="p-5 border-b border-border-subtle flex items-center justify-center">
-        <button onClick={() => router.push('/dashboard')} className="focus:outline-none">
+    <aside
+      className="w-[260px] flex-shrink-0 flex flex-col h-full"
+      style={{
+        background: 'rgba(255, 255, 255, 0.5)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        borderRight: '1px solid rgba(255, 255, 255, 0.5)',
+      }}
+    >
+      {/* Logo — keep existing image, add wordmark */}
+      <div className="px-4 py-4 flex items-center gap-3 border-b border-white/40">
+        <button onClick={() => router.push('/dashboard')} className="focus:outline-none flex items-center gap-3">
           <Image
             src="/images/forge-icon.png"
             alt="Forge"
-            width={100}
-            height={100}
-            className="rounded-lg"
+            width={36}
+            height={36}
+            className="rounded-[10px] flex-shrink-0"
             priority
           />
+          <span className="text-[17px] font-bold text-text-primary tracking-tight">Forge</span>
         </button>
       </div>
 
       {/* NavMenu */}
-      <nav className="flex-1 p-3 overflow-y-auto space-y-1">
+      <nav className="flex-1 p-3 overflow-y-auto space-y-0.5">
 
         {/* Create New button + dropdown */}
-        <div className="mb-2" ref={createDropdownRef}>
+        <div className="mb-3" ref={createDropdownRef}>
           <button
             onClick={() => setCreateDropdownOpen((v) => !v)}
-            className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-accent-primary text-white hover:bg-accent-primary/90 shadow-sm"
+            className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-accent-primary text-white hover:bg-accent-hover shadow-[0_4px_12px_rgba(160,33,254,0.3)]"
           >
             <Plus className="w-4 h-4 shrink-0" />
             <span>Create New...</span>
@@ -149,24 +158,21 @@ export function AppSidebar({
               createDropdownOpen ? 'max-h-24 opacity-100 mt-1' : 'max-h-0 opacity-0'
             }`}
           >
-            <div className="rounded-lg border border-border-subtle bg-bg-surface shadow-md overflow-hidden">
+            <div
+              className="rounded-xl overflow-hidden shadow-xl"
+              style={{ background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(255,255,255,0.6)' }}
+            >
               <button
-                onClick={() => {
-                  setCreateDropdownOpen(false);
-                  router.push('/projects/new');
-                }}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
+                onClick={() => { setCreateDropdownOpen(false); router.push('/projects/new'); }}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-black/5 hover:text-text-primary transition-all"
               >
                 <FileText className="w-4 h-4 shrink-0 text-accent-primary" />
                 Project
               </button>
-              <div className="border-t border-border-subtle" />
+              <div className="border-t border-black/5" />
               <button
-                onClick={() => {
-                  setCreateDropdownOpen(false);
-                  router.push('/smartbriefs?new=true');
-                }}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
+                onClick={() => { setCreateDropdownOpen(false); router.push('/smartbriefs?new=true'); }}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-black/5 hover:text-text-primary transition-all"
               >
                 <BookOpen className="w-4 h-4 shrink-0 text-accent-primary" />
                 SmartBrief
@@ -175,91 +181,80 @@ export function AppSidebar({
           </div>
         </div>
 
-        <button
-          onClick={() => router.push('/projects')}
-          className={navLinkClass('/projects')}
-        >
-          <FileText className="w-5 h-5 shrink-0 text-accent-primary" />
+        <button onClick={() => router.push('/projects')} className={navLinkClass('/projects')}>
+          <FileText className="w-[18px] h-[18px] shrink-0" />
           <span>Projects</span>
           {projectCount > 0 && (
-            <span className="ml-auto bg-ai-muted text-ai-accent text-[10px] font-semibold px-2 py-0.5 rounded-full font-mono">
+            <span className="ml-auto bg-accent-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full font-mono">
               {projectCount}
             </span>
           )}
         </button>
 
-        <button
-          onClick={() => router.push('/smartbriefs')}
-          className={navLinkClass('/smartbriefs')}
-        >
-          <BookOpen className="w-5 h-5 shrink-0 text-accent-primary" />
+        <button onClick={() => router.push('/smartbriefs')} className={navLinkClass('/smartbriefs')}>
+          <BookOpen className="w-[18px] h-[18px] shrink-0" />
           <span>SmartBriefs</span>
         </button>
 
-        <button
-          onClick={() => router.push('/guide')}
-          className={navLinkClass('/guide')}
-        >
-          <BookMarked className="w-5 h-5 shrink-0 text-accent-primary" />
+        <button onClick={() => router.push('/guide')} className={navLinkClass('/guide')}>
+          <BookMarked className="w-[18px] h-[18px] shrink-0" />
           <span>User Guide</span>
         </button>
 
         {/* Tools — coming soon */}
-        <div className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-text-tertiary cursor-not-allowed select-none">
-          <Wrench className="w-5 h-5 shrink-0 opacity-50" />
-          <span className="opacity-50">Tools</span>
-          <span className="ml-auto text-[9px] font-semibold px-1.5 py-0.5 rounded bg-border-subtle text-text-tertiary uppercase tracking-wide">
+        <div className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-text-tertiary cursor-not-allowed select-none">
+          <Wrench className="w-[18px] h-[18px] shrink-0 opacity-40" />
+          <span className="opacity-40">Tools</span>
+          <span className="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-black/5 text-text-muted uppercase tracking-widest">
             Soon
           </span>
         </div>
 
-        {/* Admin — visible to users with admin access */}
         {hasPermission('can_access_admin') && (
-          <button
-            onClick={() => router.push('/admin')}
-            className={navLinkClass('/admin')}
-          >
-            <Shield className="w-5 h-5 shrink-0 text-accent-primary" />
+          <button onClick={() => router.push('/admin')} className={navLinkClass('/admin')}>
+            <Shield className="w-[18px] h-[18px] shrink-0" />
             <span>Admin</span>
           </button>
         )}
       </nav>
 
       {/* ProfileMenuBox */}
-      <div className="p-3 border-t border-border-subtle" ref={profileMenuRef}>
-        {/* UserProfileMenu — expands upward */}
+      <div className="p-3 border-t border-white/40" ref={profileMenuRef}>
         {profileMenuOpen && (
-          <div className="mb-2 rounded-lg border border-border-subtle bg-bg-surface shadow-lg overflow-hidden">
+          <div
+            className="mb-2 rounded-2xl overflow-hidden shadow-xl"
+            style={{ background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.6)' }}
+          >
             <button
               onClick={() => { router.push('/profile'); setProfileMenuOpen(false); }}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-black/5 hover:text-text-primary transition-all"
             >
               <UserCircle className="w-4 h-4 shrink-0" />
               Profile
             </button>
             <button
               onClick={() => { router.push('/writer-factory'); setProfileMenuOpen(false); }}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-black/5 hover:text-text-primary transition-all"
             >
               <PenTool className="w-4 h-4 shrink-0" />
               Writer Model
             </button>
             <button
               onClick={() => { router.push('/settings'); setProfileMenuOpen(false); }}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-black/5 hover:text-text-primary transition-all"
             >
               <Settings className="w-4 h-4 shrink-0" />
               Settings
             </button>
-            <div className="border-t border-border-subtle" />
+            <div className="border-t border-black/5" />
             <button
               onClick={() => { toggleTheme(); setProfileMenuOpen(false); }}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-black/5 hover:text-text-primary transition-all"
             >
               {isDark ? <Sun className="w-4 h-4 shrink-0" /> : <Moon className="w-4 h-4 shrink-0" />}
               {isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             </button>
-            <div className="border-t border-border-subtle" />
+            <div className="border-t border-black/5" />
             <button
               onClick={() => { handleSignOut(); setProfileMenuOpen(false); }}
               className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-all"
@@ -270,39 +265,27 @@ export function AppSidebar({
           </div>
         )}
 
-        {/* ProfileMenuBox trigger */}
         <button
           onClick={() => setProfileMenuOpen((v) => !v)}
-          className="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-bg-hover transition-all group"
+          className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-black/5 transition-all"
         >
-          {/* Avatar */}
-          <div className="shrink-0 w-9 h-9 rounded-lg overflow-hidden">
+          <div className="shrink-0 w-9 h-9 rounded-full overflow-hidden">
             {user.avatar_url ? (
-              <Image
-                src={user.avatar_url}
-                alt={displayName}
-                width={36}
-                height={36}
-                className="w-full h-full object-cover"
-              />
+              <Image src={user.avatar_url} alt={displayName} width={36} height={36} className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-ai-accent flex items-center justify-center font-semibold text-sm text-white">
+              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-ai-accent flex items-center justify-center font-bold text-sm text-white">
                 {getInitials(displayName)}
               </div>
             )}
           </div>
-
-          {/* Name + role */}
           <div className="flex-1 min-w-0 text-left">
             <div className="text-[13px] font-semibold truncate text-text-primary">
               {user.full_name || user.email.split('@')[0]}
             </div>
-            <div className="text-[11px] text-text-tertiary uppercase tracking-wide truncate">
+            <div className="text-[10px] text-text-tertiary uppercase tracking-wider truncate font-medium">
               {roleLabel}
             </div>
           </div>
-
-          {/* Chevron */}
           {profileMenuOpen ? (
             <ChevronDown className="w-4 h-4 text-text-tertiary shrink-0" />
           ) : (

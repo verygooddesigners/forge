@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
+import { getDevUser } from '@/lib/dev-user';
 import { AdminPageClient } from '@/components/admin/AdminPageClient';
 import { getUserPermissions, isSuperAdmin } from '@/lib/auth-config';
 
@@ -8,6 +9,13 @@ import { getUserPermissions, isSuperAdmin } from '@/lib/auth-config';
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
+  const devUser = getDevUser();
+  if (devUser) return (
+    <Suspense fallback={<div className="min-h-screen bg-bg-deepest flex items-center justify-center">Loading...</div>}>
+      <AdminPageClient user={devUser} />
+    </Suspense>
+  );
+
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();

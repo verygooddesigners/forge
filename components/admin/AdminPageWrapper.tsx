@@ -18,8 +18,7 @@ export function AdminPageWrapper({ user }: AdminPageWrapperProps) {
   const activeSection = (sectionParam as AdminSectionId) || defaultSection;
 
   return (
-    <div className="min-h-screen bg-bg-deepest">
-      {/* Fixed Sidebar */}
+    <div className="flex h-full w-full">
       <AppSidebar 
         user={user}
         onOpenProjects={() => router.push('/dashboard')}
@@ -30,9 +29,9 @@ export function AdminPageWrapper({ user }: AdminPageWrapperProps) {
       />
 
       {/* Main Content Area */}
-      <div className="ml-[260px] min-h-screen">
+      <div className="flex-1 overflow-y-auto min-h-0" style={{ background: 'linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%)' }}>
         {/* Top Bar */}
-        <div className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 bg-bg-deep border-b border-border-subtle">
+        <div className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 bg-white/80 backdrop-blur-md border-b border-white/60">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => router.push('/dashboard')}

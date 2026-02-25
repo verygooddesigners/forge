@@ -1,28 +1,26 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { getDevUser } from '@/lib/dev-user';
 import { ProjectsPageClient } from './ProjectsPageClient';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ProjectsPage() {
+  const devUser = getDevUser();
+  if (devUser) return <ProjectsPageClient user={devUser} />;
+
   const supabase = await createClient();
-  
   const { data: { user }, error } = await supabase.auth.getUser();
 
-  if (error || !user) {
-    redirect('/login');
-  }
+  if (error || !user) redirect('/login');
 
-  // Fetch user details
   const { data: userData } = await supabase
     .from('users')
     .select('*')
     .eq('id', user.id)
     .single();
 
-  if (!userData) {
-    redirect('/login');
-  }
+  if (!userData) redirect('/login');
 
   return <ProjectsPageClient user={userData} />;
 }

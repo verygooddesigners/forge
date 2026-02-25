@@ -13,7 +13,7 @@ export function WriterFactoryPageClient({ user }: WriterFactoryPageClientProps) 
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-bg-deepest">
+    <div className="flex h-full w-full">
       <AppSidebar 
         user={user}
         onOpenProjects={() => router.push('/projects')}
@@ -22,7 +22,7 @@ export function WriterFactoryPageClient({ user }: WriterFactoryPageClientProps) 
         onOpenNFLOdds={() => router.push('/nfl-odds')}
       />
 
-      <div className="ml-[260px] min-h-screen">
+      <div className="flex-1 overflow-y-auto min-h-0" style={{ background: 'linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%)' }}>
         <WriterFactoryPanel user={user} />
       </div>
     </div>

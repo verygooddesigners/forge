@@ -16,7 +16,7 @@ function SmartBriefsPageInner({ user }: SmartBriefsPageClientProps) {
   const autoCreate = searchParams.get('new') === 'true';
 
   return (
-    <div className="min-h-screen bg-bg-deepest">
+    <div className="flex h-full w-full">
       <AppSidebar
         user={user}
         onOpenProjects={() => router.push('/projects')}
@@ -25,7 +25,7 @@ function SmartBriefsPageInner({ user }: SmartBriefsPageClientProps) {
         onOpenNFLOdds={() => router.push('/nfl-odds')}
       />
 
-      <div className="ml-[260px] min-h-screen">
+      <div className="flex-1 overflow-y-auto min-h-0" style={{ background: 'linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%)' }}>
         <SmartBriefPanel
           user={user}
           onBack={() => router.push('/dashboard')}

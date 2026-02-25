@@ -192,7 +192,7 @@ export function ContentAnalyticsClient({ user }: ContentAnalyticsClientProps) {
   ].filter((d) => d.value > 0) : [];
 
   return (
-    <div className="min-h-screen bg-bg-deepest">
+    <div className="flex h-full w-full">
       <AppSidebar
         user={user}
         onOpenProjects={() => router.push('/projects')}
@@ -201,9 +201,9 @@ export function ContentAnalyticsClient({ user }: ContentAnalyticsClientProps) {
         onOpenNFLOdds={() => router.push('/nfl-odds')}
       />
 
-      <div className="ml-[260px] min-h-screen">
+      <div className="flex-1 overflow-y-auto min-h-0" style={{ background: 'linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%)' }}>
         {/* Header */}
-        <div className="sticky top-0 z-40 bg-bg-deepest/80 backdrop-blur-lg border-b border-border-subtle px-8 py-4">
+        <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-lg border-b border-white/60 px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-text-primary">Content Analytics</h1>

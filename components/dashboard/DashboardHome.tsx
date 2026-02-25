@@ -3,10 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, Project } from '@/types';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { InlineEdit } from '@/components/ui/inline-edit';
 import { 
   Plus,
   FileText,
@@ -155,107 +152,117 @@ export function DashboardHome({ user }: DashboardHomeProps) {
   };
 
   return (
-    <div className="p-8 max-w-[1400px]">
+    <div className="p-10 max-w-[1400px]">
       {/* Welcome Section */}
-      <div className="mb-10">
-        <h1 className="text-[28px] font-bold tracking-tight mb-2">
+      <div className="mb-12">
+        <h1 className="text-[32px] font-bold tracking-tight mb-2">
           {getGreeting()}, {user.full_name || user.email.split('@')[0]}{' '}
           <span className="text-text-tertiary font-normal">— {getDayName()}</span>
         </h1>
-        <p className="text-[15px] text-text-secondary">
+        <p className="text-[16px] text-text-secondary">
           You have {recentProjects.length} projects in progress
         </p>
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
-        <Card className="p-5 hover:translate-y-0">
-          <div className="text-xs text-text-tertiary uppercase tracking-wide mb-2">
+      <div className="grid grid-cols-4 gap-5 mb-12">
+        <div className="glass-card glass-card-purple-pink p-7 cursor-default flex flex-col gap-2.5">
+          <div className="text-xs font-semibold text-text-tertiary uppercase tracking-widest">
             Articles This Week
           </div>
-          <div className="text-[28px] font-bold font-mono tracking-tight">
+          <div className="text-[36px] font-bold font-mono tracking-tight">
             {stats.articlesThisWeek}
           </div>
           {stats.articlesThisWeek > 0 && (
-            <div className="text-[11px] text-success mt-1">
-              ↑ Active
-            </div>
+            <div className="text-[13px] font-semibold text-success">↑ Active</div>
           )}
-        </Card>
+        </div>
 
-        <Card className="p-5 hover:translate-y-0">
-          <div className="text-xs text-text-tertiary uppercase tracking-wide mb-2">
+        <div className="glass-card glass-card-purple-pink p-7 cursor-default flex flex-col gap-2.5">
+          <div className="text-xs font-semibold text-text-tertiary uppercase tracking-widest">
             Words Generated
           </div>
-          <div className="text-[28px] font-bold font-mono tracking-tight">
+          <div className="text-[36px] font-bold font-mono tracking-tight">
             {formatWordCount(stats.wordsGenerated)}
           </div>
-        </Card>
+        </div>
 
-        <Card className="p-5 hover:translate-y-0">
-          <div className="text-xs text-text-tertiary uppercase tracking-wide mb-2">
+        <div className="glass-card glass-card-purple-pink p-7 cursor-default flex flex-col gap-2.5">
+          <div className="text-xs font-semibold text-text-tertiary uppercase tracking-widest">
             Avg SEO Score
           </div>
-          <div className="text-[28px] font-bold font-mono tracking-tight text-accent-primary">
+          <div className="text-[36px] font-bold font-mono tracking-tight text-accent-primary">
             {stats.avgSeoScore || '—'}
           </div>
-        </Card>
+        </div>
 
-        <Card className="p-5 hover:translate-y-0">
-          <div className="text-xs text-text-tertiary uppercase tracking-wide mb-2">
+        <div className="glass-card glass-card-purple-pink p-7 cursor-default flex flex-col gap-2.5">
+          <div className="text-xs font-semibold text-text-tertiary uppercase tracking-widest">
             Active SmartBriefs
           </div>
-          <div className="text-[28px] font-bold font-mono tracking-tight">
+          <div className="text-[36px] font-bold font-mono tracking-tight">
             {stats.activeSmartBriefs}
           </div>
-        </Card>
+        </div>
       </div>
 
       {/* Quick Actions */}
       <div className="mb-12">
-        <h2 className="text-lg font-semibold tracking-tight mb-5">Quick Actions</h2>
-        <div className="grid grid-cols-3 gap-4">
-          <Card 
-            className="p-6 cursor-pointer relative overflow-hidden group hover:translate-y-0"
+        <h2 className="text-[20px] font-bold tracking-tight mb-5">Quick Actions</h2>
+        <div className="grid grid-cols-3 gap-5">
+          <button
+            className="glass-card glass-card-purple-pink p-8 cursor-pointer text-left flex flex-col gap-5"
             onClick={() => router.push('/projects/new')}
           >
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-accent-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="w-11 h-11 rounded-[10px] bg-accent-muted flex items-center justify-center text-accent-primary mb-4">
-              <Plus className="w-6 h-6" />
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-[0_8px_16px_rgba(0,0,0,0.1)]"
+              style={{ background: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)' }}
+            >
+              <Plus className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-semibold mb-1.5">Create New Article</h3>
-            <p className="text-[13px] text-text-tertiary leading-relaxed">
-              Start from scratch or use a SmartBrief template
-            </p>
-          </Card>
+            <div>
+              <h3 className="text-[18px] font-bold mb-2">Create New Article</h3>
+              <p className="text-[14px] text-text-tertiary leading-relaxed">
+                Start a fresh AI-powered article from a topic or keyword.
+              </p>
+            </div>
+          </button>
 
-          <Card 
-            className="p-6 cursor-pointer relative overflow-hidden group hover:translate-y-0"
+          <button
+            className="glass-card glass-card-blue-cyan p-8 cursor-pointer text-left flex flex-col gap-5"
             onClick={() => router.push('/smartbriefs')}
           >
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-ai-accent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="w-11 h-11 rounded-[10px] bg-ai-muted flex items-center justify-center text-ai-accent mb-4">
-              <Sparkles className="w-6 h-6" />
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-[0_8px_16px_rgba(0,0,0,0.1)]"
+              style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)' }}
+            >
+              <Sparkles className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-semibold mb-1.5">Build SmartBrief</h3>
-            <p className="text-[13px] text-text-tertiary leading-relaxed">
-              Create reusable AI-powered content templates
-            </p>
-          </Card>
+            <div>
+              <h3 className="text-[18px] font-bold mb-2">Build SmartBrief</h3>
+              <p className="text-[14px] text-text-tertiary leading-relaxed">
+                Generate a structured content brief with AI research assistance.
+              </p>
+            </div>
+          </button>
 
-          <Card 
-            className="p-6 cursor-pointer relative overflow-hidden group hover:translate-y-0"
+          <button
+            className="glass-card glass-card-orange-red p-8 cursor-pointer text-left flex flex-col gap-5"
             onClick={() => router.push('/nfl-odds')}
           >
-            <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-success to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="w-11 h-11 rounded-[10px] bg-success-muted flex items-center justify-center text-success mb-4">
-              <TrendingUp className="w-6 h-6" />
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-[0_8px_16px_rgba(0,0,0,0.1)]"
+              style={{ background: 'linear-gradient(135deg, #F97316 0%, #EF4444 100%)' }}
+            >
+              <TrendingUp className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-semibold mb-1.5">Extract NFL Odds</h3>
-            <p className="text-[13px] text-text-tertiary leading-relaxed">
-              Upload screenshots to auto-generate betting content
-            </p>
-          </Card>
+            <div>
+              <h3 className="text-[18px] font-bold mb-2">Extract NFL Odds</h3>
+              <p className="text-[14px] text-text-tertiary leading-relaxed">
+                Pull and format live NFL odds data into ready-to-publish content.
+              </p>
+            </div>
+          </button>
         </div>
       </div>
 
@@ -263,10 +270,10 @@ export function DashboardHome({ user }: DashboardHomeProps) {
       {recentProjects.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-semibold tracking-tight">Recent Projects</h2>
+            <h2 className="text-[20px] font-bold tracking-tight">Recent Projects</h2>
             <button
               onClick={() => router.push('/projects')}
-              className="text-[13px] text-accent-primary font-medium hover:text-accent-hover flex items-center gap-1"
+              className="text-[13px] text-accent-primary font-semibold hover:text-accent-hover flex items-center gap-1 transition-colors"
             >
               View all
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -275,28 +282,23 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             </button>
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-5">
             {recentProjects.map((project) => (
-              <Card 
+              <button
                 key={project.id}
-                className="p-5 cursor-pointer hover:translate-y-0"
+                className="glass-card glass-card-green-emerald p-6 cursor-pointer text-left"
                 onClick={() => router.push(`/dashboard?project=${project.id}&model=${project.writer_model_id}`)}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 mr-3">
-                    <InlineEdit
-                      value={project.file_name || project.headline}
-                      onSave={(newValue) => updateFileName(project.id, newValue)}
-                      className="text-[15px] font-semibold leading-snug"
-                      inputClassName="text-[15px] font-semibold"
-                    />
+                    <p className="text-[15px] font-semibold leading-snug text-text-primary line-clamp-2">
+                      {project.file_name || project.headline}
+                    </p>
                   </div>
-                  <Badge variant="ai" className="flex-shrink-0">
-                    Draft
-                  </Badge>
+                  <Badge variant="ai" className="flex-shrink-0">Draft</Badge>
                 </div>
                 
-                <div className="flex items-center gap-4 mb-3.5 text-xs text-text-tertiary">
+                <div className="flex items-center gap-4 mb-4 text-xs text-text-tertiary">
                   <span className="flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 opacity-60" />
                     {formatDate(project.updated_at)}
@@ -314,11 +316,11 @@ export function DashboardHome({ user }: DashboardHomeProps) {
                 </div>
                 
                 <div className="flex flex-wrap gap-1.5">
-                  <span className="text-[11px] font-mono px-2 py-1 bg-bg-hover rounded text-text-secondary">
+                  <span className="text-[11px] font-mono px-2 py-1 bg-black/5 rounded-lg text-text-secondary">
                     {project.primary_keyword}
                   </span>
                   {project.secondary_keywords?.slice(0, 2).map((kw, i) => (
-                    <span key={i} className="text-[11px] font-mono px-2 py-1 bg-bg-hover rounded text-text-secondary">
+                    <span key={i} className="text-[11px] font-mono px-2 py-1 bg-black/5 rounded-lg text-text-secondary">
                       {kw}
                     </span>
                   ))}
@@ -328,15 +330,15 @@ export function DashboardHome({ user }: DashboardHomeProps) {
                     </span>
                   )}
                 </div>
-              </Card>
+              </button>
             ))}
           </div>
         </div>
       )}
 
       {/* AI Status Indicator */}
-      <div className="mt-8 flex items-center gap-2 px-4 py-3 bg-bg-surface border border-border-subtle rounded-lg">
-        <div className="w-2 h-2 rounded-full bg-success animate-pulse-slow" />
+      <div className="mt-10 flex items-center gap-2 px-4 py-3 glass-card rounded-xl">
+        <div className="w-2 h-2 rounded-full bg-success animate-pulse-slow flex-shrink-0" />
         <span className="text-[13px] text-text-secondary">
           <strong className="text-text-primary font-semibold">AI Agents</strong> online and ready — All systems operational
         </span>

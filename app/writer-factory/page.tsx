@@ -1,10 +1,14 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { getDevUser } from '@/lib/dev-user';
 import { WriterFactoryPageClient } from './WriterFactoryPageClient';
 
 export const dynamic = 'force-dynamic';
 
 export default async function WriterFactoryPage() {
+  const devUser = getDevUser();
+  if (devUser) return <WriterFactoryPageClient user={devUser} />;
+
   const supabase = await createClient();
   
   const { data: { user }, error } = await supabase.auth.getUser();

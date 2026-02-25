@@ -1,10 +1,14 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { getDevUser } from '@/lib/dev-user';
 import { SettingsPageClient } from '@/components/settings/SettingsPageClient';
 
 export const dynamic = 'force-dynamic';
 
 export default async function SettingsPage() {
+  const devUser = getDevUser();
+  if (devUser) return <SettingsPageClient user={devUser} />;
+
   const supabase = await createClient();
 
   const {

@@ -175,11 +175,10 @@ export function ProjectsPanel({ user, onSelectProject, onCreateProject }: Projec
   };
 
   const ProjectCard = ({ project, canDelete }: { project: Project; canDelete?: boolean }) => (
-    <Card
-      className="cursor-pointer relative overflow-hidden group p-5 hover:translate-y-0"
+    <div
+      className="glass-card glass-card-green-emerald cursor-pointer relative overflow-hidden group p-5"
       onClick={() => onSelectProject(project.id, project.writer_model_id)}
     >
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" />
 
       <div className="absolute top-3 right-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
         <button
@@ -237,11 +236,11 @@ export function ProjectsPanel({ user, onSelectProject, onCreateProject }: Projec
       </div>
 
       <div className="flex flex-wrap gap-1">
-        <span className="text-[10px] font-mono px-2 py-0.5 bg-bg-hover rounded text-text-secondary">
+        <span className="text-[10px] font-mono px-2 py-0.5 bg-black/5 rounded-lg text-text-secondary">
           {project.primary_keyword}
         </span>
         {project.secondary_keywords?.slice(0, 2).map((kw, i) => (
-          <span key={i} className="text-[10px] font-mono px-2 py-0.5 bg-bg-hover rounded text-text-secondary">
+          <span key={i} className="text-[10px] font-mono px-2 py-0.5 bg-black/5 rounded-lg text-text-secondary">
             {kw}
           </span>
         ))}
@@ -250,8 +249,8 @@ export function ProjectsPanel({ user, onSelectProject, onCreateProject }: Projec
             +{project.secondary_keywords!.length - 2}
           </span>
         )}
-      </div>
-    </Card>
+        </div>
+    </div>
   );
 
   const SectionEmpty = ({ label }: { label: string }) => (

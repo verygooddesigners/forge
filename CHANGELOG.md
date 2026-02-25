@@ -4,6 +4,17 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.09.00] - 2026-02-25
+
+### Major Redesign — Glassmorphism UI
+- Floating app container: entire app now floats as a 32px rounded glassmorphism card against a soft gray gradient background
+- New sidebar: semi-transparent glass sidebar with updated nav pills, gradient active states, purple count badge, and existing logo preserved
+- Glass card system: all cards use `rgba(255,255,255,0.9)` with `backdrop-blur`, 20px radius, and animated gradient border-on-hover
+- Quick Action cards: full-gradient colored icon containers (purple-pink, blue-cyan, orange-red)
+- Stat cards, project cards, and all interactive cards use gradient border hover effects with colored shadows
+- Auth bypass helper for local dev (never affects production)
+- New design tokens: gradient palette, glassmorphism variables, updated radius scale (up to 32px)
+
 ## [1.08.01] - 2026-02-24
 
 Documentation update: User Guide, SmartBrief Guide, AI Agent docs, and rotowrite-content-engine.md brought fully in sync with current codebase.

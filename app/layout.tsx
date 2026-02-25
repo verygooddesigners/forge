@@ -31,11 +31,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${dmSans.variable} ${spaceMono.variable} font-sans antialiased`}
-      >
+      <body className={`${dmSans.variable} ${spaceMono.variable} font-sans antialiased`}>
         <ClientInit />
-        {children}
+        {/* Outer padding creates the floating card effect against the html gradient bg */}
+        <div className="min-h-screen w-full p-6 flex items-stretch">
+          <div
+            className="w-full max-w-[1920px] mx-auto flex overflow-hidden"
+            style={{
+              height: 'calc(100vh - 48px)',
+              borderRadius: '32px',
+              background: 'rgba(255, 255, 255, 0.85)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.4)',
+              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08)',
+            }}
+          >
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );

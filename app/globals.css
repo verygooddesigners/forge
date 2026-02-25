@@ -4,30 +4,31 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  /* Forge - Light Theme with Purple Accent */
+  /* Forge Redesign - Glassmorphism Theme */
   
-  /* Background Layers - Light Mode */
+  /* Background Layers */
   --color-bg-deepest: #ffffff;
   --color-bg-deep: #fafafa;
   --color-bg-surface: #f5f5f5;
   --color-bg-elevated: #ffffff;
   --color-bg-hover: #f0f0f0;
+  --color-bg-outer: #E8EAF0;
   
-  /* Text Hierarchy - Dark text on light backgrounds */
+  /* Text Hierarchy */
   --color-text-primary: #1a1a1a;
   --color-text-secondary: #525252;
   --color-text-tertiary: #737373;
   --color-text-muted: #a3a3a3;
   
-  /* Primary Accent - Your Purple */
+  /* Primary Accent */
   --color-accent-primary: #A021FE;
   --color-accent-hover: #b84dfe;
-  --color-accent-muted: rgba(160, 33, 254, 0.1);
+  --color-accent-muted: rgba(160, 33, 254, 0.12);
   --color-accent-glow: rgba(160, 33, 254, 0.3);
   --color-accent-dark: #301047;
   --color-accent-light: #d89ffe;
   
-  /* Secondary Accent - Lighter Purple for AI Features */
+  /* AI Accent */
   --color-ai-accent: #A021FE;
   --color-ai-muted: rgba(160, 33, 254, 0.08);
   
@@ -39,16 +40,33 @@
   --color-error: #ef4444;
   --color-error-muted: rgba(239, 68, 68, 0.1);
   
-  /* Borders - Light mode borders */
+  /* Borders */
   --color-border-subtle: rgba(0, 0, 0, 0.06);
   --color-border-default: rgba(0, 0, 0, 0.1);
   --color-border-hover: rgba(160, 33, 254, 0.3);
+  --color-border-glass: rgba(255, 255, 255, 0.6);
+  
+  /* Gradients */
+  --gradient-purple-pink: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  --gradient-blue-cyan: linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%);
+  --gradient-orange-red: linear-gradient(135deg, #F97316 0%, #EF4444 100%);
+  --gradient-green-emerald: linear-gradient(135deg, #10B981 0%, #14B8A6 100%);
+  --gradient-yellow-orange: linear-gradient(135deg, #FBBF24 0%, #F97316 100%);
+  --gradient-violet-purple: linear-gradient(135deg, #A78BFA 0%, #C084FC 100%);
+  --gradient-outer-bg: linear-gradient(135deg, #E8EAF0 0%, #D1D5E0 50%, #C9CDE0 100%);
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --glass-container-bg: rgba(255, 255, 255, 0.85);
+  --glass-sidebar-bg: rgba(255, 255, 255, 0.4);
   
   /* Fonts */
   --font-sans: var(--font-dm-sans);
   --font-mono: var(--font-space-mono);
   
-  /* Legacy compatibility - map to new system */
+  /* Legacy compatibility */
   --color-background: var(--color-bg-deepest);
   --color-foreground: var(--color-text-primary);
   --color-card: var(--color-bg-surface);
@@ -68,14 +86,17 @@
   --color-input: var(--color-bg-surface);
   --color-ring: var(--color-accent-primary);
   
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 10px;
-  --radius-xl: 12px;
+  /* Updated radius scale */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-container: 32px;
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 }
 
 @layer base {
@@ -83,9 +104,15 @@
     @apply border-border outline-ring/50;
   }
   
+  html {
+    background: linear-gradient(135deg, #E8EAF0 0%, #D1D5E0 50%, #C9CDE0 100%);
+    min-height: 100vh;
+  }
+  
   body {
-    @apply bg-white text-text-primary font-sans antialiased;
+    @apply text-text-primary font-sans antialiased;
     font-weight: 400;
+    background: transparent;
   }
   
   /* TipTap Editor - Already light theme */
@@ -291,4 +318,68 @@
 
 .animate-slide-in-left {
   animation: slide-in-left 0.3s ease-out;
+}
+
+/* =============================================
+   GLASSMORPHISM CARD SYSTEM
+   ============================================= */
+
+/* Base glass card — use for all interactive cards */
+.glass-card {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9));
+  background-origin: border-box;
+  background-clip: padding-box;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-image 0.15s ease;
+}
+
+/* Purple-Pink gradient border hover (Stats cards, primary actions) */
+.glass-card-purple-pink:hover {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+    linear-gradient(135deg, #8B5CF6, #EC4899);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-color: transparent;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.2);
+}
+
+/* Blue-Cyan gradient border hover (SmartBrief) */
+.glass-card-blue-cyan:hover {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+    linear-gradient(135deg, #3B82F6, #06B6D4);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-color: transparent;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(59, 130, 246, 0.2);
+}
+
+/* Orange-Red gradient border hover (NFL Odds) */
+.glass-card-orange-red:hover {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+    linear-gradient(135deg, #F97316, #EF4444);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-color: transparent;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(249, 115, 22, 0.2);
+}
+
+/* Green-Emerald gradient border hover (Project cards) */
+.glass-card-green-emerald:hover {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+    linear-gradient(135deg, #10B981, #14B8A6);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-color: transparent;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.2);
 }
