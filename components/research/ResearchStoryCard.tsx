@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, ExternalLink, AlertTriangle } from 'lucide-react';
+import { Bookmark, CheckCircle2, ExternalLink, AlertTriangle } from 'lucide-react';
 import type { ResearchStory } from '@/types';
 
 interface ResearchStoryCardProps {
@@ -30,13 +30,15 @@ export function ResearchStoryCard({ story, selected, onToggleSelect }: ResearchS
           <button
             type="button"
             onClick={() => onToggleSelect?.(story.id)}
-            className="mt-0.5 shrink-0 rounded border border-border-subtle w-5 h-5 flex items-center justify-center transition-colors hover:bg-bg-hover"
-            title={selected ? 'Deselect' : 'Use as reference'}
+            className="mt-0.5 shrink-0 rounded border border-border-subtle w-8 h-8 flex items-center justify-center transition-colors hover:bg-bg-hover"
+            title={selected ? 'Deselect (remove from reference)' : 'Select as reference'}
             aria-pressed={selected}
           >
             {selected ? (
-              <CheckCircle2 className="w-3 h-3 text-accent-primary" />
-            ) : null}
+              <Bookmark className="w-4 h-4 text-accent-primary fill-accent-primary" />
+            ) : (
+              <Bookmark className="w-4 h-4 text-text-tertiary" />
+            )}
           </button>
           <div className="flex-1 min-w-0">
             <button

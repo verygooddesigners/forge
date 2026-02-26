@@ -8,7 +8,6 @@ import {
   Plus,
   FileText,
   BookOpen,
-  TrendingUp,
   Calendar,
   BarChart3,
   Sparkles,
@@ -246,23 +245,6 @@ export function DashboardHome({ user }: DashboardHomeProps) {
             </div>
           </button>
 
-          <button
-            className="glass-card glass-card-orange-red p-8 cursor-pointer text-left flex flex-col gap-5"
-            onClick={() => router.push('/nfl-odds')}
-          >
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-[0_8px_16px_rgba(0,0,0,0.1)]"
-              style={{ background: 'linear-gradient(135deg, #F97316 0%, #EF4444 100%)' }}
-            >
-              <TrendingUp className="w-7 h-7" />
-            </div>
-            <div>
-              <h3 className="text-[18px] font-bold mb-2">Extract NFL Odds</h3>
-              <p className="text-[14px] text-text-tertiary leading-relaxed">
-                Pull and format live NFL odds data into ready-to-publish content.
-              </p>
-            </div>
-          </button>
         </div>
       </div>
 

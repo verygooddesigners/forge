@@ -64,11 +64,11 @@ As this is a major change, I think we need to make a new branch for developing i
 #### **6. Creative Feature Agents (Optional, Modular Add-ons)**
    - **Role:**
      - Specialized content creation features including blog post ideas, visual content alignment, multimedia integrations.
-     - NFL Odds Extractor: Coordinate between Visual Data Extraction Agent and Content Generation Agent to build weekly NFL odds articles.
+     - Visual Extraction can coordinate with Content Generation for image-to-article workflows when needed.
    - **Model:**
      - For Blog Ideas: Claude Sonnet 4 or GPT-4o.
      - For Visual Content Alignments: OpenAI Whisper or Adobe tools for media.
-     - For NFL Odds Orchestration: Claude Sonnet 4 (coordinates data extraction → content generation workflow).
+     - For orchestration: Claude Sonnet 4 (coordinates data extraction → content generation when needed).
 
 #### **7. Visual Data Extraction Agent**
    - **Role:**

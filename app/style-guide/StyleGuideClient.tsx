@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Image from 'next/image';
 import {
   Copy, Check, Home, FileText, BookOpen, Sparkles,
-  Plus, TrendingUp, Calendar, BarChart3, CheckCircle2,
+  Plus, Calendar, BarChart3, CheckCircle2,
   AlertCircle, Loader2
 } from 'lucide-react';
 
@@ -288,16 +288,6 @@ export default function StyleGuideClient() {
               </p>
             </Card>
 
-            <Card className="p-6 cursor-pointer relative overflow-hidden group hover:translate-y-0">
-              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-success to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="w-11 h-11 rounded-[10px] bg-success-muted flex items-center justify-center text-success mb-4">
-                <TrendingUp className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-semibold mb-1.5">Extract NFL Odds</h3>
-              <p className="text-[13px] text-text-tertiary leading-relaxed">
-                Upload screenshots to auto-generate betting content
-              </p>
-            </Card>
           </div>
         </section>
 

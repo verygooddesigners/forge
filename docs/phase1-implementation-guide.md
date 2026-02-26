@@ -25,7 +25,6 @@ This document contains everything needed to implement the Multi-Agent System tra
 
 ### What We're NOT Building (Phase 2)
 
-- NFL Odds Extractor feature
 - Export modal
 - Image upload system
 - Visual Data Extraction workflows
@@ -594,8 +593,6 @@ Output content in clean HTML suitable for TipTap editor:
 - `docs/multi-model-transition.md` - Agent architecture overview
 - `docs/api-key-setup-guide.md` - API key configuration
 - `docs/ai-models-api-requirements.md` - Model costs and requirements
-- `docs/nfl-odds-extractor-feature.md` - Phase 2 feature (not in this phase)
-- `docs/max-feature-user-story.md` - NFL Odds user story (Phase 2)
 
 ---
 

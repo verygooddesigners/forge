@@ -24,7 +24,6 @@ export function AdminPageWrapper({ user }: AdminPageWrapperProps) {
         onOpenProjects={() => router.push('/dashboard')}
         onOpenSmartBriefs={() => router.push('/dashboard')}
         onOpenWriterFactory={() => router.push('/dashboard')}
-        onOpenNFLOdds={() => router.push('/dashboard')}
         projectCount={0}
       />
 

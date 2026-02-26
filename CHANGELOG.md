@@ -4,6 +4,13 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.12] - 2026-02-26
+
+### Improvements
+- Research stories: orchestrator returns partial results (verify/keywords/synopsis wrapped in try-catch so stories always saved); fallback to project.research_brief when project_research.stories empty; save research_brief to projects when project_research update fails; RightSidebar fetches research_brief when stories empty.
+- Editor: TipTap normalizes empty/invalid content to valid doc so no "Unknown node type" when content is {}.
+- Research UI: Replace inline story list with "View / Select Reference Sources" button; large modal with instructions and story grid; selection icon on cards changed from checkmark to bookmark (filled when selected).
+
 ## [1.10.11] - 2026-02-26
 
 ### Bug fix

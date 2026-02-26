@@ -45,7 +45,6 @@ export default function UserGuidePage() {
     { id: 'writer-factory', title: 'Writer Factory', icon: Sparkles },
     { id: 'brief-builder', title: 'SmartBrief Builder', icon: FileText },
     { id: 'creating-projects', title: 'Creating Projects', icon: Target },
-    { id: 'nfl-odds-extractor', title: 'NFL Odds Extractor', icon: Target },
     { id: 'seo-package', title: 'Understanding SEO Package', icon: Target },
     { id: 'research-story', title: 'Research Pipeline & Fact Verification', icon: Search },
     { id: 'seo-wizard', title: 'SEO Wizard Tools', icon: Zap },
@@ -1083,113 +1082,6 @@ export default function UserGuidePage() {
             open a panel where you can change the project name, description, headline, primary keyword, writer 
             model, and SmartBrief without leaving the editor.
           </p>
-        </div>
-      ),
-    },
-
-    'nfl-odds-extractor': {
-      title: 'NFL Odds Extractor',
-      content: (
-        <div className="space-y-6">
-          <p className="text-lg leading-relaxed">
-            The NFL Odds Extractor is a powerful automation tool that transforms weekly NFL schedule and odds 
-            data from screenshots into fully-formatted articles. This feature saves 25+ minutes per week and 
-            eliminates transcription errors.
-          </p>
-
-          <div className="bg-success-muted border-l-4 border-success p-5 rounded-r-lg">
-            <p className="text-sm font-medium text-text-primary mb-2">⏱️ Time Savings</p>
-            <p className="text-sm text-text-secondary">
-              <strong>Manual Process:</strong> 30+ minutes per week<br />
-              <strong>With NFL Odds Extractor:</strong> 3-5 minutes per week<br />
-              <strong>Annual Savings:</strong> ~21.5 hours (52 weeks)
-            </p>
-          </div>
-
-          <h3 className="text-xl font-semibold mt-8 mb-4">How It Works</h3>
-
-          <div className="space-y-4">
-            <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 1: Access the Feature</h4>
-              <p className="text-muted-foreground leading-relaxed">
-                Click <strong>NFL Odds Extractor</strong> in the dashboard sidebar (look for the trending up icon).
-              </p>
-            </div>
-
-            <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 2: Upload Screenshots</h4>
-              <p className="text-muted-foreground leading-relaxed">
-                Upload two screenshots:
-              </p>
-              <ul className="mt-2 space-y-1 ml-4">
-                <li>• <strong>ESPN Schedule:</strong> Screenshot of NFL weekly schedule with dates, times, locations</li>
-                <li>• <strong>RotoWire Odds:</strong> Screenshot of DraftKings odds matrix with spreads, moneylines, over/under</li>
-              </ul>
-            </div>
-
-            <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 3: Configure Week Details</h4>
-              <p className="text-muted-foreground leading-relaxed">
-                Enter the week number (1-18) and season year. Optionally add a custom headline, or let the 
-                system auto-generate one.
-              </p>
-            </div>
-
-            <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 4: Extract & Generate</h4>
-              <p className="text-muted-foreground leading-relaxed">
-                Click <strong>Extract & Generate</strong>. The Visual Extraction Agent processes both images, 
-                extracts all data (teams, dates, odds, locations), and generates a complete article with 
-                structured tables.
-              </p>
-            </div>
-
-            <div className="border-l-4 border-primary pl-6 py-2">
-              <h4 className="font-semibold text-lg mb-2">Step 5: Edit & Publish</h4>
-              <p className="text-muted-foreground leading-relaxed">
-                The generated article opens in the editor with all matchup tables populated. Add your 
-                predictions and analysis, then export when ready.
-              </p>
-            </div>
-          </div>
-
-          <h3 className="text-xl font-semibold mt-8 mb-4">What Gets Generated</h3>
-
-          <div className="space-y-3">
-            <div className="border border-border-default rounded-lg p-4">
-              <h4 className="font-semibold mb-2">Matchup List</h4>
-              <p className="text-sm text-muted-foreground">
-                A simple list of all matchups (e.g., "Lions vs Packers") for copying into your tracking spreadsheet.
-              </p>
-            </div>
-
-            <div className="border border-border-default rounded-lg p-4">
-              <h4 className="font-semibold mb-2">Individual Matchup Sections</h4>
-              <p className="text-sm text-muted-foreground">
-                For each game, generates an H2 heading, odds table (7 rows with matchup, spread, moneyline, 
-                over/under, date, location, last verified), prediction section (blank), and picks section 
-                with placeholders.
-              </p>
-            </div>
-
-            <div className="border border-border-default rounded-lg p-4">
-              <h4 className="font-semibold mb-2">Opening Odds Summary Table</h4>
-              <p className="text-sm text-muted-foreground">
-                A comprehensive table showing all matchups with opening spreads for tracking line movement.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-[rgba(59,130,246,0.15)] border-l-4 border-[#3b82f6] p-5 rounded-r-lg mt-6">
-            <p className="text-sm font-medium text-text-primary mb-2">💡 Pro Tips</p>
-            <ul className="text-sm text-text-secondary space-y-2">
-              <li>• Take screenshots at the same size/zoom level each week for consistency</li>
-              <li>• Ensure text in screenshots is clear and readable</li>
-              <li>• The AI handles various screenshot qualities, but clearer is better</li>
-              <li>• Replace all "X" placeholders in picks sections with your predictions</li>
-              <li>• Use the standard editor features to add analysis to prediction sections</li>
-            </ul>
-          </div>
         </div>
       ),
     },

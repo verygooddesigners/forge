@@ -360,7 +360,7 @@
   box-shadow: 0 12px 32px rgba(59, 130, 246, 0.2);
 }
 
-/* Orange-Red gradient border hover (NFL Odds) */
+/* Orange-Red gradient border hover */
 .glass-card-orange-red:hover {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),

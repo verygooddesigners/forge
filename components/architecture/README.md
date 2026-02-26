@@ -31,9 +31,8 @@ Select predefined workflows to highlight the data flow:
 
 1. **Article Generation** - Complete content creation flow
 2. **Writer Model Training** - AI model training process
-3. **NFL Odds Extraction** - Screenshot to article workflow
-4. **SEO Optimization** - Real-time SEO analysis
-5. **Research & Fact Verification** - News search and fact checking
+3. **SEO Optimization** - Real-time SEO analysis
+4. **Research & Fact Verification** - News search and fact checking
 
 When a workflow is selected, relevant nodes and edges are highlighted in color while others are dimmed.
 
@@ -52,23 +51,21 @@ Click any node to see:
 
 ## Components Visualized
 
-### Frontend (8 components)
+### Frontend (7 components)
 - Dashboard
 - Content Editor
 - SmartBrief Builder
 - Writer Factory
-- NFL Odds Extractor
 - Research Center
 - Admin Panel
 - AI Helper Bot
 
-### API Layer (9 endpoints)
+### API Layer (8 endpoints)
 - `/api/generate` - Content generation
 - `/api/research/*` - News search & fact verification
 - `/api/seo/*` - SEO analysis & optimization
 - `/api/writer-models/train` - Model training
 - `/api/briefs/analyze-urls` - SmartBrief URL analysis
-- `/api/nfl-odds/extract` - Visual data extraction
 - `/api/assistant/chat` - AI Helper Bot
 - `/api/admin/*` - Admin management
 - `/api/auth/*` - Authentication

@@ -14,7 +14,7 @@ Forge is transitioning from a single-AI-model architecture to a specialized mult
 - **Key Needed:** `CLAUDE_API_KEY` or `ANTHROPIC_API_KEY`
 - **Purpose:** Generate high-quality articles with proper structure, tables, headers, and SEO optimization
 - **Why This Model:** Superior creative writing, excellent structured content formatting, best-in-class reasoning
-- **Usage:** Every content generation request, NFL odds article building
+- **Usage:** Every content generation request
 - **Cost:** ~$3 per 1M input tokens, ~$15 per 1M output tokens
 
 ### 2. Writer Model & Training Agent
@@ -76,7 +76,7 @@ Forge is transitioning from a single-AI-model architecture to a specialized mult
 
 - **API:** Anthropic API
 - **Key Needed:** Already covered by Claude key above
-- **Purpose:** Coordinate between Visual Data Extraction and Content Generation for NFL odds articles
+- **Purpose:** Coordinate between Visual Data Extraction and Content Generation where needed
 - **Why This Model:** Excellent at multi-step workflows and data transformation
 - **Usage:** Smart Odds Capture workflow coordination
 - **Cost:** Included in Claude API usage

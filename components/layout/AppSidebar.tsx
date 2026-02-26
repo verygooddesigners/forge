@@ -29,7 +29,6 @@ interface AppSidebarProps {
   onOpenProjects?: () => void;
   onOpenSmartBriefs?: () => void;
   onOpenWriterFactory?: () => void;
-  onOpenNFLOdds?: () => void;
   projectCount?: number;
   collapsed?: boolean;
   onToggleCollapse?: () => void;

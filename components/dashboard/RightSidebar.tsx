@@ -5,11 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Newspaper, TrendingUp, RefreshCw } from 'lucide-react';
+import { Newspaper, TrendingUp, RefreshCw, BookOpen } from 'lucide-react';
 import { NewsArticle, Project, Brief } from '@/types';
 import type { ProjectResearch, ResearchStory } from '@/types';
 import { NewsCard } from './NewsCard';
 import { ResearchStoryCard } from '@/components/research/ResearchStoryCard';
+import { ResearchStoriesModal } from '@/components/research/ResearchStoriesModal';
 import { SEOOptimizationSidebar } from './SEOOptimizationSidebar';
 import { createClient } from '@/lib/supabase/client';
 
@@ -34,6 +35,7 @@ export function RightSidebar({
   const [project, setProject] = useState<Project | null>(null);
   const [brief, setBrief] = useState<Brief | null>(null);
   const [projectResearch, setProjectResearch] = useState<ProjectResearch | null>(null);
+  const [researchModalOpen, setResearchModalOpen] = useState(false);
   const researchRetryRef = useRef(false);
   const supabase = createClient();
 
@@ -54,11 +56,11 @@ export function RightSidebar({
     if (hasStories) return;
     const t = setTimeout(async () => {
       researchRetryRef.current = true;
-      const { data } = await supabase
-        .from('project_research')
-        .select('*')
-        .eq('project_id', projectId)
-        .single();
+      const [researchRes, briefRes] = await Promise.all([
+        supabase.from('project_research').select('*').eq('project_id', projectId).single(),
+        supabase.from('projects').select('research_brief').eq('id', projectId).single(),
+      ]);
+      const data = researchRes.data;
       if (!data) return;
       const raw = data.stories;
       let stories: ResearchStory[] = Array.isArray(raw) ? (raw as ResearchStory[]) : [];
@@ -68,6 +70,18 @@ export function RightSidebar({
           stories = Array.isArray(parsed) ? (parsed as ResearchStory[]) : [];
         } catch {
           stories = [];
+        }
+      }
+      if (stories.length === 0 && (data.status === 'completed' || data.status === 'failed')) {
+        const articles = (briefRes.data?.research_brief as any)?.articles;
+        if (Array.isArray(articles) && articles.length > 0) {
+          stories = articles.map((a: any, i: number) => ({
+            ...a,
+            id: a.id || `art-${i}`,
+            synopsis: a.synopsis || a.description?.slice(0, 150),
+            is_selected: i < 5,
+            verification_status: (a.verification_status as ResearchStory['verification_status']) || 'pending',
+          }));
         }
       }
       if (stories.length > 0) {
@@ -118,7 +132,10 @@ export function RightSidebar({
         console.error('Error loading project:', projectError);
       }
 
-      const { data: research } = researchRes;
+      const { data: research, error: researchError } = researchRes;
+      if (researchError && researchError.code !== 'PGRST116') {
+        console.error('[RightSidebar] project_research load error', researchError);
+      }
       if (research) {
         let stories: ResearchStory[] = [];
         const raw = research.stories;
@@ -131,16 +148,37 @@ export function RightSidebar({
           } catch {
             stories = [];
           }
+        } else if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+          stories = Object.values(raw) as ResearchStory[];
         }
-        if (stories.length === 0 && research.status === 'completed' && projectData?.research_brief?.articles) {
-          const articles = projectData.research_brief.articles as ResearchStory[];
-          stories = articles.map((a: any, i: number) => ({
-            ...a,
-            id: a.id || `art-${i}`,
-            synopsis: a.synopsis || a.description?.slice(0, 150),
-            is_selected: i < 5,
-            verification_status: (a.verification_status as ResearchStory['verification_status']) || 'pending',
-          }));
+        if (stories.length === 0 && (research.status === 'completed' || research.status === 'failed')) {
+          const briefSource = projectData?.research_brief?.articles;
+          if (briefSource && Array.isArray(briefSource) && briefSource.length > 0) {
+            stories = briefSource.map((a: any, i: number) => ({
+              ...a,
+              id: a.id || `art-${i}`,
+              synopsis: a.synopsis || a.description?.slice(0, 150),
+              is_selected: i < 5,
+              verification_status: (a.verification_status as ResearchStory['verification_status']) || 'pending',
+            }));
+          }
+        }
+        if (stories.length === 0 && (research.status === 'completed' || research.status === 'failed')) {
+          const { data: briefRow } = await supabase
+            .from('projects')
+            .select('research_brief')
+            .eq('id', projectId)
+            .single();
+          const articles = (briefRow?.research_brief as any)?.articles;
+          if (Array.isArray(articles) && articles.length > 0) {
+            stories = articles.map((a: any, i: number) => ({
+              ...a,
+              id: a.id || `art-${i}`,
+              synopsis: a.synopsis || a.description?.slice(0, 150),
+              is_selected: i < 5,
+              verification_status: (a.verification_status as ResearchStory['verification_status']) || 'pending',
+            }));
+          }
         }
         setProjectResearch({
           ...research,
@@ -200,31 +238,46 @@ export function RightSidebar({
 
   return (
     <div className="w-80 flex flex-col gap-3">
-      {/* Research: story cards from project_research */}
+      {/* Research: button opens modal with story selection */}
       {projectId && (
-        <Card className="bg-bg-surface border-border-subtle shadow-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Research</CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            {!projectResearch ? (
-              <p className="text-xs text-text-tertiary">No research yet for this project.</p>
-            ) : projectResearch.stories.length === 0 ? (
-              <p className="text-xs text-text-tertiary">No stories found.</p>
-            ) : (
-              <div className="space-y-2 max-h-80 overflow-y-auto">
-                {projectResearch.stories.map((story) => (
-                  <ResearchStoryCard
-                    key={story.id}
-                    story={story}
-                    selected={projectResearch.selected_story_ids?.includes(story.id)}
-                    onToggleSelect={toggleStorySelection}
-                  />
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <>
+          <Card className="bg-bg-surface border-border-subtle shadow-lg">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Research</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0 space-y-3">
+              {!projectResearch ? (
+                <p className="text-xs text-text-tertiary">No research yet for this project.</p>
+              ) : projectResearch.stories.length === 0 ? (
+                <p className="text-xs text-text-tertiary">No stories found.</p>
+              ) : (
+                <>
+                  <p className="text-xs text-text-secondary">
+                    Choose which research stories to use as reference when generating content. Selected sources are passed to the AI for context.
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full justify-start gap-2"
+                    onClick={() => setResearchModalOpen(true)}
+                  >
+                    <BookOpen className="w-4 h-4 shrink-0" />
+                    View / Select Reference Sources
+                  </Button>
+                  <p className="text-[10px] text-text-tertiary">
+                    {projectResearch.stories.length} story{projectResearch.stories.length !== 1 ? 'ies' : ''} · {projectResearch.selected_story_ids?.length ?? 0} selected
+                  </p>
+                </>
+              )}
+            </CardContent>
+          </Card>
+          <ResearchStoriesModal
+            open={researchModalOpen}
+            onOpenChange={setResearchModalOpen}
+            projectResearch={projectResearch}
+            onToggleStorySelection={toggleStorySelection}
+          />
+        </>
       )}
 
       {/* SEO Wizard */}

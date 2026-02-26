@@ -43,7 +43,6 @@ export function DashboardPageClient({ user }: DashboardPageClientProps) {
         onOpenProjects={() => router.push('/projects')}
         onOpenSmartBriefs={() => router.push('/smartbriefs')}
         onOpenWriterFactory={() => router.push('/writer-factory')}
-        onOpenNFLOdds={() => router.push('/nfl-odds')}
       />
 
       <div

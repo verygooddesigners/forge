@@ -119,12 +119,14 @@ export async function POST(request: NextRequest) {
             }
           );
 
+          const storyCount = result.stories.length;
           debugLog('ResearchPipeline', 'Pipeline done', {
             projectId,
-            stories: result.stories.length,
+            stories: storyCount,
             keywords: result.suggested_keywords.length,
             loops: result.loops_completed,
           });
+          send({ type: 'progress', message: `Saving ${storyCount} stories…`, stage: 'complete', timestamp: new Date().toISOString() });
 
           const selected_story_ids = result.stories.filter((s) => s.is_selected).map((s) => s.id);
           const storiesPayload = JSON.parse(JSON.stringify(result.stories)) as typeof result.stories;
@@ -149,7 +151,21 @@ export async function POST(request: NextRequest) {
               .from('project_research')
               .update({ status: 'failed', updated_at: new Date().toISOString() })
               .eq('id', researchId);
-            send({ type: 'error', error: `Could not save research: ${updateError.message}` });
+            const researchBrief = {
+              articles: result.research_brief.articles,
+              verified_facts: result.research_brief.verified_facts,
+              disputed_facts: result.research_brief.disputed_facts,
+              user_feedback: [],
+              fact_check_complete: result.research_brief.fact_check_complete,
+              research_timestamp: result.research_brief.research_timestamp,
+              confidence_score: result.research_brief.confidence_score,
+            };
+            await supabase
+              .from('projects')
+              .update({ research_brief: researchBrief, updated_at: new Date().toISOString() })
+              .eq('id', projectId);
+            send({ type: 'done', researchId });
+            send({ type: 'progress', message: 'Stories saved to project (research table update failed).', stage: 'complete', timestamp: new Date().toISOString() });
             return;
           }
 

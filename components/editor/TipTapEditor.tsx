@@ -7,6 +7,14 @@ import CharacterCount from '@tiptap/extension-character-count';
 import { useEffect } from 'react';
 import { EditorToolbar } from './EditorToolbar';
 
+function normalizeContent(content: any): { type: 'doc'; content: any[] } {
+  const empty: { type: 'doc'; content: any[] } = { type: 'doc', content: [] };
+  if (content == null) return empty;
+  if (typeof content !== 'object' || content.type !== 'doc') return empty;
+  if (!Array.isArray(content.content)) return { type: 'doc', content: [] };
+  return { type: 'doc', content: content.content };
+}
+
 interface TipTapEditorProps {
   content: any;
   onChange: (content: any) => void;
@@ -40,6 +48,7 @@ export function TipTapEditor({
   userId,
   onProjectUpdate,
 }: TipTapEditorProps) {
+  const safeContent = normalizeContent(content);
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -52,7 +61,7 @@ export function TipTapEditor({
       }),
       CharacterCount,
     ],
-    content,
+    content: safeContent,
     editable,
     immediatelyRender: false,
     editorProps: {
@@ -73,8 +82,11 @@ export function TipTapEditor({
   });
 
   useEffect(() => {
-    if (editor && content && JSON.stringify(editor.getJSON()) !== JSON.stringify(content)) {
-      editor.commands.setContent(content);
+    if (!editor) return;
+    const next = normalizeContent(content);
+    const current = editor.getJSON();
+    if (current.type !== 'doc' || JSON.stringify(current) !== JSON.stringify(next)) {
+      editor.commands.setContent(next);
     }
   }, [content, editor]);
 

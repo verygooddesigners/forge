@@ -26,7 +26,6 @@ import {
   Edit2,
   Check,
   X,
-  TrendingUp,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -39,10 +38,9 @@ interface LeftSidebarProps {
   onOpenProjectModal: () => void;
   onOpenWriterFactory: () => void;
   onOpenBriefBuilder: () => void;
-  onOpenNFLOddsExtractor: () => void;
 }
 
-export function LeftSidebar({ user, projectId, onOpenProjectModal, onOpenWriterFactory, onOpenBriefBuilder, onOpenNFLOddsExtractor }: LeftSidebarProps) {
+export function LeftSidebar({ user, projectId, onOpenProjectModal, onOpenWriterFactory, onOpenBriefBuilder }: LeftSidebarProps) {
   const router = useRouter();
   const supabase = createClient();
   
@@ -393,16 +391,6 @@ export function LeftSidebar({ user, projectId, onOpenProjectModal, onOpenWriterF
         >
           <Wrench className="mr-3 h-5 w-5" />
           Writer Factory
-        </Button>
-        <Separator className="my-2" />
-        <Button 
-          variant="ghost" 
-          className="w-full justify-start" 
-          size="default"
-          onClick={onOpenNFLOddsExtractor}
-        >
-          <TrendingUp className="mr-3 h-5 w-5" />
-          NFL Odds Extractor
         </Button>
         {['super_admin', 'admin', 'manager', 'team_leader'].includes(user.role) && (
           <>

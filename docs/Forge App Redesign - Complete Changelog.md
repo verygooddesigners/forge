@@ -103,7 +103,6 @@ New gradients:
 
 Article (Plus): Purple-Pink linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)
 SmartBrief (Sparkles): Blue-Cyan linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)
-NFL Odds (TrendingUp): Orange-Red linear-gradient(135deg, #F97316 0%, #EF4444 100%)
 Base styling:
 
 Same glassmorphism as StatCard

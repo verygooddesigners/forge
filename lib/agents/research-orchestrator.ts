@@ -201,11 +201,18 @@ export async function runResearchPipeline(
 
     push('evaluate', 'Evaluating relevance and timeliness...');
     debugLog('ResearchOrchestrator', 'Evaluate', { inputArticles: allArticles.length });
-    const filtered = await evaluateResearchRelevance({
-      articles: allArticles,
-      headline,
-      topic: topic || undefined,
-    });
+    let filtered: ResearchArticle[];
+    try {
+      filtered = await evaluateResearchRelevance({
+        articles: allArticles,
+        headline,
+        topic: topic || undefined,
+      });
+    } catch (evalErr) {
+      debugLog('ResearchOrchestrator', 'Evaluate error (using all articles)', evalErr);
+      push('error', 'Relevance check had an issue; using all articles.');
+      filtered = allArticles;
+    }
     push('evaluate', `${filtered.length} articles passed relevance check`);
     debugLog('ResearchOrchestrator', 'Evaluate result', { filtered: filtered.length });
     if (filtered.length === 0) {
@@ -213,21 +220,34 @@ export async function runResearchPipeline(
       break;
     }
 
-    push('verify', 'Verifying facts across sources...');
-    debugLog('ResearchOrchestrator', 'Verify');
-    lastFactResult = await verifyFacts({
-      articles: filtered,
-      topic: headline,
-      context: topic || undefined,
-    });
-    push('verify', `Verification complete. Confidence: ${lastFactResult.confidence_score}`);
-    debugLog('ResearchOrchestrator', 'Verify result', {
-      confidence: lastFactResult.confidence_score,
-      verified: lastFactResult.verified_facts?.length ?? 0,
-      disputed: lastFactResult.disputed_facts?.length ?? 0,
-    });
+    try {
+      push('verify', 'Verifying facts across sources...');
+      debugLog('ResearchOrchestrator', 'Verify');
+      lastFactResult = await verifyFacts({
+        articles: filtered,
+        topic: headline,
+        context: topic || undefined,
+      });
+      push('verify', `Verification complete. Confidence: ${lastFactResult.confidence_score}`);
+      debugLog('ResearchOrchestrator', 'Verify result', {
+        confidence: lastFactResult.confidence_score,
+        verified: lastFactResult.verified_facts?.length ?? 0,
+        disputed: lastFactResult.disputed_facts?.length ?? 0,
+      });
+    } catch (verifyErr) {
+      debugLog('ResearchOrchestrator', 'Verify error (continuing)', verifyErr);
+      push('error', 'Verification had an issue; continuing with article list.');
+      lastFactResult = null;
+    }
 
-    const decision = await orchestratorDecision(lastFactResult, loopsCompleted + 1);
+    let decision: { done: boolean; followUpQuery?: string } = { done: true, followUpQuery: undefined };
+    if (lastFactResult) {
+      try {
+        decision = await orchestratorDecision(lastFactResult, loopsCompleted + 1);
+      } catch {
+        decision = { done: true, followUpQuery: undefined };
+      }
+    }
     loopsCompleted += 1;
     debugLog('ResearchOrchestrator', 'Decision', { done: decision.done, followUpQuery: decision.followUpQuery });
 
@@ -243,32 +263,40 @@ export async function runResearchPipeline(
     }
   }
 
-  push('keywords', 'Discovering keyword opportunities...');
-  debugLog('ResearchOrchestrator', 'Keywords');
-  const topicForSeo = [headline, primaryKeyword, ...secondaryKeywords].filter(Boolean).join(' ');
-  const keywordResponse = await generateKeywordSuggestions(topicForSeo, secondaryKeywords);
-  const suggested_keywords: SuggestedKeyword[] = [];
-  if (keywordResponse.success && keywordResponse.content) {
-    try {
-      const jsonMatch = keywordResponse.content.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        const parsed = JSON.parse(jsonMatch[0]);
-        const primary: string[] = parsed.primary || [];
-        const secondary: string[] = parsed.secondary || [];
-        const longTail: string[] = parsed.longTail || [];
-        primary.forEach((k: string) => suggested_keywords.push({ keyword: k, importance: 'high' as KeywordImportance }));
-        secondary.forEach((k: string) => suggested_keywords.push({ keyword: k, importance: 'medium' as KeywordImportance }));
-        longTail.forEach((k: string) => suggested_keywords.push({ keyword: k, importance: 'low' as KeywordImportance }));
-      }
-    } catch {
-      // ignore
-    }
-  }
-  debugLog('ResearchOrchestrator', 'Keywords result', { count: suggested_keywords.length });
+  let suggested_keywords: SuggestedKeyword[] = [];
+  let synopsisMap = new Map<string, string>();
 
-  const synopsisMap = await generateSynopses(allArticles, headline);
+  try {
+    push('keywords', 'Discovering keyword opportunities...');
+    debugLog('ResearchOrchestrator', 'Keywords');
+    const topicForSeo = [headline, primaryKeyword, ...secondaryKeywords].filter(Boolean).join(' ');
+    const keywordResponse = await generateKeywordSuggestions(topicForSeo, secondaryKeywords);
+    if (keywordResponse.success && keywordResponse.content) {
+      try {
+        const jsonMatch = keywordResponse.content.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          const primary: string[] = parsed.primary || [];
+          const secondary: string[] = parsed.secondary || [];
+          const longTail: string[] = parsed.longTail || [];
+          primary.forEach((k: string) => suggested_keywords.push({ keyword: k, importance: 'high' as KeywordImportance }));
+          secondary.forEach((k: string) => suggested_keywords.push({ keyword: k, importance: 'medium' as KeywordImportance }));
+          longTail.forEach((k: string) => suggested_keywords.push({ keyword: k, importance: 'low' as KeywordImportance }));
+        }
+      } catch {
+        // ignore
+      }
+    }
+    debugLog('ResearchOrchestrator', 'Keywords result', { count: suggested_keywords.length });
+
+    synopsisMap = await generateSynopses(allArticles, headline);
+  } catch (kwErr) {
+    debugLog('ResearchOrchestrator', 'Keywords/synopsis error (continuing with stories)', kwErr);
+    push('error', 'Keyword step had an issue; saving article list.');
+  }
+
   const stories: ResearchStory[] = allArticles
-    .sort((a, b) => b.relevance_score - a.relevance_score)
+    .sort((a, b) => (b.relevance_score ?? 0) - (a.relevance_score ?? 0))
     .slice(0, 15)
     .map((a, i) => ({
       ...a,

@@ -7,7 +7,6 @@ import { AppSidebar } from '../layout/AppSidebar';
 import { DashboardHome } from './DashboardHome';
 import { ProjectsPanel } from './ProjectsPanel';
 import { WriterFactoryPanel } from './WriterFactoryPanel';
-import { NFLOddsPanel } from './NFLOddsPanel';
 import { RightSidebar } from './RightSidebar';
 import { EditorPanel } from './EditorPanel';
 import { SmartBriefPanel } from './SmartBriefPanel';
@@ -18,7 +17,7 @@ interface DashboardLayoutProps {
   user: User;
 }
 
-type DashboardView = 'home' | 'projects' | 'writer-factory' | 'nfl-odds' | 'editor' | 'smartbriefs';
+type DashboardView = 'home' | 'projects' | 'writer-factory' | 'editor' | 'smartbriefs';
 
 export function DashboardLayout({ user }: DashboardLayoutProps) {
   const router = useRouter();
@@ -61,10 +60,6 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
     setActiveView('writer-factory');
   };
 
-  const handleOpenNFLOdds = () => {
-    setActiveView('nfl-odds');
-  };
-
   const handleBackToEditor = () => {
     setActiveView('editor');
   };
@@ -82,7 +77,6 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
           onOpenProjects={handleOpenProjects}
           onOpenSmartBriefs={handleOpenSmartBriefs}
           onOpenWriterFactory={handleOpenWriterFactory}
-          onOpenNFLOdds={handleOpenNFLOdds}
           projectCount={projectCount}
           collapsed={sidebarCollapsed}
           onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -101,11 +95,6 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
             />
           ) : activeView === 'writer-factory' ? (
             <WriterFactoryPanel user={user} />
-          ) : activeView === 'nfl-odds' ? (
-            <NFLOddsPanel 
-              user={user}
-              onProjectCreated={handleSelectProject}
-            />
           ) : activeView === 'smartbriefs' ? (
             <SmartBriefPanel user={user} onBack={handleBackToHome} />
           ) : (
