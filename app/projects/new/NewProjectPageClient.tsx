@@ -24,6 +24,7 @@ import { WriterModel, Brief, Project } from '@/types';
 import { Plus, Loader2, FileText, BookOpen } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
 import { debugLog } from '@/lib/debug-log';
+import { toast } from 'sonner';
 
 // ----- TipTap content to read-only JSX (small font, for preview) -----
 function renderTipTapNode(node: any, key: number): React.ReactNode {
@@ -205,19 +206,26 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
         .select()
         .single();
 
-      if (!error && data) {
-        const redirect = `/dashboard?project=${data.id}&model=${data.writer_model_id}&research=true`;
-        debugLog('ProjectCreate', 'Project created', { projectId: data.id, redirect });
-        trackEvent(supabase, userId, 'project_created', data.id, 'project', {
-          word_count_target: parseInt(wordCount, 10) || 800,
-        });
-        router.push(redirect);
-      } else if (error) {
+      if (error) {
         debugLog('ProjectCreate', 'Insert error', error.message);
+        toast.error(error.message || 'Failed to create project');
+        return;
       }
+      if (!data?.id) {
+        debugLog('ProjectCreate', 'No project returned', { data, error });
+        toast.error('Project was created but something went wrong. Try opening the dashboard.');
+        return;
+      }
+      const redirect = `/dashboard?project=${data.id}&model=${data.writer_model_id}&research=true`;
+      debugLog('ProjectCreate', 'Project created', { projectId: data.id, redirect });
+      trackEvent(supabase, userId, 'project_created', data.id, 'project', {
+        word_count_target: parseInt(wordCount, 10) || 800,
+      });
+      router.push(redirect);
     } catch (err) {
       debugLog('ProjectCreate', 'Error', err);
       console.error('Error creating project:', err);
+      toast.error(err instanceof Error ? err.message : 'Failed to create project');
     } finally {
       setLoading(false);
     }

@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.06] - 2026-02-26
+
+### Bug fix
+- New project Create: show toast on insert error or missing response so user sees why research mode never starts; handle no-data case and catch block.
+
 ## [1.10.05] - 2026-02-26
 
 ### Bug fix
