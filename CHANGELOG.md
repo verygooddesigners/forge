@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.08] - 2026-02-26
+
+### Improvement
+- New project Create: save optional description again now that projects.description column exists (migration applied).
+
 ## [1.10.07] - 2026-02-26
 
 ### Bug fix
