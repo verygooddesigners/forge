@@ -194,7 +194,6 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
           user_id: userId,
           headline: headline.trim(),
           file_name: projectName.trim() || headline.trim(),
-          description: projectDescription.trim() || null,
           primary_keyword: primaryKeyword.trim(),
           secondary_keywords: secondaryKeywords,
           topic: topic.trim() || null,

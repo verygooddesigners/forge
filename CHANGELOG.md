@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.07] - 2026-02-26
+
+### Bug fix
+- New project Create: stop sending `description` in insert so it works when projects table has no description column (run migration 00020 to add column and persist description).
+
 ## [1.10.06] - 2026-02-26
 
 ### Bug fix
