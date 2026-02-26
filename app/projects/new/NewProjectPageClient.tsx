@@ -157,7 +157,8 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
   const addSecondaryKeyword = () => {
     const raw = secondaryKeywordInput.trim();
     if (!raw) return;
-    const parts = raw.split(/[\s,]+/).filter(Boolean);
+    // Split only on commas so multi-word keywords stay together
+    const parts = raw.split(',').map((p) => p.trim()).filter(Boolean);
     const added = parts.filter((p) => !secondaryKeywords.includes(p));
     if (added.length) setSecondaryKeywords((prev) => [...prev, ...added]);
     setSecondaryKeywordInput('');

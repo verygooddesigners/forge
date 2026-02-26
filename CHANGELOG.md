@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.05] - 2026-02-26
+
+### Bug fix
+- New project: secondary keywords no longer split on spaces; only commas separate keywords so multi-word phrases (e.g. "fantasy football") stay as one.
+
 ## [1.10.04] - 2026-02-26
 
 ### Bug fix
