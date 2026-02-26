@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.10] - 2026-02-26
+
+### Bug fix
+- Research Hub: do not navigate to editor when pipeline sends error (e.g. "No articles found"); forward orchestrator error events as type 'error'; add "Continue to editor" when research fails so user is not stuck.
+
 ## [1.10.09] - 2026-02-26
 
 ### Bug fix

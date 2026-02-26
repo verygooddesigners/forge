@@ -111,7 +111,11 @@ export async function POST(request: NextRequest) {
               additionalDetails: additionalDetails || '',
             },
             (event) => {
-              send({ type: 'progress', message: event.message, timestamp: event.timestamp });
+              if (event.type === 'error') {
+                send({ type: 'error', error: event.message });
+              } else {
+                send({ type: 'progress', message: event.message, stage: event.type, timestamp: event.timestamp });
+              }
             }
           );
 

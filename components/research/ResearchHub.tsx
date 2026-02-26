@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Search, CheckCircle2, AlertCircle, Loader2, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { debugLog } from '@/lib/debug-log';
 import type { OrchestratorLogType } from '@/types';
 
@@ -31,6 +32,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
   const [error, setError] = useState<string | null>(null);
   const [started, setStarted] = useState(false);
   const completedRef = useRef(false);
+  const errorRef = useRef(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -95,7 +97,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
           const payload = line.slice(6).trim();
           if (payload === '[DONE]') {
             debugLog('ResearchHub', 'SSE [DONE]');
-            if (!completedRef.current) {
+            if (!completedRef.current && !errorRef.current) {
               completedRef.current = true;
               onComplete();
             }
@@ -112,7 +114,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
             }
             if (data.type === 'done') {
               debugLog('ResearchHub', 'done', data);
-              if (!completedRef.current) {
+              if (!completedRef.current && !errorRef.current) {
                 completedRef.current = true;
                 onComplete();
               }
@@ -120,6 +122,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
             }
             if (data.type === 'error') {
               debugLog('ResearchHub', 'error', data.error);
+              errorRef.current = true;
               setError(data.error || 'Research failed');
             }
           } catch {
@@ -194,8 +197,23 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
         </div>
 
         <p className="text-xs text-center text-text-tertiary">
-          This usually takes 60–120 seconds. You&apos;ll be taken to the editor when research is complete.
+          {error
+            ? 'Research could not find enough content. You can continue to the editor anyway.'
+            : "This usually takes 60–120 seconds. You'll be taken to the editor when research is complete."}
         </p>
+        {error && (
+          <Button
+            onClick={() => {
+              if (!completedRef.current) {
+                completedRef.current = true;
+                onComplete();
+              }
+            }}
+            className="w-full"
+          >
+            Continue to editor
+          </Button>
+        )}
       </div>
     </div>
   );
