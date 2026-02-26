@@ -59,10 +59,21 @@ export function RightSidebar({
         .select('*')
         .eq('project_id', projectId)
         .single();
-      if (data && Array.isArray(data.stories) && data.stories.length > 0) {
+      if (!data) return;
+      const raw = data.stories;
+      let stories: ResearchStory[] = Array.isArray(raw) ? (raw as ResearchStory[]) : [];
+      if (stories.length === 0 && typeof raw === 'string') {
+        try {
+          const parsed = JSON.parse(raw);
+          stories = Array.isArray(parsed) ? (parsed as ResearchStory[]) : [];
+        } catch {
+          stories = [];
+        }
+      }
+      if (stories.length > 0) {
         setProjectResearch({
           ...data,
-          stories: (data.stories as ResearchStory[]) || [],
+          stories,
           suggested_keywords: data.suggested_keywords || [],
           selected_story_ids: data.selected_story_ids || [],
           selected_keywords: data.selected_keywords || [],
@@ -109,10 +120,31 @@ export function RightSidebar({
 
       const { data: research } = researchRes;
       if (research) {
-        const stories = Array.isArray(research.stories) ? research.stories : [];
+        let stories: ResearchStory[] = [];
+        const raw = research.stories;
+        if (Array.isArray(raw)) {
+          stories = raw as ResearchStory[];
+        } else if (typeof raw === 'string') {
+          try {
+            const parsed = JSON.parse(raw);
+            stories = Array.isArray(parsed) ? (parsed as ResearchStory[]) : [];
+          } catch {
+            stories = [];
+          }
+        }
+        if (stories.length === 0 && research.status === 'completed' && projectData?.research_brief?.articles) {
+          const articles = projectData.research_brief.articles as ResearchStory[];
+          stories = articles.map((a: any, i: number) => ({
+            ...a,
+            id: a.id || `art-${i}`,
+            synopsis: a.synopsis || a.description?.slice(0, 150),
+            is_selected: i < 5,
+            verification_status: (a.verification_status as ResearchStory['verification_status']) || 'pending',
+          }));
+        }
         setProjectResearch({
           ...research,
-          stories: (stories as ResearchStory[]) || [],
+          stories,
           suggested_keywords: research.suggested_keywords || [],
           selected_story_ids: research.selected_story_ids || [],
           selected_keywords: research.selected_keywords || [],

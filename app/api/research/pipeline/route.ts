@@ -127,11 +127,12 @@ export async function POST(request: NextRequest) {
           });
 
           const selected_story_ids = result.stories.filter((s) => s.is_selected).map((s) => s.id);
+          const storiesPayload = JSON.parse(JSON.stringify(result.stories)) as typeof result.stories;
 
-          await supabase
+          const { error: updateError } = await supabase
             .from('project_research')
             .update({
-              stories: result.stories,
+              stories: storiesPayload,
               suggested_keywords: result.suggested_keywords,
               selected_story_ids,
               selected_keywords: [],
@@ -141,6 +142,16 @@ export async function POST(request: NextRequest) {
               updated_at: new Date().toISOString(),
             })
             .eq('id', researchId);
+
+          if (updateError) {
+            debugLog('ResearchPipeline', 'project_research update failed', updateError.message);
+            await supabase
+              .from('project_research')
+              .update({ status: 'failed', updated_at: new Date().toISOString() })
+              .eq('id', researchId);
+            send({ type: 'error', error: `Could not save research: ${updateError.message}` });
+            return;
+          }
 
           const researchBrief = {
             articles: result.research_brief.articles,

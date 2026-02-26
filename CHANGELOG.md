@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.11] - 2026-02-26
+
+### Bug fix
+- Research stories empty in sidebar: pipeline now checks project_research update result and sends error if save fails; serialize stories as plain JSON for Supabase; RightSidebar fallback uses project.research_brief.articles when project_research.stories is empty; parse stories when Supabase returns JSONB as string.
+
 ## [1.10.10] - 2026-02-26
 
 ### Bug fix
