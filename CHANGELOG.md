@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.04] - 2026-02-26
+
+### Bug fix
+- Fix Vercel build: wrap Supabase promise in Promise.resolve() so .finally() is valid (PromiseLike has no finally in strict TS).
+
 ## [1.10.03] - 2026-02-26
 
 ### Improvements

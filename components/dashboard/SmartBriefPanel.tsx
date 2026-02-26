@@ -636,11 +636,13 @@ export function SmartBriefPanel({ user, onBack, autoCreate = false }: SmartBrief
                           const name = prompt('New category name:');
                           if (!name?.trim()) return;
                           setAddingCategory(true);
-                          supabase
-                            .from('categories')
-                            .insert({ name: name.trim(), type: 'brief' })
-                            .select()
-                            .single()
+                          Promise.resolve(
+                            supabase
+                              .from('categories')
+                              .insert({ name: name.trim(), type: 'brief' })
+                              .select()
+                              .single()
+                          )
                             .then(({ data, error }) => {
                               if (error) {
                                 toast.error(error.message || 'Failed to add category');
