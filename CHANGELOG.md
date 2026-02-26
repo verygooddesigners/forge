@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.09] - 2026-02-26
+
+### Bug fix
+- Research stories not showing after pipeline: load project and project_research in parallel so stories appear even if project fetch fails (e.g. 400); add one delayed refetch of project_research when editor mounts with no stories.
+
 ## [1.10.08] - 2026-02-26
 
 ### Improvement

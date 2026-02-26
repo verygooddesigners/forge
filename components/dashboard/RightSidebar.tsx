@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -34,6 +34,7 @@ export function RightSidebar({
   const [project, setProject] = useState<Project | null>(null);
   const [brief, setBrief] = useState<Brief | null>(null);
   const [projectResearch, setProjectResearch] = useState<ProjectResearch | null>(null);
+  const researchRetryRef = useRef(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -42,8 +43,35 @@ export function RightSidebar({
     } else {
       setProject(null);
       setProjectResearch(null);
+      researchRetryRef.current = false;
     }
   }, [projectId]);
+
+  // After research completes, editor may load before DB write is visible; refetch research once if we have no stories
+  useEffect(() => {
+    if (!projectId || researchRetryRef.current) return;
+    const hasStories = projectResearch && projectResearch.stories.length > 0;
+    if (hasStories) return;
+    const t = setTimeout(async () => {
+      researchRetryRef.current = true;
+      const { data } = await supabase
+        .from('project_research')
+        .select('*')
+        .eq('project_id', projectId)
+        .single();
+      if (data && Array.isArray(data.stories) && data.stories.length > 0) {
+        setProjectResearch({
+          ...data,
+          stories: (data.stories as ResearchStory[]) || [],
+          suggested_keywords: data.suggested_keywords || [],
+          selected_story_ids: data.selected_story_ids || [],
+          selected_keywords: data.selected_keywords || [],
+          orchestrator_log: data.orchestrator_log || [],
+        } as ProjectResearch);
+      }
+    }, 2500);
+    return () => clearTimeout(t);
+  }, [projectId, projectResearch, supabase]);
 
   useEffect(() => {
     if (project && (project.headline || project.primary_keyword)) {
@@ -55,36 +83,36 @@ export function RightSidebar({
     if (!projectId) return;
 
     try {
-      const { data, error } = await supabase
-        .from('projects')
-        .select(`
-          *,
-          brief:brief_id (*)
-        `)
-        .eq('id', projectId)
-        .single();
+      // Load project and project_research in parallel so research stories show even if project fetch fails (e.g. 400)
+      const [projectRes, researchRes] = await Promise.all([
+        supabase
+          .from('projects')
+          .select(`*, brief:brief_id (*)`)
+          .eq('id', projectId)
+          .single(),
+        supabase
+          .from('project_research')
+          .select('*')
+          .eq('project_id', projectId)
+          .single(),
+      ]);
 
-      if (error) {
-        console.error('Error loading project:', error);
-        return;
-      }
-
-      if (data) {
-        setProject(data as Project);
-        if (data.brief) {
-          setBrief(data.brief as Brief);
+      const { data: projectData, error: projectError } = projectRes;
+      if (!projectError && projectData) {
+        setProject(projectData as Project);
+        if (projectData.brief) {
+          setBrief(projectData.brief as Brief);
         }
+      } else if (projectError) {
+        console.error('Error loading project:', projectError);
       }
 
-      const { data: research } = await supabase
-        .from('project_research')
-        .select('*')
-        .eq('project_id', projectId)
-        .single();
+      const { data: research } = researchRes;
       if (research) {
+        const stories = Array.isArray(research.stories) ? research.stories : [];
         setProjectResearch({
           ...research,
-          stories: (research.stories as ResearchStory[]) || [],
+          stories: (stories as ResearchStory[]) || [],
           suggested_keywords: research.suggested_keywords || [],
           selected_story_ids: research.selected_story_ids || [],
           selected_keywords: research.selected_keywords || [],
