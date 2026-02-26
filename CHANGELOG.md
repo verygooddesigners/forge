@@ -4,6 +4,13 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.03] - 2026-02-26
+
+### Improvements
+- Project creation & research: debug logging (Forge:ProjectCreate, ResearchHub, ResearchPipeline, ResearchOrchestrator); enable with NEXT_PUBLIC_DEBUG_RESEARCH=1 / DEBUG_RESEARCH=1 or in dev
+- SmartBrief add-category: fix INP (defer handler + startTransition) so UI stays responsive; loading state and toasts on Create New SmartBrief and BriefBuilderModal
+- SmartBriefs My SmartBriefs cards: move category tag to bottom of card to prevent long names overlapping title
+
 ## [1.10.02] - 2026-02-25
 
 ### Bug fix — Admin User Edit dialog

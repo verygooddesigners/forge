@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, startTransition } from 'react';
 import { toast } from 'sonner';
 import {
   Dialog,
@@ -100,14 +100,16 @@ export function BriefBuilderModal({ open, onOpenChange, user }: BriefBuilderModa
 
     const { data, error } = await supabase
       .from('categories')
-      .insert({ name: newCategory, type: 'brief' })
+      .insert({ name: newCategory.trim(), type: 'brief' })
       .select()
       .single();
 
     if (!error && data) {
-      setCategories([...categories, data]);
-      setCategoryId(data.id);
-      setNewCategory('');
+      startTransition(() => {
+        setCategories((prev) => [...prev, data]);
+        setCategoryId(data.id);
+        setNewCategory('');
+      });
     }
   };
 

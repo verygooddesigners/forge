@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Search, CheckCircle2, AlertCircle, Loader2, Sparkles } from 'lucide-react';
+import { debugLog } from '@/lib/debug-log';
 import type { OrchestratorLogType } from '@/types';
 
 interface ResearchHubProps {
@@ -37,6 +38,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
     let cancelled = false;
 
     async function run() {
+      debugLog('ResearchHub', 'Starting', { projectId, writerModelId });
       const { data: project, error: projectError } = await supabase
         .from('projects')
         .select('headline, primary_keyword, secondary_keywords, topic, description')
@@ -44,6 +46,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
         .single();
 
       if (projectError || !project) {
+        debugLog('ResearchHub', 'Project not found', projectError?.message);
         setError('Project not found');
         return;
       }
@@ -61,6 +64,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
         topic: project.topic || '',
         additionalDetails: project.description || '',
       };
+      debugLog('ResearchHub', 'POST /api/research/pipeline', body);
 
       const res = await fetch('/api/research/pipeline', {
         method: 'POST',
@@ -68,9 +72,11 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
         body: JSON.stringify(body),
       });
       if (!res.ok || !res.body) {
+        debugLog('ResearchHub', 'Pipeline request failed', res.status, res.statusText);
         setError('Failed to start research');
         return;
       }
+      debugLog('ResearchHub', 'SSE stream started');
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -88,6 +94,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
           if (!line.startsWith('data: ')) continue;
           const payload = line.slice(6).trim();
           if (payload === '[DONE]') {
+            debugLog('ResearchHub', 'SSE [DONE]');
             if (!completedRef.current) {
               completedRef.current = true;
               onComplete();
@@ -97,12 +104,14 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
           try {
             const data = JSON.parse(payload);
             if (data.type === 'progress') {
+              debugLog('ResearchHub', 'progress', data.type, data.message);
               setLog((prev) => [...prev, { type: data.type, message: data.message }]);
               if (data.type && STAGE_LABELS[data.type as Stage]) {
                 setCurrentStage(data.type as Stage);
               }
             }
             if (data.type === 'done') {
+              debugLog('ResearchHub', 'done', data);
               if (!completedRef.current) {
                 completedRef.current = true;
                 onComplete();
@@ -110,6 +119,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
               return;
             }
             if (data.type === 'error') {
+              debugLog('ResearchHub', 'error', data.error);
               setError(data.error || 'Research failed');
             }
           } catch {

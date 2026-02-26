@@ -23,6 +23,7 @@ import { createClient } from '@/lib/supabase/client';
 import { WriterModel, Brief, Project } from '@/types';
 import { Plus, Loader2, FileText, BookOpen } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
+import { debugLog } from '@/lib/debug-log';
 
 // ----- TipTap content to read-only JSX (small font, for preview) -----
 function renderTipTapNode(node: any, key: number): React.ReactNode {
@@ -178,6 +179,12 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
     if (!headline.trim() || !primaryKeyword.trim()) return;
 
     setLoading(true);
+    debugLog('ProjectCreate', 'Create clicked', {
+      headline: headline.trim().slice(0, 50),
+      primaryKeyword: primaryKeyword.trim(),
+      modelId: selectedModelId,
+      briefId: selectedBriefId,
+    });
     try {
       const { data, error } = await supabase
         .from('projects')
@@ -198,12 +205,17 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
         .single();
 
       if (!error && data) {
+        const redirect = `/dashboard?project=${data.id}&model=${data.writer_model_id}&research=true`;
+        debugLog('ProjectCreate', 'Project created', { projectId: data.id, redirect });
         trackEvent(supabase, userId, 'project_created', data.id, 'project', {
           word_count_target: parseInt(wordCount, 10) || 800,
         });
-        router.push(`/dashboard?project=${data.id}&model=${data.writer_model_id}&research=true`);
+        router.push(redirect);
+      } else if (error) {
+        debugLog('ProjectCreate', 'Insert error', error.message);
       }
     } catch (err) {
+      debugLog('ProjectCreate', 'Error', err);
       console.error('Error creating project:', err);
     } finally {
       setLoading(false);
@@ -225,7 +237,6 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
         onOpenProjects={() => router.push('/projects')}
         onOpenSmartBriefs={() => router.push('/smartbriefs')}
         onOpenWriterFactory={() => router.push('/writer-factory')}
-        onOpenNFLOdds={() => router.push('/nfl-odds')}
       />
 
       <div className="flex-1 overflow-y-auto min-h-0 flex flex-col" style={{ background: 'linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%)' }}>

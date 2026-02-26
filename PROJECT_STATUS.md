@@ -1,7 +1,7 @@
 # Forge - Project Status
 
-**Last Updated:** February 24, 2026
-**Version:** v1.10.02
+**Last Updated:** February 26, 2026
+**Version:** v1.10.03
 **Production:** https://gdcforge.vercel.app
 **Repository:** https://github.com/verygooddesigners/forge  
 **Local Dev:** http://localhost:5309  
@@ -33,7 +33,6 @@
 - **Content Generation** - Streaming AI output with auto-save
 - **NewsEngine** - Tavily-powered relevant news search
 - **SEO Assistant** - Real-time scoring, live keyword tracking, dynamic targets
-- **NFL Odds Extractor** - Screenshot-to-article with structured tables
 - **Export System** - HTML/text with CMS safety warnings
 - **Admin Panel** - User management, API keys, agent configuration
 - **Auth** - Supabase Auth with password reset, RLS policies, role-based access
@@ -89,7 +88,6 @@ None currently tracked.
 
 ### January 2026
 - Multi-Agent System (8 agents with guardrails and Agent Tuner)
-- NFL Odds Extractor (Phase 2)
 - Export Modal with CMS safety warnings
 - Real-time keyword tracking in SEO sidebar
 - Dynamic SEO targets based on word count

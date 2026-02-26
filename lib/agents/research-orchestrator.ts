@@ -19,6 +19,7 @@ import type {
   OrchestratorLogType,
 } from '@/types';
 import type { FactVerificationResult } from './fact-verification';
+import { debugLog } from '@/lib/debug-log';
 
 const MAX_LOOPS = 4;
 
@@ -165,6 +166,8 @@ export async function runResearchPipeline(
   const log: OrchestratorLogEntry[] = [];
   const { projectId, headline, primaryKeyword, secondaryKeywords = [], topic = '', additionalDetails = '' } = input;
 
+  debugLog('ResearchOrchestrator', 'Start', { projectId, headline: headline?.slice(0, 40), primaryKeyword });
+
   const push = (type: OrchestratorLogType, message: string) => {
     const entry = logEntry(type, message);
     log.push(entry);
@@ -179,6 +182,7 @@ export async function runResearchPipeline(
 
   while (loopsCompleted < MAX_LOOPS) {
     push('search', `Searching for: ${currentQuery.slice(0, 60)}...`);
+    debugLog('ResearchOrchestrator', 'Search', { loop: loopsCompleted + 1, query: currentQuery.slice(0, 60) });
     const articles = await searchTavily(
       currentQuery,
       trustedSourcesMap,
@@ -186,6 +190,7 @@ export async function runResearchPipeline(
       `research-${projectId}`
     );
     push('search', `Found ${articles.length} articles`);
+    debugLog('ResearchOrchestrator', 'Search result', { articles: articles.length });
     if (articles.length === 0 && loopsCompleted === 0) {
       push('error', 'No articles found');
       break;
@@ -195,27 +200,36 @@ export async function runResearchPipeline(
     }
 
     push('evaluate', 'Evaluating relevance and timeliness...');
+    debugLog('ResearchOrchestrator', 'Evaluate', { inputArticles: allArticles.length });
     const filtered = await evaluateResearchRelevance({
       articles: allArticles,
       headline,
       topic: topic || undefined,
     });
     push('evaluate', `${filtered.length} articles passed relevance check`);
+    debugLog('ResearchOrchestrator', 'Evaluate result', { filtered: filtered.length });
     if (filtered.length === 0) {
       if (loopsCompleted === 0) break;
       break;
     }
 
     push('verify', 'Verifying facts across sources...');
+    debugLog('ResearchOrchestrator', 'Verify');
     lastFactResult = await verifyFacts({
       articles: filtered,
       topic: headline,
       context: topic || undefined,
     });
     push('verify', `Verification complete. Confidence: ${lastFactResult.confidence_score}`);
+    debugLog('ResearchOrchestrator', 'Verify result', {
+      confidence: lastFactResult.confidence_score,
+      verified: lastFactResult.verified_facts?.length ?? 0,
+      disputed: lastFactResult.disputed_facts?.length ?? 0,
+    });
 
     const decision = await orchestratorDecision(lastFactResult, loopsCompleted + 1);
     loopsCompleted += 1;
+    debugLog('ResearchOrchestrator', 'Decision', { done: decision.done, followUpQuery: decision.followUpQuery });
 
     if (decision.done) {
       if (decision.followUpQuery) push('followup', `Stopping: ${decision.followUpQuery}`);
@@ -230,6 +244,7 @@ export async function runResearchPipeline(
   }
 
   push('keywords', 'Discovering keyword opportunities...');
+  debugLog('ResearchOrchestrator', 'Keywords');
   const topicForSeo = [headline, primaryKeyword, ...secondaryKeywords].filter(Boolean).join(' ');
   const keywordResponse = await generateKeywordSuggestions(topicForSeo, secondaryKeywords);
   const suggested_keywords: SuggestedKeyword[] = [];
@@ -249,6 +264,7 @@ export async function runResearchPipeline(
       // ignore
     }
   }
+  debugLog('ResearchOrchestrator', 'Keywords result', { count: suggested_keywords.length });
 
   const synopsisMap = await generateSynopses(allArticles, headline);
   const stories: ResearchStory[] = allArticles
@@ -262,6 +278,7 @@ export async function runResearchPipeline(
     }));
 
   push('complete', 'Research complete');
+  debugLog('ResearchOrchestrator', 'Complete', { stories: stories.length, suggested_keywords: suggested_keywords.length });
 
   const research_brief = lastFactResult
     ? {

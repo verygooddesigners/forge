@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { runResearchPipeline } from '@/lib/agents/research-orchestrator';
+import { debugLog } from '@/lib/debug-log';
 
 export const maxDuration = 120;
 
@@ -16,6 +17,8 @@ export async function POST(request: NextRequest) {
       topic,
       additionalDetails,
     } = body;
+
+    debugLog('ResearchPipeline', 'POST', { projectId, headline: headline?.slice(0, 40), primaryKeyword });
 
     if (!projectId || !headline || !primaryKeyword) {
       return new Response(
@@ -42,11 +45,13 @@ export async function POST(request: NextRequest) {
       .eq('user_id', user.id)
       .single();
     if (!project) {
+      debugLog('ResearchPipeline', '403 Project not found or access denied', projectId);
       return new Response(JSON.stringify({ error: 'Project not found or access denied' }), {
         status: 403,
         headers: { 'Content-Type': 'application/json' },
       });
     }
+    debugLog('ResearchPipeline', 'Auth OK', projectId);
 
     const { data: existing } = await supabase
       .from('project_research')
@@ -57,6 +62,7 @@ export async function POST(request: NextRequest) {
     let researchId: string;
     if (existing) {
       researchId = existing.id;
+      debugLog('ResearchPipeline', 'Using existing project_research', researchId);
       await supabase
         .from('project_research')
         .update({ status: 'running', updated_at: new Date().toISOString() })
@@ -77,12 +83,14 @@ export async function POST(request: NextRequest) {
         .select('id')
         .single();
       if (insertError || !inserted) {
+        debugLog('ResearchPipeline', 'Failed to create project_research', insertError?.message);
         return new Response(
           JSON.stringify({ error: 'Failed to create project_research record' }),
           { status: 500, headers: { 'Content-Type': 'application/json' } }
         );
       }
       researchId = inserted.id;
+      debugLog('ResearchPipeline', 'Created project_research', researchId);
     }
 
     const stream = new ReadableStream({
@@ -91,6 +99,7 @@ export async function POST(request: NextRequest) {
           controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
         };
         try {
+          debugLog('ResearchPipeline', 'Pipeline started', projectId);
           const result = await runResearchPipeline(
             supabase,
             {
@@ -105,6 +114,13 @@ export async function POST(request: NextRequest) {
               send({ type: 'progress', message: event.message, timestamp: event.timestamp });
             }
           );
+
+          debugLog('ResearchPipeline', 'Pipeline done', {
+            projectId,
+            stories: result.stories.length,
+            keywords: result.suggested_keywords.length,
+            loops: result.loops_completed,
+          });
 
           const selected_story_ids = result.stories.filter((s) => s.is_selected).map((s) => s.id);
 
@@ -141,6 +157,7 @@ export async function POST(request: NextRequest) {
 
           send({ type: 'done', researchId });
         } catch (err: any) {
+          debugLog('ResearchPipeline', 'Pipeline error', err?.message ?? err);
           console.error('[research/pipeline]', err);
           await supabase
             .from('project_research')
@@ -165,6 +182,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error: any) {
+    debugLog('ResearchPipeline', 'POST error', error?.message ?? error);
     console.error('[research/pipeline]', error);
     return new Response(
       JSON.stringify({ error: error?.message || 'Internal server error' }),

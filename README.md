@@ -10,7 +10,6 @@ AI-powered content creation platform with RAG-based writer models, brief builder
 - **SmartBrief Builder**: Create AI-powered content templates with URL analysis
 - **NewsEngine**: Find relevant news with Tavily AI search
 - **SEO Assistant**: Real-time scoring with live keyword tracking as you type
-- **NFL Odds Extractor**: AI-powered screenshot extraction for automated article generation
 - **Export System**: CMS-ready formatting with critical safety warnings
 - **Project Management**: Complete workflow from creation to publication
 - **Admin Dashboard**: User management, API keys, AI configuration, and Agent Tuner
@@ -85,14 +84,6 @@ http://localhost:5309
 5. **Optimize** → Use SEO Assistant with live keyword tracking
 6. **Export** → Download or copy with CMS safety warnings
 7. **Publish** → Deploy to RotoWire CMS
-
-### NFL Odds Extractor Workflow
-1. **Upload Screenshots** → ESPN schedule + RotoWire odds
-2. **Configure** → Set week number and season year
-3. **Extract Data** → AI processes images and extracts data
-4. **Review** → Verify extracted matchups and odds
-5. **Generate Article** → Auto-creates structured content with tables
-6. **Edit & Publish** → Add predictions and export
 
 ### For Admins
 - Manage all writer models
@@ -226,7 +217,6 @@ npm run lint
 - Dynamic SEO targets based on project word count
 - Real-time keyword usage tracking in SEO sidebar
 
-### Phase 2: NFL Odds Extractor ✅
 - Visual data extraction from screenshots
 - Automated article generation with structured tables
 - Week-by-week odds tracking workflow
@@ -265,5 +255,5 @@ Built with:
 ---
 
 **Forge** - AI-Powered Content Creation Platform
-Version v1.10.02 | Built with ❤️ for RotoWire
+Version v1.10.03 | Built with ❤️ for RotoWire
 # Test webhook trigger

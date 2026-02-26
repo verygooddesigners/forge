@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, startTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -35,16 +35,9 @@ function BriefCard({ brief, onClick }: BriefCardProps) {
       onClick={() => onClick(brief)}
     >
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className="flex items-start justify-between mb-2">
-        <h3 className="text-[14px] font-semibold text-text-primary flex-1 leading-snug line-clamp-2">
-          {brief.name}
-        </h3>
-        {brief.category && (
-          <Badge variant="secondary" className="ml-2 flex-shrink-0 text-[10px]">
-            {brief.category.name}
-          </Badge>
-        )}
-      </div>
+      <h3 className="text-[14px] font-semibold text-text-primary leading-snug line-clamp-2 mb-2">
+        {brief.name}
+      </h3>
       {(brief.description || (brief.seo_config as any)?.description) && (
         <p className="text-xs text-text-secondary line-clamp-2 mb-2">
           {brief.description || (brief.seo_config as any)?.description}
@@ -61,11 +54,18 @@ function BriefCard({ brief, onClick }: BriefCardProps) {
           </span>
         )}
       </div>
-      {brief.updated_at && (
-        <div className="text-[10px] text-text-tertiary">
-          Updated {new Date(brief.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-        </div>
-      )}
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        {brief.category && (
+          <Badge variant="secondary" className="text-[10px]">
+            {brief.category.name}
+          </Badge>
+        )}
+        {brief.updated_at && (
+          <span className="text-[10px] text-text-tertiary">
+            Updated {new Date(brief.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          </span>
+        )}
+      </div>
     </Card>
   );
 }
@@ -98,6 +98,8 @@ export function SmartBriefPanel({ user, onBack, autoCreate = false }: SmartBrief
   // AutoBuilder state
   const [autoBuildUrl, setAutoBuildUrl] = useState('');
   const [autoBuilding, setAutoBuilding] = useState(false);
+
+  const [addingCategory, setAddingCategory] = useState(false);
 
   const supabase = createClient();
   const editorRef = useRef<any>(null);
@@ -627,20 +629,40 @@ export function SmartBriefPanel({ user, onBack, autoCreate = false }: SmartBrief
                     <Button
                       variant="outline"
                       size="icon"
+                      disabled={addingCategory}
                       onClick={() => {
-                        const name = prompt('New category name:');
-                        if (name) {
-                          supabase.from('categories').insert({ name, type: 'brief' }).select().single()
-                            .then(({ data }) => {
-                              if (data) {
-                                setCategories([...categories, data]);
-                                setCategoryId(data.id);
+                        // Defer so the click handler returns immediately (avoids INP / long task)
+                        setTimeout(() => {
+                          const name = prompt('New category name:');
+                          if (!name?.trim()) return;
+                          setAddingCategory(true);
+                          supabase
+                            .from('categories')
+                            .insert({ name: name.trim(), type: 'brief' })
+                            .select()
+                            .single()
+                            .then(({ data, error }) => {
+                              if (error) {
+                                toast.error(error.message || 'Failed to add category');
+                                return;
                               }
-                            });
-                        }
+                              if (data) {
+                                startTransition(() => {
+                                  setCategories((prev) => [...prev, data]);
+                                  setCategoryId(data.id);
+                                });
+                                toast.success('Category added');
+                              }
+                            })
+                            .finally(() => setAddingCategory(false));
+                        }, 0);
                       }}
                     >
-                      <Plus className="h-4 w-4" />
+                      {addingCategory ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Plus className="h-4 w-4" />
+                      )}
                     </Button>
                   </div>
                 </div>
