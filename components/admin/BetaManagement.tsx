@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
@@ -32,6 +31,7 @@ import {
 } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
+import { BetaNotesEditor } from '@/components/beta/BetaNotesEditor';
 
 interface BetaUser {
   id: string;
@@ -457,11 +457,9 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
                   v{beta.notes_version} · shown to all beta users on login
                 </span>
               </div>
-              <Textarea
+              <BetaNotesEditor
                 value={notesText}
-                onChange={e => setNotesEditMap(m => ({ ...m, [beta.id]: e.target.value }))}
-                placeholder="Write goals, instructions, or context for your beta users..."
-                className="min-h-[120px] text-[13px] resize-y"
+                onChange={html => setNotesEditMap(m => ({ ...m, [beta.id]: html }))}
                 disabled={beta.status === 'ended'}
               />
               {beta.status !== 'ended' && (
@@ -607,11 +605,10 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
               <label className="text-[13px] font-medium text-text-secondary">
                 Beta Notes <span className="text-text-tertiary font-normal">(optional)</span>
               </label>
-              <Textarea
-                placeholder="Goals, what to test, known limitations..."
+              <BetaNotesEditor
                 value={newNotes}
-                onChange={e => setNewNotes(e.target.value)}
-                className="min-h-[100px] resize-y text-[13px]"
+                onChange={html => setNewNotes(html)}
+                placeholder="Goals, what to test, known limitations..."
               />
               <p className="text-[11px] text-text-tertiary">
                 Beta users will see these notes in a modal on their first login.

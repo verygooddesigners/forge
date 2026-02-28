@@ -45,8 +45,10 @@ export async function POST(request: NextRequest) {
 
     const isManagerOrAbove = userProfile?.role && ['super_admin', 'admin', 'manager'].includes(userProfile.role);
     const ownsModel = model.strategist_id === user.id;
+    // Any authenticated user can contribute training content to in-house (shared) models
+    const isHouseModel = model.is_house_model === true;
 
-    if (!isManagerOrAbove && !ownsModel) {
+    if (!isManagerOrAbove && !ownsModel && !isHouseModel) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 

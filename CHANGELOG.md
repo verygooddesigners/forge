@@ -4,6 +4,14 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.18] - 2026-02-28
+
+### Beta Notes TipTap Editor + House Model Training
+- **Beta Notes editor** now uses TipTap rich text editor (bold, italic, H2/H3, bullet + ordered lists, undo/redo) — notes stored as HTML
+- **BetaNotesModal** renders notes as formatted HTML (headings, lists, bold, links) instead of plain pre-wrapped text
+- **New `BetaNotesEditor` component** (`components/beta/BetaNotesEditor.tsx`) — lightweight dark-themed TipTap wrapper for admin use
+- **House model training**: any authenticated user can now contribute training content to in-house writer models (RotoWire NFL, RotoWire MLB) — no longer restricted to model owner only
+
 ## [1.10.17] - 2026-02-28
 
 ### Beta Management System

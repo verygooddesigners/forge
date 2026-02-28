@@ -160,6 +160,19 @@ export function BetaNotesModal({ data, onDismiss }: BetaNotesModalProps) {
         </div>
 
         {/* Notes content */}
+        <style>{`
+          .beta-notes-modal-content h2 { font-size: 16px; font-weight: 600; margin: 12px 0 5px; color: var(--text-primary, #f0f0f0); }
+          .beta-notes-modal-content h3 { font-size: 14px; font-weight: 600; margin: 10px 0 4px; color: var(--text-primary, #f0f0f0); }
+          .beta-notes-modal-content h2:first-child, .beta-notes-modal-content h3:first-child { margin-top: 0; }
+          .beta-notes-modal-content p { margin: 0 0 8px; }
+          .beta-notes-modal-content p:last-child { margin-bottom: 0; }
+          .beta-notes-modal-content ul { list-style: disc; padding-left: 20px; margin: 4px 0 8px; }
+          .beta-notes-modal-content ol { list-style: decimal; padding-left: 20px; margin: 4px 0 8px; }
+          .beta-notes-modal-content li { margin-bottom: 3px; }
+          .beta-notes-modal-content strong { font-weight: 600; color: var(--text-primary, #f0f0f0); }
+          .beta-notes-modal-content em { font-style: italic; }
+          .beta-notes-modal-content a { color: var(--accent-primary, #7c6af7); text-decoration: underline; }
+        `}</style>
         <div
           style={{
             background: 'var(--bg-elevated, rgba(255,255,255,0.04))',
@@ -169,12 +182,18 @@ export function BetaNotesModal({ data, onDismiss }: BetaNotesModalProps) {
             fontSize: '14px',
             lineHeight: '1.65',
             color: 'var(--text-secondary, #ccc)',
-            whiteSpace: 'pre-wrap',
             maxHeight: '300px',
             overflowY: 'auto',
           }}
         >
-          {beta.notes || 'No notes added for this beta yet.'}
+          {beta.notes ? (
+            <div
+              className="beta-notes-modal-content"
+              dangerouslySetInnerHTML={{ __html: beta.notes }}
+            />
+          ) : (
+            <span style={{ color: 'var(--text-tertiary, #888)' }}>No notes added for this beta yet.</span>
+          )}
         </div>
 
         {/* Footer */}
