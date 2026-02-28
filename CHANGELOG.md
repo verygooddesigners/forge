@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.33] - 2026-02-28
+
+### Fix: Remove email confirmation gate entirely
+
+- **Middleware**: Removed `awaiting_confirmation` account_status check — authenticated users are no longer redirected to `/awaiting-confirmation`. Access is controlled solely by Supabase authentication.
+- **DB trigger (migration 00031)**: `handle_new_user` now defaults `account_status` to `'confirmed'` for all new signups instead of `'awaiting_confirmation'`. Also bulk-updates any existing users still stuck on `awaiting_confirmation`.
+- **Result**: Super admins and all users can log in directly to the dashboard without email confirmation steps.
+
 ## [1.10.32] - 2026-02-28
 
 ### Fix: redirect loop and DB constraint for beta user first-login

@@ -66,11 +66,8 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname.startsWith(path)
   );
 
-  // The awaiting-confirmation page is accessible to logged-in users
-  const isAwaitingPage = request.nextUrl.pathname === '/awaiting-confirmation';
-
   // Protected routes - require authentication
-  if (!isPublicPath && !isAwaitingPage && !user) {
+  if (!isPublicPath && !user) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
@@ -81,31 +78,6 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
     return NextResponse.redirect(url);
-  }
-
-  // For authenticated users, check account_status
-  // Skip for API routes, public paths, and the awaiting-confirmation page itself
-  if (
-    user &&
-    !isPublicPath &&
-    !isAwaitingPage &&
-    !request.nextUrl.pathname.startsWith('/api/')
-  ) {
-    try {
-      const { data: profile } = await supabase
-        .from('users')
-        .select('account_status')
-        .eq('id', user.id)
-        .single();
-
-      if (profile && profile.account_status === 'awaiting_confirmation') {
-        const url = request.nextUrl.clone();
-        url.pathname = '/awaiting-confirmation';
-        return NextResponse.redirect(url);
-      }
-    } catch {
-      // If we can't check status, let them through (fail open)
-    }
   }
 
   return supabaseResponse;
