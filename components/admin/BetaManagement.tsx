@@ -347,7 +347,6 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
 
   // ── Assign Writer Model ───────────────────────────────────────────────────
   const handleAssignWriterModel = async (betaId: string, bu: BetaUser, modelId: string | null) => {
-    if (!bu.user_id) return;
     const key = `${betaId}-${bu.email}`;
     setAssigningModelMap(m => ({ ...m, [key]: true }));
     try {
@@ -357,7 +356,7 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
         body: JSON.stringify({
           beta_id: betaId,
           action: 'assign_writer_model',
-          user_id: bu.user_id,
+          user_id: bu.user_id,   // may be null — API will provision via email if so
           email: bu.email,
           writer_model_id: modelId,
         }),
@@ -366,10 +365,14 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
       if (!res.ok) throw new Error(json.error);
       const modelName = modelId ? writerModels.find(m => m.id === modelId)?.name : null;
       toast.success(modelName ? `Writer model "${modelName}" assigned to ${bu.email}` : `Writer model unassigned`);
-      // Update local state optimistically so UI reflects immediately
+      // Update local state — also capture user_id if API provisioned it on-the-fly
       setBetas(prev => prev.map(b => b.id !== betaId ? b : {
         ...b,
-        users: b.users.map(u => u.id !== bu.id ? u : { ...u, default_writer_model_id: modelId }),
+        users: b.users.map(u => u.id !== bu.id ? u : {
+          ...u,
+          default_writer_model_id: modelId,
+          user_id: u.user_id ?? json.user_id ?? u.user_id,
+        }),
       }));
     } catch (e: any) {
       toast.error(e.message);
@@ -386,7 +389,7 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
     const isAssigning = assigningModelMap[key];
     const hasInvite = !!bu.invited_at;
     const hasAcked = !!bu.acknowledged_at;
-    const canAssignModel = !!bu.user_id && beta.status !== 'ended';
+    const canAssignModel = beta.status === 'active';
 
     return (
       <tr key={bu.id} className="border-t border-border-subtle">
@@ -428,7 +431,7 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
             </div>
           ) : (
             <span className="text-[12px] text-text-tertiary italic">
-              {!bu.user_id ? 'Invite first' : '—'}
+              {beta.status === 'draft' ? 'Start beta first' : '—'}
             </span>
           )}
         </td>

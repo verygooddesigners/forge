@@ -4,6 +4,15 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.30] - 2026-02-28
+
+### Fix: Writer Model assignment available for all active beta users
+
+- `canAssignModel` now depends on `beta.status === 'active'` instead of `!!bu.user_id` — the dropdown shows for all users once the beta is started
+- If `user_id` is missing in `beta_users` (e.g. users invited by old broken flow), the API auto-provisions the account via email and backfills `user_id` before assigning the model
+- Removed early guard (`if (!bu.user_id) return`) from `handleAssignWriterModel`
+- Fallback label changed from "Invite first" to "Start beta first"
+
 ## [1.10.29] - 2026-02-28
 
 ### Simplify beta onboarding — users self-serve via Forgot Password

@@ -293,18 +293,23 @@ export async function PATCH(req: NextRequest) {
 
     // ── Assign writer model ───────────────────────────────────────────────────
     if (action === 'assign_writer_model') {
-      const { user_id, email: userEmail, writer_model_id } = body;
-      if (!user_id) {
-        return NextResponse.json({ error: 'user_id is required' }, { status: 400 });
+      let { user_id, email: userEmail, writer_model_id } = body;
+
+      // If user_id is missing (e.g. old invite flow failed), provision via email
+      if (!user_id && userEmail) {
+        const provisioned = await provisionUser(userEmail);
+        user_id = provisioned.userId;
+        // Also backfill beta_users.user_id so the UI updates
+        await admin.from('beta_users')
+          .update({ user_id, invited_at: new Date().toISOString() })
+          .eq('beta_id', beta_id)
+          .eq('email', userEmail)
+          .is('user_id', null);
       }
 
-      // Ensure public.users record exists (user may not have logged in yet)
-      await admin.from('users').upsert({
-        id: user_id,
-        email: userEmail ?? '',
-        role: 'strategist',
-        account_status: 'confirmed',
-      }, { onConflict: 'id', ignoreDuplicates: true });
+      if (!user_id) {
+        return NextResponse.json({ error: 'Could not resolve user — provide user_id or email' }, { status: 400 });
+      }
 
       // Assign (or unassign) the writer model
       const { error } = await admin
@@ -313,7 +318,7 @@ export async function PATCH(req: NextRequest) {
         .eq('id', user_id);
 
       if (error) throw error;
-      return NextResponse.json({ success: true });
+      return NextResponse.json({ success: true, user_id });
     }
 
     // ── End beta ─────────────────────────────────────────────────────────────
