@@ -281,7 +281,7 @@ export async function PATCH(req: NextRequest) {
       const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
         type: 'magiclink',
         email: debugEmail,
-        options: { redirectTo: `${appUrl}/dashboard` },
+        options: { redirectTo: `${appUrl}/api/auth/callback?next=/dashboard` },
       });
 
       return NextResponse.json({

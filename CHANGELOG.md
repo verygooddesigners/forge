@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.10.36] - 2026-02-28
+
+### Fix: Magic link now routes through auth callback (session established correctly)
+
+- Magic links generated from Beta Management now redirect to `/api/auth/callback?next=/dashboard` instead of directly to `/dashboard` — this is the required step that exchanges the one-time token for a real session cookie. Without it, users landed on the dashboard with no session and were bounced to login.
+
 ## [1.10.35] - 2026-02-28
 
 ### Fix: Layout broken on authenticated pages + Change Password feature
