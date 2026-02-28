@@ -63,20 +63,37 @@ export function WriterFactoryPanel({ user }: WriterFactoryPanelProps) {
   }, [selectedModel]);
 
   const loadModels = async () => {
-    const { data } = await supabase
+    // Users see only their assigned personal model + in-house models
+    let query = supabase
       .from('writer_models')
       .select('*')
-      .order('name');
+      .eq('is_house_model', true);
+
+    if (user.default_writer_model_id) {
+      query = supabase
+        .from('writer_models')
+        .select('*')
+        .or(`is_house_model.eq.true,id.eq.${user.default_writer_model_id}`)
+        .order('is_house_model', { ascending: false })
+        .order('name');
+    } else {
+      query = supabase
+        .from('writer_models')
+        .select('*')
+        .eq('is_house_model', true)
+        .order('name');
+    }
+
+    const { data } = await query;
 
     if (data) {
-      console.log('[WRITER_FACTORY_PANEL] Loaded models:', data.map(m => ({
-        name: m.name,
-        id: m.id,
-        training_count: m.metadata?.total_training_pieces || 0
-      })));
       setModels(data);
-      if (data.length > 0 && !selectedModel) {
-        setSelectedModel(data[0]);
+      // Default-select the user's personal model if available, otherwise first in-house
+      if (!selectedModel) {
+        const personal = user.default_writer_model_id
+          ? data.find(m => m.id === user.default_writer_model_id)
+          : null;
+        setSelectedModel(personal ?? data[0] ?? null);
       }
     }
   };

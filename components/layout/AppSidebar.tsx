@@ -200,14 +200,10 @@ export function AppSidebar({
           <span>User Guide</span>
         </button>
 
-        {/* Tools — coming soon */}
-        <div className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-text-tertiary cursor-not-allowed select-none">
-          <Wrench className="w-[18px] h-[18px] shrink-0 opacity-40" />
-          <span className="opacity-40">Tools</span>
-          <span className="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-black/5 text-text-muted uppercase tracking-widest">
-            Soon
-          </span>
-        </div>
+        <button onClick={() => router.push('/writer-factory')} className={navLinkClass('/writer-factory')}>
+          <Wrench className="w-[18px] h-[18px] shrink-0" />
+          <span>Writer Factory</span>
+        </button>
 
         {hasPermission('can_access_admin') && (
           <button onClick={() => router.push('/admin')} className={navLinkClass('/admin')}>

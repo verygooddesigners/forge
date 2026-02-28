@@ -4,6 +4,14 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.21] - 2026-02-28
+
+### Writer Factory restored to sidebar + model scoping
+
+- **Writer Factory link** added back to `AppSidebar` main nav for all users (was missing — only existed in profile dropdown as "Writer Model")
+- **Writer Factory panel** now scoped per user: shows only their assigned personal model (`default_writer_model_id`) + in-house models (`is_house_model = true`); no longer shows all models globally
+- Personal model is auto-selected on open if assigned; falls back to first in-house model otherwise
+
 ## [1.10.20] - 2026-02-28
 
 ### Minor
