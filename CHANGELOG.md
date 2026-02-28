@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.10.34] - 2026-02-28
+
+### Feature: Get Login Link for beta users
+
+- Added **Link** button per user row in Beta Management — generates a magic login link via the admin API (no email sent)
+- Clean dialog with one-click copy; send the link via Slack, iMessage, or any channel
+- Links expire after 1 hour; works without any SMTP/email setup
+- Solves the Supabase email rate limit problem for onboarding beta users
+
 ## [1.10.33] - 2026-02-28
 
 ### Fix: Remove email confirmation gate entirely

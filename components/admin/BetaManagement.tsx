@@ -18,7 +18,9 @@ import {
   FileText,
   Loader2,
   X,
-
+  Link2,
+  Copy,
+  Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -101,6 +103,9 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
   const [assigningModelMap, setAssigningModelMap] = useState<Record<string, boolean>>({});
   const [debugResult, setDebugResult] = useState<any>(null);
   const [debuggingEmail, setDebuggingEmail] = useState<string | null>(null);
+  const [loginLink, setLoginLink] = useState<{ email: string; link: string } | null>(null);
+  const [gettingLinkEmail, setGettingLinkEmail] = useState<string | null>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -250,6 +255,37 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
     } finally {
       setDebuggingEmail(null);
     }
+  };
+
+  // ── Get Login Link ────────────────────────────────────────────────────────
+  const handleGetLoginLink = async (betaId: string, email: string) => {
+    setGettingLinkEmail(email);
+    try {
+      const res = await fetch('/api/admin/betas', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ beta_id: betaId, action: 'debug_user', email }),
+      });
+      const json = await res.json();
+      const link = json?.generate_link_result?.link;
+      if (link) {
+        setLoginLink({ email, link });
+        setLinkCopied(false);
+      } else {
+        toast.error('Could not generate login link. Is this user in auth.users?');
+      }
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setGettingLinkEmail(null);
+    }
+  };
+
+  const handleCopyLink = () => {
+    if (!loginLink) return;
+    navigator.clipboard.writeText(loginLink.link);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2000);
   };
 
   // ── Save Notes ───────────────────────────────────────────────────────────
@@ -450,6 +486,17 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
                 >
                   {isResending ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
                   {hasInvite ? 'Resend' : 'Send'}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 text-[11px] gap-1.5 text-text-secondary hover:text-accent-primary"
+                  onClick={() => handleGetLoginLink(beta.id, bu.email)}
+                  disabled={gettingLinkEmail === bu.email}
+                  title="Get login link (no email needed)"
+                >
+                  {gettingLinkEmail === bu.email ? <Loader2 className="w-3 h-3 animate-spin" /> : <Link2 className="w-3 h-3" />}
+                  Link
                 </Button>
                 <Button
                   size="sm"
@@ -740,6 +787,33 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
               {creating && <Loader2 className="w-4 h-4 animate-spin" />}
               Create Beta
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Login Link dialog */}
+      <Dialog open={!!loginLink} onOpenChange={open => !open && setLoginLink(null)}>
+        <DialogContent className="sm:max-w-[520px]">
+          <DialogHeader>
+            <DialogTitle>Login Link — {loginLink?.email}</DialogTitle>
+          </DialogHeader>
+          <p className="text-[13px] text-text-secondary">
+            Copy this link and send it directly to the user (Slack, iMessage, email, etc.). It works immediately — no password required. Links expire after 1 hour.
+          </p>
+          <div className="flex gap-2 items-stretch">
+            <div className="flex-1 bg-bg-secondary rounded-lg px-3 py-2 text-[11px] font-mono text-text-secondary overflow-hidden">
+              <p className="truncate">{loginLink?.link}</p>
+            </div>
+            <Button
+              onClick={handleCopyLink}
+              className="gap-2 shrink-0"
+            >
+              {linkCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              {linkCopied ? 'Copied!' : 'Copy'}
+            </Button>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setLoginLink(null)}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
