@@ -181,11 +181,13 @@ export async function PATCH(req: NextRequest) {
         .eq('beta_id', beta_id)
         .is('invited_at', null);
 
-      const results: { email: string; success: boolean; error?: string }[] = [];
+      const results: { email: string; success: boolean; already_existed?: boolean; email_sent?: boolean; error?: string }[] = [];
 
       for (const bu of betaUsers ?? []) {
         try {
           let newUserId: string | null = null;
+          let alreadyExisted = false;
+          let emailSent = false;
 
           const { data: inviteData, error: inviteError } =
             await admin.auth.admin.inviteUserByEmail(bu.email, {
@@ -201,14 +203,43 @@ export async function PATCH(req: NextRequest) {
 
             if (!isAlreadyExists) throw inviteError;
 
+            alreadyExisted = true;
+
             const { data: existingUser } = await admin
               .from('users')
               .select('id')
               .eq('email', bu.email.toLowerCase())
               .maybeSingle();
             newUserId = existingUser?.id ?? null;
+
+            // Send a magic link sign-in email since inviteUserByEmail doesn't work for existing users
+            try {
+              const otpRes = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/otp`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+                  'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}`,
+                },
+                body: JSON.stringify({
+                  email: bu.email,
+                  create_user: false,
+                  options: {
+                    emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com'}/`,
+                  },
+                }),
+              });
+              emailSent = otpRes.ok;
+              if (!otpRes.ok) {
+                const errText = await otpRes.text();
+                console.warn(`[beta start_beta] OTP email failed for ${bu.email}:`, errText);
+              }
+            } catch (otpErr) {
+              console.warn(`[beta start_beta] OTP fetch error for ${bu.email}:`, otpErr);
+            }
           } else {
             newUserId = inviteData.user?.id ?? null;
+            emailSent = true;
           }
 
           await admin
@@ -229,7 +260,7 @@ export async function PATCH(req: NextRequest) {
             }, { onConflict: 'id', ignoreDuplicates: true });
           }
 
-          results.push({ email: bu.email, success: true });
+          results.push({ email: bu.email, success: true, already_existed: alreadyExisted, email_sent: emailSent });
         } catch (e: any) {
           results.push({ email: bu.email, success: false, error: e.message });
         }
@@ -249,6 +280,8 @@ export async function PATCH(req: NextRequest) {
       if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
 
       let resentUserId: string | null = null;
+      let alreadyExisted = false;
+      let emailSent = false;
 
       const { data: inviteData, error: inviteError } =
         await admin.auth.admin.inviteUserByEmail(email, { data: { beta_id } });
@@ -262,6 +295,8 @@ export async function PATCH(req: NextRequest) {
 
         if (!isAlreadyExists) throw inviteError;
 
+        alreadyExisted = true;
+
         // Fall back: look up existing user record by email
         const { data: existingUser } = await admin
           .from('users')
@@ -269,8 +304,35 @@ export async function PATCH(req: NextRequest) {
           .eq('email', email.toLowerCase())
           .maybeSingle();
         resentUserId = existingUser?.id ?? null;
+
+        // Send a magic link sign-in email since inviteUserByEmail doesn't work for existing users
+        try {
+          const otpRes = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/otp`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+              'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}`,
+            },
+            body: JSON.stringify({
+              email,
+              create_user: false,
+              options: {
+                emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com'}/`,
+              },
+            }),
+          });
+          emailSent = otpRes.ok;
+          if (!otpRes.ok) {
+            const errText = await otpRes.text();
+            console.warn(`[beta resend_invite] OTP email failed for ${email}:`, errText);
+          }
+        } catch (otpErr) {
+          console.warn(`[beta resend_invite] OTP fetch error for ${email}:`, otpErr);
+        }
       } else {
         resentUserId = inviteData.user?.id ?? null;
+        emailSent = true;
       }
 
       await admin
@@ -292,7 +354,7 @@ export async function PATCH(req: NextRequest) {
         }, { onConflict: 'id', ignoreDuplicates: true });
       }
 
-      return NextResponse.json({ success: true });
+      return NextResponse.json({ success: true, already_existed: alreadyExisted, email_sent: emailSent });
     }
 
     // ── Assign writer model ───────────────────────────────────────────────────

@@ -4,6 +4,15 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.24] - 2026-02-28
+
+### Fix: beta invites now send magic link to existing Supabase users
+
+- **OTP magic link for existing users**: When `inviteUserByEmail` fails because the email already has a Supabase auth account, the API now calls `/auth/v1/otp` to send a magic link sign-in email so the user still receives something in their inbox
+- **Transparent toast feedback**: `start_beta` toast now distinguishes between "invites sent" (new users), "magic links sent (existing account)", "already registered (can log in directly)", and "failed" — so admins know exactly what happened for each user
+- **Resend invite toast updated**: Shows appropriate message for existing users — either "magic link sent" or "can log in directly" depending on whether OTP succeeded
+- Both `start_beta` and `resend_invite` API responses now include `already_existed` and `email_sent` fields per user
+
 ## [1.10.23] - 2026-02-28
 
 ### Beta UX fixes + screenshot bug reports

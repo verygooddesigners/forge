@@ -222,7 +222,15 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      toast.success(`Invite resent to ${email}`);
+      if (json.already_existed) {
+        toast.success(
+          json.email_sent
+            ? `Magic link sent to ${email} (existing account)`
+            : `${email} already has an account — they can log in directly`
+        );
+      } else {
+        toast.success(`Invite resent to ${email}`);
+      }
       load();
     } catch (e: any) {
       toast.error(e.message);
@@ -274,9 +282,16 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      const succeeded = json.results?.filter((r: any) => r.success).length ?? 0;
+      const succeeded = json.results?.filter((r: any) => r.success && !r.already_existed).length ?? 0;
+      const existingUsers = json.results?.filter((r: any) => r.success && r.already_existed && r.email_sent).length ?? 0;
+      const existingNoEmail = json.results?.filter((r: any) => r.success && r.already_existed && !r.email_sent).length ?? 0;
       const failed = json.results?.filter((r: any) => !r.success).length ?? 0;
-      toast.success(`Beta started — ${succeeded} invite${succeeded !== 1 ? 's' : ''} sent${failed > 0 ? `, ${failed} failed` : ''}`);
+      const parts: string[] = [];
+      if (succeeded > 0) parts.push(`${succeeded} invite${succeeded !== 1 ? 's' : ''} sent`);
+      if (existingUsers > 0) parts.push(`${existingUsers} magic link${existingUsers !== 1 ? 's' : ''} sent (existing account)`);
+      if (existingNoEmail > 0) parts.push(`${existingNoEmail} already registered (can log in directly)`);
+      if (failed > 0) parts.push(`${failed} failed`);
+      toast.success(`Beta started — ${parts.join(', ') || 'no pending invites'}`);
       load();
     } catch (e: any) {
       toast.error(e.message);
