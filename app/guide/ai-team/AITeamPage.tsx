@@ -122,7 +122,7 @@ export default function AITeamPage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg-deepest">
+    <div className="flex-1 overflow-y-auto bg-bg-deepest">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-bg-deep/80 backdrop-blur-md border-b border-border-default">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

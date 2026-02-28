@@ -122,7 +122,7 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
   );
 
   return (
-    <div className="min-h-screen bg-bg-primary p-6">
+    <div className="flex-1 overflow-y-auto bg-bg-primary p-6">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-6">

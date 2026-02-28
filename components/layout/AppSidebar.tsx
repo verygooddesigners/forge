@@ -18,6 +18,7 @@ import {
   Moon,
   PenTool,
   Plus,
+  KeyRound,
 } from 'lucide-react';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
@@ -233,6 +234,13 @@ export function AppSidebar({
             >
               <PenTool className="w-4 h-4 shrink-0" />
               Writer Model
+            </button>
+            <button
+              onClick={() => { router.push('/change-password'); setProfileMenuOpen(false); }}
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-black/5 hover:text-text-primary transition-all"
+            >
+              <KeyRound className="w-4 h-4 shrink-0" />
+              Change Password
             </button>
             <button
               onClick={() => { router.push('/settings'); setProfileMenuOpen(false); }}

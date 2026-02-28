@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.10.35] - 2026-02-28
+
+### Fix: Layout broken on authenticated pages + Change Password feature
+
+- **Layout fix**: All authenticated pages (Profile, Settings, Guide pages, Change Password) were using `min-h-screen` which doesn't work inside the root layout's fixed-height flex container — changed to `flex-1 overflow-y-auto` so pages fill the viewport and scroll correctly
+- **Change Password page**: New `/change-password` route with show/hide password toggles, match validation, and immediate redirect to dashboard on success
+- **Sidebar**: Added "Change Password" (key icon) to the user menu popup
+- **Magic link fix**: Login links generated from Beta Management now redirect to `/dashboard` instead of `/` (which was bouncing users to the login screen)
+
 ## [1.10.34] - 2026-02-28
 
 ### Feature: Get Login Link for beta users
