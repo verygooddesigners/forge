@@ -555,7 +555,7 @@ export function BetaToolbar({ userEmail }: { userEmail?: string }) {
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.12)'; }}
         >
           <Bug size={13} />
-          {isAdmin ? 'All Reports' : 'Bug Report'}
+          Bug Report
         </button>
 
         {/* My Reports (non-admin) or shortcut to admin view */}
