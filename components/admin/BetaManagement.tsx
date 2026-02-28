@@ -227,6 +227,8 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
       if (!res.ok) throw new Error(json.error);
       if (json.already_existed && json.magic_link) {
         setMagicLinks([{ email, link: json.magic_link }]);
+      } else if (json.already_existed && json.link_error) {
+        toast.error(`generateLink error: ${json.link_error}`);
       } else if (json.already_existed) {
         toast.error(`Couldn't generate a login link for ${email}. They can log in at /login.`);
       } else {

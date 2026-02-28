@@ -302,6 +302,13 @@ export async function PATCH(req: NextRequest) {
           magicLink = linkData.properties.action_link;
         } else if (linkError) {
           console.warn(`[beta resend_invite] generateLink failed for ${email}:`, linkError.message);
+          // Return the actual error so the admin can see what's going wrong
+          return NextResponse.json({
+            success: true,
+            already_existed: true,
+            magic_link: null,
+            link_error: linkError.message,
+          });
         }
       } else {
         resentUserId = inviteData.user?.id ?? null;
