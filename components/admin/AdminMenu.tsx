@@ -20,6 +20,7 @@ import {
   Activity,
   Link2,
   PenLine,
+  FlaskConical,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -32,6 +33,7 @@ import { cn } from '@/lib/utils';
 const ADMIN_MENU_STORAGE_KEY = 'forge-admin-menu-collapsed';
 
 export type AdminSectionId =
+  | 'beta'
   | 'users'
   | 'teams'
   | 'api-keys'
@@ -63,6 +65,9 @@ interface MenuItem {
 }
 
 const MENU_ITEMS: MenuItem[] = [
+  // Beta
+  { id: 'beta', label: 'Beta Management', icon: FlaskConical, requiredPermission: 'can_access_admin', group: 'Beta' },
+
   // User Management
   { id: 'users', label: 'Manage Users', icon: Users, requiredPermission: 'can_view_users', group: 'User Management' },
   { id: 'teams', label: 'Teams', icon: UsersRound, requiredPermission: 'can_manage_teams', group: 'User Management' },

@@ -15,6 +15,7 @@ import { OddsApiManagement } from './OddsApiManagement';
 import { AuditLog } from './AuditLog';
 import { SystemHealth } from './SystemHealth';
 import { WriterModelsAdmin } from './WriterModelsAdmin';
+import { BetaManagement } from './BetaManagement';
 import type { AdminSectionId } from './AdminMenu';
 
 interface AdminDashboardProps {
@@ -24,6 +25,8 @@ interface AdminDashboardProps {
 
 export function AdminDashboard({ user, activeSection }: AdminDashboardProps) {
   switch (activeSection) {
+    case 'beta':
+      return <BetaManagement adminUser={user} />;
     case 'users':
       return <UserManagement adminUser={user} />;
     case 'teams':

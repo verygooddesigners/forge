@@ -4,6 +4,21 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.17] - 2026-02-28
+
+### Beta Management System
+- New **Beta Management** admin section at the top of the Admin menu (FlaskConical icon)
+- Create named betas (e.g. "Beta 1") with goals/notes; manage users and invites per beta
+- **Start Beta**: sends Supabase invite emails to all added users in one click
+- **End Beta**: marks beta as ended, user accounts become permanent with same permissions
+- **Resend Invite**: per-user button to re-send a fresh invite link (useful after 24hr expiry)
+- Beta Notes editor with version tracking and "Mark as major update" toggle
+- **Beta Notes Modal**: mandatory acknowledgment on first login; dismissible X for major updates
+- **Beta Toolbar**: new ScrollText icon opens Beta Notes panel for users in active betas
+- **Toolbar collapse**: X button minimizes toolbar to a small "⚡ BETA" pill to avoid covering UI buttons; click to restore; preference saved to localStorage
+- New Supabase migration: `00026_betas.sql` (betas + beta_users tables with RLS)
+- New API routes: `/api/admin/betas` (CRUD + start/end/resend) and `/api/beta-notes` (user-facing read + acknowledge)
+
 ## [1.10.16] - 2026-02-28
 
 ### UI Fixes

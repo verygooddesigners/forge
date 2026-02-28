@@ -1,11 +1,27 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Sparkles, Bug, X, Send, ChevronDown, ChevronUp } from 'lucide-react';
+import { Sparkles, Bug, X, Send, ChevronDown, ChevronUp, ScrollText } from 'lucide-react';
 import { toast } from 'sonner';
 
-const VERSION = '1.10.13';
+const VERSION = '1.10.16';
 const UPDATED = '02/28/26';
+
+// ─── Types ─────────────────────────────────────────────────────────────────
+interface BetaData {
+  beta: {
+    id: string;
+    name: string;
+    notes: string;
+    notes_version: number;
+    notes_is_major_update: boolean;
+  };
+  membership: {
+    id: string;
+    acknowledged_at: string | null;
+    last_seen_notes_version: number;
+  };
+}
 
 // ─── Status badge helper ───────────────────────────────────────────────────
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
@@ -35,6 +51,89 @@ function StatusBadge({ status }: { status: string }) {
     >
       {cfg.label}
     </span>
+  );
+}
+
+// ─── Beta Notes Panel ──────────────────────────────────────────────────────
+function BetaNotesPanel({ betaData, onClose }: { betaData: BetaData; onClose: () => void }) {
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 10000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(0,0,0,0.45)',
+        backdropFilter: 'blur(4px)',
+      }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div
+        style={{
+          background: '#fff',
+          borderRadius: '20px',
+          padding: '28px',
+          width: '100%',
+          maxWidth: '520px',
+          maxHeight: '80vh',
+          margin: '0 16px',
+          boxShadow: '0 24px 60px rgba(0,0,0,0.18)',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+          overflow: 'hidden',
+        }}
+      >
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute', top: '16px', right: '16px',
+            background: 'none', border: 'none', cursor: 'pointer',
+            color: '#9CA3AF', padding: '4px', borderRadius: '8px',
+          }}
+        >
+          <X size={18} />
+        </button>
+
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <span style={{
+              fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em',
+              textTransform: 'uppercase', color: '#8B5CF6',
+              background: 'rgba(139,92,246,0.1)', padding: '2px 8px', borderRadius: '20px',
+            }}>
+              {betaData.beta.name}
+            </span>
+          </div>
+          <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#111827' }}>
+            Beta Notes
+          </h2>
+        </div>
+
+        <div
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            background: '#F9F5FF',
+            borderRadius: '12px',
+            padding: '16px',
+            fontSize: '14px',
+            lineHeight: '1.65',
+            color: '#374151',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          {betaData.beta.notes || 'No notes added for this beta yet.'}
+        </div>
+
+        <p style={{ fontSize: '11px', color: '#9CA3AF', margin: 0 }}>
+          v{betaData.beta.notes_version} · {betaData.beta.name}
+        </p>
+      </div>
+    </div>
   );
 }
 
@@ -99,25 +198,17 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
           position: 'relative',
         }}
       >
-        {/* Close */}
         <button
           onClick={onClose}
           style={{
-            position: 'absolute',
-            top: '16px',
-            right: '16px',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            color: '#9CA3AF',
-            padding: '4px',
-            borderRadius: '8px',
+            position: 'absolute', top: '16px', right: '16px',
+            background: 'none', border: 'none', cursor: 'pointer',
+            color: '#9CA3AF', padding: '4px', borderRadius: '8px',
           }}
         >
           <X size={18} />
         </button>
 
-        {/* Icon + Title */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
           <div style={{
             width: '40px', height: '40px', borderRadius: '12px',
@@ -182,8 +273,7 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
                 style={{
                   width: '100%', padding: '10px 12px', borderRadius: '10px',
                   border: '1.5px solid #E5E7EB', fontSize: '14px', color: '#111827',
-                  outline: 'none', boxSizing: 'border-box',
-                  fontFamily: 'inherit',
+                  outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit',
                 }}
                 onFocus={(e) => { e.target.style.borderColor = accentColor; }}
                 onBlur={(e) => { e.target.style.borderColor = '#E5E7EB'; }}
@@ -335,36 +425,23 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
 
         <div style={{ overflowY: 'auto', flex: 1 }}>
           {loading && (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: '#9CA3AF', fontSize: '14px' }}>
-              Loading…
-            </div>
+            <div style={{ textAlign: 'center', padding: '40px 0', color: '#9CA3AF', fontSize: '14px' }}>Loading…</div>
           )}
           {!loading && items?.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: '#9CA3AF', fontSize: '14px' }}>
-              No submissions yet.
-            </div>
+            <div style={{ textAlign: 'center', padding: '40px 0', color: '#9CA3AF', fontSize: '14px' }}>No submissions yet.</div>
           )}
           {!loading && items && items.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {items.map(item => {
                 const isOpen = expanded === item.id;
                 return (
-                  <div
-                    key={item.id}
-                    style={{
-                      border: '1.5px solid #F3F4F6',
-                      borderRadius: '12px',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {/* Row header */}
+                  <div key={item.id} style={{ border: '1.5px solid #F3F4F6', borderRadius: '12px', overflow: 'hidden' }}>
                     <button
                       onClick={() => setExpanded(isOpen ? null : item.id)}
                       style={{
                         width: '100%', background: isOpen ? '#F9F5FF' : '#FAFAFA',
                         border: 'none', cursor: 'pointer', padding: '12px 14px',
-                        display: 'flex', alignItems: 'center', gap: '10px',
-                        textAlign: 'left',
+                        display: 'flex', alignItems: 'center', gap: '10px', textAlign: 'left',
                       }}
                     >
                       <span style={{
@@ -391,7 +468,6 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
                       </span>
                     </button>
 
-                    {/* Expanded detail */}
                     {isOpen && (
                       <div style={{ padding: '14px', borderTop: '1px solid #F3F4F6', background: '#fff' }}>
                         <p style={{ fontSize: '13px', color: '#374151', margin: '0 0 10px', lineHeight: '1.5' }}>
@@ -416,9 +492,7 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
                           <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                             <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                               <div style={{ flex: 1 }}>
-                                <label style={{ fontSize: '11px', fontWeight: 600, color: '#6B7280', display: 'block', marginBottom: '4px' }}>
-                                  STATUS
-                                </label>
+                                <label style={{ fontSize: '11px', fontWeight: 600, color: '#6B7280', display: 'block', marginBottom: '4px' }}>STATUS</label>
                                 <select
                                   defaultValue={item.status}
                                   onChange={e => setEditStatus(prev => ({ ...prev, [item.id]: e.target.value }))}
@@ -479,9 +553,30 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
 }
 
 // ─── Main BetaToolbar ──────────────────────────────────────────────────────
-export function BetaToolbar({ userEmail }: { userEmail?: string }) {
-  const [modal, setModal] = useState<'bug' | 'feature' | 'reports' | null>(null);
-  const isAdmin = userEmail ? ['jeremy.botter@gdcgroup.com', 'jeremy.botter@gmail.com'].includes(userEmail) : false;
+const TOOLBAR_COLLAPSED_KEY = 'forge-beta-toolbar-collapsed';
+
+interface BetaToolbarProps {
+  userEmail?: string;
+  betaData?: BetaData | null;
+}
+
+export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
+  const [modal, setModal] = useState<'bug' | 'feature' | 'reports' | 'notes' | null>(null);
+  const [collapsed, setCollapsed] = useState(() => {
+    try { return localStorage.getItem(TOOLBAR_COLLAPSED_KEY) === 'true'; } catch { return false; }
+  });
+
+  const toggleCollapsed = () => {
+    const next = !collapsed;
+    setCollapsed(next);
+    try { localStorage.setItem(TOOLBAR_COLLAPSED_KEY, String(next)); } catch { /* ignore */ }
+  };
+
+  const isAdmin = userEmail
+    ? ['jeremy.botter@gdcgroup.com', 'jeremy.botter@gmail.com'].includes(userEmail)
+    : false;
+
+  const hasBetaNotes = !!betaData?.beta?.notes;
 
   const pill: React.CSSProperties = {
     display: 'inline-flex',
@@ -496,103 +591,144 @@ export function BetaToolbar({ userEmail }: { userEmail?: string }) {
     transition: 'all 0.15s',
   };
 
+  const iconBtn: React.CSSProperties = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '5px 8px',
+    borderRadius: '999px',
+    fontSize: '14px',
+    cursor: 'pointer',
+    border: 'none',
+    background: 'none',
+    color: '#7C3AED',
+    transition: 'background 0.15s',
+  };
+
   return (
     <>
-      {/* Floating toolbar */}
-      <div
-        style={{
-          position: 'fixed',
-          top: '14px',
-          right: '28px',
-          zIndex: 9999,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-          background: 'rgba(245, 243, 255, 0.92)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          border: '1.5px solid rgba(139, 92, 246, 0.25)',
-          borderRadius: '999px',
-          padding: '5px 8px 5px 14px',
-          boxShadow: '0 4px 24px rgba(139, 92, 246, 0.18), 0 1px 4px rgba(0,0,0,0.06)',
-        }}
-      >
-        {/* Version info */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginRight: '4px' }}>
-          <span style={{ fontSize: '11px', fontWeight: 700, color: '#5B21B6', letterSpacing: '0.02em' }}>
-            BETA v{VERSION}
-          </span>
-          <span style={{ width: '1px', height: '12px', background: 'rgba(139, 92, 246, 0.2)' }} />
-          <span style={{ fontSize: '11px', color: '#7C3AED', opacity: 0.7 }}>
-            {UPDATED}
-          </span>
-        </div>
-
-        {/* Suggest Feature */}
+      {/* Collapsed mini pill */}
+      {collapsed && (
         <button
-          onClick={() => setModal('feature')}
+          onClick={toggleCollapsed}
+          title="Show Beta Toolbar"
           style={{
-            ...pill,
-            background: '#8B5CF6',
-            color: '#fff',
-          }}
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#7C3AED'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#8B5CF6'; }}
-        >
-          <Sparkles size={13} />
-          Suggest Feature
-        </button>
-
-        {/* Bug Report */}
-        <button
-          onClick={() => setModal('bug')}
-          style={{
-            ...pill,
-            background: 'rgba(139, 92, 246, 0.12)',
+            position: 'fixed',
+            top: '14px',
+            right: '28px',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            background: 'rgba(245, 243, 255, 0.92)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: '1.5px solid rgba(139, 92, 246, 0.25)',
+            borderRadius: '999px',
+            padding: '5px 12px',
+            boxShadow: '0 4px 24px rgba(139, 92, 246, 0.18), 0 1px 4px rgba(0,0,0,0.06)',
+            cursor: 'pointer',
+            fontSize: '11px',
+            fontWeight: 700,
             color: '#5B21B6',
+            letterSpacing: '0.02em',
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.2)'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.12)'; }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(245, 243, 255, 1)'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(245, 243, 255, 0.92)'; }}
         >
-          <Bug size={13} />
-          Bug Report
+          ⚡ BETA
         </button>
+      )}
 
-        {/* My Reports (non-admin) or shortcut to admin view */}
-        {!isAdmin && (
+      {/* Full toolbar */}
+      {!collapsed && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '14px',
+            right: '28px',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            background: 'rgba(245, 243, 255, 0.92)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: '1.5px solid rgba(139, 92, 246, 0.25)',
+            borderRadius: '999px',
+            padding: '5px 8px 5px 14px',
+            boxShadow: '0 4px 24px rgba(139, 92, 246, 0.18), 0 1px 4px rgba(0,0,0,0.06)',
+          }}
+        >
+          {/* Version info */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginRight: '4px' }}>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: '#5B21B6', letterSpacing: '0.02em' }}>
+              BETA v{VERSION}
+            </span>
+            <span style={{ width: '1px', height: '12px', background: 'rgba(139, 92, 246, 0.2)' }} />
+            <span style={{ fontSize: '11px', color: '#7C3AED', opacity: 0.7 }}>
+              {UPDATED}
+            </span>
+          </div>
+
+          {/* Suggest Feature */}
+          <button
+            onClick={() => setModal('feature')}
+            style={{ ...pill, background: '#8B5CF6', color: '#fff' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#7C3AED'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#8B5CF6'; }}
+          >
+            <Sparkles size={13} />
+            Suggest Feature
+          </button>
+
+          {/* Bug Report */}
+          <button
+            onClick={() => setModal('bug')}
+            style={{ ...pill, background: 'rgba(139, 92, 246, 0.12)', color: '#5B21B6' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.2)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.12)'; }}
+          >
+            <Bug size={13} />
+            Bug Report
+          </button>
+
+          {/* Beta Notes */}
+          {hasBetaNotes && (
+            <button
+              onClick={() => setModal('notes')}
+              style={iconBtn}
+              title="Beta Notes"
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.1)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'none'; }}
+            >
+              <ScrollText size={15} />
+            </button>
+          )}
+
+          {/* My Reports / All Feedback */}
           <button
             onClick={() => setModal('reports')}
-            style={{
-              ...pill,
-              background: 'none',
-              color: '#7C3AED',
-              padding: '5px 8px',
-            }}
-            title="My submissions"
+            style={iconBtn}
+            title={isAdmin ? 'View all feedback' : 'My submissions'}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.1)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'none'; }}
           >
-            📬
+            {isAdmin ? '📋' : '📬'}
           </button>
-        )}
-        {isAdmin && (
+
+          {/* Collapse button */}
           <button
-            onClick={() => setModal('reports')}
-            style={{
-              ...pill,
-              background: 'none',
-              color: '#7C3AED',
-              padding: '5px 8px',
-              fontSize: '14px',
-            }}
-            title="View all feedback"
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.1)'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'none'; }}
+            onClick={toggleCollapsed}
+            style={{ ...iconBtn, opacity: 0.5 }}
+            title="Minimize toolbar"
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.1)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '0.5'; (e.currentTarget as HTMLElement).style.background = 'none'; }}
           >
-            📋
+            <X size={13} />
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Modals */}
       {(modal === 'bug' || modal === 'feature') && (
@@ -600,6 +736,9 @@ export function BetaToolbar({ userEmail }: { userEmail?: string }) {
       )}
       {modal === 'reports' && (
         <MyReports onClose={() => setModal(null)} isAdmin={isAdmin} />
+      )}
+      {modal === 'notes' && betaData && (
+        <BetaNotesPanel betaData={betaData} onClose={() => setModal(null)} />
       )}
     </>
   );
