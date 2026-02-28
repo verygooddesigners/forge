@@ -4,6 +4,14 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.26] - 2026-02-28
+
+### Fix: magic link modal for existing beta users
+
+- Replaced unreliable OTP email approach with `admin.auth.admin.generateLink()` — generates a real one-click login URL server-side without relying on Supabase's email system
+- New "Login Links" modal pops up automatically after Resend or Start Beta when existing users are found — shows each email with a copyable link you can share via Slack, email, or any channel
+- Toast messages updated to reflect the new flow
+
 ## [1.10.25] - 2026-02-28
 
 ### Fix: OTP magic link redirect_to as query param (not body)

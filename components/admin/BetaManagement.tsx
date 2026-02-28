@@ -18,6 +18,8 @@ import {
   FileText,
   Loader2,
   X,
+  Copy,
+  Link2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -98,6 +100,7 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
   const [confirmEndId, setConfirmEndId] = useState<string | null>(null);
   const [writerModels, setWriterModels] = useState<WriterModelOption[]>([]);
   const [assigningModelMap, setAssigningModelMap] = useState<Record<string, boolean>>({});
+  const [magicLinks, setMagicLinks] = useState<{ email: string; link: string }[]>([]);
 
   const load = useCallback(async () => {
     try {
@@ -222,12 +225,10 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      if (json.already_existed) {
-        toast.success(
-          json.email_sent
-            ? `Magic link sent to ${email} (existing account)`
-            : `${email} already has an account — they can log in directly`
-        );
+      if (json.already_existed && json.magic_link) {
+        setMagicLinks([{ email, link: json.magic_link }]);
+      } else if (json.already_existed) {
+        toast.error(`Couldn't generate a login link for ${email}. They can log in at /login.`);
       } else {
         toast.success(`Invite resent to ${email}`);
       }
@@ -283,15 +284,18 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
       const succeeded = json.results?.filter((r: any) => r.success && !r.already_existed).length ?? 0;
-      const existingUsers = json.results?.filter((r: any) => r.success && r.already_existed && r.email_sent).length ?? 0;
-      const existingNoEmail = json.results?.filter((r: any) => r.success && r.already_existed && !r.email_sent).length ?? 0;
+      const withLinks = (json.results ?? []).filter((r: any) => r.success && r.already_existed && r.magic_link);
+      const existingNoLink = json.results?.filter((r: any) => r.success && r.already_existed && !r.magic_link).length ?? 0;
       const failed = json.results?.filter((r: any) => !r.success).length ?? 0;
       const parts: string[] = [];
       if (succeeded > 0) parts.push(`${succeeded} invite${succeeded !== 1 ? 's' : ''} sent`);
-      if (existingUsers > 0) parts.push(`${existingUsers} magic link${existingUsers !== 1 ? 's' : ''} sent (existing account)`);
-      if (existingNoEmail > 0) parts.push(`${existingNoEmail} already registered (can log in directly)`);
+      if (withLinks.length > 0) parts.push(`${withLinks.length} login link${withLinks.length !== 1 ? 's' : ''} ready to share`);
+      if (existingNoLink > 0) parts.push(`${existingNoLink} already registered`);
       if (failed > 0) parts.push(`${failed} failed`);
       toast.success(`Beta started — ${parts.join(', ') || 'no pending invites'}`);
+      if (withLinks.length > 0) {
+        setMagicLinks(withLinks.map((r: any) => ({ email: r.email, link: r.magic_link })));
+      }
       load();
     } catch (e: any) {
       toast.error(e.message);
@@ -718,6 +722,50 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
               {creating && <Loader2 className="w-4 h-4 animate-spin" />}
               Create Beta
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Magic Links dialog — for existing users who can't receive an invite email */}
+      <Dialog open={magicLinks.length > 0} onOpenChange={open => !open && setMagicLinks([])}>
+        <DialogContent className="sm:max-w-[520px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Link2 className="w-4 h-4 text-violet-400" />
+              Login Links for Existing Users
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-[13px] text-text-secondary">
+            These users already have accounts so invite emails don&apos;t work. Share these one-click login links with them directly — via Slack, email, or any other way.
+          </p>
+          <div className="flex flex-col gap-3 py-1">
+            {magicLinks.map(({ email, link }) => (
+              <div key={email} className="flex flex-col gap-1.5 p-3 rounded-lg bg-bg-elevated border border-border-subtle">
+                <p className="text-[12px] font-medium text-text-secondary">{email}</p>
+                <div className="flex items-center gap-2">
+                  <input
+                    readOnly
+                    value={link}
+                    className="flex-1 text-[11px] bg-bg-deepest border border-border-subtle rounded px-2 py-1.5 text-text-tertiary font-mono truncate focus:outline-none"
+                  />
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="shrink-0 gap-1.5 text-[12px] h-7"
+                    onClick={() => {
+                      navigator.clipboard.writeText(link);
+                      toast.success('Copied!');
+                    }}
+                  >
+                    <Copy className="w-3 h-3" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setMagicLinks([])}>Done</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -5,7 +5,7 @@ import { Sparkles, Bug, X, Send, ChevronDown, ChevronUp, ScrollText, Paperclip, 
 import { toast } from 'sonner';
 import { createClient } from '@/lib/supabase/client';
 
-const VERSION = '1.10.25';
+const VERSION = '1.10.26';
 const UPDATED = '02/28/26';
 
 // ─── Types ─────────────────────────────────────────────────────────────────

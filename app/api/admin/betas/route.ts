@@ -181,13 +181,13 @@ export async function PATCH(req: NextRequest) {
         .eq('beta_id', beta_id)
         .is('invited_at', null);
 
-      const results: { email: string; success: boolean; already_existed?: boolean; email_sent?: boolean; error?: string }[] = [];
+      const results: { email: string; success: boolean; already_existed?: boolean; magic_link?: string; error?: string }[] = [];
 
       for (const bu of betaUsers ?? []) {
         try {
           let newUserId: string | null = null;
           let alreadyExisted = false;
-          let emailSent = false;
+          let magicLink: string | undefined;
 
           const { data: inviteData, error: inviteError } =
             await admin.auth.admin.inviteUserByEmail(bu.email, {
@@ -195,7 +195,7 @@ export async function PATCH(req: NextRequest) {
             });
 
           if (inviteError) {
-            // User already exists in auth — look up their ID from public.users
+            // User already exists in auth — look up their ID and generate a magic link for them
             const isAlreadyExists =
               inviteError.message?.toLowerCase().includes('database error saving new user') ||
               inviteError.message?.toLowerCase().includes('already been registered') ||
@@ -212,35 +212,20 @@ export async function PATCH(req: NextRequest) {
               .maybeSingle();
             newUserId = existingUser?.id ?? null;
 
-            // Send a magic link sign-in email since inviteUserByEmail doesn't work for existing users
-            try {
-              const redirectTo = encodeURIComponent(`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com'}/`);
-              const otpRes = await fetch(
-                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/otp?redirect_to=${redirectTo}`,
-                {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-                    'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}`,
-                  },
-                  body: JSON.stringify({
-                    email: bu.email,
-                    create_user: false,
-                  }),
-                }
-              );
-              emailSent = otpRes.ok;
-              if (!otpRes.ok) {
-                const errText = await otpRes.text();
-                console.warn(`[beta start_beta] OTP email failed for ${bu.email}:`, errText);
-              }
-            } catch (otpErr) {
-              console.warn(`[beta start_beta] OTP fetch error for ${bu.email}:`, otpErr);
+            // Generate a magic link the admin can share directly
+            const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com';
+            const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
+              type: 'magiclink',
+              email: bu.email,
+              options: { redirectTo: `${appUrl}/` },
+            });
+            if (!linkError && linkData?.properties?.action_link) {
+              magicLink = linkData.properties.action_link;
+            } else if (linkError) {
+              console.warn(`[beta start_beta] generateLink failed for ${bu.email}:`, linkError.message);
             }
           } else {
             newUserId = inviteData.user?.id ?? null;
-            emailSent = true;
           }
 
           await admin
@@ -261,7 +246,7 @@ export async function PATCH(req: NextRequest) {
             }, { onConflict: 'id', ignoreDuplicates: true });
           }
 
-          results.push({ email: bu.email, success: true, already_existed: alreadyExisted, email_sent: emailSent });
+          results.push({ email: bu.email, success: true, already_existed: alreadyExisted, magic_link: magicLink });
         } catch (e: any) {
           results.push({ email: bu.email, success: false, error: e.message });
         }
@@ -282,13 +267,13 @@ export async function PATCH(req: NextRequest) {
 
       let resentUserId: string | null = null;
       let alreadyExisted = false;
-      let emailSent = false;
+      let magicLink: string | undefined;
 
       const { data: inviteData, error: inviteError } =
         await admin.auth.admin.inviteUserByEmail(email, { data: { beta_id } });
 
       if (inviteError) {
-        // User already exists in auth — look up their ID from public.users
+        // User already exists in auth — look up their ID and generate a magic link for them
         const isAlreadyExists =
           inviteError.message?.toLowerCase().includes('database error saving new user') ||
           inviteError.message?.toLowerCase().includes('already been registered') ||
@@ -306,35 +291,20 @@ export async function PATCH(req: NextRequest) {
           .maybeSingle();
         resentUserId = existingUser?.id ?? null;
 
-        // Send a magic link sign-in email since inviteUserByEmail doesn't work for existing users
-        try {
-          const redirectTo = encodeURIComponent(`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com'}/`);
-          const otpRes = await fetch(
-            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/otp?redirect_to=${redirectTo}`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-                'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}`,
-              },
-              body: JSON.stringify({
-                email,
-                create_user: false,
-              }),
-            }
-          );
-          emailSent = otpRes.ok;
-          if (!otpRes.ok) {
-            const errText = await otpRes.text();
-            console.warn(`[beta resend_invite] OTP email failed for ${email}:`, errText);
-          }
-        } catch (otpErr) {
-          console.warn(`[beta resend_invite] OTP fetch error for ${email}:`, otpErr);
+        // Generate a magic link the admin can share directly (no email required)
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com';
+        const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
+          type: 'magiclink',
+          email,
+          options: { redirectTo: `${appUrl}/` },
+        });
+        if (!linkError && linkData?.properties?.action_link) {
+          magicLink = linkData.properties.action_link;
+        } else if (linkError) {
+          console.warn(`[beta resend_invite] generateLink failed for ${email}:`, linkError.message);
         }
       } else {
         resentUserId = inviteData.user?.id ?? null;
-        emailSent = true;
       }
 
       await admin
@@ -356,7 +326,7 @@ export async function PATCH(req: NextRequest) {
         }, { onConflict: 'id', ignoreDuplicates: true });
       }
 
-      return NextResponse.json({ success: true, already_existed: alreadyExisted, email_sent: emailSent });
+      return NextResponse.json({ success: true, already_existed: alreadyExisted, magic_link: magicLink });
     }
 
     // ── Assign writer model ───────────────────────────────────────────────────
