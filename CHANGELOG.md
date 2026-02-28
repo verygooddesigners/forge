@@ -4,6 +4,14 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.27] - 2026-02-28
+
+### Fix: beta invite flow — stale user cleanup + trigger fix
+
+- **Migration 00028**: Changed `handle_new_user` trigger from `ON CONFLICT (id) DO NOTHING` to `ON CONFLICT DO NOTHING` — this catches both `id` AND `email` unique constraint violations, so auth operations (inviteUserByEmail, generateLink) no longer fail with "Database error saving new user" when the email already exists in `public.users`
+- **Proactive stale row cleanup**: Before sending any invite, the API now checks if the email has an orphaned `public.users` row (UUID exists in public.users but NOT in auth.users). If found, the stale row is deleted automatically — this lets the trigger correctly create the right row after the invite lands
+- **Removed debug code**: Cleaned up temporary `link_error` field from resend_invite response and corresponding toast branch in BetaManagement
+
 ## [1.10.26] - 2026-02-28
 
 ### Fix: magic link modal for existing beta users

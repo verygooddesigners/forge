@@ -189,6 +189,21 @@ export async function PATCH(req: NextRequest) {
           let alreadyExisted = false;
           let magicLink: string | undefined;
 
+          // Pre-invite cleanup: if public.users has a row for this email whose UUID
+          // doesn't exist in auth.users, delete it so the trigger can create the correct row.
+          const { data: staleRow } = await admin
+            .from('users')
+            .select('id')
+            .eq('email', bu.email.toLowerCase())
+            .maybeSingle();
+          if (staleRow) {
+            const { data: authCheck } = await admin.auth.admin.getUserById(staleRow.id);
+            if (!authCheck?.user) {
+              console.log(`[beta start_beta] Removing stale public.users row for ${bu.email} (id: ${staleRow.id})`);
+              await admin.from('users').delete().eq('id', staleRow.id);
+            }
+          }
+
           const { data: inviteData, error: inviteError } =
             await admin.auth.admin.inviteUserByEmail(bu.email, {
               data: { beta_id },
@@ -269,6 +284,21 @@ export async function PATCH(req: NextRequest) {
       let alreadyExisted = false;
       let magicLink: string | undefined;
 
+      // Pre-invite cleanup: if public.users has a row for this email whose UUID
+      // doesn't exist in auth.users, delete it so the trigger can create the correct row.
+      const { data: staleResendRow } = await admin
+        .from('users')
+        .select('id')
+        .eq('email', email.toLowerCase())
+        .maybeSingle();
+      if (staleResendRow) {
+        const { data: authCheck } = await admin.auth.admin.getUserById(staleResendRow.id);
+        if (!authCheck?.user) {
+          console.log(`[beta resend_invite] Removing stale public.users row for ${email} (id: ${staleResendRow.id})`);
+          await admin.from('users').delete().eq('id', staleResendRow.id);
+        }
+      }
+
       const { data: inviteData, error: inviteError } =
         await admin.auth.admin.inviteUserByEmail(email, { data: { beta_id } });
 
@@ -302,13 +332,6 @@ export async function PATCH(req: NextRequest) {
           magicLink = linkData.properties.action_link;
         } else if (linkError) {
           console.warn(`[beta resend_invite] generateLink failed for ${email}:`, linkError.message);
-          // Return the actual error so the admin can see what's going wrong
-          return NextResponse.json({
-            success: true,
-            already_existed: true,
-            magic_link: null,
-            link_error: linkError.message,
-          });
         }
       } else {
         resentUserId = inviteData.user?.id ?? null;
