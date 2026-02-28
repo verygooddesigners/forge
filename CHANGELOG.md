@@ -4,6 +4,12 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.15] - 2026-02-28
+
+### Added
+- **Writer Models Admin**: New "Writer Models" section in Admin → AI & Content. Create house or personal models, view training counts, assign/unassign users as default, and delete models.
+- **Writer Models API**: Full CRUD at `/api/writer-models` (GET/POST/PATCH/DELETE) with super-admin auth.
+
 ## [1.10.14] - 2026-02-28
 
 ### Added

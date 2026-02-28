@@ -19,6 +19,7 @@ import {
   ScrollText,
   Activity,
   Link2,
+  PenLine,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -38,6 +39,7 @@ export type AdminSectionId =
   | 'ai-tuner'
   | 'ai-helper'
   | 'ai-agents'
+  | 'writer-models'
   | 'trusted-sources'
   | 'tools'
   | 'roles-editor'
@@ -70,6 +72,7 @@ const MENU_ITEMS: MenuItem[] = [
   { id: 'ai-tuner', label: 'AI Tuner', icon: Sliders, requiredPermission: 'can_edit_master_ai', group: 'AI & Content' },
   { id: 'ai-agents', label: 'AI Agents', icon: Bot, requiredPermission: 'can_tune_ai_agents', group: 'AI & Content' },
   { id: 'ai-helper', label: 'AI Helper Bot', icon: MessageCircle, requiredPermission: 'can_edit_master_ai', group: 'AI & Content' },
+  { id: 'writer-models', label: 'Writer Models', icon: PenLine, requiredPermission: 'can_edit_master_ai', group: 'AI & Content' },
   { id: 'trusted-sources', label: 'Trusted Sources', icon: BookMarked, requiredPermission: 'can_manage_trusted_sources', group: 'AI & Content' },
 
   // Integrations

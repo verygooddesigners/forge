@@ -14,6 +14,7 @@ import { RolesEditor } from './RolesEditor';
 import { OddsApiManagement } from './OddsApiManagement';
 import { AuditLog } from './AuditLog';
 import { SystemHealth } from './SystemHealth';
+import { WriterModelsAdmin } from './WriterModelsAdmin';
 import type { AdminSectionId } from './AdminMenu';
 
 interface AdminDashboardProps {
@@ -37,6 +38,8 @@ export function AdminDashboard({ user, activeSection }: AdminDashboardProps) {
       return <AIHelperAdmin adminUser={user} />;
     case 'ai-agents':
       return <AgentTuner adminUser={user} />;
+    case 'writer-models':
+      return <WriterModelsAdmin adminUser={user} />;
     case 'trusted-sources':
       return <TrustedSourcesAdmin />;
     case 'tools':
