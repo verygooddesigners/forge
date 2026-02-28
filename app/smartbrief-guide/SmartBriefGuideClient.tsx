@@ -54,7 +54,7 @@ export default function SmartBriefGuideClient() {
   };
 
   return (
-    <div className="h-full flex flex-col bg-bg-deepest overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-bg-deepest overflow-hidden">
       {/* Header */}
       <header className="border-b border-border-default bg-bg-surface sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">

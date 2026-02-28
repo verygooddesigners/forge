@@ -69,7 +69,8 @@ export function ClientInit() {
     <>
       <PasswordResetHandler />
       <Toaster theme="dark" position="bottom-right" richColors />
-      <BetaToolbar userEmail={userEmail} betaData={betaData} />
+      {/* Only show BetaToolbar when authenticated */}
+      {userEmail && <BetaToolbar userEmail={userEmail} betaData={betaData} />}
       {showModal && (
         <BetaNotesModal data={betaData} onDismiss={handleBetaModalDismiss} />
       )}

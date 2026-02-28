@@ -4,6 +4,17 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.23] - 2026-02-28
+
+### Beta UX fixes + screenshot bug reports
+
+- **Screenshot attachment for Bug Reports**: Users can now attach a screenshot when submitting a bug report — drag & drop or click-to-upload, image preview with remove button, uploads to Supabase Storage `bug-screenshots` bucket; screenshots visible in My Reports / All Feedback panel
+- **Beta Toolbar hidden on login**: `BetaToolbar` now only renders when user is authenticated (was showing on `/login` page)
+- **Login page layout fixed**: Login form now properly fills and centers within the frosted glass app container
+- **SmartBrief guide scrolling fixed**: Added `w-full` to SmartBriefGuideClient root so it fills the flex-row layout container and content area scrolls correctly
+- **Beta invite resilient to existing users**: Both `resend_invite` and `start_beta` now handle the "Database error saving new user" Supabase auth error gracefully — looks up existing user by email in `public.users` and updates `beta_users` record instead of failing
+- Migration 00027: `screenshot_url` column on `beta_feedback` + `bug-screenshots` Supabase Storage bucket with RLS
+
 ## [1.10.22] - 2026-02-28
 
 ### Fix: writer model assignment constraint error

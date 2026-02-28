@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { type, title, description } = body;
+    const { type, title, description, screenshot_url } = body;
 
     if (!type || !['bug', 'feature'].includes(type)) {
       return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
         title: title.trim(),
         description: description.trim(),
         status: 'submitted',
+        screenshot_url: screenshot_url ?? null,
       })
       .select()
       .single();

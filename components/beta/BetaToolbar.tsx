@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Sparkles, Bug, X, Send, ChevronDown, ChevronUp, ScrollText } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Sparkles, Bug, X, Send, ChevronDown, ChevronUp, ScrollText, Paperclip, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
+import { createClient } from '@/lib/supabase/client';
 
-const VERSION = '1.10.16';
+const VERSION = '1.10.23';
 const UPDATED = '02/28/26';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
@@ -148,19 +149,65 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
   const [description, setDescription] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
+  const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isBug = type === 'bug';
   const accentColor = '#8B5CF6';
+
+  function handleFileSelect(file: File) {
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please attach an image file');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be under 5MB');
+      return;
+    }
+    setScreenshotFile(file);
+    const reader = new FileReader();
+    reader.onload = (e) => setScreenshotPreview(e.target?.result as string);
+    reader.readAsDataURL(file);
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFileSelect(file);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!title.trim() || !description.trim()) return;
     setSubmitting(true);
     try {
+      let screenshot_url: string | null = null;
+
+      // Upload screenshot to Supabase Storage if attached
+      if (screenshotFile && isBug) {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const ext = screenshotFile.name.split('.').pop() || 'png';
+          const path = `${user.id}/${Date.now()}.${ext}`;
+          const { error: uploadError } = await supabase.storage
+            .from('bug-screenshots')
+            .upload(path, screenshotFile, { contentType: screenshotFile.type });
+          if (uploadError) throw uploadError;
+          const { data: { publicUrl } } = supabase.storage
+            .from('bug-screenshots')
+            .getPublicUrl(path);
+          screenshot_url = publicUrl;
+        }
+      }
+
       const res = await fetch('/api/beta-feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, title, description }),
+        body: JSON.stringify({ type, title, description, screenshot_url }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Failed to submit');
@@ -279,7 +326,7 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
                 onBlur={(e) => { e.target.style.borderColor = '#E5E7EB'; }}
               />
             </div>
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: isBug ? '16px' : '20px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
                 {isBug ? 'Steps to reproduce / details' : 'Describe the feature'}
               </label>
@@ -290,7 +337,7 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
                   ? 'What were you doing? What did you expect to happen?'
                   : 'How would this feature work? Why is it useful?'}
                 required
-                rows={5}
+                rows={4}
                 style={{
                   width: '100%', padding: '10px 12px', borderRadius: '10px',
                   border: '1.5px solid #E5E7EB', fontSize: '14px', color: '#111827',
@@ -301,6 +348,73 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
                 onBlur={(e) => { e.target.style.borderColor = '#E5E7EB'; }}
               />
             </div>
+
+            {/* Screenshot upload — bug reports only */}
+            {isBug && (
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+                  Screenshot <span style={{ fontWeight: 400, color: '#9CA3AF' }}>(optional)</span>
+                </label>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/gif,image/webp"
+                  style={{ display: 'none' }}
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFileSelect(f); }}
+                />
+
+                {screenshotPreview ? (
+                  <div style={{ position: 'relative', display: 'inline-block' }}>
+                    <img
+                      src={screenshotPreview}
+                      alt="Screenshot preview"
+                      style={{
+                        maxWidth: '100%', maxHeight: '160px', borderRadius: '10px',
+                        border: '1.5px solid #E5E7EB', display: 'block',
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => { setScreenshotFile(null); setScreenshotPreview(null); if (fileInputRef.current) fileInputRef.current.value = ''; }}
+                      style={{
+                        position: 'absolute', top: '-8px', right: '-8px',
+                        background: '#EF4444', border: 'none', borderRadius: '50%',
+                        width: '22px', height: '22px', cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: '#fff', padding: 0,
+                      }}
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                    onDragLeave={() => setDragOver(false)}
+                    onDrop={handleDrop}
+                    style={{
+                      border: `2px dashed ${dragOver ? accentColor : '#D1D5DB'}`,
+                      borderRadius: '10px',
+                      padding: '20px',
+                      textAlign: 'center',
+                      cursor: 'pointer',
+                      background: dragOver ? '#F5F3FF' : '#FAFAFA',
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+                      <Paperclip size={18} color={dragOver ? accentColor : '#9CA3AF'} />
+                      <span style={{ fontSize: '13px', color: '#6B7280' }}>
+                        Click to attach or drag & drop
+                      </span>
+                      <span style={{ fontSize: '11px', color: '#9CA3AF' }}>PNG, JPG, GIF, WebP · max 5MB</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={submitting || !title.trim() || !description.trim()}
@@ -314,7 +428,7 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
               }}
             >
               <Send size={15} />
-              {submitting ? 'Submitting…' : isBug ? 'Submit Bug Report' : 'Submit Suggestion'}
+              {submitting ? (screenshotFile ? 'Uploading & submitting…' : 'Submitting…') : isBug ? 'Submit Bug Report' : 'Submit Suggestion'}
             </button>
           </form>
         )}
@@ -333,6 +447,7 @@ interface FeedbackItem {
   created_at: string;
   admin_notes?: string;
   user_email?: string;
+  screenshot_url?: string;
 }
 
 function typeIcon(type: string) {
@@ -473,6 +588,26 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
                         <p style={{ fontSize: '13px', color: '#374151', margin: '0 0 10px', lineHeight: '1.5' }}>
                           {item.description}
                         </p>
+
+                        {item.screenshot_url && (
+                          <div style={{ marginBottom: '12px' }}>
+                            <a href={item.screenshot_url} target="_blank" rel="noopener noreferrer">
+                              <img
+                                src={item.screenshot_url}
+                                alt="Screenshot"
+                                style={{
+                                  maxWidth: '100%', maxHeight: '200px', borderRadius: '8px',
+                                  border: '1.5px solid #E5E7EB', display: 'block', cursor: 'pointer',
+                                }}
+                              />
+                            </a>
+                            <p style={{ fontSize: '11px', color: '#9CA3AF', margin: '4px 0 0', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <ImageIcon size={11} />
+                              Click to open full size
+                            </p>
+                          </div>
+                        )}
+
                         <p style={{ fontSize: '11px', color: '#9CA3AF', margin: '0 0 12px' }}>
                           Submitted: {new Date(item.created_at).toLocaleDateString('en-US', {
                             month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'

@@ -185,14 +185,31 @@ export async function PATCH(req: NextRequest) {
 
       for (const bu of betaUsers ?? []) {
         try {
+          let newUserId: string | null = null;
+
           const { data: inviteData, error: inviteError } =
             await admin.auth.admin.inviteUserByEmail(bu.email, {
               data: { beta_id },
             });
 
-          if (inviteError) throw inviteError;
+          if (inviteError) {
+            // User already exists in auth — look up their ID from public.users
+            const isAlreadyExists =
+              inviteError.message?.toLowerCase().includes('database error saving new user') ||
+              inviteError.message?.toLowerCase().includes('already been registered') ||
+              inviteError.message?.toLowerCase().includes('user already registered');
 
-          const newUserId = inviteData.user?.id ?? null;
+            if (!isAlreadyExists) throw inviteError;
+
+            const { data: existingUser } = await admin
+              .from('users')
+              .select('id')
+              .eq('email', bu.email.toLowerCase())
+              .maybeSingle();
+            newUserId = existingUser?.id ?? null;
+          } else {
+            newUserId = inviteData.user?.id ?? null;
+          }
 
           await admin
             .from('beta_users')
@@ -231,12 +248,30 @@ export async function PATCH(req: NextRequest) {
       const { email } = body;
       if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
 
+      let resentUserId: string | null = null;
+
       const { data: inviteData, error: inviteError } =
         await admin.auth.admin.inviteUserByEmail(email, { data: { beta_id } });
 
-      if (inviteError) throw inviteError;
+      if (inviteError) {
+        // User already exists in auth — look up their ID from public.users
+        const isAlreadyExists =
+          inviteError.message?.toLowerCase().includes('database error saving new user') ||
+          inviteError.message?.toLowerCase().includes('already been registered') ||
+          inviteError.message?.toLowerCase().includes('user already registered');
 
-      const resentUserId = inviteData.user?.id ?? null;
+        if (!isAlreadyExists) throw inviteError;
+
+        // Fall back: look up existing user record by email
+        const { data: existingUser } = await admin
+          .from('users')
+          .select('id')
+          .eq('email', email.toLowerCase())
+          .maybeSingle();
+        resentUserId = existingUser?.id ?? null;
+      } else {
+        resentUserId = inviteData.user?.id ?? null;
+      }
 
       await admin
         .from('beta_users')
