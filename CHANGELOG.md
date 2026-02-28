@@ -4,6 +4,16 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.19] - 2026-02-28
+
+### Beta Writer Model Assignment + User Guide Updates
+
+- **Writer Model assignment in Beta Management**: each user row now has a "Writer Model" dropdown to assign their personal writer model directly from the beta admin panel — no longer need to go to Writer Models admin separately
+- **Fix: invited users now appear in Writer Models admin**: `start_beta` and `resend_invite` now upsert the invited user into `public.users` immediately after Supabase invite, so they appear in the assignment dropdowns even before first login
+- **New `assign_writer_model` API action** on `/api/admin/betas` PATCH: upserts user into public.users then sets `default_writer_model_id` — can be called even if user hasn't logged in yet
+- **GET `/api/admin/betas`** now includes `default_writer_model_id` on each beta user row (fetched from `public.users`)
+- **User Guide updated**: registration section rewritten for invite-only beta onboarding; added in-house model callout for RotoWire NFL / RotoWire MLB; corrected export formats (HTML + Plain Text); updated walkthrough phases for beta users
+
 ## [1.10.18] - 2026-02-28
 
 ### Beta Notes TipTap Editor + House Model Training

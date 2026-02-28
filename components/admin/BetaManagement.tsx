@@ -42,6 +42,13 @@ interface BetaUser {
   acknowledged_at: string | null;
   last_seen_notes_version: number;
   created_at: string;
+  default_writer_model_id: string | null;
+}
+
+interface WriterModelOption {
+  id: string;
+  name: string;
+  is_house_model: boolean;
 }
 
 interface Beta {
@@ -89,12 +96,27 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
   const [startingMap, setStartingMap] = useState<Record<string, boolean>>({});
   const [endingMap, setEndingMap] = useState<Record<string, boolean>>({});
   const [confirmEndId, setConfirmEndId] = useState<string | null>(null);
+  const [writerModels, setWriterModels] = useState<WriterModelOption[]>([]);
+  const [assigningModelMap, setAssigningModelMap] = useState<Record<string, boolean>>({});
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch('/api/admin/betas');
-      const json = await res.json();
-      if (json.data) setBetas(json.data);
+      const [betasRes, modelsRes] = await Promise.all([
+        fetch('/api/admin/betas'),
+        fetch('/api/writer-models'),
+      ]);
+      const betasJson = await betasRes.json();
+      if (betasJson.data) setBetas(betasJson.data);
+      const modelsJson = await modelsRes.json();
+      if (modelsJson.data) {
+        setWriterModels(
+          modelsJson.data.map((m: any) => ({
+            id: m.id,
+            name: m.name,
+            is_house_model: m.is_house_model ?? false,
+          }))
+        );
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -299,13 +321,48 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
     }
   };
 
+  // ── Assign Writer Model ───────────────────────────────────────────────────
+  const handleAssignWriterModel = async (betaId: string, bu: BetaUser, modelId: string | null) => {
+    if (!bu.user_id) return;
+    const key = `${betaId}-${bu.email}`;
+    setAssigningModelMap(m => ({ ...m, [key]: true }));
+    try {
+      const res = await fetch('/api/admin/betas', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          beta_id: betaId,
+          action: 'assign_writer_model',
+          user_id: bu.user_id,
+          email: bu.email,
+          writer_model_id: modelId,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      const modelName = modelId ? writerModels.find(m => m.id === modelId)?.name : null;
+      toast.success(modelName ? `Writer model "${modelName}" assigned to ${bu.email}` : `Writer model unassigned`);
+      // Update local state optimistically so UI reflects immediately
+      setBetas(prev => prev.map(b => b.id !== betaId ? b : {
+        ...b,
+        users: b.users.map(u => u.id !== bu.id ? u : { ...u, default_writer_model_id: modelId }),
+      }));
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setAssigningModelMap(m => ({ ...m, [key]: false }));
+    }
+  };
+
   // ── Render user row ───────────────────────────────────────────────────────
   const renderUserRow = (beta: Beta, bu: BetaUser) => {
     const key = `${beta.id}-${bu.email}`;
     const isRemoving = removingMap[key];
     const isResending = resendingMap[key];
+    const isAssigning = assigningModelMap[key];
     const hasInvite = !!bu.invited_at;
     const hasAcked = !!bu.acknowledged_at;
+    const canAssignModel = !!bu.user_id && beta.status !== 'ended';
 
     return (
       <tr key={bu.id} className="border-t border-border-subtle">
@@ -324,6 +381,30 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
           ) : (
             <span className="flex items-center gap-1 text-[11px] text-text-tertiary">
               <AlertCircle className="w-3 h-3" /> Not yet invited
+            </span>
+          )}
+        </td>
+        <td className="py-2 pr-4">
+          {canAssignModel ? (
+            <div className="relative flex items-center gap-1">
+              <select
+                value={bu.default_writer_model_id ?? ''}
+                onChange={e => handleAssignWriterModel(beta.id, bu, e.target.value || null)}
+                disabled={isAssigning}
+                className="h-7 text-[12px] rounded-md border border-border-subtle bg-bg-elevated text-text-primary px-2 pr-6 appearance-none cursor-pointer disabled:opacity-50 min-w-[140px] max-w-[200px]"
+              >
+                <option value="">— Unassigned —</option>
+                {writerModels.map(m => (
+                  <option key={m.id} value={m.id}>
+                    {m.name}{m.is_house_model ? ' (In-House)' : ''}
+                  </option>
+                ))}
+              </select>
+              {isAssigning && <Loader2 className="w-3 h-3 animate-spin text-text-tertiary absolute right-1.5 pointer-events-none" />}
+            </div>
+          ) : (
+            <span className="text-[12px] text-text-tertiary italic">
+              {!bu.user_id ? 'Invite first' : '—'}
             </span>
           )}
         </td>
@@ -502,6 +583,7 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
                     <tr>
                       <th className="text-left text-[11px] font-medium text-text-tertiary pb-2 pr-4">Email</th>
                       <th className="text-left text-[11px] font-medium text-text-tertiary pb-2 pr-4">Status</th>
+                      <th className="text-left text-[11px] font-medium text-text-tertiary pb-2 pr-4">Writer Model</th>
                       <th className="text-left text-[11px] font-medium text-text-tertiary pb-2 pr-4">Invited</th>
                       <th className="text-right text-[11px] font-medium text-text-tertiary pb-2">Actions</th>
                     </tr>

@@ -41,7 +41,7 @@ export default function UserGuidePage() {
   const tableOfContents = [
     { id: 'getting-started', title: 'Getting Started', icon: BookOpen },
     { id: 'ai-architecture', title: 'AI Architecture', icon: Cpu },
-    { id: 'registration', title: 'Account Registration', icon: FileText },
+    { id: 'registration', title: 'Beta Access', icon: ShieldCheck },
     { id: 'writer-factory', title: 'Writer Factory', icon: Sparkles },
     { id: 'brief-builder', title: 'SmartBrief Builder', icon: FileText },
     { id: 'creating-projects', title: 'Creating Projects', icon: Target },
@@ -517,57 +517,91 @@ export default function UserGuidePage() {
     },
 
     'registration': {
-      title: 'Account Registration & Verification',
+      title: 'Getting Access: Beta Onboarding',
       content: (
         <div className="space-y-6">
-          <h3 className="text-xl font-semibold mb-4">Creating Your Account</h3>
-          
-          <p className="leading-relaxed">
-            To get started with Forge, you'll need to register for an account and have it verified 
-            by an administrator.
-          </p>
-
-          <h4 className="font-semibold text-lg mt-6 mb-3">Step 1: Register</h4>
-          <ol className="list-decimal list-inside space-y-2 ml-4">
-            <li className="leading-relaxed">Visit the login page and click the <strong>Register</strong> tab</li>
-            <li className="leading-relaxed">Enter your full name</li>
-            <li className="leading-relaxed">Provide your email address</li>
-            <li className="leading-relaxed">Create a secure password</li>
-            <li className="leading-relaxed">Click <strong>Register</strong></li>
-          </ol>
-
-          <div className="bg-[rgba(59,130,246,0.15)] border-l-4 border-[#3b82f6] p-5 rounded-r-lg my-6">
-            <p className="text-sm font-medium text-text-primary mb-2">📧 Check Your Email</p>
-            <p className="text-sm text-text-secondary">
-              You'll receive an email verification link. Click it to confirm your email address.
+          <div className="bg-accent-muted border-2 border-accent-primary rounded-lg p-6">
+            <h3 className="text-lg font-semibold mb-3 text-accent-primary flex items-center gap-2">
+              <Shield className="h-5 w-5" />
+              Forge is Currently Invite-Only
+            </h3>
+            <p className="leading-relaxed text-text-secondary">
+              Forge is in a private beta. You cannot self-register — access is granted by invitation only.
+              If you're reading this, you've already been invited and are part of the beta program.
             </p>
           </div>
 
-          <h4 className="font-semibold text-lg mt-6 mb-3">Step 2: Account Approval</h4>
-          <p className="leading-relaxed mb-4">
-            After email verification, your account will have a <strong>pending</strong> status. An administrator 
-            must approve your account and assign you a role:
-          </p>
+          <h3 className="text-xl font-semibold mt-8 mb-4">How Beta Access Works</h3>
 
-          <div className="grid gap-3">
-            <div className="border-l-4 border-accent-primary pl-4 py-2">
-              <strong className="text-accent-primary">Strategist</strong>
-              <p className="text-sm text-muted-foreground">Create and manage your own content, writer models, and briefs</p>
+          <div className="space-y-4">
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-primary text-white rounded-full flex items-center justify-center font-bold">
+                1
+              </div>
+              <div>
+                <h4 className="font-semibold mb-1">Receive Your Invite</h4>
+                <p className="text-muted-foreground leading-relaxed">
+                  A Forge admin adds you to the beta. You'll receive an email invitation with a magic link to log in — no password required.
+                </p>
+              </div>
             </div>
-            <div className="border-l-4 border-blue-500 pl-4 py-2">
-              <strong className="text-blue-700">Editor</strong>
-              <p className="text-sm text-muted-foreground">Create and edit content, access shared resources</p>
+
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-primary text-white rounded-full flex items-center justify-center font-bold">
+                2
+              </div>
+              <div>
+                <h4 className="font-semibold mb-1">Click Your Magic Link</h4>
+                <p className="text-muted-foreground leading-relaxed">
+                  Click the link in your invite email to authenticate and land directly in Forge. Magic links are single-use and expire after a short window.
+                </p>
+              </div>
             </div>
-            <div className="border-l-4 border-purple-500 pl-4 py-2">
-              <strong className="text-purple-700">Admin</strong>
-              <p className="text-sm text-muted-foreground">Full access including user management and system settings</p>
+
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-10 h-10 bg-accent-primary text-white rounded-full flex items-center justify-center font-bold">
+                3
+              </div>
+              <div>
+                <h4 className="font-semibold mb-1">Start Using Forge</h4>
+                <p className="text-muted-foreground leading-relaxed">
+                  You're in. Your account is pre-configured with a Strategist role. You can immediately access the Writer Factory,
+                  SmartBrief Builder, and Projects.
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="bg-success-muted border-l-4 border-success p-5 rounded-r-lg my-6">
-            <p className="text-sm font-medium text-text-primary mb-2">✅ Account Approved</p>
+          <div className="bg-[rgba(59,130,246,0.15)] border-l-4 border-[#3b82f6] p-5 rounded-r-lg my-6">
+            <p className="text-sm font-medium text-text-primary mb-2">🔑 Returning to Forge</p>
             <p className="text-sm text-text-secondary">
-              Once approved, you'll receive another email with your login link. You can then access the full application.
+              On subsequent visits, go to the login page and enter your email address. Forge will send you a fresh magic link —
+              just click it and you're in. There's no password to remember.
+            </p>
+          </div>
+
+          <h3 className="text-xl font-semibold mt-8 mb-4">Your Beta Account</h3>
+
+          <div className="grid gap-3">
+            <div className="border-l-4 border-accent-primary pl-4 py-2">
+              <strong className="text-accent-primary">Strategist Role</strong>
+              <p className="text-sm text-muted-foreground">All beta users are Strategists — you can create projects, writer models, and SmartBriefs</p>
+            </div>
+            <div className="border-l-4 border-green-500 pl-4 py-2">
+              <strong className="text-green-700">In-House Models</strong>
+              <p className="text-sm text-muted-foreground">You have access to shared RotoWire NFL and RotoWire MLB writer models — and you can contribute training content to them</p>
+            </div>
+            <div className="border-l-4 border-purple-500 pl-4 py-2">
+              <strong className="text-purple-700">Personal Model</strong>
+              <p className="text-sm text-muted-foreground">Your personal writer model may be pre-created for you. Check the Writer Factory to see if it's there and add your own training content</p>
+            </div>
+          </div>
+
+          <div className="bg-warning-muted border-l-4 border-warning p-5 rounded-r-lg my-6">
+            <p className="text-sm font-medium text-text-primary mb-2">💬 Beta Feedback</p>
+            <p className="text-sm text-text-secondary">
+              You're an early user helping shape Forge. If something doesn't work right or you have ideas,
+              use the feedback button in the beta toolbar at the top of the screen. Your input directly influences what gets built next.
             </p>
           </div>
         </div>
@@ -583,17 +617,26 @@ export default function UserGuidePage() {
             Each model learns from sample content, capturing tone, vocabulary, and writing patterns.
           </p>
 
+          <div className="bg-success-muted border-l-4 border-success p-5 rounded-r-lg mb-6">
+            <p className="text-sm font-medium text-text-primary mb-2">🏈 In-House Models Available to All Beta Users</p>
+            <p className="text-sm text-text-secondary">
+              Two shared in-house models are available to all beta users: <strong className="text-text-primary">RotoWire NFL</strong> and{' '}
+              <strong className="text-text-primary">RotoWire MLB</strong>. You can contribute training content to these models to help them improve —
+              and they're available to everyone, so your contributions benefit the whole team.
+            </p>
+          </div>
+
           <h3 className="text-xl font-semibold mt-8 mb-4">Creating a Writer Model</h3>
-          
+
           <ol className="list-decimal list-inside space-y-4 ml-4">
             <li className="leading-relaxed">
               <strong>Open the Writer Factory</strong> from the dashboard or initial modal
             </li>
             <li className="leading-relaxed">
-              <strong>Click the plus icon</strong> to create a new model (Admin only)
+              <strong>Click the plus icon</strong> to create a new model (Admin only — personal models are created by admins for each writer)
             </li>
             <li className="leading-relaxed">
-              <strong>Name your model</strong> (e.g., "Jeremy Botter" or "Sports Analysis Voice")
+              <strong>Name your model</strong> (e.g., "Blake Weishaar" or "Sports Analysis Voice")
             </li>
             <li className="leading-relaxed">
               <strong>Click Create</strong> – your new model appears in the sidebar
@@ -2015,25 +2058,25 @@ export default function UserGuidePage() {
           <div className="bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-lg p-6 my-8">
             <h3 className="text-2xl font-bold mb-2">Let's Create Content!</h3>
             <p className="text-accent-light">
-              This walkthrough assumes you've registered, been approved, and are logged into Forge.
+              This walkthrough assumes you've received your beta invite and are logged into Forge.
             </p>
           </div>
 
           {/* Phase 1 */}
           <div className="border-l-4 border-accent-primary pl-6 py-4 bg-accent-muted/50">
             <h3 className="text-xl font-bold mb-3 text-violet-900">Phase 1: Train Your Writer Model</h3>
-            
+
             <div className="space-y-3">
               <div className="flex gap-3">
                 <div className="font-bold text-accent-primary">1.</div>
                 <p className="leading-relaxed">Click <strong>Writer Factory</strong> from the initial dashboard modal</p>
               </div>
-              
+
               <div className="flex gap-3">
                 <div className="font-bold text-accent-primary">2.</div>
                 <div>
-                  <p className="leading-relaxed">Create a new model named after yourself (or the voice you're training)</p>
-                  <p className="text-sm text-muted-foreground mt-1">Admin users can create models for themselves or others</p>
+                  <p className="leading-relaxed">Select your personal writer model from the sidebar (your model should already be set up)</p>
+                  <p className="text-sm text-muted-foreground mt-1">You can also contribute training content to the shared <strong>RotoWire NFL</strong> or <strong>RotoWire MLB</strong> in-house models</p>
                 </div>
               </div>
 
@@ -2041,7 +2084,7 @@ export default function UserGuidePage() {
                 <div className="font-bold text-accent-primary">3.</div>
                 <div>
                   <p className="leading-relaxed">Add 5-10 complete articles to get started (aim for 25 eventually)</p>
-                  <p className="text-sm text-muted-foreground mt-1">Copy/paste each article, then click "Add Training Content"</p>
+                  <p className="text-sm text-muted-foreground mt-1">Paste each article or extract from a URL, then click "Add Training Content"</p>
                 </div>
               </div>
 
@@ -2253,7 +2296,7 @@ export default function UserGuidePage() {
               
               <div className="flex gap-3">
                 <div className="font-bold text-ai-accent">2.</div>
-                <p className="leading-relaxed">Choose your export format (Rich Text, Word, Plain Text, or Markdown)</p>
+                <p className="leading-relaxed">Choose your export format — <strong>HTML</strong> (preserves all formatting for CMS pasting) or <strong>Plain Text</strong></p>
               </div>
 
               <div className="flex gap-3">

@@ -25,10 +25,26 @@ export async function GET(req: NextRequest) {
       .select('*')
       .order('created_at', { ascending: true });
 
+    // Fetch default_writer_model_id for all invited users
+    const userIds = (betaUsers ?? []).map(bu => bu.user_id).filter(Boolean);
+    const modelByUserId: Record<string, string | null> = {};
+    if (userIds.length > 0) {
+      const { data: userRows } = await admin
+        .from('users')
+        .select('id, default_writer_model_id')
+        .in('id', userIds);
+      for (const row of userRows ?? []) {
+        modelByUserId[row.id] = row.default_writer_model_id ?? null;
+      }
+    }
+
     const usersByBeta: Record<string, typeof betaUsers> = {};
     for (const bu of betaUsers ?? []) {
       if (!usersByBeta[bu.beta_id]) usersByBeta[bu.beta_id] = [];
-      usersByBeta[bu.beta_id]!.push(bu);
+      usersByBeta[bu.beta_id]!.push({
+        ...bu,
+        default_writer_model_id: bu.user_id ? (modelByUserId[bu.user_id] ?? null) : null,
+      });
     }
 
     return NextResponse.json({
@@ -176,13 +192,25 @@ export async function PATCH(req: NextRequest) {
 
           if (inviteError) throw inviteError;
 
+          const newUserId = inviteData.user?.id ?? null;
+
           await admin
             .from('beta_users')
             .update({
               invited_at: new Date().toISOString(),
-              user_id: inviteData.user?.id ?? null,
+              user_id: newUserId,
             })
             .eq('id', bu.id);
+
+          // Ensure public.users record exists so the user appears in writer model assignment dropdowns
+          if (newUserId) {
+            await admin.from('users').upsert({
+              id: newUserId,
+              email: bu.email,
+              role: 'strategist',
+              account_status: 'active',
+            }, { onConflict: 'id', ignoreDuplicates: true });
+          }
 
           results.push({ email: bu.email, success: true });
         } catch (e: any) {
@@ -208,15 +236,52 @@ export async function PATCH(req: NextRequest) {
 
       if (inviteError) throw inviteError;
 
+      const resentUserId = inviteData.user?.id ?? null;
+
       await admin
         .from('beta_users')
         .update({
           invited_at: new Date().toISOString(),
-          user_id: inviteData.user?.id ?? null,
+          user_id: resentUserId,
         })
         .eq('beta_id', beta_id)
         .eq('email', email);
 
+      // Ensure public.users record exists so the user appears in writer model assignment dropdowns
+      if (resentUserId) {
+        await admin.from('users').upsert({
+          id: resentUserId,
+          email: email,
+          role: 'strategist',
+          account_status: 'active',
+        }, { onConflict: 'id', ignoreDuplicates: true });
+      }
+
+      return NextResponse.json({ success: true });
+    }
+
+    // ── Assign writer model ───────────────────────────────────────────────────
+    if (action === 'assign_writer_model') {
+      const { user_id, email: userEmail, writer_model_id } = body;
+      if (!user_id) {
+        return NextResponse.json({ error: 'user_id is required' }, { status: 400 });
+      }
+
+      // Ensure public.users record exists (user may not have logged in yet)
+      await admin.from('users').upsert({
+        id: user_id,
+        email: userEmail ?? '',
+        role: 'strategist',
+        account_status: 'active',
+      }, { onConflict: 'id', ignoreDuplicates: true });
+
+      // Assign (or unassign) the writer model
+      const { error } = await admin
+        .from('users')
+        .update({ default_writer_model_id: writer_model_id ?? null })
+        .eq('id', user_id);
+
+      if (error) throw error;
       return NextResponse.json({ success: true });
     }
 
