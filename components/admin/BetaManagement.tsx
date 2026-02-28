@@ -227,12 +227,10 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      if (json.already_existed && json.magic_link) {
+      if (json.magic_link) {
         setMagicLinks([{ email, link: json.magic_link }]);
-      } else if (json.already_existed) {
-        toast.error(`Couldn't generate a login link for ${email}. They can log in at /login.`);
       } else {
-        toast.success(`Invite resent to ${email}`);
+        toast.success(`Account provisioned for ${email} — ask them to use Reset Password at login`);
       }
       load();
     } catch (e: any) {
@@ -303,16 +301,14 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      const succeeded = json.results?.filter((r: any) => r.success && !r.already_existed).length ?? 0;
-      const withLinks = (json.results ?? []).filter((r: any) => r.success && r.already_existed && r.magic_link);
-      const existingNoLink = json.results?.filter((r: any) => r.success && r.already_existed && !r.magic_link).length ?? 0;
+      const withLinks = (json.results ?? []).filter((r: any) => r.success && r.magic_link);
+      const noLink = json.results?.filter((r: any) => r.success && !r.magic_link).length ?? 0;
       const failed = json.results?.filter((r: any) => !r.success).length ?? 0;
       const parts: string[] = [];
-      if (succeeded > 0) parts.push(`${succeeded} invite${succeeded !== 1 ? 's' : ''} sent`);
-      if (withLinks.length > 0) parts.push(`${withLinks.length} login link${withLinks.length !== 1 ? 's' : ''} ready to share`);
-      if (existingNoLink > 0) parts.push(`${existingNoLink} already registered`);
+      if (withLinks.length > 0) parts.push(`${withLinks.length} password setup link${withLinks.length !== 1 ? 's' : ''} ready`);
+      if (noLink > 0) parts.push(`${noLink} provisioned`);
       if (failed > 0) parts.push(`${failed} failed`);
-      toast.success(`Beta started — ${parts.join(', ') || 'no pending invites'}`);
+      toast.success(`Beta started — ${parts.join(', ') || 'no pending users'}`);
       if (withLinks.length > 0) {
         setMagicLinks(withLinks.map((r: any) => ({ email: r.email, link: r.magic_link })));
       }
@@ -756,17 +752,17 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
         </DialogContent>
       </Dialog>
 
-      {/* Magic Links dialog — for existing users who can't receive an invite email */}
+      {/* Password Setup Links dialog */}
       <Dialog open={magicLinks.length > 0} onOpenChange={open => !open && setMagicLinks([])}>
         <DialogContent className="sm:max-w-[520px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Link2 className="w-4 h-4 text-violet-400" />
-              Login Links for Existing Users
+              Password Setup Links
             </DialogTitle>
           </DialogHeader>
           <p className="text-[13px] text-text-secondary">
-            These users already have accounts so invite emails don&apos;t work. Share these one-click login links with them directly — via Slack, email, or any other way.
+            Accounts have been created. Share each person&apos;s link directly — via Slack, email, or any other way. When they click it, they&apos;ll be prompted to set their password and can then log in normally.
           </p>
           <div className="flex flex-col gap-3 py-1">
             {magicLinks.map(({ email, link }) => (

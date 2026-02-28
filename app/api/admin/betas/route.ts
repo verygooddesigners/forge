@@ -173,7 +173,52 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ success: true });
     }
 
-    // ── Start beta (send invites) ─────────────────────────────────────────────
+    // ── Shared helper: create/find auth account + ensure public.users row + get reset link ──
+    const provisionUser = async (email: string): Promise<{ userId: string; resetLink?: string }> => {
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com';
+
+      // 1. Create the auth account directly (no email sent, pre-confirmed)
+      let userId: string | null = null;
+      const { data: created, error: createError } = await admin.auth.admin.createUser({
+        email,
+        email_confirm: true,
+      });
+
+      if (createError) {
+        // User already exists — find their UUID via auth list
+        const isAlreadyExists =
+          createError.message?.toLowerCase().includes('already') ||
+          createError.message?.toLowerCase().includes('registered');
+        if (!isAlreadyExists) throw createError;
+
+        const { data: listData } = await admin.auth.admin.listUsers({ perPage: 1000 });
+        const found = listData?.users?.find(u => u.email?.toLowerCase() === email.toLowerCase());
+        userId = found?.id ?? null;
+      } else {
+        userId = created.user?.id ?? null;
+      }
+
+      if (!userId) throw new Error(`Could not resolve auth user ID for ${email}`);
+
+      // 2. Ensure public.users row is correct (delete any stale rows by email, upsert by id)
+      await admin.from('users').delete().eq('email', email.toLowerCase()).neq('id', userId);
+      await admin.from('users').upsert(
+        { id: userId, email, role: 'Content Creator', account_status: 'awaiting_confirmation' },
+        { onConflict: 'id', ignoreDuplicates: true },
+      );
+
+      // 3. Generate a password-setup link (type: recovery = "set your password" flow)
+      const { data: linkData } = await admin.auth.admin.generateLink({
+        type: 'recovery',
+        email,
+        options: { redirectTo: `${appUrl}/` },
+      });
+      const resetLink = linkData?.properties?.action_link;
+
+      return { userId, resetLink };
+    };
+
+    // ── Start beta ────────────────────────────────────────────────────────────
     if (action === 'start_beta') {
       const { data: betaUsers } = await admin
         .from('beta_users')
@@ -181,87 +226,16 @@ export async function PATCH(req: NextRequest) {
         .eq('beta_id', beta_id)
         .is('invited_at', null);
 
-      const results: { email: string; success: boolean; already_existed?: boolean; magic_link?: string; error?: string }[] = [];
+      const results: { email: string; success: boolean; magic_link?: string; error?: string }[] = [];
 
       for (const bu of betaUsers ?? []) {
         try {
-          let newUserId: string | null = null;
-          let alreadyExisted = false;
-          let magicLink: string | undefined;
-
-          // Pre-invite cleanup: if public.users has a row for this email whose UUID
-          // doesn't exist in auth.users, delete it so the trigger can create the correct row.
-          const { data: staleRow } = await admin
-            .from('users')
-            .select('id')
-            .eq('email', bu.email.toLowerCase())
-            .maybeSingle();
-          if (staleRow) {
-            const { data: authCheck } = await admin.auth.admin.getUserById(staleRow.id);
-            if (!authCheck?.user) {
-              console.log(`[beta start_beta] Removing stale public.users row for ${bu.email} (id: ${staleRow.id})`);
-              await admin.from('users').delete().eq('id', staleRow.id);
-            }
-          }
-
-          const { data: inviteData, error: inviteError } =
-            await admin.auth.admin.inviteUserByEmail(bu.email, {
-              data: { beta_id },
-            });
-
-          if (inviteError) {
-            // User already exists in auth — look up their ID and generate a magic link for them
-            const isAlreadyExists =
-              inviteError.message?.toLowerCase().includes('database error saving new user') ||
-              inviteError.message?.toLowerCase().includes('already been registered') ||
-              inviteError.message?.toLowerCase().includes('user already registered');
-
-            if (!isAlreadyExists) throw inviteError;
-
-            alreadyExisted = true;
-
-            const { data: existingUser } = await admin
-              .from('users')
-              .select('id')
-              .eq('email', bu.email.toLowerCase())
-              .maybeSingle();
-            newUserId = existingUser?.id ?? null;
-
-            // Generate a magic link the admin can share directly
-            const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com';
-            const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
-              type: 'magiclink',
-              email: bu.email,
-              options: { redirectTo: `${appUrl}/` },
-            });
-            if (!linkError && linkData?.properties?.action_link) {
-              magicLink = linkData.properties.action_link;
-            } else if (linkError) {
-              console.warn(`[beta start_beta] generateLink failed for ${bu.email}:`, linkError.message);
-            }
-          } else {
-            newUserId = inviteData.user?.id ?? null;
-          }
-
-          await admin
-            .from('beta_users')
-            .update({
-              invited_at: new Date().toISOString(),
-              user_id: newUserId,
-            })
-            .eq('id', bu.id);
-
-          // Ensure public.users record exists so the user appears in writer model assignment dropdowns
-          if (newUserId) {
-            await admin.from('users').upsert({
-              id: newUserId,
-              email: bu.email,
-              role: 'strategist',
-              account_status: 'confirmed',
-            }, { onConflict: 'id', ignoreDuplicates: true });
-          }
-
-          results.push({ email: bu.email, success: true, already_existed: alreadyExisted, magic_link: magicLink });
+          const { userId, resetLink } = await provisionUser(bu.email);
+          await admin.from('beta_users').update({
+            invited_at: new Date().toISOString(),
+            user_id: userId,
+          }).eq('id', bu.id);
+          results.push({ email: bu.email, success: true, magic_link: resetLink });
         } catch (e: any) {
           results.push({ email: bu.email, success: false, error: e.message });
         }
@@ -275,92 +249,19 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ success: true, results });
     }
 
-    // ── Resend invite ────────────────────────────────────────────────────────
+    // ── Resend / get reset link ───────────────────────────────────────────────
     if (action === 'resend_invite') {
       const { email } = body;
       if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
 
-      let resentUserId: string | null = null;
-      let alreadyExisted = false;
-      let magicLink: string | undefined;
+      const { userId, resetLink } = await provisionUser(email);
 
-      // Pre-invite cleanup: if public.users has a row for this email whose UUID
-      // doesn't exist in auth.users, delete it so the trigger can create the correct row.
-      const { data: staleResendRow } = await admin
-        .from('users')
-        .select('id')
-        .eq('email', email.toLowerCase())
-        .maybeSingle();
-      if (staleResendRow) {
-        const { data: authCheck } = await admin.auth.admin.getUserById(staleResendRow.id);
-        if (!authCheck?.user) {
-          console.log(`[beta resend_invite] Removing stale public.users row for ${email} (id: ${staleResendRow.id})`);
-          await admin.from('users').delete().eq('id', staleResendRow.id);
-        }
-      }
+      await admin.from('beta_users').update({
+        invited_at: new Date().toISOString(),
+        user_id: userId,
+      }).eq('beta_id', beta_id).eq('email', email);
 
-      const { data: inviteData, error: inviteError } =
-        await admin.auth.admin.inviteUserByEmail(email, { data: { beta_id } });
-
-      if (inviteError) {
-        // User already exists in auth — look up their ID and generate a magic link for them
-        const isAlreadyExists =
-          inviteError.message?.toLowerCase().includes('database error saving new user') ||
-          inviteError.message?.toLowerCase().includes('already been registered') ||
-          inviteError.message?.toLowerCase().includes('user already registered');
-
-        if (!isAlreadyExists) throw inviteError;
-
-        alreadyExisted = true;
-
-        // Fall back: look up existing user record by email
-        const { data: existingUser } = await admin
-          .from('users')
-          .select('id')
-          .eq('email', email.toLowerCase())
-          .maybeSingle();
-        resentUserId = existingUser?.id ?? null;
-
-        // Generate a magic link the admin can share directly (no email required)
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com';
-        const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
-          type: 'magiclink',
-          email,
-          options: { redirectTo: `${appUrl}/` },
-        });
-        if (!linkError && linkData?.properties?.action_link) {
-          magicLink = linkData.properties.action_link;
-        } else if (linkError) {
-          console.warn(`[beta resend_invite] generateLink failed for ${email}:`, linkError.message);
-        }
-      } else {
-        resentUserId = inviteData.user?.id ?? null;
-      }
-
-      await admin
-        .from('beta_users')
-        .update({
-          invited_at: new Date().toISOString(),
-          user_id: resentUserId,
-        })
-        .eq('beta_id', beta_id)
-        .eq('email', email);
-
-      // Ensure public.users record exists so the user appears in writer model assignment dropdowns
-      if (resentUserId) {
-        await admin.from('users').upsert({
-          id: resentUserId,
-          email: email,
-          role: 'strategist',
-          account_status: 'confirmed',
-        }, { onConflict: 'id', ignoreDuplicates: true });
-      }
-
-      return NextResponse.json({
-        success: true,
-        already_existed: alreadyExisted,
-        magic_link: magicLink,
-      });
+      return NextResponse.json({ success: true, magic_link: resetLink });
     }
 
     // ── Debug user state ─────────────────────────────────────────────────────

@@ -4,6 +4,16 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.28] - 2026-02-28
+
+### Fix: bypass email entirely — createUser + recovery link flow
+
+- **No more invite emails**: `start_beta` and `resend_invite` now use `admin.auth.admin.createUser({ email_confirm: true })` to create accounts silently — no email is ever sent, so Supabase email delivery issues are irrelevant
+- **Password setup links**: After provisioning accounts, a `generateLink({ type: 'recovery' })` URL is generated for each user — admins share these directly (Slack, email, etc.). Users click the link, set their password, and log in normally
+- **Graceful existing-user handling**: If `createUser` fails because the user already exists, the API falls back to `listUsers` to find their UUID — same provisioning flow proceeds without error
+- **Updated UI copy**: Magic Links dialog now says "Password Setup Links" with updated instructions explaining the click-to-set-password flow
+- **Migration 00029**: Captures the EXCEPTION wrapper added to `handle_new_user` trigger — suppresses any trigger errors as warnings so they never block auth user creation
+
 ## [1.10.27] - 2026-02-28
 
 ### Fix: beta invite flow — stale user cleanup + trigger fix
