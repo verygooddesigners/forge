@@ -101,6 +101,8 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
   const [writerModels, setWriterModels] = useState<WriterModelOption[]>([]);
   const [assigningModelMap, setAssigningModelMap] = useState<Record<string, boolean>>({});
   const [magicLinks, setMagicLinks] = useState<{ email: string; link: string }[]>([]);
+  const [debugResult, setDebugResult] = useState<any>(null);
+  const [debuggingEmail, setDebuggingEmail] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -237,6 +239,24 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
       toast.error(e.message);
     } finally {
       setResendingMap(m => ({ ...m, [key]: false }));
+    }
+  };
+
+  // ── Debug User ───────────────────────────────────────────────────────────
+  const handleDebugUser = async (betaId: string, email: string) => {
+    setDebuggingEmail(email);
+    try {
+      const res = await fetch('/api/admin/betas', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ beta_id: betaId, action: 'debug_user', email }),
+      });
+      const json = await res.json();
+      setDebugResult({ email, ...json });
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setDebuggingEmail(null);
     }
   };
 
@@ -442,6 +462,16 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
                 >
                   {isResending ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
                   {hasInvite ? 'Resend' : 'Send'}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 text-[11px] gap-1 text-text-secondary hover:text-yellow-400"
+                  onClick={() => handleDebugUser(beta.id, bu.email)}
+                  disabled={debuggingEmail === bu.email}
+                  title="Debug user auth state"
+                >
+                  {debuggingEmail === bu.email ? <Loader2 className="w-3 h-3 animate-spin" /> : <AlertCircle className="w-3 h-3" />}
                 </Button>
                 <Button
                   size="sm"
@@ -766,6 +796,40 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setMagicLinks([])}>Done</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Debug User dialog */}
+      <Dialog open={!!debugResult} onOpenChange={open => !open && setDebugResult(null)}>
+        <DialogContent className="sm:max-w-[560px]">
+          <DialogHeader>
+            <DialogTitle>User Debug — {debugResult?.email}</DialogTitle>
+          </DialogHeader>
+          {debugResult && (
+            <div className="space-y-3 text-[12px] font-mono">
+              <div>
+                <p className="text-text-secondary mb-1 font-sans font-medium">public.users row</p>
+                <pre className="bg-bg-secondary rounded p-2 overflow-auto whitespace-pre-wrap break-all">
+                  {JSON.stringify(debugResult.public_users_row, null, 2)}
+                </pre>
+              </div>
+              <div>
+                <p className="text-text-secondary mb-1 font-sans font-medium">auth.users (by public UUID)</p>
+                <pre className="bg-bg-secondary rounded p-2 overflow-auto whitespace-pre-wrap break-all">
+                  {JSON.stringify(debugResult.auth_user_by_pub_id, null, 2)}
+                </pre>
+              </div>
+              <div>
+                <p className="text-text-secondary mb-1 font-sans font-medium">generateLink result</p>
+                <pre className={`rounded p-2 overflow-auto whitespace-pre-wrap break-all ${debugResult.generate_link_result?.success ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
+                  {JSON.stringify(debugResult.generate_link_result, null, 2)}
+                </pre>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setDebugResult(null)}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

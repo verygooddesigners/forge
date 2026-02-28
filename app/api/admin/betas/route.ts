@@ -356,7 +356,47 @@ export async function PATCH(req: NextRequest) {
         }, { onConflict: 'id', ignoreDuplicates: true });
       }
 
-      return NextResponse.json({ success: true, already_existed: alreadyExisted, magic_link: magicLink });
+      return NextResponse.json({
+        success: true,
+        already_existed: alreadyExisted,
+        magic_link: magicLink,
+      });
+    }
+
+    // ── Debug user state ─────────────────────────────────────────────────────
+    if (action === 'debug_user') {
+      const { email: debugEmail } = body;
+      if (!debugEmail) return NextResponse.json({ error: 'email required' }, { status: 400 });
+
+      // 1. Check public.users
+      const { data: pubRow } = await admin
+        .from('users')
+        .select('id, email, role, account_status')
+        .eq('email', debugEmail.toLowerCase())
+        .maybeSingle();
+
+      // 2. Check auth.users via the UUID in public.users
+      let authByPubId: any = null;
+      if (pubRow) {
+        const { data: a } = await admin.auth.admin.getUserById(pubRow.id);
+        authByPubId = a?.user ? { id: a.user.id, email: a.user.email, confirmed: a.user.email_confirmed_at } : null;
+      }
+
+      // 3. Try generateLink directly
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com';
+      const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
+        type: 'magiclink',
+        email: debugEmail,
+        options: { redirectTo: `${appUrl}/` },
+      });
+
+      return NextResponse.json({
+        public_users_row: pubRow ?? null,
+        auth_user_by_pub_id: authByPubId,
+        generate_link_result: linkData?.properties?.action_link
+          ? { success: true, link: linkData.properties.action_link }
+          : { success: false, error: linkError?.message ?? 'no link returned' },
+      });
     }
 
     // ── Assign writer model ───────────────────────────────────────────────────
