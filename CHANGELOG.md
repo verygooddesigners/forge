@@ -4,6 +4,12 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.14] - 2026-02-28
+
+### Added
+- **Beta Toolbar**: Floating lavender pill (top-right) showing version + date with "Suggest Feature" and "New Bug Report" buttons. Visible to all authenticated users throughout the app.
+- **Beta Feedback System**: Full in-app bug/feature submission with Supabase `beta_feedback` table, REST API (POST/GET/PATCH), and modals. Users see their own submissions; Super Admins see all with status management and user notes.
+
 ## [1.10.13] - 2026-02-28
 
 ### Bug fix
