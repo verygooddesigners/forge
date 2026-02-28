@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.13] - 2026-02-28
+
+### Bug fix
+- Admin Panel: Fixed full-screen black error when opening Edit User dialog. Root cause was `<SelectItem value="">` conflicting with Radix UI Select v2's internal empty-string sentinel. Replaced with `__none__` sentinel, mapped back to empty string in state. Also added route-level `app/admin/error.tsx` so future admin errors show a contained in-page error instead of the global boundary.
+
 ## [1.10.12] - 2026-02-26
 
 ### Improvements

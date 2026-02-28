@@ -485,15 +485,15 @@ export function UserManagement({ adminUser }: UserManagementProps) {
                     defaultWriterModelId &&
                     writerModels.some((m) => m.id === defaultWriterModelId)
                       ? defaultWriterModelId
-                      : ''
+                      : '__none__'
                   }
-                  onValueChange={setDefaultWriterModelId}
+                  onValueChange={(value) => setDefaultWriterModelId(value === '__none__' ? '' : value)}
                 >
                   <SelectTrigger id="defaultWriterModel">
                     <SelectValue placeholder="None" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="__none__">None</SelectItem>
                     {writerModels.map((m) => (
                       <SelectItem key={m.id} value={m.id}>
                         {m.name}
