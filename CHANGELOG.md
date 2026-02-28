@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.10.37] - 2026-02-28
+
+### Fix: BetaToolbar version corrected
+
+- Fixed hardcoded version string in `BetaToolbar.tsx` — was stuck showing v1.10.32, now correctly shows v1.10.36
+
 ## [1.10.36] - 2026-02-28
 
 ### Fix: Magic link now routes through auth callback (session established correctly)
