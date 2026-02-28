@@ -39,8 +39,10 @@ export function ClientInit() {
 
     const supabase = createClient();
 
-    supabase.auth.getUser().then(({ data }) => {
-      const email = data.user?.email ?? undefined;
+    // Use getSession() (reads cached cookie) instead of getUser() (network call)
+    // to avoid the toolbar never appearing when the network call is slow/fails.
+    supabase.auth.getSession().then(({ data }) => {
+      const email = data.session?.user?.email ?? undefined;
       setUserEmail(email);
 
       // Only fetch beta notes if logged in
