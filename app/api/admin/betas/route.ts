@@ -173,10 +173,9 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ success: true });
     }
 
-    // ── Shared helper: create/find auth account + ensure public.users row + get reset link ──
-    const provisionUser = async (email: string): Promise<{ userId: string; resetLink?: string }> => {
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com';
-
+    // ── Shared helper: create/find auth account + ensure public.users row ──────
+    // Users set their own password via "Forgot Password" on the login page.
+    const provisionUser = async (email: string): Promise<{ userId: string }> => {
       // 1. Create the auth account directly (no email sent, pre-confirmed)
       let userId: string | null = null;
       const { data: created, error: createError } = await admin.auth.admin.createUser({
@@ -207,15 +206,7 @@ export async function PATCH(req: NextRequest) {
         { onConflict: 'id', ignoreDuplicates: true },
       );
 
-      // 3. Generate a password-setup link (type: recovery = "set your password" flow)
-      const { data: linkData } = await admin.auth.admin.generateLink({
-        type: 'recovery',
-        email,
-        options: { redirectTo: `${appUrl}/` },
-      });
-      const resetLink = linkData?.properties?.action_link;
-
-      return { userId, resetLink };
+      return { userId };
     };
 
     // ── Start beta ────────────────────────────────────────────────────────────
@@ -226,16 +217,16 @@ export async function PATCH(req: NextRequest) {
         .eq('beta_id', beta_id)
         .is('invited_at', null);
 
-      const results: { email: string; success: boolean; magic_link?: string; error?: string }[] = [];
+      const results: { email: string; success: boolean; error?: string }[] = [];
 
       for (const bu of betaUsers ?? []) {
         try {
-          const { userId, resetLink } = await provisionUser(bu.email);
+          const { userId } = await provisionUser(bu.email);
           await admin.from('beta_users').update({
             invited_at: new Date().toISOString(),
             user_id: userId,
           }).eq('id', bu.id);
-          results.push({ email: bu.email, success: true, magic_link: resetLink });
+          results.push({ email: bu.email, success: true });
         } catch (e: any) {
           results.push({ email: bu.email, success: false, error: e.message });
         }
@@ -254,14 +245,14 @@ export async function PATCH(req: NextRequest) {
       const { email } = body;
       if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 });
 
-      const { userId, resetLink } = await provisionUser(email);
+      const { userId } = await provisionUser(email);
 
       await admin.from('beta_users').update({
         invited_at: new Date().toISOString(),
         user_id: userId,
       }).eq('beta_id', beta_id).eq('email', email);
 
-      return NextResponse.json({ success: true, magic_link: resetLink });
+      return NextResponse.json({ success: true });
     }
 
     // ── Debug user state ─────────────────────────────────────────────────────

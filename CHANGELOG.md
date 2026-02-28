@@ -4,6 +4,15 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.29] - 2026-02-28
+
+### Simplify beta onboarding — users self-serve via Forgot Password
+
+- Removed `generateLink` step from `provisionUser` — no links generated or displayed
+- Removed "Password Setup Links" modal and `magicLinks` state from BetaManagement
+- Toast messages now instruct admin to tell users to use Forgot Password at login
+- Unused `Copy` and `Link2` imports removed
+
 ## [1.10.28] - 2026-02-28
 
 ### Fix: bypass email entirely — createUser + recovery link flow

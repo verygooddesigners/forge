@@ -18,8 +18,7 @@ import {
   FileText,
   Loader2,
   X,
-  Copy,
-  Link2,
+
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -100,7 +99,6 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
   const [confirmEndId, setConfirmEndId] = useState<string | null>(null);
   const [writerModels, setWriterModels] = useState<WriterModelOption[]>([]);
   const [assigningModelMap, setAssigningModelMap] = useState<Record<string, boolean>>({});
-  const [magicLinks, setMagicLinks] = useState<{ email: string; link: string }[]>([]);
   const [debugResult, setDebugResult] = useState<any>(null);
   const [debuggingEmail, setDebuggingEmail] = useState<string | null>(null);
 
@@ -227,11 +225,7 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      if (json.magic_link) {
-        setMagicLinks([{ email, link: json.magic_link }]);
-      } else {
-        toast.success(`Account provisioned for ${email} — ask them to use Reset Password at login`);
-      }
+      toast.success(`Account ready for ${email} — ask them to use Forgot Password at login`);
       load();
     } catch (e: any) {
       toast.error(e.message);
@@ -301,17 +295,12 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
-      const withLinks = (json.results ?? []).filter((r: any) => r.success && r.magic_link);
-      const noLink = json.results?.filter((r: any) => r.success && !r.magic_link).length ?? 0;
+      const provisioned = json.results?.filter((r: any) => r.success).length ?? 0;
       const failed = json.results?.filter((r: any) => !r.success).length ?? 0;
       const parts: string[] = [];
-      if (withLinks.length > 0) parts.push(`${withLinks.length} password setup link${withLinks.length !== 1 ? 's' : ''} ready`);
-      if (noLink > 0) parts.push(`${noLink} provisioned`);
+      if (provisioned > 0) parts.push(`${provisioned} account${provisioned !== 1 ? 's' : ''} created`);
       if (failed > 0) parts.push(`${failed} failed`);
-      toast.success(`Beta started — ${parts.join(', ') || 'no pending users'}`);
-      if (withLinks.length > 0) {
-        setMagicLinks(withLinks.map((r: any) => ({ email: r.email, link: r.magic_link })));
-      }
+      toast.success(`Beta started — ${parts.join(', ') || 'no pending users'}. Ask them to use Forgot Password at login.`);
       load();
     } catch (e: any) {
       toast.error(e.message);
@@ -748,50 +737,6 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
               {creating && <Loader2 className="w-4 h-4 animate-spin" />}
               Create Beta
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Password Setup Links dialog */}
-      <Dialog open={magicLinks.length > 0} onOpenChange={open => !open && setMagicLinks([])}>
-        <DialogContent className="sm:max-w-[520px]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Link2 className="w-4 h-4 text-violet-400" />
-              Password Setup Links
-            </DialogTitle>
-          </DialogHeader>
-          <p className="text-[13px] text-text-secondary">
-            Accounts have been created. Share each person&apos;s link directly — via Slack, email, or any other way. When they click it, they&apos;ll be prompted to set their password and can then log in normally.
-          </p>
-          <div className="flex flex-col gap-3 py-1">
-            {magicLinks.map(({ email, link }) => (
-              <div key={email} className="flex flex-col gap-1.5 p-3 rounded-lg bg-bg-elevated border border-border-subtle">
-                <p className="text-[12px] font-medium text-text-secondary">{email}</p>
-                <div className="flex items-center gap-2">
-                  <input
-                    readOnly
-                    value={link}
-                    className="flex-1 text-[11px] bg-bg-deepest border border-border-subtle rounded px-2 py-1.5 text-text-tertiary font-mono truncate focus:outline-none"
-                  />
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="shrink-0 gap-1.5 text-[12px] h-7"
-                    onClick={() => {
-                      navigator.clipboard.writeText(link);
-                      toast.success('Copied!');
-                    }}
-                  >
-                    <Copy className="w-3 h-3" />
-                    Copy
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setMagicLinks([])}>Done</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
