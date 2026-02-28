@@ -208,7 +208,7 @@ export async function PATCH(req: NextRequest) {
               id: newUserId,
               email: bu.email,
               role: 'strategist',
-              account_status: 'active',
+              account_status: 'confirmed',
             }, { onConflict: 'id', ignoreDuplicates: true });
           }
 
@@ -253,7 +253,7 @@ export async function PATCH(req: NextRequest) {
           id: resentUserId,
           email: email,
           role: 'strategist',
-          account_status: 'active',
+          account_status: 'confirmed',
         }, { onConflict: 'id', ignoreDuplicates: true });
       }
 
@@ -272,7 +272,7 @@ export async function PATCH(req: NextRequest) {
         id: user_id,
         email: userEmail ?? '',
         role: 'strategist',
-        account_status: 'active',
+        account_status: 'confirmed',
       }, { onConflict: 'id', ignoreDuplicates: true });
 
       // Assign (or unassign) the writer model

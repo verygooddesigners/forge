@@ -4,6 +4,12 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.22] - 2026-02-28
+
+### Fix: writer model assignment constraint error
+
+- Fixed `users_account_status_check` violation in betas API — `account_status` must be `'confirmed'` not `'active'`; affected all three `public.users` upserts (start_beta, resend_invite, assign_writer_model)
+
 ## [1.10.21] - 2026-02-28
 
 ### Writer Factory restored to sidebar + model scoping
