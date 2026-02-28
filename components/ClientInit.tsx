@@ -22,6 +22,9 @@ interface BetaData {
   };
 }
 
+// Auth pages where we never want to show the beta toolbar or modal
+const AUTH_PATHS = ['/login', '/reset-password', '/signup', '/awaiting-confirmation'];
+
 export function ClientInit() {
   const [mounted, setMounted] = useState(false);
   const [userEmail, setUserEmail] = useState<string | undefined>(undefined);
@@ -30,6 +33,10 @@ export function ClientInit() {
 
   useEffect(() => {
     setMounted(true);
+
+    // Don't show beta UI on auth pages
+    if (AUTH_PATHS.some(p => window.location.pathname.startsWith(p))) return;
+
     const supabase = createClient();
 
     supabase.auth.getUser().then(({ data }) => {

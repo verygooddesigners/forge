@@ -201,8 +201,10 @@ export async function PATCH(req: NextRequest) {
 
       // 2. Ensure public.users row is correct (delete any stale rows by email, upsert by id)
       await admin.from('users').delete().eq('email', email.toLowerCase()).neq('id', userId);
+      // Use 'confirmed' — email is pre-confirmed via email_confirm:true.
+      // 'awaiting_confirmation' would block the user from the dashboard via middleware.
       await admin.from('users').upsert(
-        { id: userId, email, role: 'Content Creator', account_status: 'awaiting_confirmation' },
+        { id: userId, email, role: 'Content Creator', account_status: 'confirmed' },
         { onConflict: 'id', ignoreDuplicates: true },
       );
 

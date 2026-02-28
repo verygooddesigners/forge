@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export default function ResetPasswordPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg-deepest p-4">
+    <div className="w-full h-full flex items-center justify-center p-8">
       <ResetPasswordForm />
     </div>
   );

@@ -4,6 +4,15 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.31] - 2026-02-28
+
+### Fix: three first-login issues for beta users
+
+- **Blank dashboard**: `provisionUser` was setting `account_status: 'awaiting_confirmation'`, which caused middleware to redirect users to `/awaiting-confirmation` instead of the dashboard. Changed to `'confirmed'` since email is already pre-confirmed via `email_confirm: true`
+- **Migration 00030**: One-time fix for existing beta users already stuck in `awaiting_confirmation` — updates them all to `confirmed`
+- **Beta notes modal on reset-password page**: `ClientInit` now skips fetching and showing the beta toolbar/modal when the current path is an auth page (`/login`, `/reset-password`, `/signup`, `/awaiting-confirmation`)
+- **Reset-password page layout**: Changed from `min-h-screen bg-bg-deepest` to `w-full h-full` to match the login page layout inside the root floating card
+
 ## [1.10.30] - 2026-02-28
 
 ### Fix: Writer Model assignment available for all active beta users
