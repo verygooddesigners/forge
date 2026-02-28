@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.32] - 2026-02-28
+
+### Fix: redirect loop and DB constraint for beta user first-login
+
+- **Redirect loop broken**: `dashboard/page.tsx` now auto-provisions a missing `public.users` profile (using admin client) instead of redirecting to `/login`, which caused an infinite loop when middleware bounced authenticated users back to `/dashboard`
+- **DB constraint fix**: Live database had the old `account_status` constraint (`pending`, `strategist`, etc.) — migrations 00013/00016 were not applied. SQL provided to normalize existing rows and update the constraint to `(awaiting_confirmation, confirmed)` before inserting Jeremy's profile
+- **`provisionUser` always updates existing rows**: Changed `ignoreDuplicates: true` to `false` so the upsert always sets `account_status: confirmed` even on pre-existing rows
+
 All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
