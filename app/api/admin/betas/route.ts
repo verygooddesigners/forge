@@ -214,21 +214,22 @@ export async function PATCH(req: NextRequest) {
 
             // Send a magic link sign-in email since inviteUserByEmail doesn't work for existing users
             try {
-              const otpRes = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/otp`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-                  'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}`,
-                },
-                body: JSON.stringify({
-                  email: bu.email,
-                  create_user: false,
-                  options: {
-                    emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com'}/`,
+              const redirectTo = encodeURIComponent(`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com'}/`);
+              const otpRes = await fetch(
+                `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/otp?redirect_to=${redirectTo}`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+                    'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}`,
                   },
-                }),
-              });
+                  body: JSON.stringify({
+                    email: bu.email,
+                    create_user: false,
+                  }),
+                }
+              );
               emailSent = otpRes.ok;
               if (!otpRes.ok) {
                 const errText = await otpRes.text();
@@ -307,21 +308,22 @@ export async function PATCH(req: NextRequest) {
 
         // Send a magic link sign-in email since inviteUserByEmail doesn't work for existing users
         try {
-          const otpRes = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/otp`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-              'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}`,
-            },
-            body: JSON.stringify({
-              email,
-              create_user: false,
-              options: {
-                emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com'}/`,
+          const redirectTo = encodeURIComponent(`${process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com'}/`);
+          const otpRes = await fetch(
+            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/otp?redirect_to=${redirectTo}`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+                'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}`,
               },
-            }),
-          });
+              body: JSON.stringify({
+                email,
+                create_user: false,
+              }),
+            }
+          );
           emailSent = otpRes.ok;
           if (!otpRes.ok) {
             const errText = await otpRes.text();

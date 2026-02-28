@@ -4,6 +4,12 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.25] - 2026-02-28
+
+### Fix: OTP magic link redirect_to as query param (not body)
+
+- Fixed OTP endpoint call for existing users — `redirect_to` must be a URL query parameter, not nested inside the request body; previous format caused 4xx responses and `email_sent: false`
+
 ## [1.10.24] - 2026-02-28
 
 ### Fix: beta invites now send magic link to existing Supabase users
