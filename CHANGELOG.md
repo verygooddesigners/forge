@@ -4,6 +4,12 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.20] - 2026-02-28
+
+### Minor
+
+- Renamed "Suggest Feature" button in Beta Toolbar to "Suggest/Feedback"
+
 ## [1.10.19] - 2026-02-28
 
 ### Beta Writer Model Assignment + User Guide Updates

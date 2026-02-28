@@ -671,7 +671,7 @@ export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
             </span>
           </div>
 
-          {/* Suggest Feature */}
+          {/* Suggest/Feedback */}
           <button
             onClick={() => setModal('feature')}
             style={{ ...pill, background: '#8B5CF6', color: '#fff' }}
@@ -679,7 +679,7 @@ export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = '#8B5CF6'; }}
           >
             <Sparkles size={13} />
-            Suggest Feature
+            Suggest/Feedback
           </button>
 
           {/* Bug Report */}
