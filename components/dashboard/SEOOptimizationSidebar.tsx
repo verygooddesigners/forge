@@ -527,7 +527,7 @@ export function SEOOptimizationSidebar({
                   <p className="text-xs text-muted-foreground">
                     Click a keyword to include it when generating content.
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 overflow-hidden">
                     {(projectResearch.suggested_keywords as SuggestedKeywordType[]).map((kw, index) => {
                       const selected = projectResearch.selected_keywords?.includes(kw.keyword);
                       const pillClass =
@@ -540,12 +540,13 @@ export function SEOOptimizationSidebar({
                         <Badge
                           key={index}
                           variant="outline"
-                          className={`cursor-pointer text-xs px-2 py-1 ${pillClass} ${selected ? 'ring-2 ring-offset-1 ring-primary' : ''}`}
+                          className={`cursor-pointer text-[10px] px-1.5 py-0.5 max-w-full truncate ${pillClass} ${selected ? 'ring-2 ring-offset-1 ring-primary' : ''}`}
                           onClick={() => toggleResearchKeyword(kw.keyword)}
+                          title={kw.keyword}
                         >
-                          {kw.keyword}
-                          <span className="ml-1 opacity-70 text-[10px]">
-                            ({kw.importance === 'high' ? 'High' : kw.importance === 'medium' ? 'Med' : 'Low'})
+                          <span className="truncate">{kw.keyword}</span>
+                          <span className="ml-1 opacity-60 text-[9px] shrink-0">
+                            {kw.importance === 'high' ? 'H' : kw.importance === 'medium' ? 'M' : 'L'}
                           </span>
                         </Badge>
                       );
@@ -621,25 +622,26 @@ export function SEOOptimizationSidebar({
                       <Info className="h-3 w-3 text-muted-foreground" />
                     </div>
                     
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 overflow-hidden">
                       {suggestedKeywords.map((kw, index) => {
-                        const colorClass = 
-                          kw.importance === 'high' 
-                            ? 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200' 
+                        const colorClass =
+                          kw.importance === 'high'
+                            ? 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200'
                             : kw.importance === 'medium'
                             ? 'bg-orange-100 text-orange-800 border-orange-300 hover:bg-orange-200'
                             : 'bg-red-100 text-red-800 border-red-300 hover:bg-red-200';
-                        
+
                         const selectedClass = kw.selected ? 'ring-2 ring-offset-1 ring-violet-500' : '';
-                        
+
                         return (
                           <Badge
                             key={index}
                             variant="outline"
-                            className={`cursor-pointer text-xs px-2 py-1 ${colorClass} ${selectedClass} transition-all`}
+                            className={`cursor-pointer text-[10px] px-1.5 py-0.5 max-w-full truncate ${colorClass} ${selectedClass} transition-all`}
                             onClick={() => toggleKeywordSelection(kw.keyword)}
+                            title={kw.keyword}
                           >
-                            {kw.keyword}
+                            <span className="truncate">{kw.keyword}</span>
                           </Badge>
                         );
                       })}

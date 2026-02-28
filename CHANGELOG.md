@@ -4,6 +4,13 @@ All notable changes to Forge are documented here.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.10.16] - 2026-02-28
+
+### UI Fixes
+- Quick Actions: Replaced NFL Odds card with a Guides card linking to User Guide and SmartBriefs Guide
+- SmartBriefs: AutoBuilder button now uses primary purple border and icon
+- Suggested Keywords: Smaller text (10px), compact padding, overflow contained with truncation and tooltips
+
 ## [1.10.15] - 2026-02-28
 
 ### Added

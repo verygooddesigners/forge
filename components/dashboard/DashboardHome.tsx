@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, Project } from '@/types';
 import { Badge } from '@/components/ui/badge';
-import { 
+import {
   Plus,
   FileText,
   BookOpen,
   Calendar,
   BarChart3,
   Sparkles,
+  BookMarked,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { countWordsInTipTapJson } from '@/lib/word-count';
@@ -244,6 +245,37 @@ export function DashboardHome({ user }: DashboardHomeProps) {
               </p>
             </div>
           </button>
+
+          <div className="glass-card glass-card-green-emerald p-8 text-left flex flex-col gap-5">
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-[0_8px_16px_rgba(0,0,0,0.1)]"
+              style={{ background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)' }}
+            >
+              <BookMarked className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className="text-[18px] font-bold mb-2">Guides</h3>
+              <p className="text-[14px] text-text-tertiary leading-relaxed mb-4">
+                Learn how to get the most out of Forge.
+              </p>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => router.push('/guide')}
+                  className="text-[13px] font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1.5 transition-colors"
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  User Guide →
+                </button>
+                <button
+                  onClick={() => router.push('/smartbrief-guide')}
+                  className="text-[13px] font-semibold text-emerald-700 hover:text-emerald-800 flex items-center gap-1.5 transition-colors"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                  SmartBriefs Guide →
+                </button>
+              </div>
+            </div>
+          </div>
 
         </div>
       </div>

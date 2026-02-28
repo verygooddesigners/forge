@@ -415,8 +415,8 @@ export function SmartBriefPanel({ user, onBack, autoCreate = false }: SmartBrief
                 <option value="alpha_za">Z → A</option>
               </select>
 
-              <Button onClick={startNewBriefFull} size="sm" variant="outline" className="gap-2">
-                <Wand2 className="w-4 h-4" />
+              <Button onClick={startNewBriefFull} size="sm" variant="outline" className="gap-2 border-accent-primary text-accent-primary hover:bg-accent-muted hover:text-accent-primary">
+                <Wand2 className="w-4 h-4 text-accent-primary" />
                 SmartBrief AutoBuilder
               </Button>
               <Button onClick={startNewBriefFull} size="sm" className="gap-2">
