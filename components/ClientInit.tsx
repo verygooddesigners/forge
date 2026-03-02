@@ -34,27 +34,44 @@ export function ClientInit() {
   useEffect(() => {
     setMounted(true);
 
-    // Don't show beta UI on auth pages
-    if (AUTH_PATHS.some(p => window.location.pathname.startsWith(p))) return;
-
     const supabase = createClient();
+    const isAuthPage = AUTH_PATHS.some(p => window.location.pathname.startsWith(p));
 
-    // Use getSession() (reads cached cookie) instead of getUser() (network call)
-    // to avoid the toolbar never appearing when the network call is slow/fails.
-    supabase.auth.getSession().then(({ data }) => {
-      const email = data.session?.user?.email ?? undefined;
-      setUserEmail(email);
+    const fetchBetaData = (email: string) => {
+      fetch('/api/beta-notes')
+        .then(r => r.json())
+        .then(json => { if (json.data) setBetaData(json.data); })
+        .catch(console.error);
+    };
 
-      // Only fetch beta notes if logged in
-      if (email) {
-        fetch('/api/beta-notes')
-          .then(r => r.json())
-          .then(json => {
-            if (json.data) setBetaData(json.data);
-          })
-          .catch(console.error);
+    // Initial session check (skip on auth pages like /login, /signup)
+    if (!isAuthPage) {
+      // Use getSession() (reads cached cookie) instead of getUser() (network call)
+      // to avoid the toolbar never appearing when the network call is slow/fails.
+      supabase.auth.getSession().then(({ data }) => {
+        const email = data.session?.user?.email ?? undefined;
+        setUserEmail(email);
+        if (email) fetchBetaData(email);
+      });
+    }
+
+    // Listen for auth state changes so we catch the session being set by
+    // /auth/magic (magic link sign-in). The root layout persists across
+    // client-side navigations, so the initial getSession() call above may
+    // run before setSession() is called — this listener bridges that gap.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        const email = session.user?.email ?? undefined;
+        setUserEmail(email);
+        if (email) fetchBetaData(email);
+      } else if (event === 'SIGNED_OUT') {
+        setUserEmail(undefined);
+        setBetaData(null);
+        setBetaModalDismissed(false);
       }
     });
+
+    return () => { subscription.unsubscribe(); };
   }, []);
 
   const handleBetaModalDismiss = () => {

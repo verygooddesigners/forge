@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.10.42] - 2026-03-02
+
+### Fix: Beta Notes modal now shows on first magic link sign-in
+
+- **Root cause**: `ClientInit` lives in the root layout and mounts once on `/auth/magic`. The initial `getSession()` call finds no session (the user isn't signed in yet), so beta data is never fetched. When `/auth/magic` calls `setSession()` and navigates to `/dashboard`, the layout doesn't re-mount so `getSession()` never fires again.
+- **Fix**: Added `supabase.auth.onAuthStateChange` listener to `ClientInit`. When `setSession()` fires `SIGNED_IN`, the listener immediately fetches beta notes and triggers the modal — regardless of which page caused the sign-in.
+- Also resets `betaModalDismissed` state on `SIGNED_OUT` so the modal shows correctly on next login.
+
+### Fix: Tyler Olsen → Tyler Olson (migration data)
+
+- Corrected spelling in `migration-data/writer_models.json`
+- Run the SQL below in Supabase to fix live records
+
 ## [1.10.41] - 2026-03-02
 
 ### Fix: Magic links no longer consumed by Slack/email pre-fetchers
