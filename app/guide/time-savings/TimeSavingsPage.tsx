@@ -206,7 +206,7 @@ export default function TimeSavingsPage() {
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
                     activeSection === item.id
                       ? 'bg-accent-muted text-accent-primary font-medium'
-                      : 'text-text-secondary hover:bg-slate-100 hover:text-text-primary'
+                      : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary'
                   }`}
                 >
                   {item.title}

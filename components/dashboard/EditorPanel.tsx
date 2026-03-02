@@ -480,7 +480,7 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
 
   return (
     <>
-      <div className="flex-1 bg-white border border-border-subtle rounded-xl flex flex-col">
+      <div className="flex-1 bg-bg-elevated border border-border-subtle rounded-xl flex flex-col">
         <div className="flex-1 overflow-hidden flex flex-col">
           <GenerationContext
             projectId={projectId}
@@ -504,7 +504,7 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
         </div>
 
         {/* Status Bar */}
-        <div className="border-t border-border-subtle bg-white px-4 py-2.5 text-xs text-gray-600 flex justify-between items-center">
+        <div className="border-t border-border-subtle bg-bg-surface px-4 py-2.5 text-xs text-text-secondary flex justify-between items-center">
           <span className="flex items-center gap-2 font-medium">
             {generating ? (
               <>

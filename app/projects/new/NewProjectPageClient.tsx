@@ -248,9 +248,9 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
         onOpenWriterFactory={() => router.push('/writer-factory')}
       />
 
-      <div className="flex-1 overflow-y-auto min-h-0 flex flex-col" style={{ background: 'linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%)' }}>
+      <div className="flex-1 overflow-y-auto min-h-0 flex flex-col bg-bg-deep">
         {/* Top bar */}
-        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 px-6 py-4 border-b border-white/60 bg-white/80 backdrop-blur-md">
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 px-6 py-4 border-b border-border-subtle bg-bg-surface/80 backdrop-blur-md">
           <h1 className="text-xl font-semibold text-text-primary">Create New Project</h1>
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={() => router.push('/projects')}>

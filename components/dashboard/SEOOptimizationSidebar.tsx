@@ -505,7 +505,7 @@ export function SEOOptimizationSidebar({
 
   return (
     <div className="w-80 flex flex-col gap-3">
-      <Card className="bg-white shadow-lg">
+      <Card className="bg-bg-elevated shadow-lg">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <CardHeader className="pb-3">
             <TabsList className="grid w-full grid-cols-2">

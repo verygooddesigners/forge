@@ -21,10 +21,10 @@ export default function SavingsCalculator({
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-6 md:p-8 shadow-sm">
+    <div className="bg-bg-elevated border border-border-default rounded-xl p-6 md:p-8 shadow-sm">
       <div className="space-y-8">
         {/* Team Size */}
-        <div className="border-b border-slate-100 pb-6">
+        <div className="border-b border-border-subtle pb-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-violet-100 rounded-lg p-2">
               <Users className="h-5 w-5 text-violet-600" />
@@ -41,14 +41,14 @@ export default function SavingsCalculator({
               max={50}
               value={inputs.teamSize}
               onChange={(e) => updateInput('teamSize', Math.max(1, Math.min(50, parseInt(e.target.value) || 1)))}
-              className="w-24 px-3 py-2 border border-slate-300 rounded-lg text-center font-mono text-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+              className="w-24 px-3 py-2 border border-border-default rounded-lg text-center font-mono text-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
             />
             <span className="text-slate-600">people</span>
           </div>
         </div>
 
         {/* New Articles */}
-        <div className="border-b border-slate-100 pb-6">
+        <div className="border-b border-border-subtle pb-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-emerald-100 rounded-lg p-2">
               <FileText className="h-5 w-5 text-emerald-600" />
@@ -94,7 +94,7 @@ export default function SavingsCalculator({
         </div>
 
         {/* Update/Repeat Articles */}
-        <div className="border-b border-slate-100 pb-6">
+        <div className="border-b border-border-subtle pb-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-blue-100 rounded-lg p-2">
               <RefreshCw className="h-5 w-5 text-blue-600" />
@@ -186,7 +186,7 @@ export default function SavingsCalculator({
         </div>
 
         {/* Calculate Button */}
-        <div className="pt-4 border-t border-slate-100">
+        <div className="pt-4 border-t border-border-subtle">
           <button
             onClick={onCalculate}
             className="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-violet-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2"

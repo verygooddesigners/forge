@@ -31,6 +31,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Anti-flash: apply dark class synchronously before first paint */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('forge-theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();` }} />
+      </head>
       <body className={`${dmSans.variable} ${spaceMono.variable} font-sans antialiased`}>
         <ClientInit />
         {/* Outer padding creates the floating card effect against the html gradient bg */}

@@ -409,3 +409,155 @@
   box-shadow: 0 12px 32px rgba(16, 185, 129, 0.2);
 }
 
+
+/* =============================================
+   DARK MODE
+   ============================================= */
+
+/* Tailwind v4: enable dark: variant via .dark class on <html> */
+@custom-variant dark (&:is(.dark *));
+
+/* Beta toolbar pill CSS vars */
+:root {
+  --beta-pill-bg: rgba(245, 243, 255, 0.92);
+  --beta-pill-border: rgba(139, 92, 246, 0.25);
+  --beta-pill-color: #5B21B6;
+  --beta-pill-version-color: #5B21B6;
+  --beta-pill-icon-color: #7C3AED;
+}
+
+/* ── Dark palette overrides ── */
+html.dark {
+  --color-bg-deepest: #080808;
+  --color-bg-deep: #0f0f0f;
+  --color-bg-surface: #141414;
+  --color-bg-elevated: #1a1a1a;
+  --color-bg-hover: #222222;
+  --color-bg-outer: #050505;
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #a0a0a0;
+  --color-text-tertiary: #707070;
+  --color-text-muted: #505050;
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-default: rgba(255, 255, 255, 0.10);
+  --color-border-hover: rgba(160, 33, 254, 0.4);
+  --color-border-glass: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(20, 20, 20, 0.92);
+  --glass-sidebar-bg: rgba(14, 14, 14, 0.6);
+  --glass-container-bg: rgba(16, 16, 16, 0.95);
+  /* Beta toolbar pill */
+  --beta-pill-bg: rgba(20, 10, 40, 0.92);
+  --beta-pill-border: rgba(139, 92, 246, 0.35);
+  --beta-pill-color: #c084fc;
+  --beta-pill-version-color: #c084fc;
+  --beta-pill-icon-color: #a78bfa;
+
+  /* Legacy compat */
+  --color-background: #080808;
+  --color-foreground: #f0f0f0;
+  --color-card: #141414;
+  --color-card-foreground: #f0f0f0;
+  --color-popover: #1a1a1a;
+  --color-popover-foreground: #f0f0f0;
+  --color-muted: #222222;
+  --color-muted-foreground: #707070;
+  --color-input: #141414;
+  --color-border: rgba(255, 255, 255, 0.10);
+}
+
+/* ── Dark html background ── */
+html.dark {
+  background: #050505;
+}
+
+/* ── Dark glassmorphism class overrides ── */
+html.dark .app-container {
+  background: rgba(16, 16, 16, 0.95);
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+html.dark .app-sidebar {
+  background: rgba(14, 14, 14, 0.6);
+  border-right-color: rgba(255, 255, 255, 0.06);
+}
+
+html.dark .app-floating-menu {
+  background: rgba(20, 20, 20, 0.98);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Safety net: Tailwind utility class overrides ── */
+html.dark .bg-white { background-color: #1a1a1a !important; }
+html.dark .bg-white\/80 { background-color: rgba(26, 26, 26, 0.85) !important; }
+html.dark .bg-white\/10 { background-color: rgba(255, 255, 255, 0.05) !important; }
+html.dark .bg-white\/20 { background-color: rgba(255, 255, 255, 0.08) !important; }
+html.dark .bg-gray-50 { background-color: #141414 !important; }
+html.dark .bg-slate-100 { background-color: #1a1a1a !important; }
+html.dark .bg-slate-200 { background-color: #222222 !important; }
+html.dark .bg-slate-300 { background-color: #2a2a2a !important; }
+html.dark .bg-slate-400 { background-color: #333333 !important; }
+html.dark .bg-slate-500 { background-color: #3a3a3a !important; }
+html.dark .bg-black\/5 { background-color: rgba(255, 255, 255, 0.04) !important; }
+
+html.dark .text-gray-600 { color: #a0a0a0 !important; }
+html.dark .text-gray-700 { color: #c0c0c0 !important; }
+html.dark .text-gray-800 { color: #d0d0d0 !important; }
+html.dark .text-gray-900 { color: #f0f0f0 !important; }
+
+html.dark .border-slate-200 { border-color: rgba(255, 255, 255, 0.08) !important; }
+html.dark .border-slate-300 { border-color: rgba(255, 255, 255, 0.10) !important; }
+html.dark .border-white\/40 { border-color: rgba(255, 255, 255, 0.06) !important; }
+
+html.dark .shadow-lg { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important; }
+
+/* ── Fix hover:bg-black/5 (AppSidebar nav items) ── */
+html.dark .hover\:bg-black\/5:hover { background-color: rgba(255, 255, 255, 0.06) !important; }
+html.dark .hover\:bg-slate-100:hover { background-color: #222222 !important; }
+
+/* ── Dark glass card overrides ── */
+html.dark .glass-card {
+  background-image: linear-gradient(rgba(26, 26, 26, 0.95), rgba(26, 26, 26, 0.95));
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+html.dark .glass-card-purple-pink:hover {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.95), rgba(26, 26, 26, 0.95)),
+    linear-gradient(135deg, #8B5CF6, #EC4899);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-color: transparent;
+  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.3);
+}
+
+html.dark .glass-card-blue-cyan:hover {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.95), rgba(26, 26, 26, 0.95)),
+    linear-gradient(135deg, #3B82F6, #06B6D4);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-color: transparent;
+  box-shadow: 0 12px 32px rgba(59, 130, 246, 0.3);
+}
+
+html.dark .glass-card-orange-red:hover {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.95), rgba(26, 26, 26, 0.95)),
+    linear-gradient(135deg, #F97316, #EF4444);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-color: transparent;
+  box-shadow: 0 12px 32px rgba(249, 115, 22, 0.3);
+}
+
+html.dark .glass-card-green-emerald:hover {
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.95), rgba(26, 26, 26, 0.95)),
+    linear-gradient(135deg, #10B981, #14B8A6);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-color: transparent;
+  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.3);
+}
+

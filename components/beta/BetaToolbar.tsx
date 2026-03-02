@@ -31,11 +31,11 @@ const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   planned:       { label: 'Planned',       color: '#3B82F6' },
   in_progress:   { label: 'In Progress',   color: '#10B981' },
   completed:     { label: 'Completed',     color: '#059669' },
-  wont_fix:      { label: "Won't Fix",     color: '#6B7280' },
+  wont_fix:      { label: "Won't Fix",     color: 'var(--color-text-muted)' },
 };
 
 function StatusBadge({ status }: { status: string }) {
-  const cfg = STATUS_CONFIG[status] ?? { label: status, color: '#6B7280' };
+  const cfg = STATUS_CONFIG[status] ?? { label: status, color: 'var(--color-text-muted)' };
   return (
     <span
       style={{
@@ -73,7 +73,7 @@ function BetaNotesPanel({ betaData, onClose }: { betaData: BetaData; onClose: ()
     >
       <div
         style={{
-          background: '#fff',
+          background: 'var(--color-bg-elevated)',
           borderRadius: '20px',
           padding: '28px',
           width: '100%',
@@ -93,7 +93,7 @@ function BetaNotesPanel({ betaData, onClose }: { betaData: BetaData; onClose: ()
           style={{
             position: 'absolute', top: '16px', right: '16px',
             background: 'none', border: 'none', cursor: 'pointer',
-            color: '#9CA3AF', padding: '4px', borderRadius: '8px',
+            color: 'var(--color-text-muted)', padding: '4px', borderRadius: '8px',
           }}
         >
           <X size={18} />
@@ -109,7 +109,7 @@ function BetaNotesPanel({ betaData, onClose }: { betaData: BetaData; onClose: ()
               {betaData.beta.name}
             </span>
           </div>
-          <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#111827' }}>
+          <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: 'var(--color-text-primary)' }}>
             Beta Notes
           </h2>
         </div>
@@ -118,19 +118,19 @@ function BetaNotesPanel({ betaData, onClose }: { betaData: BetaData; onClose: ()
           style={{
             flex: 1,
             overflowY: 'auto',
-            background: '#F9F5FF',
+            background: 'var(--color-accent-muted)',
             borderRadius: '12px',
             padding: '16px',
             fontSize: '14px',
             lineHeight: '1.65',
-            color: '#374151',
+            color: 'var(--color-text-secondary)',
             whiteSpace: 'pre-wrap',
           }}
         >
           {betaData.beta.notes || 'No notes added for this beta yet.'}
         </div>
 
-        <p style={{ fontSize: '11px', color: '#9CA3AF', margin: 0 }}>
+        <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', margin: 0 }}>
           v{betaData.beta.notes_version} · {betaData.beta.name}
         </p>
       </div>
@@ -235,7 +235,7 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
     >
       <div
         style={{
-          background: '#fff',
+          background: 'var(--color-bg-elevated)',
           borderRadius: '20px',
           padding: '32px',
           width: '100%',
@@ -250,7 +250,7 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
           style={{
             position: 'absolute', top: '16px', right: '16px',
             background: 'none', border: 'none', cursor: 'pointer',
-            color: '#9CA3AF', padding: '4px', borderRadius: '8px',
+            color: 'var(--color-text-muted)', padding: '4px', borderRadius: '8px',
           }}
         >
           <X size={18} />
@@ -267,10 +267,10 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
               : <Sparkles size={20} color={accentColor} />}
           </div>
           <div>
-            <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#111827' }}>
+            <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: 'var(--color-text-primary)' }}>
               {isBug ? 'Report a Bug' : 'Suggest a Feature'}
             </h2>
-            <p style={{ margin: 0, fontSize: '12px', color: '#9CA3AF', marginTop: '2px' }}>
+            <p style={{ margin: 0, fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '2px' }}>
               {isBug ? 'Tell us what went wrong' : 'Share your idea with the team'}
             </p>
           </div>
@@ -288,10 +288,10 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
-            <p style={{ fontSize: '15px', fontWeight: 600, color: '#111827', margin: '0 0 6px' }}>
+            <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text-primary)', margin: '0 0 6px' }}>
               {isBug ? 'Bug reported!' : 'Suggestion submitted!'}
             </p>
-            <p style={{ fontSize: '13px', color: '#6B7280', margin: '0 0 24px' }}>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', margin: '0 0 24px' }}>
               Thanks — we'll review it shortly.
             </p>
             <button
@@ -308,7 +308,7 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
         ) : (
           <form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
             <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
                 {isBug ? 'What happened?' : 'What do you have in mind?'}
               </label>
               <input
@@ -319,15 +319,15 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
                 required
                 style={{
                   width: '100%', padding: '10px 12px', borderRadius: '10px',
-                  border: '1.5px solid #E5E7EB', fontSize: '14px', color: '#111827',
+                  border: '1.5px solid var(--color-border-default)', fontSize: '14px', color: 'var(--color-text-primary)',
                   outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit',
                 }}
                 onFocus={(e) => { e.target.style.borderColor = accentColor; }}
-                onBlur={(e) => { e.target.style.borderColor = '#E5E7EB'; }}
+                onBlur={(e) => { e.target.style.borderColor = 'var(--color-border-default)'; }}
               />
             </div>
             <div style={{ marginBottom: isBug ? '16px' : '20px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
                 {isBug ? 'Steps to reproduce / details' : 'Describe the feature'}
               </label>
               <textarea
@@ -340,20 +340,20 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
                 rows={4}
                 style={{
                   width: '100%', padding: '10px 12px', borderRadius: '10px',
-                  border: '1.5px solid #E5E7EB', fontSize: '14px', color: '#111827',
+                  border: '1.5px solid var(--color-border-default)', fontSize: '14px', color: 'var(--color-text-primary)',
                   outline: 'none', resize: 'vertical', boxSizing: 'border-box',
                   fontFamily: 'inherit', lineHeight: '1.5',
                 }}
                 onFocus={(e) => { e.target.style.borderColor = accentColor; }}
-                onBlur={(e) => { e.target.style.borderColor = '#E5E7EB'; }}
+                onBlur={(e) => { e.target.style.borderColor = 'var(--color-border-default)'; }}
               />
             </div>
 
             {/* Screenshot upload — bug reports only */}
             {isBug && (
               <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
-                  Screenshot <span style={{ fontWeight: 400, color: '#9CA3AF' }}>(optional)</span>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+                  Screenshot <span style={{ fontWeight: 400, color: 'var(--color-text-muted)' }}>(optional)</span>
                 </label>
                 <input
                   ref={fileInputRef}
@@ -370,7 +370,7 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
                       alt="Screenshot preview"
                       style={{
                         maxWidth: '100%', maxHeight: '160px', borderRadius: '10px',
-                        border: '1.5px solid #E5E7EB', display: 'block',
+                        border: '1.5px solid var(--color-border-default)', display: 'block',
                       }}
                     />
                     <button
@@ -399,16 +399,16 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
                       padding: '20px',
                       textAlign: 'center',
                       cursor: 'pointer',
-                      background: dragOver ? '#F5F3FF' : '#FAFAFA',
+                      background: dragOver ? 'var(--color-accent-muted)' : 'var(--color-bg-surface)',
                       transition: 'all 0.15s',
                     }}
                   >
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
                       <Paperclip size={18} color={dragOver ? accentColor : '#9CA3AF'} />
-                      <span style={{ fontSize: '13px', color: '#6B7280' }}>
+                      <span style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>
                         Click to attach or drag & drop
                       </span>
-                      <span style={{ fontSize: '11px', color: '#9CA3AF' }}>PNG, JPG, GIF, WebP · max 5MB</span>
+                      <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>PNG, JPG, GIF, WebP · max 5MB</span>
                     </div>
                   </div>
                 )}
@@ -506,7 +506,7 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
     >
       <div
         style={{
-          background: '#fff',
+          background: 'var(--color-bg-elevated)',
           borderRadius: '20px',
           padding: '28px',
           width: '100%',
@@ -525,36 +525,36 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
           style={{
             position: 'absolute', top: '16px', right: '16px',
             background: 'none', border: 'none', cursor: 'pointer',
-            color: '#9CA3AF', padding: '4px', borderRadius: '8px',
+            color: 'var(--color-text-muted)', padding: '4px', borderRadius: '8px',
           }}
         >
           <X size={18} />
         </button>
 
-        <h2 style={{ margin: '0 0 4px', fontSize: '16px', fontWeight: 700, color: '#111827' }}>
+        <h2 style={{ margin: '0 0 4px', fontSize: '16px', fontWeight: 700, color: 'var(--color-text-primary)' }}>
           {isAdmin ? '📋 All Beta Feedback' : '📬 My Reports'}
         </h2>
-        <p style={{ margin: '0 0 20px', fontSize: '12px', color: '#9CA3AF' }}>
+        <p style={{ margin: '0 0 20px', fontSize: '12px', color: 'var(--color-text-muted)' }}>
           {isAdmin ? 'All bug reports and feature suggestions from beta users' : 'Your submitted bug reports and feature suggestions'}
         </p>
 
         <div style={{ overflowY: 'auto', flex: 1 }}>
           {loading && (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: '#9CA3AF', fontSize: '14px' }}>Loading…</div>
+            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--color-text-muted)', fontSize: '14px' }}>Loading…</div>
           )}
           {!loading && items?.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: '#9CA3AF', fontSize: '14px' }}>No submissions yet.</div>
+            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--color-text-muted)', fontSize: '14px' }}>No submissions yet.</div>
           )}
           {!loading && items && items.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {items.map(item => {
                 const isOpen = expanded === item.id;
                 return (
-                  <div key={item.id} style={{ border: '1.5px solid #F3F4F6', borderRadius: '12px', overflow: 'hidden' }}>
+                  <div key={item.id} style={{ border: '1.5px solid var(--color-border-subtle)', borderRadius: '12px', overflow: 'hidden' }}>
                     <button
                       onClick={() => setExpanded(isOpen ? null : item.id)}
                       style={{
-                        width: '100%', background: isOpen ? '#F9F5FF' : '#FAFAFA',
+                        width: '100%', background: isOpen ? 'var(--color-accent-muted)' : 'var(--color-bg-surface)',
                         border: 'none', cursor: 'pointer', padding: '12px 14px',
                         display: 'flex', alignItems: 'center', gap: '10px', textAlign: 'left',
                       }}
@@ -563,17 +563,17 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
                         flexShrink: 0, display: 'flex', alignItems: 'center', gap: '4px',
                         fontSize: '11px', fontWeight: 600,
                         color: item.type === 'bug' ? '#EF4444' : '#8B5CF6',
-                        background: item.type === 'bug' ? '#FEF2F2' : '#F5F3FF',
+                        background: item.type === 'bug' ? 'rgba(239,68,68,0.1)' : 'var(--color-accent-muted)',
                         padding: '3px 8px', borderRadius: '999px',
                       }}>
                         {typeIcon(item.type)}
                         {item.type === 'bug' ? 'Bug' : 'Feature'}
                       </span>
-                      <span style={{ flex: 1, fontSize: '13px', fontWeight: 600, color: '#111827' }}>
+                      <span style={{ flex: 1, fontSize: '13px', fontWeight: 600, color: 'var(--color-text-primary)' }}>
                         {item.title}
                       </span>
                       {isAdmin && item.user_email && (
-                        <span style={{ fontSize: '11px', color: '#9CA3AF', flexShrink: 0, marginRight: '8px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', flexShrink: 0, marginRight: '8px' }}>
                           {item.user_email.split('@')[0]}
                         </span>
                       )}
@@ -584,8 +584,8 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
                     </button>
 
                     {isOpen && (
-                      <div style={{ padding: '14px', borderTop: '1px solid #F3F4F6', background: '#fff' }}>
-                        <p style={{ fontSize: '13px', color: '#374151', margin: '0 0 10px', lineHeight: '1.5' }}>
+                      <div style={{ padding: '14px', borderTop: '1px solid var(--color-border-subtle)', background: 'var(--color-bg-elevated)' }}>
+                        <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', margin: '0 0 10px', lineHeight: '1.5' }}>
                           {item.description}
                         </p>
 
@@ -597,18 +597,18 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
                                 alt="Screenshot"
                                 style={{
                                   maxWidth: '100%', maxHeight: '200px', borderRadius: '8px',
-                                  border: '1.5px solid #E5E7EB', display: 'block', cursor: 'pointer',
+                                  border: '1.5px solid var(--color-border-default)', display: 'block', cursor: 'pointer',
                                 }}
                               />
                             </a>
-                            <p style={{ fontSize: '11px', color: '#9CA3AF', margin: '4px 0 0', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', margin: '4px 0 0', display: 'flex', alignItems: 'center', gap: '4px' }}>
                               <ImageIcon size={11} />
                               Click to open full size
                             </p>
                           </div>
                         )}
 
-                        <p style={{ fontSize: '11px', color: '#9CA3AF', margin: '0 0 12px' }}>
+                        <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', margin: '0 0 12px' }}>
                           Submitted: {new Date(item.created_at).toLocaleDateString('en-US', {
                             month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
                           })}
@@ -616,8 +616,8 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
 
                         {item.admin_notes && !isAdmin && (
                           <div style={{
-                            background: '#F5F3FF', borderRadius: '8px', padding: '10px 12px',
-                            fontSize: '13px', color: '#5B21B6', borderLeft: '3px solid #8B5CF6',
+                            background: 'var(--color-accent-muted)', borderRadius: '8px', padding: '10px 12px',
+                            fontSize: '13px', color: 'var(--color-accent-primary)', borderLeft: '3px solid #8B5CF6',
                           }}>
                             <strong>Note from team:</strong> {item.admin_notes}
                           </div>
@@ -627,14 +627,14 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
                           <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                             <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                               <div style={{ flex: 1 }}>
-                                <label style={{ fontSize: '11px', fontWeight: 600, color: '#6B7280', display: 'block', marginBottom: '4px' }}>STATUS</label>
+                                <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-text-muted)', display: 'block', marginBottom: '4px' }}>STATUS</label>
                                 <select
                                   defaultValue={item.status}
                                   onChange={e => setEditStatus(prev => ({ ...prev, [item.id]: e.target.value }))}
                                   style={{
                                     width: '100%', padding: '8px 10px', borderRadius: '8px',
-                                    border: '1.5px solid #E5E7EB', fontSize: '13px', color: '#111827',
-                                    background: '#fff', outline: 'none', fontFamily: 'inherit',
+                                    border: '1.5px solid var(--color-border-default)', fontSize: '13px', color: 'var(--color-text-primary)',
+                                    background: 'var(--color-bg-elevated)', outline: 'none', fontFamily: 'inherit',
                                   }}
                                 >
                                   {Object.entries(STATUS_CONFIG).map(([val, { label }]) => (
@@ -656,7 +656,7 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
                               </button>
                             </div>
                             <div>
-                              <label style={{ fontSize: '11px', fontWeight: 600, color: '#6B7280', display: 'block', marginBottom: '4px' }}>
+                              <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-text-muted)', display: 'block', marginBottom: '4px' }}>
                                 NOTE TO USER (optional)
                               </label>
                               <textarea
@@ -666,7 +666,7 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
                                 rows={2}
                                 style={{
                                   width: '100%', padding: '8px 10px', borderRadius: '8px',
-                                  border: '1.5px solid #E5E7EB', fontSize: '13px', color: '#111827',
+                                  border: '1.5px solid var(--color-border-default)', fontSize: '13px', color: 'var(--color-text-primary)',
                                   outline: 'none', resize: 'vertical', boxSizing: 'border-box',
                                   fontFamily: 'inherit',
                                 }}
@@ -736,7 +736,7 @@ export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
     cursor: 'pointer',
     border: 'none',
     background: 'none',
-    color: '#7C3AED',
+    color: 'var(--beta-pill-icon-color)',
     transition: 'background 0.15s',
   };
 
@@ -755,21 +755,21 @@ export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
             display: 'flex',
             alignItems: 'center',
             gap: '5px',
-            background: 'rgba(245, 243, 255, 0.92)',
+            background: 'var(--beta-pill-bg)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
-            border: '1.5px solid rgba(139, 92, 246, 0.25)',
+            border: '1.5px solid var(--beta-pill-border)',
             borderRadius: '999px',
             padding: '5px 12px',
             boxShadow: '0 4px 24px rgba(139, 92, 246, 0.18), 0 1px 4px rgba(0,0,0,0.06)',
             cursor: 'pointer',
             fontSize: '11px',
             fontWeight: 700,
-            color: '#5B21B6',
+            color: 'var(--beta-pill-color)',
             letterSpacing: '0.02em',
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(245, 243, 255, 1)'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(245, 243, 255, 0.92)'; }}
+          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--beta-pill-bg)'; }}
+          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'var(--beta-pill-bg)'; }}
         >
           ⚡ BETA
         </button>
@@ -786,10 +786,10 @@ export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            background: 'rgba(245, 243, 255, 0.92)',
+            background: 'var(--beta-pill-bg)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
-            border: '1.5px solid rgba(139, 92, 246, 0.25)',
+            border: '1.5px solid var(--beta-pill-border)',
             borderRadius: '999px',
             padding: '5px 8px 5px 14px',
             boxShadow: '0 4px 24px rgba(139, 92, 246, 0.18), 0 1px 4px rgba(0,0,0,0.06)',
@@ -797,11 +797,11 @@ export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
         >
           {/* Version info */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginRight: '4px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: '#5B21B6', letterSpacing: '0.02em' }}>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--beta-pill-version-color)', letterSpacing: '0.02em' }}>
               BETA v{VERSION}
             </span>
             <span style={{ width: '1px', height: '12px', background: 'rgba(139, 92, 246, 0.2)' }} />
-            <span style={{ fontSize: '11px', color: '#7C3AED', opacity: 0.7 }}>
+            <span style={{ fontSize: '11px', color: 'var(--beta-pill-icon-color)', opacity: 0.7 }}>
               {UPDATED}
             </span>
           </div>
@@ -820,7 +820,7 @@ export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
           {/* Bug Report */}
           <button
             onClick={() => setModal('bug')}
-            style={{ ...pill, background: 'rgba(139, 92, 246, 0.12)', color: '#5B21B6' }}
+            style={{ ...pill, background: 'rgba(139, 92, 246, 0.12)', color: 'var(--beta-pill-color)' }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.2)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.12)'; }}
           >

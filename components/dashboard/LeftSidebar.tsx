@@ -147,7 +147,7 @@ export function LeftSidebar({ user, projectId, onOpenProjectModal, onOpenWriterF
   };
 
   return (
-    <div className="w-64 bg-white rounded-lg shadow-lg flex flex-col p-4 overflow-y-auto">
+    <div className="w-64 bg-bg-elevated rounded-lg shadow-lg flex flex-col p-4 overflow-y-auto">
       {/* Logo */}
       <div className="mb-4 flex justify-center">
         <Image

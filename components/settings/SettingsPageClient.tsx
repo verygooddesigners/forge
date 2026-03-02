@@ -62,6 +62,7 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS);
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   // Load settings from localStorage
   useEffect(() => {
@@ -73,6 +74,7 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
     } catch {
       // ignore
     }
+    setIsDark(document.documentElement.classList.contains('dark'));
   }, []);
 
   const set = <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
@@ -149,6 +151,19 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
               </CardTitle>
             </CardHeader>
             <CardContent className="divide-y divide-border-subtle">
+              <SettingRow
+                label="Dark Mode"
+                description="Switch between light and dark color themes"
+              >
+                <Switch
+                  checked={isDark}
+                  onCheckedChange={(v) => {
+                    document.documentElement.classList.toggle('dark', v);
+                    try { localStorage.setItem('forge-theme', v ? 'dark' : 'light'); } catch(e) {}
+                    setIsDark(v);
+                  }}
+                />
+              </SettingRow>
               <SettingRow
                 label="Compact Project Cards"
                 description="Show smaller project cards in the Projects browser"

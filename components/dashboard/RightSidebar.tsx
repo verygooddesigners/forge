@@ -290,7 +290,7 @@ export function RightSidebar({
           onProjectUpdate={onProjectUpdate}
         />
       ) : (
-        <Card className="bg-white shadow-lg flex-1 flex flex-col">
+        <Card className="bg-bg-elevated shadow-lg flex-1 flex flex-col">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
             <CardHeader className="pb-3">
               <TabsList className="grid w-full grid-cols-2">
