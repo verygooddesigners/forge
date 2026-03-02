@@ -7,6 +7,9 @@ import { DashboardPageClient } from './DashboardPageClient';
 // Force dynamic rendering to avoid SSR issues with Supabase
 export const dynamic = 'force-dynamic';
 
+// Cast to any — admin client lacks a Database generic so .from() infers `never`
+const getAdmin = () => createAdminClient() as any;
+
 export default async function DashboardPage() {
   const devUser = getDevUser();
   if (devUser) return <DashboardPageClient user={devUser} />;
@@ -29,7 +32,7 @@ export default async function DashboardPage() {
     if (!profile) {
       // Profile missing — the DB trigger likely failed during signup.
       // Auto-provision to prevent the redirect loop: dashboard→/login→dashboard.
-      const admin = createAdminClient();
+      const admin = getAdmin();
       await admin.from('users').upsert(
         { id: user.id, email: user.email!, role: 'Content Creator', account_status: 'confirmed' },
         { onConflict: 'id', ignoreDuplicates: false },
@@ -53,5 +56,3 @@ export default async function DashboardPage() {
     redirect('/login');
   }
 }
-
-

@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { analyzeWritingStyle, generateWriterEmbeddings } from '@/lib/agents';
 
+// Cast to any — admin client lacks a Database generic so .from() infers `never`
+const getAdmin = () => createAdminClient() as any;
+
 export async function POST(request: NextRequest) {
   try {
     console.log('[TRAIN] Training request received');
@@ -27,9 +30,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Use admin client for DB operations — RLS blocks user-scoped inserts on training_content
-    let admin;
+    let admin: any;
     try {
-      admin = createAdminClient();
+      admin = getAdmin();
     } catch (adminErr: any) {
       console.error('[TRAIN] Failed to create admin client:', adminErr.message);
       return NextResponse.json(

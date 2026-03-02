@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { isSuperAdmin } from '@/lib/super-admin';
 
+// Cast to any — admin client lacks a Database generic so .from() infers `never`
+const getAdmin = () => createAdminClient() as any;
+
 // POST /api/beta-feedback — submit a bug report or feature suggestion
 export async function POST(req: NextRequest) {
   try {
@@ -23,7 +26,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Title and description are required' }, { status: 400 });
     }
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
 
     // Build insert payload — only include screenshot_url if the column exists
     // Migration 00027 adds this column but may not have been run in production
@@ -64,7 +67,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
 
     if (isSuperAdmin(user.email)) {
       // Super admin: all feedback, newest first
@@ -109,7 +112,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: 'id is required' }, { status: 400 });
     }
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
     const { data, error } = await admin
       .from('beta_feedback')
       .update({ status, admin_notes })

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
+// Cast to any — admin client lacks a Database generic so .from() infers `never`
+const getAdmin = () => createAdminClient() as any;
+
 // GET /api/beta-notes — get current user's active beta notes + membership
 export async function GET(req: NextRequest) {
   try {
@@ -9,7 +12,7 @@ export async function GET(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ data: null });
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
 
     // Find active beta membership by user_id or email
     const { data: membership } = await admin
@@ -64,7 +67,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: 'membership_id and action required' }, { status: 400 });
     }
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
     const updates: Record<string, any> = {};
 
     if (action === 'acknowledge') {

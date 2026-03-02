@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
+// Cast to any — admin client lacks a Database generic so .from() infers `never`
+const getAdmin = () => createAdminClient() as any;
+
 export async function PATCH(request: NextRequest) {
   try {
     const supabase = await createClient();
@@ -19,7 +22,7 @@ export async function PATCH(request: NextRequest) {
     if (job_title !== undefined) updatePayload.job_title = job_title || null;
     if (avatar_url !== undefined) updatePayload.avatar_url = avatar_url || null;
 
-    const adminClient = createAdminClient();
+    const adminClient = getAdmin();
     const { error } = await adminClient
       .from('users')
       .update(updatePayload)

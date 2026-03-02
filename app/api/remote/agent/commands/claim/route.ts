@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { validateRemoteAgentToken } from '@/lib/remote-agent';
 
+// Cast to any — admin client lacks a Database generic so .from() infers `never`
+const getAdmin = () => createAdminClient() as any;
+
 export async function POST(request: NextRequest) {
   const auth = validateRemoteAgentToken(request);
   if (!auth.ok) {
@@ -19,7 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = createAdminClient();
+    const supabase = getAdmin();
 
     const { data: pending, error } = await supabase
       .from('cursor_remote_commands')

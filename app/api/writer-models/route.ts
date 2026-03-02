@@ -3,6 +3,9 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { isSuperAdmin } from '@/lib/super-admin';
 
+// Cast to any — admin client lacks a Database generic so .from() infers `never`
+const getAdmin = () => createAdminClient() as any;
+
 // GET /api/writer-models — list all (admin) or own + house models (user)
 export async function GET(req: NextRequest) {
   try {
@@ -10,7 +13,7 @@ export async function GET(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
     const isAdmin = isSuperAdmin(user.email);
 
     if (isAdmin) {
@@ -39,7 +42,7 @@ export async function GET(req: NextRequest) {
       }
 
       return NextResponse.json({
-        data: models?.map(m => ({
+        data: models?.map((m: any) => ({
           ...m,
           assigned_users: assignmentsByModel[m.id] ?? [],
         })),
@@ -89,7 +92,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
     const { data, error } = await admin
       .from('writer_models')
       .insert({
@@ -122,7 +125,7 @@ export async function PATCH(req: NextRequest) {
     const body = await req.json();
     const { id, name, description, is_house_model, assign_user_id, unassign_user_id } = body;
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
 
     // Handle user assignment
     if (assign_user_id) {
@@ -183,7 +186,7 @@ export async function DELETE(req: NextRequest) {
     const id = req.nextUrl.searchParams.get('id');
     if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 });
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
 
     // Clear any user assignments first
     await admin
