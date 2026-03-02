@@ -103,7 +103,7 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
   const [assigningModelMap, setAssigningModelMap] = useState<Record<string, boolean>>({});
   const [debugResult, setDebugResult] = useState<any>(null);
   const [debuggingEmail, setDebuggingEmail] = useState<string | null>(null);
-  const [loginLink, setLoginLink] = useState<{ email: string; link: string } | null>(null);
+  const [loginLink, setLoginLink] = useState<{ betaId: string; email: string; link: string } | null>(null);
   const [gettingLinkEmail, setGettingLinkEmail] = useState<string | null>(null);
   const [linkCopied, setLinkCopied] = useState(false);
 
@@ -269,7 +269,7 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
       const json = await res.json();
       const link = json?.generate_link_result?.link;
       if (link) {
-        setLoginLink({ email, link });
+        setLoginLink({ betaId, email, link });
         setLinkCopied(false);
       } else {
         toast.error('Could not generate login link. Is this user in auth.users?');
@@ -801,16 +801,38 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
             Copy this link and send it directly to the user (Slack, iMessage, email, etc.). It works immediately — no password required. Links expire after 1 hour.
           </p>
           {/* URL box: full-width, wrapping, no overflow off-screen */}
-          <div className="w-full bg-bg-secondary rounded-lg px-3 py-2.5 text-[11px] font-mono text-text-secondary border border-border-subtle">
-            <p className="break-all whitespace-pre-wrap select-all">{loginLink?.link}</p>
+          <div className="w-full bg-bg-secondary rounded-lg px-3 py-2.5 text-[11px] font-mono text-text-secondary border border-border-subtle min-h-[56px] flex items-center">
+            {gettingLinkEmail === loginLink?.email ? (
+              <span className="flex items-center gap-2 text-text-tertiary">
+                <Loader2 className="w-3 h-3 animate-spin" /> Generating new link…
+              </span>
+            ) : (
+              <p className="break-all whitespace-pre-wrap select-all">{loginLink?.link}</p>
+            )}
           </div>
-          <Button
-            onClick={handleCopyLink}
-            className="w-full gap-2"
-          >
-            {linkCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-            {linkCopied ? 'Copied to clipboard!' : 'Copy Link'}
-          </Button>
+          {/* Actions row */}
+          <div className="flex gap-2">
+            <Button
+              onClick={handleCopyLink}
+              disabled={gettingLinkEmail === loginLink?.email}
+              className="flex-1 gap-2"
+            >
+              {linkCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              {linkCopied ? 'Copied!' : 'Copy Link'}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => loginLink && handleGetLoginLink(loginLink.betaId, loginLink.email)}
+              disabled={gettingLinkEmail === loginLink?.email}
+              className="gap-2"
+              title="Generate a fresh 1-hour link"
+            >
+              {gettingLinkEmail === loginLink?.email
+                ? <Loader2 className="w-4 h-4 animate-spin" />
+                : <RefreshCw className="w-4 h-4" />}
+              Refresh
+            </Button>
+          </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setLoginLink(null)} className="w-full">Close</Button>
           </DialogFooter>
