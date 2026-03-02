@@ -4,6 +4,9 @@ import { createAdminClient } from '@/lib/supabase/admin';
 const VALID_METRICS = ['CLS', 'FCP', 'LCP', 'TTFB', 'INP'];
 const VALID_RATINGS = ['good', 'needs-improvement', 'poor'];
 
+// Cast to any to avoid `never` type errors — admin client lacks Database generic
+const getAdmin = () => createAdminClient() as any;
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -26,8 +29,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true, inserted: 0 });
     }
 
-    const admin = createAdminClient();
-    const { error } = await (admin.from('web_vitals').insert(rows) as unknown as Promise<{ error: any }>);
+    const admin = getAdmin();
+    const { error } = await admin.from('web_vitals').insert(rows);
     if (error) throw error;
 
     return NextResponse.json({ ok: true, inserted: rows.length });
@@ -48,7 +51,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
     const url = new URL(req.url);
     const hours = parseInt(url.searchParams.get('hours') || '24', 10);
     const since = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
@@ -58,7 +61,7 @@ export async function GET(req: NextRequest) {
       .from('web_vitals')
       .select('*')
       .gte('created_at', since)
-      .order('created_at', { ascending: true }) as { data: any[] | null; error: any };
+      .order('created_at', { ascending: true });
 
     if (error) throw error;
 
