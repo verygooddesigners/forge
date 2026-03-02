@@ -23,10 +23,10 @@ export async function GET(req: NextRequest) {
     const { data: betaUsers } = await admin
       .from('beta_users')
       .select('*')
-      .order('created_at', { ascending: true });
+      .order('created_at', { ascending: true }) as { data: any[] | null };
 
     // Fetch default_writer_model_id for all invited users
-    const userIds = (betaUsers ?? []).map(bu => bu.user_id).filter(Boolean);
+    const userIds = (betaUsers ?? []).map((bu: any) => bu.user_id).filter(Boolean);
     const modelByUserId: Record<string, string | null> = {};
     if (userIds.length > 0) {
       const { data: userRows } = await admin
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    const usersByBeta: Record<string, typeof betaUsers> = {};
+    const usersByBeta: Record<string, any[]> = {};
     for (const bu of betaUsers ?? []) {
       if (!usersByBeta[bu.beta_id]) usersByBeta[bu.beta_id] = [];
       usersByBeta[bu.beta_id]!.push({
@@ -217,7 +217,7 @@ export async function PATCH(req: NextRequest) {
         .from('beta_users')
         .select('*')
         .eq('beta_id', beta_id)
-        .is('invited_at', null);
+        .is('invited_at', null) as { data: any[] | null };
 
       const results: { email: string; success: boolean; error?: string }[] = [];
 
