@@ -75,11 +75,12 @@ export function ProjectCreationModal({
 
   const loadData = async () => {
     // User can see: personal model (strategist_id = userId) + all house models (is_house_model = true)
-    const { data: models } = await supabase
+    const { data: rawModels } = await supabase
       .from('writer_models')
       .select('*')
       .or(`strategist_id.eq.${userId},is_house_model.eq.true`)
       .order('name');
+    const models = (rawModels ?? []) as WriterModel[];
 
     const { data: briefsData } = await supabase
       .from('briefs')
@@ -87,7 +88,7 @@ export function ProjectCreationModal({
       .or(`is_shared.eq.true,created_by.eq.${userId}`)
       .order('name');
 
-    if (models) {
+    if (models.length) {
       setWriterModels(models);
       const { data: userRow } = await supabase
         .from('users')

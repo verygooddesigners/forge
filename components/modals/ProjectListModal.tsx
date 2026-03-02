@@ -61,13 +61,14 @@ export function ProjectListModal({
   const loadProjects = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data: rawData, error } = await supabase
         .from('projects')
         .select('*')
         .eq('user_id', userId)
         .order('updated_at', { ascending: false });
+      const data = (rawData ?? []) as Project[];
 
-      if (!error && data) {
+      if (!error && data.length) {
         // Set file_name to headline if not set
         const projectsWithFileName = data.map(project => ({
           ...project,

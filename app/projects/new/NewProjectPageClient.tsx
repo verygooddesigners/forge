@@ -123,11 +123,12 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
   const loadData = async () => {
     setDataLoading(true);
     // User can see: their personal model (strategist_id = userId) + all house models (is_house_model = true)
-    const { data: models } = await supabase
+    const { data: rawModels } = await supabase
       .from('writer_models')
       .select('*')
       .or(`strategist_id.eq.${userId},is_house_model.eq.true`)
       .order('name');
+    const models = (rawModels ?? []) as WriterModel[];
 
     const { data: briefsData } = await supabase
       .from('briefs')
@@ -135,7 +136,7 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
       .or(`is_shared.eq.true,created_by.eq.${userId}`)
       .order('name');
 
-    if (models) {
+    if (models.length) {
       setWriterModels(models);
       const defaultId = (user as User & { default_writer_model_id?: string }).default_writer_model_id;
       const personalModel = models.find((m) => m.strategist_id === userId);

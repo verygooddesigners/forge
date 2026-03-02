@@ -59,12 +59,13 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
 
   const loadWriterModels = async () => {
     console.log('[WRITER_FACTORY] Loading writer models...');
-    const { data, error } = await supabase
+    const { data: rawData, error } = await supabase
       .from('writer_models')
       .select('*')
       .order('created_at', { ascending: false });
+    const data = (rawData ?? []) as WriterModel[];
 
-    if (!error && data) {
+    if (!error && data.length) {
       console.log('[WRITER_FACTORY] Loaded models:', data.map(m => ({
         id: m.id,
         name: m.name,
@@ -501,7 +502,7 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
                       </Button>
                       {trainingContent.trim() && (
                         <p className="text-xs text-muted-foreground text-center">
-                          {trainingContent.split(/\s+/).length} words \u2022 Ready to train
+                          {trainingContent.split(/\s+/).length} words • Ready to train
                         </p>
                       )}
                     </CardContent>

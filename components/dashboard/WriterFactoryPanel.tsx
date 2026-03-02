@@ -84,9 +84,10 @@ export function WriterFactoryPanel({ user }: WriterFactoryPanelProps) {
         .order('name');
     }
 
-    const { data } = await query;
+    const { data: rawData } = await query;
+    const data = (rawData ?? []) as WriterModel[];
 
-    if (data) {
+    if (data.length) {
       setModels(data);
       // Default-select the user's personal model if available, otherwise first in-house
       if (!selectedModel) {

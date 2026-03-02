@@ -61,25 +61,27 @@ export function ProjectsPanel({ user, onSelectProject, onCreateProject }: Projec
     setLoading(true);
     try {
       // My projects
-      const { data: mine, error: mineErr } = await supabase
+      const { data: rawMine, error: mineErr } = await supabase
         .from('projects')
         .select('*')
         .eq('user_id', user.id)
         .order('updated_at', { ascending: false });
+      const mine = (rawMine ?? []) as Project[];
 
-      if (!mineErr && mine) {
+      if (!mineErr && mine.length) {
         setMyProjects(mine.map((p) => ({ ...p, file_name: p.file_name || p.headline })));
       }
 
       // Shared projects (other users' projects shared with everyone)
-      const { data: shared, error: sharedErr } = await supabase
+      const { data: rawShared, error: sharedErr } = await supabase
         .from('projects')
         .select('*')
         .neq('user_id', user.id)
         .eq('is_shared', true)
         .order('updated_at', { ascending: false });
+      const shared = (rawShared ?? []) as Project[];
 
-      if (!sharedErr && shared) {
+      if (!sharedErr && shared.length) {
         setSharedProjects(shared.map((p) => ({ ...p, file_name: p.file_name || p.headline })));
       }
     } catch (error) {

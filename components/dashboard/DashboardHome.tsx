@@ -37,14 +37,15 @@ export function DashboardHome({ user }: DashboardHomeProps) {
   }, []);
 
   const loadRecentProjects = async () => {
-    const { data } = await supabase
+    const { data: rawData } = await supabase
       .from('projects')
       .select('*')
       .eq('user_id', user.id)
       .order('updated_at', { ascending: false })
       .limit(4);
+    const data = (rawData ?? []) as Project[];
 
-    if (data) {
+    if (data.length) {
       // Set file_name to headline if not set
       const projectsWithFileName = data.map(project => ({
         ...project,
@@ -77,17 +78,18 @@ export function DashboardHome({ user }: DashboardHomeProps) {
 
   const loadStats = async () => {
     // Load actual stats from database
-    const { data: projects } = await supabase
+    const { data: rawProjects } = await supabase
       .from('projects')
       .select('*')
       .eq('user_id', user.id);
+    const projects = (rawProjects ?? []) as Project[];
 
     const { data: briefs } = await supabase
       .from('briefs')
       .select('id')
       .or(`created_by.eq.${user.id},is_shared.eq.true`);
 
-    if (projects) {
+    if (projects.length) {
       const oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       
