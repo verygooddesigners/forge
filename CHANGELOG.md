@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.10.51] - 2026-03-02
+
+### Fix: "Unauthorized" error when training writer models (VER-6)
+
+Root cause: Personal writer models had `strategist_id: null` in the database, and the training permission check only allowed (a) managers+, (b) model owner via `strategist_id`, or (c) house models. Content Creators with an assigned `default_writer_model_id` failed all three checks.
+
+- **train/route.ts**: Added fourth permission check — users can train their assigned default model (`default_writer_model_id === model_id`), fetching `default_writer_model_id` alongside `role` in the user profile query
+- **writer-models/route.ts**: Updated GET for regular users to also include models matching their `default_writer_model_id` in the OR filter, not just `strategist_id` matches
+- Systemic fix — works for all users with assigned personal models, not just one account
+
+---
+
 ## [1.10.50] - 2026-03-02
 
 ### Feat: Dark Mode v2 — systematic implementation

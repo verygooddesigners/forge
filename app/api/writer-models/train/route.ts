@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     // Check if user can train this model
     const { data: userProfile } = await admin
       .from('users')
-      .select('role')
+      .select('role, default_writer_model_id')
       .eq('id', user.id)
       .single();
 
@@ -61,8 +61,10 @@ export async function POST(request: NextRequest) {
     const ownsModel = model.strategist_id === user.id;
     // Any authenticated user can contribute training content to in-house (shared) models
     const isHouseModel = model.is_house_model === true;
+    // Users can train their assigned default model even if strategist_id isn't set
+    const isAssignedModel = userProfile?.default_writer_model_id === model_id;
 
-    if (!isManagerOrAbove && !ownsModel && !isHouseModel) {
+    if (!isManagerOrAbove && !ownsModel && !isHouseModel && !isAssignedModel) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
@@ -188,5 +190,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-

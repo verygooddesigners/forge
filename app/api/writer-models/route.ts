@@ -45,11 +45,23 @@ export async function GET(req: NextRequest) {
         })),
       });
     } else {
-      // Regular users see own + house models
+      // Regular users see own + house models + their assigned default model
+      // First get the user's default_writer_model_id
+      const { data: userProfile } = await admin
+        .from('users')
+        .select('default_writer_model_id')
+        .eq('id', user.id)
+        .single();
+
+      let orFilter = `strategist_id.eq.${user.id},is_house_model.eq.true`;
+      if (userProfile?.default_writer_model_id) {
+        orFilter += `,id.eq.${userProfile.default_writer_model_id}`;
+      }
+
       const { data, error } = await admin
         .from('writer_models')
         .select('*')
-        .or(`strategist_id.eq.${user.id},is_house_model.eq.true`)
+        .or(orFilter)
         .order('name');
 
       if (error) throw error;
