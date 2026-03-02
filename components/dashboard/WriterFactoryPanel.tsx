@@ -187,7 +187,9 @@ export function WriterFactoryPanel({ user }: WriterFactoryPanelProps) {
         setTrainingText('');
         toast.success('Training story added successfully!');
       } else {
-        throw new Error('Failed to add training story');
+        const errorData = await response.json().catch(() => ({}));
+        const serverMessage = errorData?.details || errorData?.error || 'Failed to add training story';
+        throw new Error(serverMessage);
       }
     } catch (error: any) {
       toast.error(error.message);

@@ -27,17 +27,27 @@ export async function POST(request: NextRequest) {
     }
 
     // Use admin client for DB operations — RLS blocks user-scoped inserts on training_content
-    const admin = createAdminClient();
+    let admin;
+    try {
+      admin = createAdminClient();
+    } catch (adminErr: any) {
+      console.error('[TRAIN] Failed to create admin client:', adminErr.message);
+      return NextResponse.json(
+        { error: 'Server configuration error', details: 'Admin database client unavailable' },
+        { status: 500 }
+      );
+    }
 
-    // Get the model to check permissions
+    // Get the model to check permissions (simple query — no join)
     const { data: model, error: modelError } = await admin
       .from('writer_models')
-      .select('*, users!writer_models_strategist_id_fkey(role)')
+      .select('*')
       .eq('id', model_id)
       .single();
 
     if (modelError || !model) {
-      return NextResponse.json({ error: 'Model not found' }, { status: 404 });
+      console.error('[TRAIN] Model not found:', { model_id, modelError });
+      return NextResponse.json({ error: 'Model not found', details: modelError?.message || 'No model with this ID' }, { status: 404 });
     }
 
     // Check if user can train this model
@@ -56,51 +66,57 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    // Analyze writing style using Writer Training Agent
+    // Analyze writing style and generate embeddings in parallel
+    // These are non-critical — if they fail or timeout, we still save the content
     let analyzedStyle: any = {};
-    try {
-      const analysisResponse = await analyzeWritingStyle({
-        samples: [content],
-        writerName: model.name || 'Writer',
-        existingContext: model.metadata?.style_analysis,
-      });
-      
-      if (analysisResponse.success && analysisResponse.content) {
-        try {
-          analyzedStyle = JSON.parse(analysisResponse.content);
-        } catch {
-          // If parse fails, use default
-          analyzedStyle = {
-            tone: 'professional',
-            voice: 'active',
-            vocabulary_level: 'intermediate',
-            sentence_structure: 'varied',
-            key_phrases: [],
-          };
-        }
-      }
-    } catch (styleError: any) {
-      console.error('Error analyzing writing style:', styleError);
-      // Return a default style if analysis fails
-      analyzedStyle = {
-        tone: 'professional',
-        voice: 'active',
-        vocabulary_level: 'intermediate',
-        sentence_structure: 'varied',
-        key_phrases: [],
-      };
-    }
-
-    // Generate embeddings using Writer Training Agent (if configured)
     let embedding = null;
+
     try {
-      const embeddingVector = await generateWriterEmbeddings(content);
-      if (embeddingVector) {
-        embedding = embeddingVector;
+      // Run both AI operations in parallel with a 8-second timeout
+      const AI_TIMEOUT = 8000;
+      const [styleResult, embeddingResult] = await Promise.allSettled([
+        Promise.race([
+          analyzeWritingStyle({
+            samples: [content],
+            writerName: model.name || 'Writer',
+            existingContext: model.metadata?.style_analysis,
+          }),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Style analysis timeout')), AI_TIMEOUT)),
+        ]),
+        Promise.race([
+          generateWriterEmbeddings(content),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Embedding generation timeout')), AI_TIMEOUT)),
+        ]),
+      ]);
+
+      // Process style analysis result
+      if (styleResult.status === 'fulfilled') {
+        const analysisResponse = styleResult.value as any;
+        if (analysisResponse.success && analysisResponse.content) {
+          try {
+            analyzedStyle = JSON.parse(analysisResponse.content);
+          } catch {
+            console.warn('[TRAIN] Failed to parse style analysis JSON');
+          }
+        }
+      } else {
+        console.warn('[TRAIN] Style analysis failed:', styleResult.reason?.message);
       }
-    } catch (embeddingError) {
-      console.warn('Error generating embeddings:', embeddingError);
-      // Continue without embeddings
+
+      // Process embedding result
+      if (embeddingResult.status === 'fulfilled') {
+        const embeddingVector = embeddingResult.value as number[] | null;
+        if (embeddingVector && Array.isArray(embeddingVector) && embeddingVector.length === 1536) {
+          embedding = embeddingVector;
+        } else if (embeddingVector) {
+          console.warn('[TRAIN] Embedding dimension mismatch:', (embeddingVector as any).length);
+        }
+      } else {
+        console.warn('[TRAIN] Embedding generation failed:', embeddingResult.reason?.message);
+      }
+    } catch (aiError: any) {
+      console.warn('[TRAIN] AI processing error (non-critical):', aiError?.message);
+      // Continue with defaults — the content will still be saved
     }
 
     // Save training content with analysis and embeddings
@@ -114,9 +130,9 @@ export async function POST(request: NextRequest) {
       });
 
     if (insertError) {
-      console.error('[TRAIN] Error saving training content:', insertError);
+      console.error('[TRAIN] Error saving training content:', JSON.stringify(insertError));
       return NextResponse.json(
-        { error: 'Failed to save training content', details: insertError.message },
+        { error: 'Failed to save training content', details: insertError.message, code: insertError.code },
         { status: 500 }
       );
     }

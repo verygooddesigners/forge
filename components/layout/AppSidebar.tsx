@@ -17,8 +17,6 @@ import {
   PenTool,
   Plus,
   KeyRound,
-  Sun,
-  Moon,
 } from 'lucide-react';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
@@ -43,20 +41,7 @@ export function AppSidebar({
   const pathname = usePathname();
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [createDropdownOpen, setCreateDropdownOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
 
-  // Sync isDark state with html class on mount
-  useEffect(() => {
-    setIsDark(document.documentElement.classList.contains('dark'));
-  }, []);
-
-  const toggleTheme = () => {
-    const html = document.documentElement;
-    const nowDark = !html.classList.contains('dark');
-    html.classList.toggle('dark', nowDark);
-    try { localStorage.setItem('forge-theme', nowDark ? 'dark' : 'light'); } catch(e) {}
-    setIsDark(nowDark);
-  };
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const createDropdownRef = useRef<HTMLDivElement>(null);
   const { hasPermission } = usePermissions(user.id);
@@ -210,15 +195,7 @@ export function AppSidebar({
           </button>
         )}
 
-        {/* Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-text-secondary hover:bg-black/5 hover:text-text-primary mt-1"
-          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-        >
-          {isDark ? <Sun className="w-[18px] h-[18px] shrink-0" /> : <Moon className="w-[18px] h-[18px] shrink-0" />}
-          <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
-        </button>
+        {/* Theme Toggle — disabled until Dark Mode v2 is complete */}
       </nav>
 
       {/* ProfileMenuBox */}

@@ -62,7 +62,7 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS);
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  // const [isDark, setIsDark] = useState(false); // Disabled until Dark Mode v2 is complete
 
   // Load settings from localStorage
   useEffect(() => {
@@ -74,7 +74,7 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
     } catch {
       // ignore
     }
-    setIsDark(document.documentElement.classList.contains('dark'));
+    // setIsDark(document.documentElement.classList.contains('dark')); // Disabled until Dark Mode v2
   }, []);
 
   const set = <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
@@ -151,6 +151,7 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
               </CardTitle>
             </CardHeader>
             <CardContent className="divide-y divide-border-subtle">
+              {/* Dark Mode toggle — disabled until Dark Mode v2 is complete
               <SettingRow
                 label="Dark Mode"
                 description="Switch between light and dark color themes"
@@ -164,6 +165,7 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
                   }}
                 />
               </SettingRow>
+              */}
               <SettingRow
                 label="Compact Project Cards"
                 description="Show smaller project cards in the Projects browser"

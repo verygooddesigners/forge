@@ -24,17 +24,24 @@ export async function POST(req: NextRequest) {
     }
 
     const admin = createAdminClient();
+
+    // Build insert payload — only include screenshot_url if the column exists
+    // Migration 00027 adds this column but may not have been run in production
+    const insertPayload: Record<string, unknown> = {
+      user_id: user.id,
+      user_email: user.email,
+      type,
+      title: title.trim(),
+      description: description.trim(),
+      status: 'submitted',
+    };
+    if (screenshot_url) {
+      insertPayload.screenshot_url = screenshot_url;
+    }
+
     const { data, error } = await admin
       .from('beta_feedback')
-      .insert({
-        user_id: user.id,
-        user_email: user.email,
-        type,
-        title: title.trim(),
-        description: description.trim(),
-        status: 'submitted',
-        screenshot_url: screenshot_url ?? null,
-      })
+      .insert(insertPayload)
       .select()
       .single();
 

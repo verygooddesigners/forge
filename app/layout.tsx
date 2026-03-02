@@ -32,8 +32,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Anti-flash: apply dark class synchronously before first paint */}
-        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('forge-theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();` }} />
+        {/* Anti-flash dark mode script — disabled until Dark Mode v2 is complete.
+           Also clears any previously saved dark preference so users aren't stuck. */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{localStorage.removeItem('forge-theme');}catch(e){}})();` }} />
       </head>
       <body className={`${dmSans.variable} ${spaceMono.variable} font-sans antialiased`}>
         <ClientInit />
