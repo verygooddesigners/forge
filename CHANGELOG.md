@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.10.48] - 2026-03-02
+
+### Fix: Dark Mode — comprehensive overhaul for readability
+
+- **Admin panel**: Removed hardcoded white gradient (`#FAFAFA → #FFFFFF`) from `AdminPageClient` and `AdminPageWrapper` main content areas — these now correctly use CSS variable backgrounds that flip in dark mode.
+- **Form inputs & textareas**: Changed `bg-white` to `bg-bg-elevated` in the core `Input` and `Textarea` shadcn components — affects every form field across the entire app.
+- **Global dark mode safety net**: Added comprehensive `html.dark` overrides in `globals.css` that catch any remaining `bg-white`, `bg-gray-50`, `bg-white/80` and similar light-only Tailwind classes throughout dashboard sidebars, modals, and panels.
+- **White border fixes**: `border-white/60`, `border-white/40`, `border-black/5` variants now render as appropriate subtle dark borders.
+- **Text colour fixes**: `text-gray-600/700/800/900`, `text-slate-*`, `text-zinc-*` overridden to use proper CSS variable text colours in dark mode.
+- **TipTap editor preserved**: Editor content area remains white-on-white intentionally (Word-processor style) — added `.tiptap-editor-wrapper` CSS exception so the override doesn't bleed into the writing surface.
+- **Select dropdowns**: Radix `[role="listbox"]` and `[role="combobox"]` elements mapped to dark surface colours.
+
 ## [1.10.46] - 2026-03-02
 
 ### Fix: System Health screen — actually works now

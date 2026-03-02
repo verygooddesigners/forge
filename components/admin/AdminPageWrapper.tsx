@@ -28,9 +28,9 @@ export function AdminPageWrapper({ user }: AdminPageWrapperProps) {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto min-h-0" style={{ background: 'linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%)' }}>
+      <div className="flex-1 overflow-y-auto min-h-0 bg-bg-primary">
         {/* Top Bar */}
-        <div className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 bg-white/80 backdrop-blur-md border-b border-white/60">
+        <div className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 bg-bg-surface/80 backdrop-blur-md border-b border-border-subtle">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => router.push('/dashboard')}

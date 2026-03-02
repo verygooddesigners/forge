@@ -542,3 +542,112 @@ html.dark .hover\:bg-black\/5:hover {
 html.dark .border-black\/5 {
   border-color: rgba(255, 255, 255, 0.07) !important;
 }
+
+/* =============================================
+   DARK MODE UNIVERSAL SAFETY NET
+   Catches components that use hardcoded bg-white
+   or light-only Tailwind classes.
+   TipTap editor (.ProseMirror) is explicitly excluded.
+   ============================================= */
+
+/* bg-white → bg-surface */
+html.dark .bg-white {
+  background-color: var(--color-bg-surface) !important;
+}
+
+/* bg-white opacity variants */
+html.dark .bg-white\/80 {
+  background-color: rgba(22, 22, 44, 0.80) !important;
+}
+html.dark .bg-white\/60 {
+  background-color: rgba(22, 22, 44, 0.60) !important;
+}
+html.dark .bg-white\/40 {
+  background-color: rgba(22, 22, 44, 0.40) !important;
+}
+
+/* White border variants → subtle dark borders */
+html.dark .border-white\/60 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+html.dark .border-white\/40 {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+html.dark .border-white\/20 {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Light gray backgrounds that look washed out in dark mode */
+html.dark .bg-gray-50,
+html.dark .bg-slate-50,
+html.dark .bg-zinc-50,
+html.dark .bg-neutral-50 {
+  background-color: var(--color-bg-elevated) !important;
+}
+
+html.dark .bg-gray-100,
+html.dark .bg-slate-100,
+html.dark .bg-zinc-100,
+html.dark .bg-neutral-100 {
+  background-color: var(--color-bg-hover) !important;
+}
+
+/* Form inputs — override bg-white set in input.tsx / textarea.tsx */
+html.dark input:not([class*="ProseMirror"]),
+html.dark textarea:not([class*="ProseMirror"]) {
+  background-color: var(--color-bg-elevated) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-default) !important;
+}
+
+/* Select triggers */
+html.dark [role="combobox"],
+html.dark [data-radix-select-trigger] {
+  background-color: var(--color-bg-elevated) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-default) !important;
+}
+
+/* Radix Select dropdown content */
+html.dark [role="listbox"],
+html.dark [data-radix-select-content] {
+  background-color: var(--color-bg-elevated) !important;
+  border-color: var(--color-border-default) !important;
+}
+
+/* Modal / Dialog overlays */
+html.dark [role="dialog"] .bg-white,
+html.dark [data-radix-dialog-content] {
+  background-color: var(--color-bg-surface) !important;
+  border-color: var(--color-border-default) !important;
+}
+
+/* Shadow Card components that use bg-white directly */
+html.dark .shadow-lg.bg-white,
+html.dark .rounded-lg.bg-white {
+  background-color: var(--color-bg-surface) !important;
+  border: 1px solid var(--color-border-subtle);
+}
+
+/* Text colors that become illegible on dark backgrounds */
+html.dark .text-gray-600 { color: var(--color-text-secondary) !important; }
+html.dark .text-gray-700 { color: var(--color-text-secondary) !important; }
+html.dark .text-gray-800 { color: var(--color-text-primary) !important; }
+html.dark .text-gray-900 { color: var(--color-text-primary) !important; }
+html.dark .text-slate-600 { color: var(--color-text-secondary) !important; }
+html.dark .text-slate-700 { color: var(--color-text-secondary) !important; }
+html.dark .text-zinc-600 { color: var(--color-text-secondary) !important; }
+
+/* =============================================
+   TIPTAP EDITOR EXCEPTION
+   The content editor stays white/light so that
+   formatted content (Word-processor style) remains
+   easy to read and copy-paste into external tools.
+   ============================================= */
+html.dark .tiptap-editor-wrapper {
+  background-color: #ffffff !important;
+}
+
+html.dark .tiptap-editor-wrapper .bg-white {
+  background-color: #ffffff !important;
+}

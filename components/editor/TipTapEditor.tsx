@@ -101,7 +101,7 @@ export function TipTapEditor({
   }
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="tiptap-editor-wrapper flex flex-col h-full bg-white">
       <EditorToolbar
         editor={editor}
         onGenerateContent={onGenerateContent}

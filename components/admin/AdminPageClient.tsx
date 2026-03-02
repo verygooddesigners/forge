@@ -59,7 +59,7 @@ export function AdminPageClient({ user }: AdminPageClientProps) {
           />
         )}
 
-        <main className="flex-1 overflow-auto p-8" style={{ background: 'linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%)' }}>
+        <main className="flex-1 overflow-auto p-8 bg-bg-primary">
           {permissionsLoading ? (
             <div className="flex items-center justify-center h-full">
               <Loader2 className="w-6 h-6 animate-spin text-text-tertiary" />
