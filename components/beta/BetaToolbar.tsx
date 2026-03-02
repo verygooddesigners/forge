@@ -4,9 +4,9 @@ import { useState, useEffect, useRef } from 'react';
 import { Sparkles, Bug, X, Send, ChevronDown, ChevronUp, ScrollText, Paperclip, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { createClient } from '@/lib/supabase/client';
+import { version as VERSION } from '@/package.json';
 
-const VERSION = '1.10.36';
-const UPDATED = '02/28/26';
+const UPDATED = '03/02/26';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 interface BetaData {

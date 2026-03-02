@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.40] - 2026-03-02
+
+### Fix: BetaToolbar version now auto-syncs from package.json
+
+- Removed hardcoded `VERSION` constant from `BetaToolbar.tsx`
+- Version is now imported directly from `package.json` — always stays in sync automatically
+
 ## [1.10.39] - 2026-03-02
 
 ### Fix: Magic link redirectTo now uses correct production domain
