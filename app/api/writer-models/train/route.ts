@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { analyzeWritingStyle, generateWriterEmbeddings } from '@/lib/agents';
 
 export async function POST(request: NextRequest) {
@@ -25,8 +26,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Use admin client for DB operations — RLS blocks user-scoped inserts on training_content
+    const admin = createAdminClient();
+
     // Get the model to check permissions
-    const { data: model, error: modelError } = await supabase
+    const { data: model, error: modelError } = await admin
       .from('writer_models')
       .select('*, users!writer_models_strategist_id_fkey(role)')
       .eq('id', model_id)
@@ -37,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user can train this model
-    const { data: userProfile } = await supabase
+    const { data: userProfile } = await admin
       .from('users')
       .select('role')
       .eq('id', user.id)
@@ -100,7 +104,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Save training content with analysis and embeddings
-    const { error: insertError } = await supabase
+    const { error: insertError } = await admin
       .from('training_content')
       .insert({
         model_id,
@@ -120,7 +124,7 @@ export async function POST(request: NextRequest) {
     console.log('[TRAIN] Training content saved successfully');
 
     // Update model metadata with new count
-    const { count: contentCount, error: countError } = await supabase
+    const { count: contentCount, error: countError } = await admin
       .from('training_content')
       .select('id', { count: 'exact', head: true })
       .eq('model_id', model_id);
@@ -132,7 +136,7 @@ export async function POST(request: NextRequest) {
     const newCount = contentCount || 0;
 
     // Update the model with the new count
-    const { error: updateError } = await supabase
+    const { error: updateError } = await admin
       .from('writer_models')
       .update({
         metadata: {

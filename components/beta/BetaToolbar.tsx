@@ -8,7 +8,7 @@ import { version as VERSION } from '@/package.json';
 
 const UPDATED = '03/02/26';
 
-// ─── Types ─────────────────────────────────────────────────────────────────
+// ─── Types ──────────────────────────────────────────────────────
 interface BetaData {
   beta: {
     id: string;
@@ -24,7 +24,7 @@ interface BetaData {
   };
 }
 
-// ─── Status badge helper ───────────────────────────────────────────────────
+// ─── Status badge helper ───────────────────────────────────────────
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
   submitted:     { label: 'Submitted',     color: '#8B5CF6' },
   under_review:  { label: 'Under Review',  color: '#F59E0B' },
@@ -55,7 +55,7 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-// ─── Beta Notes Panel ──────────────────────────────────────────────────────
+// ─── Beta Notes Panel ────────────────────────────────────────────
 function BetaNotesPanel({ betaData, onClose }: { betaData: BetaData; onClose: () => void }) {
   return (
     <div
@@ -138,7 +138,7 @@ function BetaNotesPanel({ betaData, onClose }: { betaData: BetaData; onClose: ()
   );
 }
 
-// ─── Submission Modal ──────────────────────────────────────────────────────
+// ─── Submission Modal ────────────────────────────────────────────
 interface SubmitModalProps {
   type: 'bug' | 'feature';
   onClose: () => void;
@@ -187,20 +187,29 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
       let screenshot_url: string | null = null;
 
       // Upload screenshot to Supabase Storage if attached
+      // Wrapped in try/catch so bug report still submits even if bucket is missing
       if (screenshotFile && isBug) {
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const ext = screenshotFile.name.split('.').pop() || 'png';
-          const path = `${user.id}/${Date.now()}.${ext}`;
-          const { error: uploadError } = await supabase.storage
-            .from('bug-screenshots')
-            .upload(path, screenshotFile, { contentType: screenshotFile.type });
-          if (uploadError) throw uploadError;
-          const { data: { publicUrl } } = supabase.storage
-            .from('bug-screenshots')
-            .getPublicUrl(path);
-          screenshot_url = publicUrl;
+        try {
+          const supabase = createClient();
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            const ext = screenshotFile.name.split('.').pop() || 'png';
+            const path = `${user.id}/${Date.now()}.${ext}`;
+            const { error: uploadError } = await supabase.storage
+              .from('bug-screenshots')
+              .upload(path, screenshotFile, { contentType: screenshotFile.type });
+            if (!uploadError) {
+              const { data: { publicUrl } } = supabase.storage
+                .from('bug-screenshots')
+                .getPublicUrl(path);
+              screenshot_url = publicUrl;
+            } else {
+              console.warn('Screenshot upload failed (bucket may not exist):', uploadError.message);
+            }
+          }
+        } catch (uploadErr: any) {
+          console.warn('Screenshot upload error:', uploadErr?.message);
+          // Continue without screenshot — don't block the bug report
         }
       }
 
@@ -437,7 +446,7 @@ function SubmitModal({ type, onClose }: SubmitModalProps) {
   );
 }
 
-// ─── My Reports Panel ──────────────────────────────────────────────────────
+// ─── My Reports Panel ────────────────────────────────────────────
 interface FeedbackItem {
   id: string;
   type: 'bug' | 'feature';
@@ -687,7 +696,7 @@ function MyReports({ onClose, isAdmin }: { onClose: () => void; isAdmin: boolean
   );
 }
 
-// ─── Main BetaToolbar ──────────────────────────────────────────────────────
+// ─── Main BetaToolbar ────────────────────────────────────────────
 const TOOLBAR_COLLAPSED_KEY = 'forge-beta-toolbar-collapsed';
 
 interface BetaToolbarProps {
