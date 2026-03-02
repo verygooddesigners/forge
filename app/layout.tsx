@@ -31,32 +31,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* Anti-flash: read theme from localStorage and set .dark before first paint */}
-        <script dangerouslySetInnerHTML={{ __html: `
-          (function() {
-            try {
-              var s = localStorage.getItem('forge-user-settings');
-              var theme = 'dark'; // default matches DEFAULT_SETTINGS
-              if (s) {
-                var parsed = JSON.parse(s);
-                if (parsed.theme) theme = parsed.theme;
-              }
-              if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-              } else if (theme === 'system') {
-                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                  document.documentElement.classList.add('dark');
-                }
-              }
-              // 'light': no class needed
-            } catch(e) {
-              // Fallback: default to dark
-              document.documentElement.classList.add('dark');
-            }
-          })();
-        ` }} />
-      </head>
       <body className={`${dmSans.variable} ${spaceMono.variable} font-sans antialiased`}>
         <ClientInit />
         {/* Outer padding creates the floating card effect against the html gradient bg */}

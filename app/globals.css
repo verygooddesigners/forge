@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   /* Forge Redesign - Glassmorphism Theme */
   
@@ -99,55 +97,6 @@
   --radius: 0.75rem;
 }
 
-/* =============================================
-   DARK MODE VARIABLE OVERRIDES
-   Applied when <html class="dark"> is set.
-   ============================================= */
-html.dark {
-  color-scheme: dark;
-
-  /* Backgrounds */
-  --color-bg-deepest: #0c0c1a;
-  --color-bg-deep: #111120;
-  --color-bg-surface: #161628;
-  --color-bg-elevated: #1c1c2e;
-  --color-bg-hover: #222238;
-  --color-bg-outer: #07070f;
-
-  /* Text */
-  --color-text-primary: #f0f0ff;
-  --color-text-secondary: #9090b8;
-  --color-text-tertiary: #606080;
-  --color-text-muted: #404060;
-
-  /* Accent — purple pops well on dark */
-  --color-accent-primary: #b84dfe;
-  --color-accent-hover: #c96ffe;
-  --color-accent-muted: rgba(184, 77, 254, 0.18);
-  --color-accent-glow: rgba(184, 77, 254, 0.4);
-  --color-accent-light: #d89ffe;
-
-  /* AI */
-  --color-ai-accent: #b84dfe;
-  --color-ai-muted: rgba(184, 77, 254, 0.12);
-
-  /* Borders */
-  --color-border-subtle: rgba(255, 255, 255, 0.05);
-  --color-border-default: rgba(255, 255, 255, 0.1);
-  --color-border-hover: rgba(184, 77, 254, 0.4);
-  --color-border-glass: rgba(255, 255, 255, 0.12);
-
-  /* Gradients */
-  --gradient-outer-bg: linear-gradient(135deg, #0a0a14 0%, #0c0c1a 50%, #08080e 100%);
-
-  /* Glassmorphism */
-  --glass-bg: rgba(12, 12, 26, 0.92);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-  --glass-container-bg: rgba(12, 12, 26, 0.88);
-  --glass-sidebar-bg: rgba(14, 14, 28, 0.6);
-}
-
 /* App container — replaces hardcoded inline styles in layout.tsx */
 .app-container {
   height: calc(100vh - 48px);
@@ -159,23 +108,12 @@ html.dark {
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-html.dark .app-container {
-  background: var(--glass-container-bg);
-  border-color: var(--glass-border);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 8px 24px rgba(0, 0, 0, 0.4);
-}
-
 /* Sidebar — replaces hardcoded inline styles in AppSidebar.tsx */
 .app-sidebar {
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-right: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-html.dark .app-sidebar {
-  background: var(--glass-sidebar-bg);
-  border-right-color: var(--glass-border);
 }
 
 /* Floating menus (profile dropdown, create dropdown) in sidebar */
@@ -186,11 +124,6 @@ html.dark .app-sidebar {
   border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
-html.dark .app-floating-menu {
-  background: rgba(20, 20, 40, 0.97);
-  border-color: rgba(255, 255, 255, 0.12);
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -199,11 +132,6 @@ html.dark .app-floating-menu {
   html {
     background: linear-gradient(135deg, #E8EAF0 0%, #D1D5E0 50%, #C9CDE0 100%);
     min-height: 100vh;
-    transition: background 0.2s ease;
-  }
-
-  html.dark {
-    background: linear-gradient(135deg, #0a0a14 0%, #0c0c1a 50%, #08080e 100%);
   }
 
   body {
@@ -481,173 +409,3 @@ html.dark .app-floating-menu {
   box-shadow: 0 12px 32px rgba(16, 185, 129, 0.2);
 }
 
-/* =============================================
-   DARK MODE GLASS CARD OVERRIDES
-   ============================================= */
-
-html.dark .glass-card {
-  background-image: linear-gradient(rgba(22, 22, 44, 0.92), rgba(22, 22, 44, 0.92));
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-html.dark .glass-card-purple-pink:hover {
-  background-image:
-    linear-gradient(rgba(22, 22, 44, 0.92), rgba(22, 22, 44, 0.92)),
-    linear-gradient(135deg, #8B5CF6, #EC4899);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  border-color: transparent;
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.35);
-}
-
-html.dark .glass-card-blue-cyan:hover {
-  background-image:
-    linear-gradient(rgba(22, 22, 44, 0.92), rgba(22, 22, 44, 0.92)),
-    linear-gradient(135deg, #3B82F6, #06B6D4);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  border-color: transparent;
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(59, 130, 246, 0.35);
-}
-
-html.dark .glass-card-orange-red:hover {
-  background-image:
-    linear-gradient(rgba(22, 22, 44, 0.92), rgba(22, 22, 44, 0.92)),
-    linear-gradient(135deg, #F97316, #EF4444);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  border-color: transparent;
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(249, 115, 22, 0.35);
-}
-
-html.dark .glass-card-green-emerald:hover {
-  background-image:
-    linear-gradient(rgba(22, 22, 44, 0.92), rgba(22, 22, 44, 0.92)),
-    linear-gradient(135deg, #10B981, #14B8A6);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  border-color: transparent;
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.35);
-}
-
-/* Sidebar hover states in dark mode */
-html.dark .hover\:bg-black\/5:hover {
-  background-color: rgba(255, 255, 255, 0.07) !important;
-}
-
-html.dark .border-black\/5 {
-  border-color: rgba(255, 255, 255, 0.07) !important;
-}
-
-/* =============================================
-   DARK MODE UNIVERSAL SAFETY NET
-   Catches components that use hardcoded bg-white
-   or light-only Tailwind classes.
-   TipTap editor (.ProseMirror) is explicitly excluded.
-   ============================================= */
-
-/* bg-white → bg-surface */
-html.dark .bg-white {
-  background-color: var(--color-bg-surface) !important;
-}
-
-/* bg-white opacity variants */
-html.dark .bg-white\/80 {
-  background-color: rgba(22, 22, 44, 0.80) !important;
-}
-html.dark .bg-white\/60 {
-  background-color: rgba(22, 22, 44, 0.60) !important;
-}
-html.dark .bg-white\/40 {
-  background-color: rgba(22, 22, 44, 0.40) !important;
-}
-
-/* White border variants → subtle dark borders */
-html.dark .border-white\/60 {
-  border-color: rgba(255, 255, 255, 0.08) !important;
-}
-html.dark .border-white\/40 {
-  border-color: rgba(255, 255, 255, 0.06) !important;
-}
-html.dark .border-white\/20 {
-  border-color: rgba(255, 255, 255, 0.06) !important;
-}
-
-/* Light gray backgrounds that look washed out in dark mode */
-html.dark .bg-gray-50,
-html.dark .bg-slate-50,
-html.dark .bg-zinc-50,
-html.dark .bg-neutral-50 {
-  background-color: var(--color-bg-elevated) !important;
-}
-
-html.dark .bg-gray-100,
-html.dark .bg-slate-100,
-html.dark .bg-zinc-100,
-html.dark .bg-neutral-100 {
-  background-color: var(--color-bg-hover) !important;
-}
-
-/* Form inputs — override bg-white set in input.tsx / textarea.tsx */
-html.dark input:not([class*="ProseMirror"]),
-html.dark textarea:not([class*="ProseMirror"]) {
-  background-color: var(--color-bg-elevated) !important;
-  color: var(--color-text-primary) !important;
-  border-color: var(--color-border-default) !important;
-}
-
-/* Select triggers */
-html.dark [role="combobox"],
-html.dark [data-radix-select-trigger] {
-  background-color: var(--color-bg-elevated) !important;
-  color: var(--color-text-primary) !important;
-  border-color: var(--color-border-default) !important;
-}
-
-/* Radix Select dropdown content */
-html.dark [role="listbox"],
-html.dark [data-radix-select-content] {
-  background-color: var(--color-bg-elevated) !important;
-  border-color: var(--color-border-default) !important;
-}
-
-/* Modal / Dialog overlays */
-html.dark [role="dialog"] .bg-white,
-html.dark [data-radix-dialog-content] {
-  background-color: var(--color-bg-surface) !important;
-  border-color: var(--color-border-default) !important;
-}
-
-/* Shadow Card components that use bg-white directly */
-html.dark .shadow-lg.bg-white,
-html.dark .rounded-lg.bg-white {
-  background-color: var(--color-bg-surface) !important;
-  border: 1px solid var(--color-border-subtle);
-}
-
-/* Text colors that become illegible on dark backgrounds */
-html.dark .text-gray-600 { color: var(--color-text-secondary) !important; }
-html.dark .text-gray-700 { color: var(--color-text-secondary) !important; }
-html.dark .text-gray-800 { color: var(--color-text-primary) !important; }
-html.dark .text-gray-900 { color: var(--color-text-primary) !important; }
-html.dark .text-slate-600 { color: var(--color-text-secondary) !important; }
-html.dark .text-slate-700 { color: var(--color-text-secondary) !important; }
-html.dark .text-zinc-600 { color: var(--color-text-secondary) !important; }
-
-/* =============================================
-   TIPTAP EDITOR EXCEPTION
-   The content editor stays white/light so that
-   formatted content (Word-processor style) remains
-   easy to read and copy-paste into external tools.
-   ============================================= */
-html.dark .tiptap-editor-wrapper {
-  background-color: #ffffff !important;
-}
-
-html.dark .tiptap-editor-wrapper .bg-white {
-  background-color: #ffffff !important;
-}

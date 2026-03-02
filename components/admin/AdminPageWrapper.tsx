@@ -28,7 +28,7 @@ export function AdminPageWrapper({ user }: AdminPageWrapperProps) {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto min-h-0 bg-bg-primary">
+      <div className="flex-1 overflow-y-auto min-h-0 bg-bg-deep">
         {/* Top Bar */}
         <div className="sticky top-0 z-50 flex items-center justify-between px-8 py-4 bg-bg-surface/80 backdrop-blur-md border-b border-border-subtle">
           <div className="flex items-center gap-4">

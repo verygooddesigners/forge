@@ -14,8 +14,6 @@ import {
   UserCircle,
   Settings,
   LogOut,
-  Sun,
-  Moon,
   PenTool,
   Plus,
   KeyRound,
@@ -43,7 +41,6 @@ export function AppSidebar({
   const pathname = usePathname();
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [createDropdownOpen, setCreateDropdownOpen] = useState(false);
-  const [isDark, setIsDark] = useState(true); // default dark; synced from DOM on mount
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const createDropdownRef = useRef<HTMLDivElement>(null);
   const { hasPermission } = usePermissions(user.id);
@@ -74,29 +71,10 @@ export function AppSidebar({
     return () => document.removeEventListener('mousedown', handler);
   }, [createDropdownOpen]);
 
-  // Sync isDark state with the actual DOM class on mount (set by anti-flash script)
-  useEffect(() => {
-    setIsDark(document.documentElement.classList.contains('dark'));
-  }, []);
-
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
     router.push('/login');
-  };
-
-  const toggleTheme = () => {
-    const nowDark = document.documentElement.classList.toggle('dark');
-    setIsDark(nowDark);
-    // Persist to localStorage so layout anti-flash script picks it up on next load
-    try {
-      const stored = localStorage.getItem('forge-user-settings');
-      const settings = stored ? JSON.parse(stored) : {};
-      settings.theme = nowDark ? 'dark' : 'light';
-      localStorage.setItem('forge-user-settings', JSON.stringify(settings));
-    } catch {
-      // ignore
-    }
   };
 
   const getInitials = (name: string) => {
@@ -248,14 +226,6 @@ export function AppSidebar({
             >
               <Settings className="w-4 h-4 shrink-0" />
               Settings
-            </button>
-            <div className="border-t border-black/5" />
-            <button
-              onClick={() => { toggleTheme(); setProfileMenuOpen(false); }}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-black/5 hover:text-text-primary transition-all"
-            >
-              {isDark ? <Sun className="w-4 h-4 shrink-0" /> : <Moon className="w-4 h-4 shrink-0" />}
-              {isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             </button>
             <div className="border-t border-black/5" />
             <button

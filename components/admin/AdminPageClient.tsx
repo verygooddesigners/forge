@@ -59,7 +59,7 @@ export function AdminPageClient({ user }: AdminPageClientProps) {
           />
         )}
 
-        <main className="flex-1 overflow-auto p-8 bg-bg-primary">
+        <main className="flex-1 overflow-auto p-8 bg-bg-deep">
           {permissionsLoading ? (
             <div className="flex items-center justify-center h-full">
               <Loader2 className="w-6 h-6 animate-spin text-text-tertiary" />

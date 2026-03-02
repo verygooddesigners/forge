@@ -30,7 +30,6 @@ interface SettingsPageClientProps {
 }
 
 interface UserSettings {
-  theme: 'dark' | 'light' | 'system';
   defaultWordCount: number;
   editorFontSize: 'sm' | 'md' | 'lg';
   spellCheck: boolean;
@@ -44,7 +43,6 @@ interface UserSettings {
 }
 
 const DEFAULT_SETTINGS: UserSettings = {
-  theme: 'dark',
   defaultWordCount: 800,
   editorFontSize: 'md',
   spellCheck: true,
@@ -87,17 +85,6 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 
-      // Apply theme immediately
-      if (settings.theme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else if (settings.theme === 'light') {
-        document.documentElement.classList.remove('dark');
-      } else {
-        // system: follow OS preference
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.classList.toggle('dark', prefersDark);
-      }
-
       toast.success('Settings saved');
       setDirty(false);
     } catch {
@@ -126,7 +113,7 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
   );
 
   return (
-    <div className="flex-1 overflow-y-auto bg-bg-primary p-6">
+    <div className="flex-1 overflow-y-auto bg-bg-deep p-6">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -162,21 +149,6 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
               </CardTitle>
             </CardHeader>
             <CardContent className="divide-y divide-border-subtle">
-              <SettingRow
-                label="Theme"
-                description="Choose your preferred color scheme"
-              >
-                <Select value={settings.theme} onValueChange={(v) => set('theme', v as any)}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="light">Light</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
-                  </SelectContent>
-                </Select>
-              </SettingRow>
               <SettingRow
                 label="Compact Project Cards"
                 description="Show smaller project cards in the Projects browser"

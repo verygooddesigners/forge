@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.10.49] - 2026-03-02
+
+### Revert: Remove dark mode (deferred to future beta)
+
+- Removed all dark mode CSS variable overrides from globals.css
+- Removed dark mode toggle from sidebar profile menu
+- Removed theme setting from Settings page
+- Removed anti-flash script from layout
+- Removed `@custom-variant dark` directive
+- Fixed `bg-bg-primary` (invalid class) → `bg-bg-deep` in admin and settings pages
+- App is now consistently light mode; dark mode will return in a future beta
+
 ## [1.10.48] - 2026-03-02
 
 ### Fix: Dark Mode — comprehensive overhaul for readability
