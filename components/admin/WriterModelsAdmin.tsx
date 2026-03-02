@@ -33,7 +33,7 @@ import {
 } from '@/components/ui/table';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/client';
-import { Plus, Trash2, UserPlus, UserMinus, Pen, BookOpen, Sparkles } from 'lucide-react';
+import { Plus, Trash2, UserPlus, UserMinus, Pen, BookOpen, Sparkles, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface AssignedUser {
@@ -64,7 +64,9 @@ export function WriterModelsAdmin({ adminUser }: WriterModelsAdminProps) {
   const [loading, setLoading] = useState(true);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showAssignDialog, setShowAssignDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
   const [selectedModel, setSelectedModel] = useState<WriterModelWithAssignments | null>(null);
+  const [editingModel, setEditingModel] = useState<WriterModelWithAssignments | null>(null);
   const [assignUserId, setAssignUserId] = useState('');
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -73,6 +75,11 @@ export function WriterModelsAdmin({ adminUser }: WriterModelsAdminProps) {
   const [newName, setNewName] = useState('');
   const [newDescription, setNewDescription] = useState('');
   const [newIsHouse, setNewIsHouse] = useState(false);
+
+  // Edit form state
+  const [editName, setEditName] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+  const [editIsHouse, setEditIsHouse] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -123,6 +130,41 @@ export function WriterModelsAdmin({ adminUser }: WriterModelsAdminProps) {
       setNewName('');
       setNewDescription('');
       setNewIsHouse(false);
+      await loadData();
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function openEditDialog(model: WriterModelWithAssignments) {
+    setEditingModel(model);
+    setEditName(model.name);
+    setEditDescription(model.metadata?.description ?? '');
+    setEditIsHouse(model.is_house_model);
+    setShowEditDialog(true);
+  }
+
+  async function handleEditSave() {
+    if (!editingModel || !editName.trim()) return;
+    setSaving(true);
+    try {
+      const res = await fetch('/api/writer-models', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingModel.id,
+          name: editName.trim(),
+          description: editDescription,
+          is_house_model: editIsHouse,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error);
+      toast.success('Model updated');
+      setShowEditDialog(false);
+      setEditingModel(null);
       await loadData();
     } catch (err: any) {
       toast.error(err.message);
@@ -253,6 +295,7 @@ export function WriterModelsAdmin({ adminUser }: WriterModelsAdminProps) {
                     key={model.id}
                     model={model}
                     onAssign={() => { setSelectedModel(model); setShowAssignDialog(true); }}
+                    onEdit={() => openEditDialog(model)}
                     onUnassign={handleUnassign}
                     onDelete={handleDelete}
                     deleting={deleting === model.id}
@@ -296,6 +339,7 @@ export function WriterModelsAdmin({ adminUser }: WriterModelsAdminProps) {
                     key={model.id}
                     model={model}
                     onAssign={() => { setSelectedModel(model); setShowAssignDialog(true); }}
+                    onEdit={() => openEditDialog(model)}
                     onUnassign={handleUnassign}
                     onDelete={handleDelete}
                     deleting={deleting === model.id}
@@ -359,6 +403,62 @@ export function WriterModelsAdmin({ adminUser }: WriterModelsAdminProps) {
         </DialogContent>
       </Dialog>
 
+      {/* Edit Model Dialog */}
+      <Dialog open={showEditDialog} onOpenChange={(open) => { if (!open) { setShowEditDialog(false); setEditingModel(null); } }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Writer Model</DialogTitle>
+            <DialogDescription>
+              Update the name, description, and settings for this model.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div className="space-y-2">
+              <Label htmlFor="edit-model-name">Model Name</Label>
+              <Input
+                id="edit-model-name"
+                value={editName}
+                onChange={e => setEditName(e.target.value)}
+                placeholder="e.g. RotoWire Voice, ESPN Style…"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-model-desc">Description</Label>
+              <Textarea
+                id="edit-model-desc"
+                value={editDescription}
+                onChange={e => setEditDescription(e.target.value)}
+                placeholder="Brief description of this writer's style…"
+                rows={3}
+              />
+            </div>
+            <div className="flex items-center justify-between rounded-lg border border-border-subtle p-3">
+              <div>
+                <p className="text-sm font-medium text-text-primary">House Model</p>
+                <p className="text-xs text-text-tertiary">Available to all users, not tied to one strategist</p>
+              </div>
+              <Switch checked={editIsHouse} onCheckedChange={setEditIsHouse} />
+            </div>
+            <div className="flex gap-2 pt-1">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => { setShowEditDialog(false); setEditingModel(null); }}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={handleEditSave}
+                disabled={saving || !editName.trim()}
+              >
+                {saving ? 'Saving…' : 'Save Changes'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Assign User Dialog */}
       <Dialog open={showAssignDialog} onOpenChange={setShowAssignDialog}>
         <DialogContent className="max-w-md">
@@ -412,12 +512,13 @@ export function WriterModelsAdmin({ adminUser }: WriterModelsAdminProps) {
 interface ModelRowProps {
   model: WriterModelWithAssignments;
   onAssign: () => void;
+  onEdit: () => void;
   onUnassign: (modelId: string, userId: string, userName: string) => void;
   onDelete: (model: WriterModelWithAssignments) => void;
   deleting: boolean;
 }
 
-function ModelRow({ model, onAssign, onUnassign, onDelete, deleting }: ModelRowProps) {
+function ModelRow({ model, onAssign, onEdit, onUnassign, onDelete, deleting }: ModelRowProps) {
   const trainingCount = model.metadata?.total_training_pieces ?? 0;
   const description = model.metadata?.description;
 
@@ -457,6 +558,15 @@ function ModelRow({ model, onAssign, onUnassign, onDelete, deleting }: ModelRowP
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-1">
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 px-2 text-[12px] gap-1"
+            onClick={onEdit}
+            title="Edit model"
+          >
+            <Edit className="w-3.5 h-3.5" />
+          </Button>
           <Button
             size="sm"
             variant="ghost"

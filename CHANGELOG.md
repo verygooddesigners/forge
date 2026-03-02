@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.10.45] - 2026-03-02
+
+### Feature: Edit Writer Models in Admin
+
+- Added Edit (pencil) icon button to every row in the Writer Models admin table
+- Clicking Edit opens a dialog pre-populated with the model's current name, description, and House Model toggle
+- All three fields are fully editable and saved via the existing PATCH `/api/writer-models` endpoint
+- Edit button appears before the Assign User and Delete buttons in the Actions column
+- No API changes needed — the endpoint already supported updating name, description, and is_house_model
+
 ## [1.10.44] - 2026-03-02
 
 ### Fix: Teams screen errors (crash on New Team + missing DB tables)
