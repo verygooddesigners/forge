@@ -21,6 +21,7 @@ import {
   Link2,
   PenLine,
   FlaskConical,
+  Gauge,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -47,7 +48,8 @@ export type AdminSectionId =
   | 'roles-editor'
   | 'odds-api'
   | 'audit-log'
-  | 'system-health';
+  | 'system-health'
+  | 'platform-metrics';
 
 interface AdminMenuProps {
   user: User;
@@ -86,6 +88,7 @@ const MENU_ITEMS: MenuItem[] = [
   { id: 'odds-api', label: 'Odds API', icon: TrendingUp, requiredPermission: 'can_manage_api_keys', group: 'Integrations' },
 
   // Platform
+  { id: 'platform-metrics', label: 'Performance', icon: Gauge, requiredPermission: 'can_manage_api_keys', group: 'Platform' },
   { id: 'tools', label: 'Tools Management', icon: Wrench, requiredPermission: 'can_manage_tools', group: 'Platform' },
   { id: 'audit-log', label: 'Audit Log', icon: ScrollText, requiredPermission: 'can_access_admin', group: 'Platform' },
   { id: 'system-health', label: 'System Health', icon: Activity, requiredPermission: 'can_manage_api_keys', group: 'Platform' },
