@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.10.43] - 2026-03-02
+
+### Feature: Beta Management gated behind can_manage_betas permission
+
+- Added `can_manage_betas` permission key to `PermissionKey` type, `ALL_PERMISSION_KEYS`, and `AdminMenu`
+- Beta Management section is now hidden from non-super-admins; only users with `can_manage_betas` can see it
+- Super admins receive this permission automatically (no DB changes required)
+- Other admin roles can be granted `can_manage_betas` via the Roles Editor when needed
+- API routes already enforced `isSuperAdmin` — this adds matching frontend visibility control
+
 ## [1.10.42] - 2026-03-02
 
 ### Fix: Beta Notes modal now shows on first magic link sign-in

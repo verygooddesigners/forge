@@ -66,7 +66,7 @@ interface MenuItem {
 
 const MENU_ITEMS: MenuItem[] = [
   // Beta
-  { id: 'beta', label: 'Beta Management', icon: FlaskConical, requiredPermission: 'can_access_admin', group: 'Beta' },
+  { id: 'beta', label: 'Beta Management', icon: FlaskConical, requiredPermission: 'can_manage_betas', group: 'Beta' },
 
   // User Management
   { id: 'users', label: 'Manage Users', icon: Users, requiredPermission: 'can_view_users', group: 'User Management' },

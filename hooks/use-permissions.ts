@@ -35,6 +35,7 @@ const ALL_PERMISSION_KEYS: PermissionKey[] = [
   'can_manage_sso',
   'can_manage_tools',
   'can_manage_role_permissions',
+  'can_manage_betas',
 ];
 
 function buildSuperAdminPermissions(): Record<string, boolean> {

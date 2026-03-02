@@ -2,7 +2,7 @@
 
 export type AccountStatus = 'awaiting_confirmation' | 'confirmed';
 
-// All 28 permission keys in the system
+// All 29 permission keys in the system
 export type PermissionKey =
   // Content
   | 'can_create_projects'
@@ -36,7 +36,9 @@ export type PermissionKey =
   | 'can_manage_api_keys'
   | 'can_manage_sso'
   | 'can_manage_tools'
-  | 'can_manage_role_permissions';
+  | 'can_manage_role_permissions'
+  // Beta Program (super-admin only for now)
+  | 'can_manage_betas';
 
 // Dynamic role — name is the display name (e.g. "Super Administrator")
 export interface Role {
