@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import { createClient as createAdminClient } from '@supabase/supabase-js';
+import { createClient as rawCreateClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkApiPermission } from '@/lib/auth-config';
 
@@ -22,9 +22,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
-    const adminClient = createAdminClient(supabaseUrl, serviceRoleKey, {
+    // Cast to any — this client lacks a Database generic so .from() infers `never`
+    const adminClient = rawCreateClient(supabaseUrl, serviceRoleKey, {
       auth: { autoRefreshToken: false, persistSession: false },
-    });
+    }) as any;
 
     // Check if user with this email already exists
     const { data: existingUser } = await adminClient
