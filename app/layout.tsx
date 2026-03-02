@@ -31,22 +31,37 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Anti-flash: read theme from localStorage and set .dark before first paint */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            try {
+              var s = localStorage.getItem('forge-user-settings');
+              var theme = 'dark'; // default matches DEFAULT_SETTINGS
+              if (s) {
+                var parsed = JSON.parse(s);
+                if (parsed.theme) theme = parsed.theme;
+              }
+              if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+              } else if (theme === 'system') {
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                  document.documentElement.classList.add('dark');
+                }
+              }
+              // 'light': no class needed
+            } catch(e) {
+              // Fallback: default to dark
+              document.documentElement.classList.add('dark');
+            }
+          })();
+        ` }} />
+      </head>
       <body className={`${dmSans.variable} ${spaceMono.variable} font-sans antialiased`}>
         <ClientInit />
         {/* Outer padding creates the floating card effect against the html gradient bg */}
         <div className="min-h-screen w-full p-6 flex items-stretch">
-          <div
-            className="w-full max-w-[1920px] mx-auto flex overflow-hidden"
-            style={{
-              height: 'calc(100vh - 48px)',
-              borderRadius: '32px',
-              background: 'rgba(255, 255, 255, 0.85)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.4)',
-              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08)',
-            }}
-          >
+          <div className="app-container w-full max-w-[1920px] mx-auto flex overflow-hidden">
             {children}
           </div>
         </div>

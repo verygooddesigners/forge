@@ -43,7 +43,7 @@ export function AppSidebar({
   const pathname = usePathname();
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [createDropdownOpen, setCreateDropdownOpen] = useState(false);
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(true); // default dark; synced from DOM on mount
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const createDropdownRef = useRef<HTMLDivElement>(null);
   const { hasPermission } = usePermissions(user.id);
@@ -74,6 +74,11 @@ export function AppSidebar({
     return () => document.removeEventListener('mousedown', handler);
   }, [createDropdownOpen]);
 
+  // Sync isDark state with the actual DOM class on mount (set by anti-flash script)
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains('dark'));
+  }, []);
+
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -81,8 +86,17 @@ export function AppSidebar({
   };
 
   const toggleTheme = () => {
-    const isLight = document.documentElement.classList.toggle('light');
-    setIsDark(!isLight);
+    const nowDark = document.documentElement.classList.toggle('dark');
+    setIsDark(nowDark);
+    // Persist to localStorage so layout anti-flash script picks it up on next load
+    try {
+      const stored = localStorage.getItem('forge-user-settings');
+      const settings = stored ? JSON.parse(stored) : {};
+      settings.theme = nowDark ? 'dark' : 'light';
+      localStorage.setItem('forge-user-settings', JSON.stringify(settings));
+    } catch {
+      // ignore
+    }
   };
 
   const getInitials = (name: string) => {
@@ -110,15 +124,7 @@ export function AppSidebar({
   const roleLabel = user.role;
 
   return (
-    <aside
-      className="w-[260px] flex-shrink-0 flex flex-col h-full"
-      style={{
-        background: 'rgba(255, 255, 255, 0.5)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
-        borderRight: '1px solid rgba(255, 255, 255, 0.5)',
-      }}
-    >
+    <aside className="app-sidebar w-[260px] flex-shrink-0 flex flex-col h-full">
       {/* Logo — keep existing image, add wordmark */}
       <div className="px-4 py-4 flex items-center gap-3 border-b border-white/40">
         <button onClick={() => router.push('/dashboard')} className="focus:outline-none flex items-center gap-3">
@@ -158,10 +164,7 @@ export function AppSidebar({
               createDropdownOpen ? 'max-h-24 opacity-100 mt-1' : 'max-h-0 opacity-0'
             }`}
           >
-            <div
-              className="rounded-xl overflow-hidden shadow-xl"
-              style={{ background: 'rgba(255,255,255,0.95)', border: '1px solid rgba(255,255,255,0.6)' }}
-            >
+            <div className="app-floating-menu rounded-xl overflow-hidden shadow-xl">
               <button
                 onClick={() => { setCreateDropdownOpen(false); router.push('/projects/new'); }}
                 className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-black/5 hover:text-text-primary transition-all"
@@ -217,10 +220,7 @@ export function AppSidebar({
       {/* ProfileMenuBox */}
       <div className="p-3 border-t border-white/40" ref={profileMenuRef}>
         {profileMenuOpen && (
-          <div
-            className="mb-2 rounded-2xl overflow-hidden shadow-xl"
-            style={{ background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.6)' }}
-          >
+          <div className="app-floating-menu mb-2 rounded-2xl overflow-hidden shadow-xl">
             <button
               onClick={() => { router.push('/profile'); setProfileMenuOpen(false); }}
               className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-black/5 hover:text-text-primary transition-all"

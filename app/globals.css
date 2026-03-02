@@ -99,16 +99,113 @@
   --radius: 0.75rem;
 }
 
+/* =============================================
+   DARK MODE VARIABLE OVERRIDES
+   Applied when <html class="dark"> is set.
+   ============================================= */
+html.dark {
+  color-scheme: dark;
+
+  /* Backgrounds */
+  --color-bg-deepest: #0c0c1a;
+  --color-bg-deep: #111120;
+  --color-bg-surface: #161628;
+  --color-bg-elevated: #1c1c2e;
+  --color-bg-hover: #222238;
+  --color-bg-outer: #07070f;
+
+  /* Text */
+  --color-text-primary: #f0f0ff;
+  --color-text-secondary: #9090b8;
+  --color-text-tertiary: #606080;
+  --color-text-muted: #404060;
+
+  /* Accent — purple pops well on dark */
+  --color-accent-primary: #b84dfe;
+  --color-accent-hover: #c96ffe;
+  --color-accent-muted: rgba(184, 77, 254, 0.18);
+  --color-accent-glow: rgba(184, 77, 254, 0.4);
+  --color-accent-light: #d89ffe;
+
+  /* AI */
+  --color-ai-accent: #b84dfe;
+  --color-ai-muted: rgba(184, 77, 254, 0.12);
+
+  /* Borders */
+  --color-border-subtle: rgba(255, 255, 255, 0.05);
+  --color-border-default: rgba(255, 255, 255, 0.1);
+  --color-border-hover: rgba(184, 77, 254, 0.4);
+  --color-border-glass: rgba(255, 255, 255, 0.12);
+
+  /* Gradients */
+  --gradient-outer-bg: linear-gradient(135deg, #0a0a14 0%, #0c0c1a 50%, #08080e 100%);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(12, 12, 26, 0.92);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --glass-container-bg: rgba(12, 12, 26, 0.88);
+  --glass-sidebar-bg: rgba(14, 14, 28, 0.6);
+}
+
+/* App container — replaces hardcoded inline styles in layout.tsx */
+.app-container {
+  height: calc(100vh - 48px);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+html.dark .app-container {
+  background: var(--glass-container-bg);
+  border-color: var(--glass-border);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Sidebar — replaces hardcoded inline styles in AppSidebar.tsx */
+.app-sidebar {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+html.dark .app-sidebar {
+  background: var(--glass-sidebar-bg);
+  border-right-color: var(--glass-border);
+}
+
+/* Floating menus (profile dropdown, create dropdown) in sidebar */
+.app-floating-menu {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+html.dark .app-floating-menu {
+  background: rgba(20, 20, 40, 0.97);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  
+
   html {
     background: linear-gradient(135deg, #E8EAF0 0%, #D1D5E0 50%, #C9CDE0 100%);
     min-height: 100vh;
+    transition: background 0.2s ease;
   }
-  
+
+  html.dark {
+    background: linear-gradient(135deg, #0a0a14 0%, #0c0c1a 50%, #08080e 100%);
+  }
+
   body {
     @apply text-text-primary font-sans antialiased;
     font-weight: 400;
@@ -382,4 +479,66 @@
   border-color: transparent;
   transform: translateY(-4px);
   box-shadow: 0 12px 32px rgba(16, 185, 129, 0.2);
+}
+
+/* =============================================
+   DARK MODE GLASS CARD OVERRIDES
+   ============================================= */
+
+html.dark .glass-card {
+  background-image: linear-gradient(rgba(22, 22, 44, 0.92), rgba(22, 22, 44, 0.92));
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+html.dark .glass-card-purple-pink:hover {
+  background-image:
+    linear-gradient(rgba(22, 22, 44, 0.92), rgba(22, 22, 44, 0.92)),
+    linear-gradient(135deg, #8B5CF6, #EC4899);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-color: transparent;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(139, 92, 246, 0.35);
+}
+
+html.dark .glass-card-blue-cyan:hover {
+  background-image:
+    linear-gradient(rgba(22, 22, 44, 0.92), rgba(22, 22, 44, 0.92)),
+    linear-gradient(135deg, #3B82F6, #06B6D4);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-color: transparent;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(59, 130, 246, 0.35);
+}
+
+html.dark .glass-card-orange-red:hover {
+  background-image:
+    linear-gradient(rgba(22, 22, 44, 0.92), rgba(22, 22, 44, 0.92)),
+    linear-gradient(135deg, #F97316, #EF4444);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-color: transparent;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(249, 115, 22, 0.35);
+}
+
+html.dark .glass-card-green-emerald:hover {
+  background-image:
+    linear-gradient(rgba(22, 22, 44, 0.92), rgba(22, 22, 44, 0.92)),
+    linear-gradient(135deg, #10B981, #14B8A6);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-color: transparent;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.35);
+}
+
+/* Sidebar hover states in dark mode */
+html.dark .hover\:bg-black\/5:hover {
+  background-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+html.dark .border-black\/5 {
+  border-color: rgba(255, 255, 255, 0.07) !important;
 }

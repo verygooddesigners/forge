@@ -88,10 +88,14 @@ export function SettingsPageClient({ user }: SettingsPageClientProps) {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 
       // Apply theme immediately
-      if (settings.theme === 'light') {
-        document.documentElement.classList.add('light');
+      if (settings.theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else if (settings.theme === 'light') {
+        document.documentElement.classList.remove('dark');
       } else {
-        document.documentElement.classList.remove('light');
+        // system: follow OS preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.classList.toggle('dark', prefersDark);
       }
 
       toast.success('Settings saved');
