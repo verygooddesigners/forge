@@ -63,7 +63,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const supabase = await createClient();
-    const results = [];
+    const results: { agentKey: string; success: boolean; data?: any; error?: string }[] = [];
 
     for (const agent of agents) {
       const { data, error } = await supabase

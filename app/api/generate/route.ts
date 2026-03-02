@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
 
     // Use RAG to find similar training content
     const queryText = `${headline} ${primaryKeyword} ${secondaryKeywords?.join(' ') || ''}`;
-    let similarContent = [];
+    let similarContent: any[] = [];
     let writerContext = '';
     
     try {
@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
           if (selectedStories.length > 0) {
             researchContext += '\n\nREFERENCE STORIES (use for facts and context):\n';
             selectedStories.forEach((a: any, i: number) => {
-              researchContext += `${i + 1}. "${a.title}" — ${a.source || a.url || ''}\n`;
+              researchContext += `${i + 1}. "${a.title}" \u2014 ${a.source || a.url || ''}\n`;
               if (a.synopsis) researchContext += `   Summary: ${a.synopsis}\n`;
               else if (a.description) researchContext += `   ${(a.description || '').slice(0, 300)}\n`;
             });
@@ -241,13 +241,13 @@ export async function POST(request: NextRequest) {
       if (articles.length > 0 && !researchContext.includes('REFERENCE STORIES')) {
         researchContext += '\n\nRESEARCH SOURCES:\n';
         researchContext += articles.slice(0, 5).map((a: any, i: number) =>
-          `${i + 1}. "${a.title}" — ${a.source} (${a.url})`
+          `${i + 1}. "${a.title}" \u2014 ${a.source} (${a.url})`
         ).join('\n');
       }
       if (researchBrief.disputed_facts && researchBrief.disputed_facts.length > 0) {
         researchContext += '\n\nDISPUTED/UNCERTAIN FACTS (avoid using these):\n';
         researchContext += researchBrief.disputed_facts.map((f: any, i: number) =>
-          `${i + 1}. ${f.fact || f.claim} — ${f.reason || 'unverified'}`
+          `${i + 1}. ${f.fact || f.claim} \u2014 ${f.reason || 'unverified'}`
         ).join('\n');
       }
     }
@@ -363,5 +363,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-
