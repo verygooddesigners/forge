@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     // Analyze writing style and generate embeddings in parallel
     // These are non-critical — if they fail or timeout, we still save the content
     let analyzedStyle: any = {};
-    let embedding = null;
+    let embedding: number[] | null = null;
 
     try {
       // Run both AI operations in parallel with a 8-second timeout
