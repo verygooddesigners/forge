@@ -67,7 +67,8 @@ export default function MagicAuthPage() {
       if (tokenHash && type) {
         const { error } = await supabase.auth.verifyOtp({
           token_hash: tokenHash,
-          type: type as Parameters<typeof supabase.auth.verifyOtp>[0]['type'],
+          // token_hash only supports email OTP types, not SMS
+          type: type as 'email' | 'recovery' | 'invite' | 'magiclink' | 'signup' | 'email_change',
         });
         if (!error) {
           router.replace('/dashboard');
