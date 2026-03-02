@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.10.46] - 2026-03-02
+
+### Fix: System Health screen — actually works now
+
+- **AI API "degraded" bug**: The health check was pinging `/api/generate/health` which didn't exist. Created the endpoint — it makes a minimal 1-token Claude API call and returns `healthy`, `degraded` (rate limited), or `error` (bad key / unreachable) with latency.
+- **Storage "degraded" bug**: The check was looking for an `avatars` bucket that doesn't exist in this project. Changed to `listBuckets()` which returns the actual bucket list and shows their names when healthy.
+- **Refresh UX**: Refresh button now resets all checks to "Checking" state first, then re-runs — instead of showing stale results while new ones load.
+- **Better diagnostics**: Each degraded/error check now shows a specific message (e.g. "API key is invalid or expired") and a detail line with the raw error or HTTP status code, so you know exactly what's wrong and how to fix it.
+- **Latency coloring**: Response time shown in yellow when >500ms, orange/red when >1000ms.
+- **Last checked timestamp** shown on the overall status banner.
+
 ## [1.10.45] - 2026-03-02
 
 ### Feature: Edit Writer Models in Admin
