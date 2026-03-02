@@ -1,5 +1,41 @@
 # Changelog
 
+## [1.11.1] - 2026-03-02
+
+### Fix: TypeScript `never` type errors across all admin client routes
+
+Root cause: `createAdminClient()` in `lib/supabase/admin.ts` doesn't pass a `Database` generic to Supabase's `createClient()`, so every `.from()` call on the admin client infers `never` types — causing TypeScript build failures on any `.insert()`, `.update()`, `.select()`, or `.delete()` chain.
+
+**Fix**: Applied `const getAdmin = () => createAdminClient() as any` pattern at the module level in all affected routes. This casts the admin client to `any` at creation, eliminating all downstream type errors without changing runtime behavior.
+
+**Files fixed (12 total):**
+- `app/api/admin/betas/route.ts`
+- `app/api/admin/vitals/route.ts`
+- `app/api/admin/users/route.ts`
+- `app/api/admin/users/[userId]/route.ts`
+- `app/api/beta-feedback/route.ts`
+- `app/api/beta-notes/route.ts`
+- `app/api/profile/route.ts`
+- `app/api/remote/agent/heartbeat/route.ts`
+- `app/api/remote/agent/commands/complete/route.ts`
+- `app/api/remote/agent/commands/claim/route.ts`
+- `app/api/writer-models/route.ts`
+- `app/api/writer-models/train/route.ts`
+- `app/dashboard/page.tsx`
+
+### Feat: Platform Metrics — Web Vitals monitoring dashboard
+
+New admin dashboard for tracking real user performance metrics (Core Web Vitals).
+
+- **WebVitalsReporter** (`components/WebVitalsReporter.tsx`): Client component using native `PerformanceObserver` API to capture LCP, FCP, CLS, INP, and TTFB. Buffers entries and flushes via `sendBeacon` to minimize performance impact.
+- **PlatformMetrics** (`components/admin/PlatformMetrics.tsx`): 640-line admin dashboard with p75 summary cards, AreaChart time series, per-page path breakdown table, and rating distribution bars.
+- **AdminMenu**: Added Gauge icon and `platform-metrics` section under Platform group.
+- **API endpoints** (`app/api/admin/vitals/route.ts`): POST for ingesting vitals data, GET for querying with time range and metric filters.
+- **Database**: New `web_vitals` table with RLS policies (`supabase/migrations/20260302_web_vitals.sql`).
+- **Layout**: `WebVitalsReporter` mounted in root `app/layout.tsx` for automatic collection on all pages.
+
+---
+
 ## [1.11.0] - 2026-03-02
 
 ### Performance: Major speed & bloat reduction (audit-driven)
@@ -86,7 +122,7 @@ Complete dark mode with full pre-implementation codebase audit (120+ hardcoded c
 - **AI API "degraded" bug**: The health check was pinging `/api/generate/health` which didn't exist. Created the endpoint — it makes a minimal 1-token Claude API call and returns `healthy`, `degraded` (rate limited), or `error` (bad key / unreachable) with latency.
 - **Storage "degraded" bug**: The check was looking for an `avatars` bucket that doesn't exist in this project. Changed to `listBuckets()` which returns the actual bucket list and shows their names when healthy.
 - **Refresh UX**: Refresh button now resets all checks to "Checking" state first, then re-runs — instead of showing stale results while new ones load.
-- **Better diagnostics**: Each degraded/error check now shows a specific message (e.g. "API key is invalid or expired") and a detail line with the raw error or HTTP status code, so you know exactly what’s wrong and how to fix it.
+- **Better diagnostics**: Each degraded/error check now shows a specific message (e.g. "API key is invalid or expired") and a detail line with the raw error or HTTP status code, so you know exactly what's wrong and how to fix it.
 - **Latency coloring**: Response time shown in yellow when >500ms, orange/red when >1000ms.
 - **Last checked timestamp** shown on the overall status banner.
 
@@ -95,7 +131,7 @@ Complete dark mode with full pre-implementation codebase audit (120+ hardcoded c
 ### Feature: Edit Writer Models in Admin
 
 - Added Edit (pencil) icon button to every row in the Writer Models admin table
-- Clicking Edit opens a dialog pre-populated with the model’s current name, description, and House Model toggle
+- Clicking Edit opens a dialog pre-populated with the model's current name, description, and House Model toggle
 - All three fields are fully editable and saved via the existing PATCH `/api/writer-models` endpoint
 - Edit button appears before the Assign User and Delete buttons in the Actions column
 - No API changes needed — the endpoint already supported updating name, description, and is_house_model
@@ -128,7 +164,7 @@ Run the following in Supabase → SQL Editor to create the tables needed by the 
 
 ### Fix: Beta Notes modal now shows on first magic link sign-in
 
-- **Root cause**: `ClientInit` lives in the root layout and mounts once on `/auth/magic`. The initial `getSession()` call finds no session (the user isn’t signed in yet), so beta data is never fetched. When `/auth/magic` calls `setSession()` and navigates to `/dashboard`, the layout doesn’t re-mount so `getSession()` never fires again.
+- **Root cause**: `ClientInit` lives in the root layout and mounts once on `/auth/magic`. The initial `getSession()` call finds no session (the user isn't signed in yet), so beta data is never fetched. When `/auth/magic` calls `setSession()` and navigates to `/dashboard`, the layout doesn't re-mount so `getSession()` never fires again.
 - **Fix**: Added `supabase.auth.onAuthStateChange` listener to `ClientInit`. When `setSession()` fires `SIGNED_IN`, the listener immediately fetches beta notes and triggers the modal — regardless of which page caused the sign-in.
 - Also resets `betaModalDismissed` state on `SIGNED_OUT` so the modal shows correctly on next login.
 
@@ -142,7 +178,7 @@ Run the following in Supabase → SQL Editor to create the tables needed by the 
 ### Fix: Magic links no longer consumed by Slack/email pre-fetchers
 
 - **Root cause**: Sharing the raw Supabase verification URL (`supabase.co/auth/v1/verify?token=xxx`) via Slack or email causes those platforms to pre-fetch the URL for link previews, consuming the one-time token before the recipient can click it.
-- **Fix**: Created `/auth/go` intermediary page. Links now look like `gdcforge.vercel.app/auth/go?url=BASE64_SUPABASE_URL`. Pre-fetchers visit the page but don’t execute JavaScript — so the Supabase token is never consumed. Real users’ browsers execute the JS and are redirected instantly.
+- **Fix**: Created `/auth/go` intermediary page. Links now look like `gdcforge.vercel.app/auth/go?url=BASE64_SUPABASE_URL`. Pre-fetchers visit the page but don't execute JavaScript — so the Supabase token is never consumed. Real users' browsers execute the JS and are redirected instantly.
 - Added `/auth/go` to middleware public paths.
 
 ## [1.10.40] - 2026-03-02
@@ -157,7 +193,7 @@ Run the following in Supabase → SQL Editor to create the tables needed by the 
 ### Fix: Magic link redirectTo now uses correct production domain
 
 - **Root cause**: `generateLink` was building the `redirectTo` URL from `NEXT_PUBLIC_APP_URL` env var (not set in Vercel production) and falling back to `https://forge.gdcgroup.com`. But the Supabase allowlist only had `https://gdcforge.vercel.app/auth/magic`. Domain mismatch → Supabase rejected the redirect → users landed on login screen.
-- **Fix**: Derive the URL from the incoming request’s `host` and `x-forwarded-proto` headers. This works correctly across all domains (gdcforge.vercel.app, forge.gdcgroup.com, etc.) with no env var required.
+- **Fix**: Derive the URL from the incoming request's `host` and `x-forwarded-proto` headers. This works correctly across all domains (gdcforge.vercel.app, forge.gdcgroup.com, etc.) with no env var required.
 
 ## [1.10.38] - 2026-03-02
 
@@ -167,7 +203,7 @@ Run the following in Supabase → SQL Editor to create the tables needed by the 
 - **Fix**: Created `/auth/magic` — a client-side page that handles all three Supabase auth redirect formats: implicit flow (hash fragments), PKCE code exchange (`?code=xxx`), and OTP token hash (`?token_hash=xxx&type=magiclink`). The page reads whichever format Supabase uses, sets the session, then redirects to dashboard.
 - Updated `generateLink` `redirectTo` to point to `/auth/magic` instead of the old server-side route.
 - Added `/auth/magic` to middleware public paths so unauthenticated users can reach the page.
-- **Login link modal**: Fixed two UI bugs — dialog now has explicit dark background so it’s visible, and the URL uses `break-all` so it wraps instead of overflowing off screen. Copy button is now full-width for easier clicking.
+- **Login link modal**: Fixed two UI bugs — dialog now has explicit dark background so it's visible, and the URL uses `break-all` so it wraps instead of overflowing off screen. Copy button is now full-width for easier clicking.
 
 ## [1.10.37] - 2026-02-28
 
@@ -185,7 +221,7 @@ Run the following in Supabase → SQL Editor to create the tables needed by the 
 
 ### Fix: Layout broken on authenticated pages + Change Password feature
 
-- **Layout fix**: All authenticated pages (Profile, Settings, Guide pages, Change Password) were using `min-h-screen` which doesn’t work inside the root layout’s fixed-height flex container — changed to `flex-1 overflow-y-auto` so pages fill the viewport and scroll correctly
+- **Layout fix**: All authenticated pages (Profile, Settings, Guide pages, Change Password) were using `min-h-screen` which doesn't work inside the root layout's fixed-height flex container — changed to `flex-1 overflow-y-auto` so pages fill the viewport and scroll correctly
 - **Change Password page**: New `/change-password` route with show/hide password toggles, match validation, and immediate redirect to dashboard on success
 - **Sidebar**: Added "Change Password" (key icon) to the user menu popup
 - **Magic link fix**: Login links generated from Beta Management now redirect to `/dashboard` instead of `/` (which was bouncing users to the login screen)
@@ -212,7 +248,7 @@ Run the following in Supabase → SQL Editor to create the tables needed by the 
 ### Fix: redirect loop and DB constraint for beta user first-login
 
 - **Redirect loop broken**: `dashboard/page.tsx` now auto-provisions a missing `public.users` profile (using admin client) instead of redirecting to `/login`, which caused an infinite loop when middleware bounced authenticated users back to `/dashboard`
-- **DB constraint fix**: Live database had the old `account_status` constraint (`pending`, `strategist`, etc.) — migrations 00013/00016 were not applied. SQL provided to normalize existing rows and update the constraint to `(awaiting_confirmation, confirmed)` before inserting Jeremy’s profile
+- **DB constraint fix**: Live database had the old `account_status` constraint (`pending`, `strategist`, etc.) — migrations 00013/00016 were not applied. SQL provided to normalize existing rows and update the constraint to `(awaiting_confirmation, confirmed)` before inserting Jeremy's profile
 - **`provisionUser` always updates existing rows**: Changed `ignoreDuplicates: true` to `false` so the upsert always sets `account_status: confirmed` even on pre-existing rows
 
 All notable changes to Forge are documented here.
@@ -268,7 +304,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fix: magic link modal for existing beta users
 
-- Replaced unreliable OTP email approach with `admin.auth.admin.generateLink()` — generates a real one-click login URL server-side without relying on Supabase’s email system
+- Replaced unreliable OTP email approach with `admin.auth.admin.generateLink()` — generates a real one-click login URL server-side without relying on Supabase's email system
 - New "Login Links" modal pops up automatically after Resend or Start Beta when existing users are found — shows each email with a copyable link you can share via Slack, email, or any channel
 - Toast messages updated to reflect the new flow
 
@@ -324,7 +360,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - **Writer Model assignment in Beta Management**: each user row now has a "Writer Model" dropdown to assign their personal writer model directly from the beta admin panel — no longer need to go to Writer Models admin separately
 - **Fix: invited users now appear in Writer Models admin**: `start_beta` and `resend_invite` now upsert the invited user into `public.users` immediately after Supabase invite, so they appear in the assignment dropdowns even before first login
-- **New `assign_writer_model` API action** on `/api/admin/betas` PATCH: upserts user into public.users then sets `default_writer_model_id` — can be called even if user hasn’t logged in yet
+- **New `assign_writer_model` API action** on `/api/admin/betas` PATCH: upserts user into public.users then sets `default_writer_model_id` — can be called even if user hasn't logged in yet
 - **GET `/api/admin/betas`** now includes `default_writer_model_id` on each beta user row (fetched from `public.users`)
 - **User Guide updated**: registration section rewritten for invite-only beta onboarding; added in-house model callout for RotoWire NFL / RotoWire MLB; corrected export formats (HTML + Plain Text); updated walkthrough phases for beta users
 
@@ -373,7 +409,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [1.10.13] - 2026-02-28
 
 ### Bug fix
-- Admin Panel: Fixed full-screen black error when opening Edit User dialog. Root cause was `<SelectItem value="">` conflicting with Radix UI Select v2’s internal empty-string sentinel. Replaced with `__none__` sentinel, mapped back to empty string in state. Also added route-level `app/admin/error.tsx` so future admin errors show a contained in-page error instead of the global boundary.
+- Admin Panel: Fixed full-screen black error when opening Edit User dialog. Root cause was `<SelectItem value="">` conflicting with Radix UI Select v2's internal empty-string sentinel. Replaced with `__none__` sentinel, mapped back to empty string in state. Also added route-level `app/admin/error.tsx` so future admin errors show a contained in-page error instead of the global boundary.
 
 ## [1.10.12] - 2026-02-26
 
@@ -532,7 +568,7 @@ Fix password reset redirect: added `?type=recovery` to the `redirectTo` URL in `
 
 ## [1.07.04] - 2026-02-20
 
-- **Fix Save Profile**: Profile updates (name, job title, avatar) were failing with "Failed to Update Profile" because the Supabase RLS policy on the `users` table only allows admins to update rows. Created `/api/profile` PATCH route that verifies the user’s session then uses the service role client to update only the authenticated user’s own `full_name`, `job_title`, and `avatar_url`. Updated `ProfilePageClient` to call this API route instead of querying Supabase directly.
+- **Fix Save Profile**: Profile updates (name, job title, avatar) were failing with "Failed to Update Profile" because the Supabase RLS policy on the `users` table only allows admins to update rows. Created `/api/profile` PATCH route that verifies the user's session then uses the service role client to update only the authenticated user's own `full_name`, `job_title`, and `avatar_url`. Updated `ProfilePageClient` to call this API route instead of querying Supabase directly.
 
 ## [1.07.03] - 2026-02-20
 
@@ -555,7 +591,7 @@ Fix password reset redirect: added `?type=recovery` to the `redirectTo` URL in `
 - **`usePermissions` hook**: New React hook for client components to fetch and check permissions against the DB without individual queries.
 - **DB Migration (00018)**: Converts `users.role` from ENUM to TEXT, seeds 5 default roles, adds `is_tool_creator` field to users, rewrites all RLS policies to use `has_permission()`, adds `is_super_admin()` helper.
 - **RLS policies rewritten**: All policies now use `has_permission()` function — `agent_configs`, `trusted_sources`, `ai_settings`, `api_keys`, `tools`, `briefs`, `role_permissions`, `user_permission_overrides`, `cursor_remote_*`, and new `roles` table.
-- **Admin menu permission-driven**: `AdminMenu.tsx` now uses `requiredPermission` per item instead of `minRole` hierarchy. Menu visibility is driven by the user’s actual permission set.
+- **Admin menu permission-driven**: `AdminMenu.tsx` now uses `requiredPermission` per item instead of `minRole` hierarchy. Menu visibility is driven by the user's actual permission set.
 - **UserManagement updated**: Role dropdown is now fetched dynamically from the `roles` table. `is_tool_creator` checkbox added to create/edit user dialogs.
 - **ClientInit component**: Extracted `PasswordResetHandler` and `Toaster` into a `ClientInit` wrapper using `next/dynamic` with `ssr: false` to prevent Radix UI hook errors during static prerendering.
 - **Build fixes**: Added `force-dynamic` to `/nfl-odds`, `/projects`, `/smartbriefs`, `/writer-factory` pages. Created custom `global-error.tsx` and `not-found.tsx` pages. Fixed `PasswordResetHandler` to use `window.location` instead of `usePathname()`.
@@ -591,7 +627,7 @@ Fix password reset redirect: added `?type=recovery` to the `redirectTo` URL in `
 
 ## [1.06.05] - 2026-02-19
 
-- **Fix SmartBrief save button blocking UI (240ms)**: The TipTap editor in `SmartBriefPanel` had a bidirectional content sync — it received `briefContent` as a prop (updated every keystroke via `onChange`), which triggered an expensive `JSON.stringify` comparison in TipTap’s internal `useEffect` on every keystroke, blocking the main thread. Fixed by: (1) adding `key={selectedBrief?.id ?? 'new'}` so the editor remounts cleanly when switching briefs (no programmatic `setContent` needed); (2) passing only the stable initial content (`selectedBrief?.content ?? null`) as the `content` prop so TipTap’s sync effect no longer fires on every keystroke; (3) capturing the editor instance via `onEditorReady` + `editorRef`, so `saveBrief` reads content directly from `editorRef.current.getJSON()` instead of relying on React state — guaranteeing the latest editor content is always saved.
+- **Fix SmartBrief save button blocking UI (240ms)**: The TipTap editor in `SmartBriefPanel` had a bidirectional content sync — it received `briefContent` as a prop (updated every keystroke via `onChange`), which triggered an expensive `JSON.stringify` comparison in TipTap's internal `useEffect` on every keystroke, blocking the main thread. Fixed by: (1) adding `key={selectedBrief?.id ?? 'new'}` so the editor remounts cleanly when switching briefs (no programmatic `setContent` needed); (2) passing only the stable initial content (`selectedBrief?.content ?? null`) as the `content` prop so TipTap's sync effect no longer fires on every keystroke; (3) capturing the editor instance via `onEditorReady` + `editorRef`, so `saveBrief` reads content directly from `editorRef.current.getJSON()` instead of relying on React state — guaranteeing the latest editor content is always saved.
 
 ## [1.06.04] - 2026-02-19
 
