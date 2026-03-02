@@ -1,7 +1,7 @@
 # Forge - Project Status
 
 **Last Updated:** March 2, 2026
-**Version:** v1.10.46
+**Version:** v1.10.50
 **Production:** https://gdcforge.vercel.app
 **Repository:** https://github.com/verygooddesigners/forge  
 **Local Dev:** http://localhost:5309  
@@ -37,6 +37,7 @@
 - **Admin Panel** - User management, API keys, agent configuration
 - **Auth** - Supabase Auth with password reset, RLS policies, role-based access
 - **Content Analytics** - Interactive dashboard with charts, date filtering, team stats, save/share filters, multi-format export (CSV, Excel, PDF, HTML)
+- **Dark Mode** - Full class-based dark mode (Sun/Moon toggle in sidebar + Settings), anti-flash script, persists via localStorage
 
 ### In Progress
 - AI-powered secondary keyword suggestions (Project Creation)

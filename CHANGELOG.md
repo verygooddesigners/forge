@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.10.50] - 2026-03-02
+
+### Feat: Dark Mode v2 — systematic implementation
+
+Complete dark mode with full pre-implementation codebase audit (120+ hardcoded color instances across 37+ files identified and fixed).
+
+- **Three-layer strategy**: CSS variable overrides → global safety-net CSS → inline style replacements
+- **globals.css**: `@custom-variant dark` for Tailwind v4, full dark palette token overrides in `html.dark {}`, glassmorphism overrides, safety-net selectors for `bg-white/bg-slate-*/text-gray-*`
+- **Anti-flash**: Synchronous `<script>` in `<head>` reads `localStorage` before first paint; no white flash on page reload
+- **Toggle**: Sun/Moon button in AppSidebar nav section; Dark Mode switch in Settings > Appearance; preference persists via `localStorage` key `forge-theme`
+- **Dashboard panels**: `EditorPanel`, `LeftSidebar`, `RightSidebar`, `SEOOptimizationSidebar` — `bg-white` → semantic token classes
+- **BetaToolbar**: All inline `style={}` hex colors replaced with CSS variable references (`var(--color-bg-elevated)`, `var(--color-text-primary)`, etc.); floating pill uses dedicated `--beta-pill-*` CSS vars
+- **Page containers**: `NewProjectPageClient`, `ContentAnalyticsClient` — removed inline white gradients, semantic bg tokens
+- **Settings**: Re-added Dark Mode toggle (Switch) in Appearance card
+- **Guide pages**: `SavingsCalculator`, `TimeSavingsPage` — hardcoded slate/white → semantic tokens
+- **TipTap editor canvas** intentionally stays white (Word-processor style) — existing `!important` rules preserved
+
+---
+
 ## [1.10.49] - 2026-03-02
 
 ### Revert: Remove dark mode (deferred to future beta)
