@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.10.44] - 2026-03-02
+
+### Fix: Teams screen errors (crash on New Team + missing DB tables)
+
+- **White screen crash on "New Team" button**: Fixed by replacing `<SelectItem value="">` with `<SelectItem value="__none__">` in the Team Manager dialog. Radix UI throws when a SelectItem has an empty string value, which triggered the admin error boundary and showed the "Something went wrong" screen.
+- **`public.teams` not found**: Added migration `00032_teams.sql` that creates the `teams` and `team_members` tables with proper indexes, foreign keys, and RLS policies. **Run this migration in Supabase SQL editor to enable the Teams feature.**
+
+### Migration required (00032_teams.sql)
+
+Run the following in Supabase → SQL Editor to create the tables needed by the Teams section:
+```sql
+-- See supabase/migrations/00032_teams.sql
+```
+
 ## [1.10.43] - 2026-03-02
 
 ### Feature: Beta Management gated behind can_manage_betas permission

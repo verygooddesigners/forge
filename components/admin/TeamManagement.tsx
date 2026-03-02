@@ -686,12 +686,15 @@ function TeamDialog({
           </div>
           <div className="space-y-2">
             <Label htmlFor="team-manager">Team Manager</Label>
-            <Select value={managedBy} onValueChange={onManagedByChange}>
+            <Select
+              value={managedBy || '__none__'}
+              onValueChange={(v) => onManagedByChange(v === '__none__' ? '' : v)}
+            >
               <SelectTrigger id="team-manager">
                 <SelectValue placeholder="Select a manager" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">None</SelectItem>
+                <SelectItem value="__none__">None</SelectItem>
                 {managerCandidates.map((u) => (
                   <SelectItem key={u.id} value={u.id}>
                     {u.full_name ? `${u.full_name} (${u.email})` : u.email}
