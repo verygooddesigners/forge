@@ -29,33 +29,53 @@ export async function GET(request: Request) {
       return NextResponse.json({ members: [], aggregate: null });
     }
 
-    // Build per-user stats
+    const userIds = allUsers.map((u) => u.id);
+
+    // Bulk-fetch all projects, briefs, and events in 3 queries instead of 3N
+    let pq = supabase.from('projects').select('id, content, seo_score, created_at, user_id').in('user_id', userIds);
+    if (from) pq = pq.gte('created_at', from);
+    if (to) pq = pq.lte('created_at', `${to}T23:59:59.999Z`);
+    const { data: allProjects } = await pq;
+
+    let bq = supabase.from('briefs').select('id, is_shared, created_at, created_by').in('created_by', userIds);
+    if (from) bq = bq.gte('created_at', from);
+    if (to) bq = bq.lte('created_at', `${to}T23:59:59.999Z`);
+    const { data: allBriefs } = await bq;
+
+    let eq = supabase.from('analytics_events').select('user_id, event_type, created_at').in('user_id', userIds);
+    if (from) eq = eq.gte('created_at', from);
+    if (to) eq = eq.lte('created_at', `${to}T23:59:59.999Z`);
+    const { data: allEvents } = await eq;
+
+    // Group by user in memory
+    const projectsByUser = new Map<string, typeof allProjects>();
+    for (const p of allProjects || []) {
+      const arr = projectsByUser.get(p.user_id) || [];
+      arr.push(p);
+      projectsByUser.set(p.user_id, arr);
+    }
+    const briefsByUser = new Map<string, typeof allBriefs>();
+    for (const b of allBriefs || []) {
+      const arr = briefsByUser.get(b.created_by) || [];
+      arr.push(b);
+      briefsByUser.set(b.created_by, arr);
+    }
+    const eventsByUser = new Map<string, typeof allEvents>();
+    for (const e of allEvents || []) {
+      const arr = eventsByUser.get(e.user_id) || [];
+      arr.push(e);
+      eventsByUser.set(e.user_id, arr);
+    }
+
+    // Build per-user stats from in-memory data
     const memberStats: TeamMemberStats[] = [];
     let aggProjects = 0, aggExports = 0, aggWords = 0, aggBriefs = 0, aggShared = 0, aggEdited = 0;
     let seoSum = 0, seoCount = 0, projectCount = 0;
 
     for (const u of allUsers) {
-      // Projects
-      let pq = supabase.from('projects').select('id, content, seo_score, created_at').eq('user_id', u.id);
-      if (from) pq = pq.gte('created_at', from);
-      if (to) pq = pq.lte('created_at', `${to}T23:59:59.999Z`);
-      const { data: projects } = await pq;
-
-      // Briefs
-      let bq = supabase.from('briefs').select('id, is_shared, created_at').eq('created_by', u.id);
-      if (from) bq = bq.gte('created_at', from);
-      if (to) bq = bq.lte('created_at', `${to}T23:59:59.999Z`);
-      const { data: briefs } = await bq;
-
-      // Events
-      let eq = supabase.from('analytics_events').select('*').eq('user_id', u.id);
-      if (from) eq = eq.gte('created_at', from);
-      if (to) eq = eq.lte('created_at', `${to}T23:59:59.999Z`);
-      const { data: events } = await eq;
-
-      const safeProjects = projects || [];
-      const safeBriefs = briefs || [];
-      const safeEvents = events || [];
+      const safeProjects = projectsByUser.get(u.id) || [];
+      const safeBriefs = briefsByUser.get(u.id) || [];
+      const safeEvents = eventsByUser.get(u.id) || [];
 
       const wordCounts = safeProjects.map((p) => countWordsInTipTapJson(p.content));
       const totalWords = wordCounts.reduce((s, w) => s + w, 0);

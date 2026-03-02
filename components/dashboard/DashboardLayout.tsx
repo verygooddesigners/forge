@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { User } from '@/types';
 import { AppSidebar } from '../layout/AppSidebar';
@@ -10,7 +10,7 @@ import { WriterFactoryPanel } from './WriterFactoryPanel';
 import { RightSidebar } from './RightSidebar';
 import { EditorPanel } from './EditorPanel';
 import { SmartBriefPanel } from './SmartBriefPanel';
-import { UserGuideModal } from '@/components/modals/UserGuideModal';
+const UserGuideModal = lazy(() => import('@/components/modals/UserGuideModal').then(m => ({ default: m.UserGuideModal })));
 import { AIHelperWidget } from '@/components/ai/AIHelperWidget';
 
 interface DashboardLayoutProps {
@@ -122,10 +122,14 @@ export function DashboardLayout({ user }: DashboardLayoutProps) {
       </div>
 
       {/* Modals */}
-      <UserGuideModal
-        open={showUserGuideModal}
-        onOpenChange={setShowUserGuideModal}
-      />
+      {showUserGuideModal && (
+        <Suspense fallback={null}>
+          <UserGuideModal
+            open={showUserGuideModal}
+            onOpenChange={setShowUserGuideModal}
+          />
+        </Suspense>
+      )}
 
       {/* AI Helper Widget */}
       <AIHelperWidget />

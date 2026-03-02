@@ -33,7 +33,11 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
   const [started, setStarted] = useState(false);
   const completedRef = useRef(false);
   const errorRef = useRef(false);
+  const onCompleteRef = useRef(onComplete);
   const supabase = createClient();
+
+  // Keep the ref up to date without triggering the effect
+  useEffect(() => { onCompleteRef.current = onComplete; });
 
   useEffect(() => {
     if (completedRef.current) return;
@@ -99,7 +103,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
             debugLog('ResearchHub', 'SSE [DONE]');
             if (!completedRef.current && !errorRef.current) {
               completedRef.current = true;
-              onComplete();
+              onCompleteRef.current();
             }
             return;
           }
@@ -116,7 +120,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
               debugLog('ResearchHub', 'done', data);
               if (!completedRef.current && !errorRef.current) {
                 completedRef.current = true;
-                onComplete();
+                onCompleteRef.current();
               }
               return;
             }
@@ -133,7 +137,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
 
       if (!completedRef.current && !error) {
         completedRef.current = true;
-        onComplete();
+        onCompleteRef.current();
       }
     }
 
@@ -141,7 +145,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
     return () => {
       cancelled = true;
     };
-  }, [projectId, onComplete]);
+  }, [projectId]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] p-8">
@@ -199,7 +203,7 @@ export function ResearchHub({ projectId, writerModelId, onComplete }: ResearchHu
         <p className="text-xs text-center text-text-tertiary">
           {error
             ? 'Research could not find enough content. You can continue to the editor anyway.'
-            : "This usually takes 60–120 seconds. You'll be taken to the editor when research is complete."}
+            : "This usually takes 60\u2013120 seconds. You'll be taken to the editor when research is complete."}
         </p>
         {error && (
           <Button

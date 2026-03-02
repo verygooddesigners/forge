@@ -53,7 +53,7 @@ export function InternalLinksModal({
         .catch(() => toast.error('Failed to load link suggestions'))
         .finally(() => setLoading(false));
     }
-  }, [open, projectId, content]);
+  }, [open, projectId]); // content snapshotted when modal opens — not on every keystroke
 
   const copyUrl = (url: string, title: string) => {
     const fullUrl = url.startsWith('http') ? url : (typeof window !== 'undefined' ? window.location.origin : '') + url;

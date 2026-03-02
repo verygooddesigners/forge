@@ -296,13 +296,6 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
                 const modelTrainingCount = model.metadata?.total_training_pieces || 0;
                 const modelPercentage = calculateTrainingPercentage(modelTrainingCount);
                 
-                console.log('[BADGE_RENDER]', model.name, ':', {
-                  id: model.id,
-                  metadata: model.metadata,
-                  count: modelTrainingCount,
-                  percentage: modelPercentage
-                });
-                
                 return (
                   <Card
                     key={model.id}
@@ -508,7 +501,7 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
                       </Button>
                       {trainingContent.trim() && (
                         <p className="text-xs text-muted-foreground text-center">
-                          {trainingContent.split(/\s+/).length} words • Ready to train
+                          {trainingContent.split(/\s+/).length} words \u2022 Ready to train
                         </p>
                       )}
                     </CardContent>
@@ -532,5 +525,4 @@ export function WriterFactoryModal({ open, onOpenChange, user }: WriterFactoryMo
     </Dialog>
   );
 }
-
 

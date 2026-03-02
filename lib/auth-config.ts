@@ -10,30 +10,34 @@ export { isSuperAdmin };
 /**
  * Fetch all permissions for a user.
  * Merges role_permissions + user_permission_overrides (overrides take precedence).
+ * Optionally accepts a pre-fetched role to avoid an extra DB call.
  */
-export async function getUserPermissions(userId: string): Promise<Record<string, boolean>> {
+export async function getUserPermissions(userId: string, knownRole?: string): Promise<Record<string, boolean>> {
   const supabase = await createClient();
 
-  // Get user's role
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', userId)
-    .single();
+  // If role is already known (from checkApiPermission), skip the extra query
+  let role = knownRole;
+  if (!role) {
+    const { data: profile } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', userId)
+      .single();
+    if (!profile) return {};
+    role = profile.role;
+  }
 
-  if (!profile) return {};
-
-  // Get role permissions
-  const { data: rolePerms } = await supabase
-    .from('role_permissions')
-    .select('permission_key, enabled')
-    .eq('role', profile.role);
-
-  // Get user overrides
-  const { data: overrides } = await supabase
-    .from('user_permission_overrides')
-    .select('permission_key, enabled')
-    .eq('user_id', userId);
+  // Fetch role permissions and user overrides in parallel
+  const [{ data: rolePerms }, { data: overrides }] = await Promise.all([
+    supabase
+      .from('role_permissions')
+      .select('permission_key, enabled')
+      .eq('role', role),
+    supabase
+      .from('user_permission_overrides')
+      .select('permission_key, enabled')
+      .eq('user_id', userId),
+  ]);
 
   const perms: Record<string, boolean> = {};
 
@@ -91,7 +95,8 @@ export async function checkApiPermission(
       return { user: profile as User, allowed: true };
     }
 
-    const perms = await getUserPermissions(authUser.id);
+    // Pass the already-known role to avoid a redundant users query
+    const perms = await getUserPermissions(authUser.id, profile.role);
     return { user: profile as User, allowed: perms[permissionKey] === true };
   } catch {
     return { user: null, allowed: false };

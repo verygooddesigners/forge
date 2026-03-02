@@ -28,21 +28,38 @@ export async function POST(request: Request) {
 
     if (!users) return NextResponse.json({ error: 'No users found' }, { status: 404 });
 
+    const userIds = users.map((u) => u.id);
+
+    // Bulk-fetch all projects and briefs in 2 queries instead of 2N
+    let pq = supabase.from('projects').select('id, content, seo_score, user_id').in('user_id', userIds);
+    if (dateFrom) pq = pq.gte('created_at', dateFrom);
+    if (dateTo) pq = pq.lte('created_at', `${dateTo}T23:59:59.999Z`);
+    const { data: allProjects } = await pq;
+
+    let bq = supabase.from('briefs').select('id, is_shared, created_by').in('created_by', userIds);
+    if (dateFrom) bq = bq.gte('created_at', dateFrom);
+    if (dateTo) bq = bq.lte('created_at', `${dateTo}T23:59:59.999Z`);
+    const { data: allBriefs } = await bq;
+
+    // Group by user in memory
+    const projectsByUser = new Map<string, typeof allProjects>();
+    for (const p of allProjects || []) {
+      const arr = projectsByUser.get(p.user_id) || [];
+      arr.push(p);
+      projectsByUser.set(p.user_id, arr);
+    }
+    const briefsByUser = new Map<string, typeof allBriefs>();
+    for (const b of allBriefs || []) {
+      const arr = briefsByUser.get(b.created_by) || [];
+      arr.push(b);
+      briefsByUser.set(b.created_by, arr);
+    }
+
     const rows: Record<string, any>[] = [];
 
     for (const u of users) {
-      let pq = supabase.from('projects').select('id, content, seo_score').eq('user_id', u.id);
-      if (dateFrom) pq = pq.gte('created_at', dateFrom);
-      if (dateTo) pq = pq.lte('created_at', `${dateTo}T23:59:59.999Z`);
-      const { data: projects } = await pq;
-
-      let bq = supabase.from('briefs').select('id, is_shared').eq('created_by', u.id);
-      if (dateFrom) bq = bq.gte('created_at', dateFrom);
-      if (dateTo) bq = bq.lte('created_at', `${dateTo}T23:59:59.999Z`);
-      const { data: briefs } = await bq;
-
-      const safeProjects = projects || [];
-      const safeBriefs = briefs || [];
+      const safeProjects = projectsByUser.get(u.id) || [];
+      const safeBriefs = briefsByUser.get(u.id) || [];
       const totalWords = safeProjects.reduce((s, p) => s + countWordsInTipTapJson(p.content), 0);
       const scores = safeProjects.filter((p) => p.seo_score != null).map((p) => Number(p.seo_score));
 
