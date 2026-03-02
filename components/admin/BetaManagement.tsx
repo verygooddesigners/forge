@@ -267,8 +267,14 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
         body: JSON.stringify({ beta_id: betaId, action: 'debug_user', email }),
       });
       const json = await res.json();
-      const link = json?.generate_link_result?.link;
-      if (link) {
+      const rawLink = json?.generate_link_result?.link;
+      if (rawLink) {
+        // Wrap the raw Supabase verification URL in our /auth/go intermediary.
+        // This prevents Slack / email pre-fetchers from consuming the one-time
+        // token before the actual user clicks the link. Pre-fetchers visit the
+        // /auth/go page but don't execute JavaScript, so they never follow the
+        // redirect. Real users' browsers do execute JS and are redirected instantly.
+        const link = `${window.location.origin}/auth/go?url=${btoa(rawLink)}`;
         setLoginLink({ betaId, email, link });
         setLinkCopied(false);
       } else {

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.41] - 2026-03-02
+
+### Fix: Magic links no longer consumed by Slack/email pre-fetchers
+
+- **Root cause**: Sharing the raw Supabase verification URL (`supabase.co/auth/v1/verify?token=xxx`) via Slack or email causes those platforms to pre-fetch the URL for link previews, consuming the one-time token before the recipient can click it.
+- **Fix**: Created `/auth/go` intermediary page. Links now look like `gdcforge.vercel.app/auth/go?url=BASE64_SUPABASE_URL`. Pre-fetchers visit the page but don't execute JavaScript — so the Supabase token is never consumed. Real users' browsers execute the JS and are redirected instantly.
+- Added `/auth/go` to middleware public paths.
+
 ## [1.10.40] - 2026-03-02
 
 ### Fix: BetaToolbar version now auto-syncs from package.json

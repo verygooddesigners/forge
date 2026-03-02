@@ -61,7 +61,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Public routes that don't require authentication
-  const publicPaths = ['/system-architecture', '/login', '/signup', '/reset-password', '/api/auth', '/auth/magic', '/smartbrief-guide', '/guide'];
+  const publicPaths = ['/system-architecture', '/login', '/signup', '/reset-password', '/api/auth', '/auth/magic', '/auth/go', '/smartbrief-guide', '/guide'];
   const isPublicPath = publicPaths.some(path =>
     request.nextUrl.pathname.startsWith(path)
   );
