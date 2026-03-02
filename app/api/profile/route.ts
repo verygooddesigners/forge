@@ -1,41 +1,48 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { createAdminClient } from '@/lib/supabase/admin';
 
-// Cast to any — admin client lacks a Database generic so .from() infers `never`
-const getAdmin = () => createAdminClient() as any;
-
-export async function PATCH(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+
+    if (error) throw error;
+    return NextResponse.json(profile);
+  } catch (error) {
+    console.error('Profile GET error:', error);
+    return NextResponse.json({ error: 'Failed to fetch profile' }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
-    const { full_name, job_title, avatar_url } = body;
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(body)
+      .eq('id', user.id)
+      .select()
+      .single();
 
-    const updatePayload: Record<string, unknown> = {};
-    if (full_name !== undefined) updatePayload.full_name = full_name || null;
-    if (job_title !== undefined) updatePayload.job_title = job_title || null;
-    if (avatar_url !== undefined) updatePayload.avatar_url = avatar_url || null;
-
-    const adminClient = getAdmin();
-    const { error } = await adminClient
-      .from('users')
-      .update(updatePayload)
-      .eq('id', user.id);
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Internal server error';
-    console.error('Error updating profile:', error);
-    return NextResponse.json({ error: message }, { status: 500 });
+    if (error) throw error;
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error('Profile PATCH error:', error);
+    return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
   }
 }

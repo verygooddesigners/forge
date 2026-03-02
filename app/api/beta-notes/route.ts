@@ -1,105 +1,59 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { createAdminClient } from '@/lib/supabase/admin';
 
-// Cast to any — admin client lacks a Database generic so .from() infers `never`
-const getAdmin = () => createAdminClient() as any;
-
-// GET /api/beta-notes — get current user's active beta notes + membership
-export async function GET(req: NextRequest) {
+export async function GET(request: Request) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ data: null });
-
-    const admin = getAdmin();
-
-    // Find active beta membership by user_id or email
-    const { data: membership } = await admin
-      .from('beta_users')
-      .select('*, betas(*)')
-      .or(`user_id.eq.${user.id},email.eq.${user.email}`)
-      .not('betas', 'is', null)
-      .limit(1)
-      .single();
-
-    if (!membership || !membership.betas) {
-      return NextResponse.json({ data: null });
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const beta = membership.betas as Record<string, any>;
-    if (beta.status !== 'active') {
-      return NextResponse.json({ data: null });
-    }
+    const { searchParams } = new URL(request.url);
+    const betaId = searchParams.get('betaId');
 
-    return NextResponse.json({
-      data: {
-        beta: {
-          id: beta.id,
-          name: beta.name,
-          notes: beta.notes,
-          notes_version: beta.notes_version,
-          notes_is_major_update: beta.notes_is_major_update,
-          status: beta.status,
-        },
-        membership: {
-          id: membership.id,
-          acknowledged_at: membership.acknowledged_at,
-          last_seen_notes_version: membership.last_seen_notes_version,
-        },
-      },
-    });
-  } catch (err: any) {
-    console.error('[beta-notes GET]', err);
-    return NextResponse.json({ data: null });
+    const query = supabase
+      .from('beta_notes')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (betaId) query.eq('beta_id', betaId);
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return NextResponse.json(data ?? []);
+  } catch (error) {
+    console.error('Beta notes error:', error);
+    return NextResponse.json({ error: 'Failed to fetch notes' }, { status: 500 });
   }
 }
 
-// PATCH /api/beta-notes — acknowledge notes or mark major update as seen
-export async function PATCH(req: NextRequest) {
+export async function POST(request: Request) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
-    const { membership_id, action } = await req.json();
-    if (!membership_id || !action) {
-      return NextResponse.json({ error: 'membership_id and action required' }, { status: 400 });
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const admin = getAdmin();
-    const updates: Record<string, any> = {};
+    const body = await request.json();
+    const { betaId, content } = body;
 
-    if (action === 'acknowledge') {
-      updates.acknowledged_at = new Date().toISOString();
-      // Also mark notes version as seen
-      const { data: bu } = await admin
-        .from('beta_users')
-        .select('betas(notes_version)')
-        .eq('id', membership_id)
-        .single();
-      const notesVersion = (bu?.betas as any)?.notes_version ?? 1;
-      updates.last_seen_notes_version = notesVersion;
-    } else if (action === 'seen') {
-      const { data: bu } = await admin
-        .from('beta_users')
-        .select('betas(notes_version)')
-        .eq('id', membership_id)
-        .single();
-      const notesVersion = (bu?.betas as any)?.notes_version ?? 1;
-      updates.last_seen_notes_version = notesVersion;
+    if (!betaId || !content) {
+      return NextResponse.json({ error: 'betaId and content are required' }, { status: 400 });
     }
 
-    const { error } = await admin
-      .from('beta_users')
-      .update(updates)
-      .eq('id', membership_id)
-      .or(`user_id.eq.${user.id},email.eq.${user.email}`);
+    const { data, error } = await supabase
+      .from('beta_notes')
+      .insert({ beta_id: betaId, user_id: user.id, content })
+      .select()
+      .single();
 
     if (error) throw error;
-    return NextResponse.json({ success: true });
-  } catch (err: any) {
-    console.error('[beta-notes PATCH]', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json(data, { status: 201 });
+  } catch (error) {
+    console.error('Beta notes POST error:', error);
+    return NextResponse.json({ error: 'Failed to create note' }, { status: 500 });
   }
 }

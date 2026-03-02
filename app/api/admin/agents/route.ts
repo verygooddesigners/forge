@@ -1,99 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { AgentConfig } from '@/lib/agents/types';
-import { checkApiPermission } from '@/lib/auth-config';
+import { NextResponse } from 'next/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
-/**
- * GET /api/admin/agents
- * List all agent configurations
- */
 export async function GET() {
   try {
-    const { user, allowed } = await checkApiPermission('can_tune_ai_agents');
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    if (!allowed) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    const supabase = createAdminClient();
 
-    const supabase = await createClient();
-    const { data: configs, error } = await supabase
-      .from('agent_configs')
+    const { data, error } = await supabase
+      .from('remote_agents')
       .select('*')
-      .order('agent_key');
+      .order('last_heartbeat', { ascending: false });
 
     if (error) throw error;
-
-    const agentConfigs: AgentConfig[] = configs.map((config: any) => ({
-      id: config.id,
-      agentKey: config.agent_key,
-      displayName: config.display_name,
-      description: config.description || '',
-      systemPrompt: config.system_prompt,
-      temperature: Number(config.temperature),
-      maxTokens: config.max_tokens,
-      model: config.model,
-      enabled: config.enabled,
-      guardrails: Array.isArray(config.guardrails) ? config.guardrails : [],
-      specialConfig: config.special_config || {},
-      updatedBy: config.updated_by,
-      createdAt: config.created_at,
-      updatedAt: config.updated_at,
-    }));
-
-    return NextResponse.json({ agents: agentConfigs });
+    return NextResponse.json(data ?? []);
   } catch (error) {
-    console.error('Error fetching agent configs:', error);
-    return NextResponse.json({ error: 'Failed to fetch agent configurations' }, { status: 500 });
-  }
-}
-
-/**
- * PUT /api/admin/agents
- * Bulk update multiple agent configurations
- */
-export async function PUT(request: NextRequest) {
-  try {
-    const { user, allowed } = await checkApiPermission('can_tune_ai_agents');
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    if (!allowed) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-
-    const body = await request.json();
-    const { agents } = body;
-
-    if (!Array.isArray(agents)) {
-      return NextResponse.json({ error: 'Invalid request body. Expected agents array.' }, { status: 400 });
-    }
-
-    const supabase = await createClient();
-    const results: { agentKey: string; success: boolean; data?: any; error?: string }[] = [];
-
-    for (const agent of agents) {
-      const { data, error } = await supabase
-        .from('agent_configs')
-        .update({
-          display_name: agent.displayName,
-          description: agent.description,
-          system_prompt: agent.systemPrompt,
-          temperature: agent.temperature,
-          max_tokens: agent.maxTokens,
-          model: agent.model,
-          enabled: agent.enabled,
-          guardrails: agent.guardrails,
-          special_config: agent.specialConfig,
-          updated_by: user.id,
-        })
-        .eq('agent_key', agent.agentKey)
-        .select()
-        .single();
-
-      if (error) {
-        results.push({ agentKey: agent.agentKey, success: false, error: error.message });
-      } else {
-        results.push({ agentKey: agent.agentKey, success: true, data });
-      }
-    }
-
-    return NextResponse.json({ results });
-  } catch (error) {
-    console.error('Error updating agent configs:', error);
-    return NextResponse.json({ error: 'Failed to update agent configurations' }, { status: 500 });
+    console.error('Failed to fetch agents:', error);
+    return NextResponse.json({ error: 'Failed to fetch agents' }, { status: 500 });
   }
 }

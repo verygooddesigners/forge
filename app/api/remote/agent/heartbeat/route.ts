@@ -1,56 +1,32 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { validateRemoteAgentToken } from '@/lib/remote-agent';
 
-// Cast to any — admin client lacks a Database generic so .from() infers `never`
-const getAdmin = () => createAdminClient() as any;
-
-export async function POST(request: NextRequest) {
-  const auth = validateRemoteAgentToken(request);
-  if (!auth.ok) {
-    return NextResponse.json({ error: auth.error }, { status: auth.status });
-  }
-
+export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const agentId = String(body.agentId || '').trim();
+    const { agentId, status, metadata } = body;
 
     if (!agentId) {
-      return NextResponse.json(
-        { error: 'agentId is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'agentId is required' }, { status: 400 });
     }
 
-    const supabase = getAdmin();
-    const now = new Date().toISOString();
-
-    const { data, error } = await supabase
-      .from('cursor_agent_status')
+    const supabase = createAdminClient();
+    const { error } = await supabase
+      .from('remote_agents')
       .upsert(
         {
-          agent_id: agentId,
-          status: body.status || 'idle',
-          current_task: body.currentTask || null,
-          last_message: body.lastMessage || null,
-          last_heartbeat: now,
-          metadata: body.metadata || {},
+          id: agentId,
+          status: status ?? 'idle',
+          last_heartbeat: new Date().toISOString(),
+          metadata: metadata ?? {},
         },
-        { onConflict: 'agent_id' }
-      )
-      .select()
-      .single();
+        { onConflict: 'id' }
+      );
 
-    if (error) {
-      throw error;
-    }
-
-    return NextResponse.json({ agent: data });
+    if (error) throw error;
+    return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error('Error updating agent heartbeat:', error);
-    return NextResponse.json(
-      { error: 'Failed to update heartbeat' },
-      { status: 500 }
-    );
+    console.error('Heartbeat error:', error);
+    return NextResponse.json({ error: 'Heartbeat failed' }, { status: 500 });
   }
 }
