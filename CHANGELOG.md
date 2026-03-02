@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.10.38] - 2026-03-02
+
+### Fix: Magic links now actually sign users in (root cause fixed)
+
+- **Root cause**: Supabase magic links redirect with hash fragments (`#access_token=xxx`) when using implicit auth flow. Hash fragments are never sent to the server, so the old server-side `/api/auth/callback` route received nothing and bounced users to login every time.
+- **Fix**: Created `/auth/magic` — a client-side page that handles all three Supabase auth redirect formats: implicit flow (hash fragments), PKCE code exchange (`?code=xxx`), and OTP token hash (`?token_hash=xxx&type=magiclink`). The page reads whichever format Supabase uses, sets the session, then redirects to dashboard.
+- Updated `generateLink` `redirectTo` to point to `/auth/magic` instead of the old server-side route.
+- Added `/auth/magic` to middleware public paths so unauthenticated users can reach the page.
+- **Login link modal**: Fixed two UI bugs — dialog now has explicit dark background so it's visible, and the URL uses `break-all` so it wraps instead of overflowing off screen. Copy button is now full-width for easier clicking.
+
 ## [1.10.37] - 2026-02-28
 
 ### Fix: BetaToolbar version corrected

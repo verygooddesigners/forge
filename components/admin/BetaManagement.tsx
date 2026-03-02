@@ -793,27 +793,26 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
 
       {/* Login Link dialog */}
       <Dialog open={!!loginLink} onOpenChange={open => !open && setLoginLink(null)}>
-        <DialogContent className="sm:max-w-[520px]">
+        <DialogContent className="sm:max-w-[540px] bg-bg-elevated border border-border-subtle shadow-xl">
           <DialogHeader>
-            <DialogTitle>Login Link — {loginLink?.email}</DialogTitle>
+            <DialogTitle className="text-text-primary">Login Link — {loginLink?.email}</DialogTitle>
           </DialogHeader>
           <p className="text-[13px] text-text-secondary">
             Copy this link and send it directly to the user (Slack, iMessage, email, etc.). It works immediately — no password required. Links expire after 1 hour.
           </p>
-          <div className="flex gap-2 items-stretch">
-            <div className="flex-1 bg-bg-secondary rounded-lg px-3 py-2 text-[11px] font-mono text-text-secondary overflow-hidden">
-              <p className="truncate">{loginLink?.link}</p>
-            </div>
-            <Button
-              onClick={handleCopyLink}
-              className="gap-2 shrink-0"
-            >
-              {linkCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-              {linkCopied ? 'Copied!' : 'Copy'}
-            </Button>
+          {/* URL box: full-width, wrapping, no overflow off-screen */}
+          <div className="w-full bg-bg-secondary rounded-lg px-3 py-2.5 text-[11px] font-mono text-text-secondary border border-border-subtle">
+            <p className="break-all whitespace-pre-wrap select-all">{loginLink?.link}</p>
           </div>
+          <Button
+            onClick={handleCopyLink}
+            className="w-full gap-2"
+          >
+            {linkCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            {linkCopied ? 'Copied to clipboard!' : 'Copy Link'}
+          </Button>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setLoginLink(null)}>Close</Button>
+            <Button variant="ghost" onClick={() => setLoginLink(null)} className="w-full">Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
