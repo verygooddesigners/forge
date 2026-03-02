@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     const { data: betas, error } = await admin
       .from('betas')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false }) as { data: any[] | null; error: any };
 
     if (error) throw error;
 
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
       const { data: userRows } = await admin
         .from('users')
         .select('id, default_writer_model_id')
-        .in('id', userIds);
+        .in('id', userIds) as { data: any[] | null };
       for (const row of userRows ?? []) {
         modelByUserId[row.id] = row.default_writer_model_id ?? null;
       }
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
         created_by: user.email,
       })
       .select()
-      .single();
+      .single() as { data: any; error: any };
 
     if (error) throw error;
     return NextResponse.json({ success: true, data: { ...data, users: [] } });
@@ -126,7 +126,7 @@ export async function PATCH(req: NextRequest) {
         .from('betas')
         .select('notes_version')
         .eq('id', beta_id)
-        .single();
+        .single() as { data: any };
 
       const newVersion = (current?.notes_version ?? 1) + 1;
 
@@ -267,7 +267,7 @@ export async function PATCH(req: NextRequest) {
         .from('users')
         .select('id, email, role, account_status')
         .eq('email', debugEmail.toLowerCase())
-        .maybeSingle();
+        .maybeSingle() as { data: any };
 
       // 2. Check auth.users via the UUID in public.users
       let authByPubId: any = null;
@@ -359,7 +359,7 @@ export async function DELETE(req: NextRequest) {
 
     const admin = createAdminClient();
 
-    const { data: beta } = await admin.from('betas').select('status').eq('id', id).single();
+    const { data: beta } = await admin.from('betas').select('status').eq('id', id).single() as { data: any };
     if (beta?.status !== 'draft') {
       return NextResponse.json({ error: 'Only draft betas can be deleted' }, { status: 400 });
     }
