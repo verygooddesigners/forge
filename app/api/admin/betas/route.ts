@@ -3,6 +3,11 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { isSuperAdmin } from '@/lib/super-admin';
 
+// The singleton admin client doesn't pass a Database generic to createClient(),
+// so every .from() call infers `never` for custom tables. Casting to `any`
+// at the call site is the simplest fix until the admin client is properly typed.
+const getAdmin = () => createAdminClient() as any;
+
 // GET /api/admin/betas — list all betas with their users
 export async function GET(req: NextRequest) {
   try {
@@ -12,18 +17,18 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
     const { data: betas, error } = await admin
       .from('betas')
       .select('*')
-      .order('created_at', { ascending: false }) as { data: any[] | null; error: any };
+      .order('created_at', { ascending: false });
 
     if (error) throw error;
 
     const { data: betaUsers } = await admin
       .from('beta_users')
       .select('*')
-      .order('created_at', { ascending: true }) as { data: any[] | null };
+      .order('created_at', { ascending: true });
 
     // Fetch default_writer_model_id for all invited users
     const userIds = (betaUsers ?? []).map((bu: any) => bu.user_id).filter(Boolean);
@@ -32,7 +37,7 @@ export async function GET(req: NextRequest) {
       const { data: userRows } = await admin
         .from('users')
         .select('id, default_writer_model_id')
-        .in('id', userIds) as { data: any[] | null };
+        .in('id', userIds);
       for (const row of userRows ?? []) {
         modelByUserId[row.id] = row.default_writer_model_id ?? null;
       }
@@ -48,7 +53,7 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({
-      data: betas?.map(b => ({
+      data: betas?.map((b: any) => ({
         ...b,
         users: usersByBeta[b.id] ?? [],
       })),
@@ -73,7 +78,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
     const { data, error } = await admin
       .from('betas')
       .insert({
@@ -82,7 +87,7 @@ export async function POST(req: NextRequest) {
         created_by: user.email,
       })
       .select()
-      .single() as { data: any; error: any };
+      .single();
 
     if (error) throw error;
     return NextResponse.json({ success: true, data: { ...data, users: [] } });
@@ -107,7 +112,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: 'beta_id and action are required' }, { status: 400 });
     }
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
 
     // ── Update name ──────────────────────────────────────────────────────────
     if (action === 'update') {
@@ -126,7 +131,7 @@ export async function PATCH(req: NextRequest) {
         .from('betas')
         .select('notes_version')
         .eq('id', beta_id)
-        .single() as { data: any };
+        .single();
 
       const newVersion = (current?.notes_version ?? 1) + 1;
 
@@ -191,7 +196,7 @@ export async function PATCH(req: NextRequest) {
         if (!isAlreadyExists) throw createError;
 
         const { data: listData } = await admin.auth.admin.listUsers({ perPage: 1000 });
-        const found = listData?.users?.find(u => u.email?.toLowerCase() === email.toLowerCase());
+        const found = listData?.users?.find((u: any) => u.email?.toLowerCase() === email.toLowerCase());
         userId = found?.id ?? null;
       } else {
         userId = created.user?.id ?? null;
@@ -217,7 +222,7 @@ export async function PATCH(req: NextRequest) {
         .from('beta_users')
         .select('*')
         .eq('beta_id', beta_id)
-        .is('invited_at', null) as { data: any[] | null };
+        .is('invited_at', null);
 
       const results: { email: string; success: boolean; error?: string }[] = [];
 
@@ -267,7 +272,7 @@ export async function PATCH(req: NextRequest) {
         .from('users')
         .select('id, email, role, account_status')
         .eq('email', debugEmail.toLowerCase())
-        .maybeSingle() as { data: any };
+        .maybeSingle();
 
       // 2. Check auth.users via the UUID in public.users
       let authByPubId: any = null;
@@ -357,9 +362,9 @@ export async function DELETE(req: NextRequest) {
     const id = req.nextUrl.searchParams.get('id');
     if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 });
 
-    const admin = createAdminClient();
+    const admin = getAdmin();
 
-    const { data: beta } = await admin.from('betas').select('status').eq('id', id).single() as { data: any };
+    const { data: beta } = await admin.from('betas').select('status').eq('id', id).single();
     if (beta?.status !== 'draft') {
       return NextResponse.json({ error: 'Only draft betas can be deleted' }, { status: 400 });
     }
