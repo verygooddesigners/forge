@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.39] - 2026-03-02
+
+### Fix: Magic link redirectTo now uses correct production domain
+
+- **Root cause**: `generateLink` was building the `redirectTo` URL from `NEXT_PUBLIC_APP_URL` env var (not set in Vercel production) and falling back to `https://forge.gdcgroup.com`. But the Supabase allowlist only had `https://gdcforge.vercel.app/auth/magic`. Domain mismatch → Supabase rejected the redirect → users landed on login screen.
+- **Fix**: Derive the URL from the incoming request's `host` and `x-forwarded-proto` headers. This works correctly across all domains (gdcforge.vercel.app, forge.gdcgroup.com, etc.) with no env var required.
+
 ## [1.10.38] - 2026-03-02
 
 ### Fix: Magic links now actually sign users in (root cause fixed)

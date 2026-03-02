@@ -277,7 +277,12 @@ export async function PATCH(req: NextRequest) {
       }
 
       // 3. Try generateLink directly
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://forge.gdcgroup.com';
+      // Derive the app URL from the incoming request so it works across all
+      // domains (gdcforge.vercel.app, forge.gdcgroup.com, etc.) without relying
+      // on env vars that may differ between dev and production.
+      const host = req.headers.get('host') ?? 'gdcforge.vercel.app';
+      const proto = req.headers.get('x-forwarded-proto') ?? 'https';
+      const appUrl = `${proto}://${host}`;
       const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
         type: 'magiclink',
         email: debugEmail,
