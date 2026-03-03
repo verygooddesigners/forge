@@ -1,41 +1,71 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { validateRemoteAgentToken } from '@/lib/remote-agent';
 
-export async function POST(request: Request) {
+// Cast to any — admin client lacks a Database generic so .from() infers `never`
+const getAdmin = () => createAdminClient() as any;
+
+export async function POST(request: NextRequest) {
+  const auth = validateRemoteAgentToken(request);
+  if (!auth.ok) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   try {
     const body = await request.json();
-    const { agentId } = body;
+    const agentId = String(body.agentId || '').trim();
 
     if (!agentId) {
-      return NextResponse.json({ error: 'agentId is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'agentId is required' },
+        { status: 400 }
+      );
     }
 
-    const supabase = createAdminClient();
+    const supabase = getAdmin();
 
-    // Find the oldest pending command for this agent
-    const { data: command, error: fetchError } = await supabase
-      .from('agent_commands')
+    const { data: pending, error } = await supabase
+      .from('cursor_remote_commands')
       .select('*')
-      .eq('agent_id', agentId)
       .eq('status', 'pending')
+      .or(`target_agent_id.is.null,target_agent_id.eq.${agentId}`)
       .order('created_at', { ascending: true })
-      .limit(1)
-      .single();
+      .limit(1);
 
-    if (fetchError && fetchError.code !== 'PGRST116') throw fetchError;
-    if (!command) return NextResponse.json({ command: null });
+    if (error) {
+      throw error;
+    }
 
-    // Claim it
-    const { error: updateError } = await supabase
-      .from('agent_commands')
-      .update({ status: 'claimed', claimed_at: new Date().toISOString() })
+    if (!pending || pending.length === 0) {
+      return NextResponse.json({ command: null });
+    }
+
+    const command = pending[0];
+    const now = new Date().toISOString();
+
+    const { data: updatedRows, error: updateError } = await supabase
+      .from('cursor_remote_commands')
+      .update({
+        status: 'in_progress',
+        claimed_by: agentId,
+        claimed_at: now,
+        started_at: now,
+      })
       .eq('id', command.id)
-      .eq('status', 'pending');
+      .eq('status', 'pending')
+      .select();
 
-    if (updateError) throw updateError;
-    return NextResponse.json({ command });
+    if (updateError) {
+      throw updateError;
+    }
+
+    const updated = updatedRows?.[0] || null;
+    return NextResponse.json({ command: updated });
   } catch (error) {
-    console.error('Command claim error:', error);
-    return NextResponse.json({ error: 'Failed to claim command' }, { status: 500 });
+    console.error('Error claiming cursor command:', error);
+    return NextResponse.json(
+      { error: 'Failed to claim command' },
+      { status: 500 }
+    );
   }
 }
