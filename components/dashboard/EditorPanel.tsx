@@ -257,14 +257,14 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
 
       // Final content conversion - convert markdown text to proper TipTap format
       const lines = cleanedText.split('\n');
-      const tipTapNodes = [];
+      const tipTapNodes: Record<string, unknown>[] = [];
       let currentParagraph = '';
       let inList = false;
       let listItems: string[] = [];
       let listType: 'bullet' | 'ordered' | null = null;
 
       const parseInlineFormatting = (text: string) => {
-        const content = [];
+        const content: { type: string; text: string; marks?: { type: string }[] }[] = [];
         let remainingText = text;
         let position = 0;
 
@@ -420,7 +420,7 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
 
       const tipTapContent = {
         type: 'doc',
-        content: tipTapNodes.filter((node) => node.content && (node.content.length > 0 || node.type === 'bulletList' || node.type === 'orderedList')),
+        content: tipTapNodes.filter((node) => node.content && (Array.isArray(node.content) ? node.content.length > 0 : true) || node.type === 'bulletList' || node.type === 'orderedList'),
       };
 
       setContent(tipTapContent);
@@ -541,4 +541,3 @@ export function EditorPanel({ projectId, writerModelId, onOpenProjectModal, onNe
     </>
   );
 }
-
