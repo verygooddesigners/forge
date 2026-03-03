@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.11.1] - 2026-03-03
+
+### Feature: Admin API Key Management
+
+Admins can now manage API keys for external services (Anthropic, Tavily, OpenAI) directly from the Admin panel — no code deploys or environment variable changes required.
+
+- **`system_settings` table** — New Supabase table (`supabase/migrations/00033_system_settings.sql`) stores admin-managed key/value config, protected by admin-only RLS
+- **`GET/PUT /api/admin/settings`** — New API route returns masked key status and upserts individual keys; protected by `can_manage_api_keys` permission
+- **`lib/settings-cache.ts`** — Shared in-memory cache (5-min TTL) to avoid a DB round-trip on every AI request; invalidated immediately on admin save
+- **DB-first key resolution** — `lib/ai.ts`, `lib/agents/base.ts`, and the health route all resolve the Claude API key via cache → DB → env var fallback, so an admin-saved key takes precedence over `.env.local` without a redeploy
+- **APIKeyManagement component** — Complete rewrite of the Admin → API Keys tab: real load/save, masked current key display with last-updated timestamp, per-key save buttons with loading states, Enter-key support
+- **⚠️ Manual step required**: Run `supabase/migrations/00033_system_settings.sql` in the Supabase Dashboard SQL Editor to create the table
+
+---
+
 ## [1.11.0] - 2026-03-02
 
 ### Performance: Major speed & bloat reduction (audit-driven)
