@@ -2,6 +2,35 @@ import { createClient } from '../supabase/server';
 import { AgentConfig, AgentKey, AgentMessage, AgentResponse } from './types';
 import { DEFAULT_AGENT_CONFIGS } from './config';
 import * as prompts from './prompts';
+import { getCached, setCached } from '../settings-cache';
+import { createAdminClient } from '../supabase/admin';
+
+/** Resolve the Claude API key — DB first, env var fallback (cached). */
+async function resolveClaudeApiKey(): Promise<string> {
+  const cached = getCached('claude_api_key');
+  if (cached) return cached;
+
+  try {
+    const supabase = createAdminClient();
+    const { data } = await supabase
+      .from('system_settings')
+      .select('value')
+      .eq('key', 'claude_api_key')
+      .single();
+    if (data?.value) {
+      setCached('claude_api_key', data.value);
+      return data.value;
+    }
+  } catch { /* fall through */ }
+
+  const envKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
+  if (envKey) {
+    setCached('claude_api_key', envKey);
+    return envKey;
+  }
+
+  throw new Error('CLAUDE_API_KEY is not configured');
+}
 
 /**
  * Load agent configuration from database, fallback to default
@@ -94,10 +123,7 @@ export async function callClaude(
   config: AgentConfig
 ): Promise<AgentResponse> {
   try {
-    const apiKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
-      throw new Error('CLAUDE_API_KEY is not configured');
-    }
+    const apiKey = await resolveClaudeApiKey();
     
     // Separate system message from user/assistant messages
     const systemMessage = messages.find(m => m.role === 'system');
@@ -163,10 +189,7 @@ export async function streamClaude(
   messages: AgentMessage[],
   config: AgentConfig
 ): Promise<ReadableStream> {
-  const apiKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('CLAUDE_API_KEY is not configured');
-  }
+  const apiKey = await resolveClaudeApiKey();
   
   // Separate system message from user/assistant messages
   const systemMessage = messages.find(m => m.role === 'system');

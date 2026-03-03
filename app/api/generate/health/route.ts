@@ -1,4 +1,24 @@
 import { NextResponse } from 'next/server';
+import { getCached, setCached } from '@/lib/settings-cache';
+import { createAdminClient } from '@/lib/supabase/admin';
+
+async function resolveClaudeApiKey(): Promise<string | null> {
+  const cached = getCached('claude_api_key');
+  if (cached) return cached;
+  try {
+    const supabase = createAdminClient();
+    const { data } = await supabase
+      .from('system_settings')
+      .select('value')
+      .eq('key', 'claude_api_key')
+      .single();
+    if (data?.value) {
+      setCached('claude_api_key', data.value);
+      return data.value;
+    }
+  } catch { /* fall through */ }
+  return process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY || null;
+}
 
 /**
  * GET /api/generate/health
@@ -7,7 +27,7 @@ import { NextResponse } from 'next/server';
  * Uses raw fetch to match the rest of the codebase (no @anthropic-ai/sdk dependency).
  */
 export async function GET() {
-  const apiKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
+  const apiKey = await resolveClaudeApiKey();
 
   if (!apiKey) {
     return NextResponse.json(

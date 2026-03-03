@@ -1,5 +1,7 @@
 // AI Provider abstraction layer - supports Claude API
 import { STYLE_ANALYSIS_SYSTEM_PROMPT } from './prompts';
+import { getCached, setCached } from './settings-cache';
+import { createAdminClient } from './supabase/admin';
 
 interface AIMessage {
   role: 'system' | 'user' | 'assistant';
@@ -11,6 +13,43 @@ interface AIOptions {
   temperature?: number;
   maxTokens?: number;
   stream?: boolean;
+}
+
+/**
+ * Resolve the Claude API key.
+ * Priority: DB (system_settings) → CLAUDE_API_KEY env var → ANTHROPIC_API_KEY env var
+ * DB value is cached for 5 minutes to avoid a round-trip on every request.
+ */
+async function resolveClaudeApiKey(): Promise<string> {
+  // 1. Check in-memory cache first
+  const cached = getCached('claude_api_key');
+  if (cached) return cached;
+
+  // 2. Try to load from DB (admin-configured key takes precedence over env var)
+  try {
+    const supabase = createAdminClient();
+    const { data } = await supabase
+      .from('system_settings')
+      .select('value')
+      .eq('key', 'claude_api_key')
+      .single();
+
+    if (data?.value) {
+      setCached('claude_api_key', data.value);
+      return data.value;
+    }
+  } catch {
+    // DB unavailable or table doesn't exist yet — fall through to env var
+  }
+
+  // 3. Fall back to environment variable
+  const envKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
+  if (envKey) {
+    setCached('claude_api_key', envKey);
+    return envKey;
+  }
+
+  throw new Error('CLAUDE_API_KEY is not configured. Set it in Admin → API Keys or add it to your .env.local file.');
 }
 
 /**
@@ -26,10 +65,7 @@ export async function generateContent(
     maxTokens = 4000,
   } = options;
 
-  const apiKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('CLAUDE_API_KEY is not configured. Please add it to your .env.local file.');
-  }
+  const apiKey = await resolveClaudeApiKey();
 
   // Separate system message from user/assistant messages
   const systemMessage = messages.find(m => m.role === 'system');
@@ -89,10 +125,7 @@ export async function streamContent(
     content: msg.content,
   }));
 
-  const apiKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    throw new Error('CLAUDE_API_KEY is not configured. Please add it to your .env.local file.');
-  }
+  const apiKey = await resolveClaudeApiKey();
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -135,7 +168,7 @@ export async function analyzeWritingStyle(content: string) {
   ];
 
   const result = await generateContent(messages, { temperature: 0.3 });
-  
+
   try {
     return JSON.parse(result);
   } catch {
@@ -149,5 +182,3 @@ export async function analyzeWritingStyle(content: string) {
     };
   }
 }
-
-
