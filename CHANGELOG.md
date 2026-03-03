@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.11.2] - 2026-03-03
+
+### Fix: API Keys + Health Checks + Speed Insights
+
+- **API Keys bug fix** — Admin API Keys tab was erroring ("Could not load current API key status") because the settings route was querying a `system_settings` table that never existed. Updated all routes and key resolvers (`lib/ai.ts`, `lib/agents/base.ts`, health route) to use the pre-existing `api_keys` table (`service_name`/`key_encrypted` columns)
+- **Tavily & OpenAI health checks** — Added `GET /api/generate/health/tavily` and `GET /api/generate/health/openai` routes; System Health tracker now shows all three API services (Claude, Tavily, OpenAI) with live status and latency
+- **Vercel Speed Insights** — Added `<SpeedInsights />` to root layout for Core Web Vitals tracking across all pages
+- **Build fix** — Added `.npmrc` with `legacy-peer-deps=true` to resolve peer dependency conflict between `@vercel/speed-insights` and Next.js 16 canary
+
+---
+
 ## [1.11.1] - 2026-03-03
 
 ### Feature: Admin API Key Management
