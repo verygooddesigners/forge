@@ -17,7 +17,7 @@ interface AIOptions {
 
 /**
  * Resolve the Claude API key.
- * Priority: DB (system_settings) → CLAUDE_API_KEY env var → ANTHROPIC_API_KEY env var
+ * Priority: in-memory cache → DB (api_keys table) → CLAUDE_API_KEY env var → ANTHROPIC_API_KEY env var
  * DB value is cached for 5 minutes to avoid a round-trip on every request.
  */
 async function resolveClaudeApiKey(): Promise<string> {
@@ -25,21 +25,21 @@ async function resolveClaudeApiKey(): Promise<string> {
   const cached = getCached('claude_api_key');
   if (cached) return cached;
 
-  // 2. Try to load from DB (admin-configured key takes precedence over env var)
+  // 2. Try to load from api_keys table (admin-configured key takes precedence over env var)
   try {
     const supabase = createAdminClient();
     const { data } = await supabase
-      .from('system_settings')
-      .select('value')
-      .eq('key', 'claude_api_key')
+      .from('api_keys')
+      .select('key_encrypted')
+      .eq('service_name', 'claude')
       .single();
 
-    if (data?.value) {
-      setCached('claude_api_key', data.value);
-      return data.value;
+    if (data?.key_encrypted) {
+      setCached('claude_api_key', data.key_encrypted);
+      return data.key_encrypted;
     }
   } catch {
-    // DB unavailable or table doesn't exist yet — fall through to env var
+    // DB unavailable — fall through to env var
   }
 
   // 3. Fall back to environment variable

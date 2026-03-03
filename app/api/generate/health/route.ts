@@ -8,13 +8,13 @@ async function resolveClaudeApiKey(): Promise<string | null> {
   try {
     const supabase = createAdminClient();
     const { data } = await supabase
-      .from('system_settings')
-      .select('value')
-      .eq('key', 'claude_api_key')
+      .from('api_keys')
+      .select('key_encrypted')
+      .eq('service_name', 'claude')
       .single();
-    if (data?.value) {
-      setCached('claude_api_key', data.value);
-      return data.value;
+    if (data?.key_encrypted) {
+      setCached('claude_api_key', data.key_encrypted);
+      return data.key_encrypted;
     }
   } catch { /* fall through */ }
   return process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY || null;

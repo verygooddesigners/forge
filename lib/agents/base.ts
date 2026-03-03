@@ -5,7 +5,7 @@ import * as prompts from './prompts';
 import { getCached, setCached } from '../settings-cache';
 import { createAdminClient } from '../supabase/admin';
 
-/** Resolve the Claude API key — DB first, env var fallback (cached). */
+/** Resolve the Claude API key — api_keys table first, env var fallback (cached). */
 async function resolveClaudeApiKey(): Promise<string> {
   const cached = getCached('claude_api_key');
   if (cached) return cached;
@@ -13,13 +13,13 @@ async function resolveClaudeApiKey(): Promise<string> {
   try {
     const supabase = createAdminClient();
     const { data } = await supabase
-      .from('system_settings')
-      .select('value')
-      .eq('key', 'claude_api_key')
+      .from('api_keys')
+      .select('key_encrypted')
+      .eq('service_name', 'claude')
       .single();
-    if (data?.value) {
-      setCached('claude_api_key', data.value);
-      return data.value;
+    if (data?.key_encrypted) {
+      setCached('claude_api_key', data.key_encrypted);
+      return data.key_encrypted;
     }
   } catch { /* fall through */ }
 
