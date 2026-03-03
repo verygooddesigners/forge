@@ -1,29 +1,365 @@
-import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { findSimilarTrainingContent, buildContextFromExamples, buildContentGenerationPrompt } from '@/lib/rag';
+import { generateContentStream, ContentGenerationRequest } from '@/lib/agents';
+import { getUserPermissions } from '@/lib/auth-config';
+import { replaceTwigs, getDateTwigValues } from '@/lib/twigs';
 
-export async function POST(request: Request) {
+/**
+ * Convert TipTap JSON to plain text
+ */
+function convertTipTapToText(doc: any): string {
+  if (!doc || !doc.content) return '';
+
+  const extractText = (node: any): string => {
+    if (node.type === 'text') {
+      return node.text || '';
+    }
+    
+    if (node.content && Array.isArray(node.content)) {
+      const text = node.content.map(extractText).join('');
+      
+      // Add formatting based on node type
+      if (node.type === 'heading') {
+        const level = node.attrs?.level || 1;
+        const prefix = '#'.repeat(level) + ' ';
+        return prefix + text + '\n\n';
+      }
+      
+      if (node.type === 'paragraph') {
+        return text + '\n\n';
+      }
+      
+      return text;
+    }
+    
+    return '';
+  };
+
+  return doc.content.map(extractText).join('').trim();
+}
+
+export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const body = await request.json();
-    const { prompt, model = 'gpt-4o', projectId } = body;
-
-    if (!prompt) {
-      return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
-    }
-
-    // TODO: Implement actual generation logic
-    return NextResponse.json({
-      content: `Generated content for: ${prompt}`,
-      model,
+    const {
       projectId,
+      headline,
+      primaryKeyword,
+      secondaryKeywords,
+      wordCount,
+      writerModelId,
+      briefContent,
+      researchBrief,
+      selectedStoryIds,
+      selectedKeywords,
+    } = await request.json();
+
+    // Validate required fields
+    if (!headline || !primaryKeyword || !writerModelId) {
+      console.error('[GENERATE] Missing required fields:', { headline: !!headline, primaryKeyword: !!primaryKeyword, writerModelId: !!writerModelId });
+      return new Response(
+        JSON.stringify({ error: 'Missing required fields: headline, primaryKeyword, or writerModelId' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const supabase = await createClient();
+
+    // Verify user is authenticated
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      console.error('[GENERATE] User not authenticated');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+    // Verify project ownership if projectId provided
+    if (projectId) {
+      const { data: project } = await supabase
+        .from('projects')
+        .select('id')
+        .eq('id', projectId)
+        .eq('user_id', user.id)
+        .single();
+      if (!project) {
+        return new Response(
+          JSON.stringify({ error: 'Project not found or access denied' }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // Verify writer model access (ownership or admin+)
+    if (writerModelId) {
+      const { data: model, error: modelError } = await supabase
+        .from('writer_models')
+        .select('id, strategist_id, created_by')
+        .eq('id', writerModelId)
+        .single();
+
+      if (modelError || !model) {
+        return new Response(
+          JSON.stringify({ error: 'Writer model not found or access denied' }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+
+      const { data: profile } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      const userPerms = profile ? await getUserPermissions(user.id) : {};
+      const isAdminOrAbove = userPerms['can_edit_users'] === true;
+      const ownsModel = model.strategist_id === user.id || model.created_by === user.id;
+
+      if (!isAdminOrAbove && !ownsModel) {
+        return new Response(
+          JSON.stringify({ error: 'Writer model not found or access denied' }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // Get AI master instructions (optional - don't fail if missing)
+    let masterInstructions = '';
+    try {
+      const { data: aiSettings, error: settingsError } = await supabase
+        .from('ai_settings')
+        .select('setting_value')
+        .eq('setting_key', 'master_instructions')
+        .single();
+
+      if (settingsError) {
+        console.warn('[GENERATE] ai_settings query failed (non-fatal):', settingsError.message);
+      } else {
+        masterInstructions = aiSettings?.setting_value || '';
+      }
+    } catch (settingsErr) {
+      console.warn('[GENERATE] ai_settings table might not exist (non-fatal):', settingsErr);
+    }
+
+    // Use RAG to find similar training content
+    const queryText = `${headline} ${primaryKeyword} ${secondaryKeywords?.join(' ') || ''}`;
+    let similarContent: any[] = [];
+    let writerContext = '';
+    
+    try {
+      similarContent = await findSimilarTrainingContent(
+        writerModelId,
+        queryText,
+        3 // Get top 3 examples
+      );
+
+      // Build context from examples
+      writerContext = buildContextFromExamples(similarContent);
+      
+      if (similarContent.length === 0) {
+        console.warn('[GENERATE] No training content found for this writer model');
+        writerContext = 'No specific training examples available. Write in a professional, engaging style.';
+      }
+    } catch (ragError: any) {
+      console.error('[GENERATE] Error fetching training content:', ragError.message);
+      writerContext = 'No specific training examples available. Write in a professional, engaging style.';
+    }
+
+    // Convert brief content from TipTap JSON to plain text
+    let briefText = 'Write a well-structured article with clear headings and paragraphs.';
+    if (briefContent) {
+      try {
+        // Parse if it's a string
+        const briefJson = typeof briefContent === 'string' ? JSON.parse(briefContent) : briefContent;
+        
+        // Convert TipTap JSON to plain text
+        if (briefJson && briefJson.content) {
+          briefText = convertTipTapToText(briefJson);
+        } else {
+          briefText = briefContent;
+        }
+      } catch (e: any) {
+        console.warn('[GENERATE] Brief parsing error (using default):', e.message);
+        briefText = 'Write a well-structured article with clear headings and paragraphs.';
+      }
+    }
+
+    // Replace twigs in the brief text with date values and any project data
+    const twigData: Record<string, string> = {
+      ...getDateTwigValues(),
+      'content.target_keyword': primaryKeyword,
+      'content.title': headline,
+    };
+    if (secondaryKeywords && secondaryKeywords.length > 0) {
+      twigData['content.secondary_keyword'] = secondaryKeywords[0];
+    }
+    briefText = replaceTwigs(briefText, twigData);
+
+    // Build the brief with all context
+    let fullBrief = briefText;
+    if (masterInstructions) {
+      fullBrief = `${masterInstructions}\n\n${briefText}`;
+    }
+
+    // Build research context: use project_research selected stories/keywords when projectId is set
+    let researchContext = '';
+    let idsToUse: string[] = Array.isArray(selectedStoryIds) ? selectedStoryIds : [];
+    let keywordsToUse: string[] = Array.isArray(selectedKeywords) ? selectedKeywords : [];
+
+    if (projectId) {
+      const { data: pr } = await supabase
+        .from('project_research')
+        .select('stories, selected_story_ids, selected_keywords')
+        .eq('project_id', projectId)
+        .single();
+      if (pr) {
+        if (idsToUse.length === 0 && Array.isArray(pr.selected_story_ids)) idsToUse = pr.selected_story_ids;
+        if (keywordsToUse.length === 0 && Array.isArray(pr.selected_keywords)) keywordsToUse = pr.selected_keywords;
+        if (pr.stories && Array.isArray(pr.stories) && idsToUse.length > 0) {
+          const selectedStories = (pr.stories as any[]).filter((s) => idsToUse.includes(s.id));
+          if (selectedStories.length > 0) {
+            researchContext += '\n\nREFERENCE STORIES (use for facts and context):\n';
+            selectedStories.forEach((a: any, i: number) => {
+              researchContext += `${i + 1}. "${a.title}" \u2014 ${a.source || a.url || ''}\n`;
+              if (a.synopsis) researchContext += `   Summary: ${a.synopsis}\n`;
+              else if (a.description) researchContext += `   ${(a.description || '').slice(0, 300)}\n`;
+            });
+          }
+        }
+      }
+    }
+
+    if (researchBrief && researchBrief.fact_check_complete) {
+      const facts = researchBrief.verified_facts || [];
+      const articles = researchBrief.articles || [];
+      if (facts.length > 0) {
+        researchContext += '\n\nVERIFIED RESEARCH FACTS:\n';
+        researchContext += facts.map((f: any, i: number) =>
+          `${i + 1}. ${f.fact || f.claim} (Confidence: ${f.confidence || 'high'})`
+        ).join('\n');
+      }
+      if (articles.length > 0 && !researchContext.includes('REFERENCE STORIES')) {
+        researchContext += '\n\nRESEARCH SOURCES:\n';
+        researchContext += articles.slice(0, 5).map((a: any, i: number) =>
+          `${i + 1}. "${a.title}" \u2014 ${a.source} (${a.url})`
+        ).join('\n');
+      }
+      if (researchBrief.disputed_facts && researchBrief.disputed_facts.length > 0) {
+        researchContext += '\n\nDISPUTED/UNCERTAIN FACTS (avoid using these):\n';
+        researchContext += researchBrief.disputed_facts.map((f: any, i: number) =>
+          `${i + 1}. ${f.fact || f.claim} \u2014 ${f.reason || 'unverified'}`
+        ).join('\n');
+      }
+    }
+
+    const allSecondary = [...(secondaryKeywords || []), ...keywordsToUse];
+    const uniqueSecondary = Array.from(new Set(allSecondary));
+
+    // Use Content Generation Agent
+    const agentRequest: ContentGenerationRequest = {
+      brief: fullBrief + researchContext,
+      primaryKeywords: [primaryKeyword],
+      secondaryKeywords: uniqueSecondary,
+      writerModelContext: writerContext,
+      targetWordCount: wordCount || 800,
+      additionalInstructions: `Write an article with the headline: "${headline}"`,
+    };
+
+    // Generate content with streaming using agent
+    let stream: ReadableStream;
+    try {
+      stream = await generateContentStream(agentRequest);
+    } catch (aiError: any) {
+      console.error('[GENERATE] Content Generation Agent error:', aiError.message);
+      return new Response(
+        JSON.stringify({ error: `AI Generation failed: ${aiError.message}` }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Convert Claude's stream to SSE format
+    const encoder = new TextEncoder();
+    const readableStream = new ReadableStream({
+      async start(controller) {
+        const reader = stream.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || ''; // Keep incomplete line in buffer
+
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                const data = line.slice(6).trim();
+                
+                if (data === '[DONE]') {
+                  controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+                  continue;
+                }
+
+                try {
+                  const json = JSON.parse(data);
+                  
+                  // Claude streaming format: content_block.delta.text or delta.text
+                  const content = json.content_block?.delta?.text || 
+                                 json.delta?.text || 
+                                 (json.type === 'content_block_delta' && json.delta?.text) ||
+                                 '';
+                  
+                  if (content) {
+                    controller.enqueue(
+                      encoder.encode(`data: ${JSON.stringify({ content })}\n\n`)
+                    );
+                  }
+
+                  // Handle stop event
+                  if (json.type === 'message_stop') {
+                    controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+                  }
+                } catch (e) {
+                  // Skip invalid JSON
+                }
+              } else if (line.startsWith('event: ')) {
+                // Handle Claude events
+                const event = line.slice(7).trim();
+                if (event === 'message_stop') {
+                  controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Stream error:', error);
+        } finally {
+          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+          controller.close();
+        }
+      },
     });
-  } catch (error) {
-    console.error('Generation error:', error);
-    return NextResponse.json({ error: 'Generation failed' }, { status: 500 });
+
+    return new Response(readableStream, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
+    });
+  } catch (error: any) {
+    console.error('[GENERATE] Fatal error in generate route:', error);
+    console.error('[GENERATE] Error stack:', error.stack);
+    return new Response(
+      JSON.stringify({ 
+        error: 'Internal server error', 
+        details: error.message || 'Unknown error',
+        type: error.constructor.name 
+      }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
   }
 }
