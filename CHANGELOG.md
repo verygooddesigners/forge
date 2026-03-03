@@ -1,41 +1,5 @@
 # Changelog
 
-## [1.11.1] - 2026-03-02
-
-### Fix: TypeScript `never` type errors across all admin client routes
-
-Root cause: `createAdminClient()` in `lib/supabase/admin.ts` doesn't pass a `Database` generic to Supabase's `createClient()`, so every `.from()` call on the admin client infers `never` types — causing TypeScript build failures on any `.insert()`, `.update()`, `.select()`, or `.delete()` chain.
-
-**Fix**: Applied `const getAdmin = () => createAdminClient() as any` pattern at the module level in all affected routes. This casts the admin client to `any` at creation, eliminating all downstream type errors without changing runtime behavior.
-
-**Files fixed (12 total):**
-- `app/api/admin/betas/route.ts`
-- `app/api/admin/vitals/route.ts`
-- `app/api/admin/users/route.ts`
-- `app/api/admin/users/[userId]/route.ts`
-- `app/api/beta-feedback/route.ts`
-- `app/api/beta-notes/route.ts`
-- `app/api/profile/route.ts`
-- `app/api/remote/agent/heartbeat/route.ts`
-- `app/api/remote/agent/commands/complete/route.ts`
-- `app/api/remote/agent/commands/claim/route.ts`
-- `app/api/writer-models/route.ts`
-- `app/api/writer-models/train/route.ts`
-- `app/dashboard/page.tsx`
-
-### Feat: Platform Metrics — Web Vitals monitoring dashboard
-
-New admin dashboard for tracking real user performance metrics (Core Web Vitals).
-
-- **WebVitalsReporter** (`components/WebVitalsReporter.tsx`): Client component using native `PerformanceObserver` API to capture LCP, FCP, CLS, INP, and TTFB. Buffers entries and flushes via `sendBeacon` to minimize performance impact.
-- **PlatformMetrics** (`components/admin/PlatformMetrics.tsx`): 640-line admin dashboard with p75 summary cards, AreaChart time series, per-page path breakdown table, and rating distribution bars.
-- **AdminMenu**: Added Gauge icon and `platform-metrics` section under Platform group.
-- **API endpoints** (`app/api/admin/vitals/route.ts`): POST for ingesting vitals data, GET for querying with time range and metric filters.
-- **Database**: New `web_vitals` table with RLS policies (`supabase/migrations/20260302_web_vitals.sql`).
-- **Layout**: `WebVitalsReporter` mounted in root `app/layout.tsx` for automatic collection on all pages.
-
----
-
 ## [1.11.0] - 2026-03-02
 
 ### Performance: Major speed & bloat reduction (audit-driven)

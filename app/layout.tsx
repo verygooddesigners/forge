@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { DM_Sans, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { ClientInit } from "@/components/ClientInit";
-import { WebVitalsReporter } from "@/components/WebVitalsReporter";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -37,7 +36,6 @@ export default function RootLayout({
       </head>
       <body className={`${dmSans.variable} ${spaceMono.variable} font-sans antialiased`}>
         <ClientInit />
-        <WebVitalsReporter />
         {/* Outer padding creates the floating card effect against the html gradient bg */}
         <div className="min-h-screen w-full p-6 flex items-stretch">
           <div className="app-container w-full max-w-[1920px] mx-auto flex overflow-hidden">
