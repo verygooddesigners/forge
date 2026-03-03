@@ -7,6 +7,8 @@ import {
   Shield,
   HardDrive,
   Cpu,
+  Search,
+  Bot,
   CheckCircle2,
   AlertTriangle,
   XCircle,
@@ -34,7 +36,9 @@ const INITIAL_CHECKS: HealthCheck[] = [
   { id: 'database', name: 'Database', description: 'Supabase PostgreSQL connection', status: 'checking' },
   { id: 'auth', name: 'Authentication', description: 'Supabase Auth service', status: 'checking' },
   { id: 'storage', name: 'Storage', description: 'Supabase Storage buckets', status: 'checking' },
-  { id: 'ai', name: 'AI API', description: 'Claude (Anthropic) API connectivity', status: 'checking' },
+  { id: 'ai', name: 'Claude API', description: 'Anthropic Claude API connectivity', status: 'checking' },
+  { id: 'tavily', name: 'Tavily API', description: 'News search API connectivity', status: 'checking' },
+  { id: 'openai', name: 'OpenAI API', description: 'Embeddings and vision API connectivity', status: 'checking' },
 ];
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -42,6 +46,8 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   auth: Shield,
   storage: HardDrive,
   ai: Cpu,
+  tavily: Search,
+  openai: Bot,
 };
 
 export function SystemHealth() {
@@ -129,6 +135,46 @@ export function SystemHealth() {
       }
     } catch (e: any) {
       updateCheck('ai', { status: 'error', message: 'AI endpoint unreachable', detail: e.message });
+    }
+
+    // Tavily API
+    const tavilyStart = Date.now();
+    try {
+      const res = await fetch('/api/generate/health/tavily', { method: 'GET' });
+      const json = await res.json().catch(() => ({}));
+      const latency = Date.now() - tavilyStart;
+      if (res.ok) {
+        updateCheck('tavily', { status: 'healthy', latency: json.latency ?? latency });
+      } else {
+        updateCheck('tavily', {
+          status: res.status === 429 ? 'degraded' : 'error',
+          latency,
+          message: json.message || 'Tavily endpoint returned an error',
+          detail: `HTTP ${res.status}`,
+        });
+      }
+    } catch (e: any) {
+      updateCheck('tavily', { status: 'error', message: 'Tavily endpoint unreachable', detail: e.message });
+    }
+
+    // OpenAI API
+    const openaiStart = Date.now();
+    try {
+      const res = await fetch('/api/generate/health/openai', { method: 'GET' });
+      const json = await res.json().catch(() => ({}));
+      const latency = Date.now() - openaiStart;
+      if (res.ok) {
+        updateCheck('openai', { status: 'healthy', latency: json.latency ?? latency });
+      } else {
+        updateCheck('openai', {
+          status: res.status === 429 ? 'degraded' : 'error',
+          latency,
+          message: json.message || 'OpenAI endpoint returned an error',
+          detail: `HTTP ${res.status}`,
+        });
+      }
+    } catch (e: any) {
+      updateCheck('openai', { status: 'error', message: 'OpenAI endpoint unreachable', detail: e.message });
     }
 
     setLastChecked(new Date());
