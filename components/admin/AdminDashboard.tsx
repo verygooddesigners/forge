@@ -1,24 +1,61 @@
 'use client';
 
-import { useState } from 'react';
-import AdminMenu from './AdminMenu';
-import { AdminUserManagement } from './AdminUserManagement';
+import { User } from '@/types';
+import { UserManagement } from './UserManagement';
+import { TeamManagement } from './TeamManagement';
+import { APIKeyManagement } from './APIKeyManagement';
+import { AITuner } from './AITuner';
+import { AgentTuner } from './AgentTuner';
+import { AIHelperAdmin } from './AIHelperAdmin';
+import { SSOConfigStatus } from './SSOConfigStatus';
+import { TrustedSourcesAdmin } from './TrustedSourcesAdmin';
+import { ToolsAdmin } from './ToolsAdmin';
+import { RolesEditor } from './RolesEditor';
+import { OddsApiManagement } from './OddsApiManagement';
+import { AuditLog } from './AuditLog';
+import { SystemHealth } from './SystemHealth';
+import { WriterModelsAdmin } from './WriterModelsAdmin';
 import { BetaManagement } from './BetaManagement';
-import { AgentMonitor } from './AgentMonitor';
+import type { AdminSectionId } from './AdminMenu';
 
-type AdminView = 'users' | 'betas' | 'agents';
+interface AdminDashboardProps {
+  user: User;
+  activeSection: AdminSectionId;
+}
 
-export function AdminDashboard() {
-  const [currentView, setCurrentView] = useState<AdminView>('users');
-
-  return (
-    <div className="flex h-screen bg-gray-950 text-white">
-      <AdminMenu currentView={currentView} onViewChange={setCurrentView} />
-      <main className="flex-1 overflow-auto p-8">
-        {currentView === 'users' && <AdminUserManagement />}
-        {currentView === 'betas' && <BetaManagement />}
-        {currentView === 'agents' && <AgentMonitor />}
-      </main>
-    </div>
-  );
+export function AdminDashboard({ user, activeSection }: AdminDashboardProps) {
+  switch (activeSection) {
+    case 'beta':
+      return <BetaManagement adminUser={user} />;
+    case 'users':
+      return <UserManagement adminUser={user} />;
+    case 'teams':
+      return <TeamManagement adminUser={user} />;
+    case 'api-keys':
+      return <APIKeyManagement adminUser={user} />;
+    case 'sso':
+      return <SSOConfigStatus />;
+    case 'ai-tuner':
+      return <AITuner adminUser={user} />;
+    case 'ai-helper':
+      return <AIHelperAdmin adminUser={user} />;
+    case 'ai-agents':
+      return <AgentTuner adminUser={user} />;
+    case 'writer-models':
+      return <WriterModelsAdmin adminUser={user} />;
+    case 'trusted-sources':
+      return <TrustedSourcesAdmin />;
+    case 'tools':
+      return <ToolsAdmin />;
+    case 'roles-editor':
+      return <RolesEditor adminUser={user} />;
+    case 'odds-api':
+      return <OddsApiManagement />;
+    case 'audit-log':
+      return <AuditLog />;
+    case 'system-health':
+      return <SystemHealth />;
+    default:
+      return <UserManagement adminUser={user} />;
+  }
 }
