@@ -74,11 +74,22 @@ export function ProjectCreationModal({
   }, [open]);
 
   const loadData = async () => {
-    // User can see: personal model (strategist_id = userId) + all house models (is_house_model = true)
+    // Fetch the admin-assigned model ID first so we can include it in the query
+    const { data: userRow } = await supabase
+      .from('users')
+      .select('default_writer_model_id')
+      .eq('id', userId)
+      .single();
+    const defaultId = userRow?.default_writer_model_id as string | null;
+
+    // User can see: their personal model + all house models + admin-assigned model
+    let orFilter = `strategist_id.eq.${userId},is_house_model.eq.true`;
+    if (defaultId) orFilter += `,id.eq.${defaultId}`;
+
     const { data: rawModels } = await supabase
       .from('writer_models')
       .select('*')
-      .or(`strategist_id.eq.${userId},is_house_model.eq.true`)
+      .or(orFilter)
       .order('name');
     const models = (rawModels ?? []) as WriterModel[];
 
@@ -90,17 +101,11 @@ export function ProjectCreationModal({
 
     if (models.length) {
       setWriterModels(models);
-      const { data: userRow } = await supabase
-        .from('users')
-        .select('default_writer_model_id')
-        .eq('id', userId)
-        .single();
-      const defaultId = userRow?.default_writer_model_id;
-      const personalModel = models.find((m) => m.strategist_id === userId);
       if (defaultId && models.some((m) => m.id === defaultId)) {
         setSelectedModelId(defaultId);
-      } else if (personalModel) {
-        setSelectedModelId(personalModel.id);
+      } else {
+        const personalModel = models.find((m) => m.strategist_id === userId);
+        if (personalModel) setSelectedModelId(personalModel.id);
       }
     }
     if (briefsData) setBriefs(briefsData);
@@ -108,6 +113,8 @@ export function ProjectCreationModal({
 
   const personalModels = writerModels.filter((m) => m.strategist_id === userId);
   const houseModels = writerModels.filter((m) => m.is_house_model);
+  // Models assigned by an admin that aren't the user's own and aren't house models
+  const assignedModels = writerModels.filter((m) => !m.is_house_model && m.strategist_id !== userId);
 
   const resetForm = () => {
     setStep(1);
@@ -362,6 +369,21 @@ export function ProjectCreationModal({
                     <SelectValue placeholder="Select a writer model" />
                   </SelectTrigger>
                   <SelectContent>
+                    {assignedModels.length > 0 && (
+                      <SelectGroup>
+                        <SelectLabel>Your Model</SelectLabel>
+                        {assignedModels.map((model) => (
+                          <SelectItem key={model.id} value={model.id}>
+                            <div className="flex items-center gap-2">
+                              <span>{model.name}</span>
+                              <span className="text-xs text-muted-foreground">
+                                ({getTrainingPercentage(model)}% trained)
+                              </span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    )}
                     {personalModels.length > 0 && (
                       <SelectGroup>
                         <SelectLabel>Your Model</SelectLabel>

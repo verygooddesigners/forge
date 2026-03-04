@@ -122,11 +122,23 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
 
   const loadData = async () => {
     setDataLoading(true);
-    // User can see: their personal model (strategist_id = userId) + all house models (is_house_model = true)
+
+    // Fetch the admin-assigned model ID first so we can include it in the query
+    const { data: userRow } = await supabase
+      .from('users')
+      .select('default_writer_model_id')
+      .eq('id', userId)
+      .single();
+    const defaultId = userRow?.default_writer_model_id as string | null;
+
+    // User can see: their personal model + all house models + admin-assigned model
+    let orFilter = `strategist_id.eq.${userId},is_house_model.eq.true`;
+    if (defaultId) orFilter += `,id.eq.${defaultId}`;
+
     const { data: rawModels } = await supabase
       .from('writer_models')
       .select('*')
-      .or(`strategist_id.eq.${userId},is_house_model.eq.true`)
+      .or(orFilter)
       .order('name');
     const models = (rawModels ?? []) as WriterModel[];
 
@@ -138,12 +150,11 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
 
     if (models.length) {
       setWriterModels(models);
-      const defaultId = (user as User & { default_writer_model_id?: string }).default_writer_model_id;
-      const personalModel = models.find((m) => m.strategist_id === userId);
       if (defaultId && models.some((m) => m.id === defaultId)) {
         setSelectedModelId(defaultId);
-      } else if (personalModel) {
-        setSelectedModelId(personalModel.id);
+      } else {
+        const personalModel = models.find((m) => m.strategist_id === userId);
+        if (personalModel) setSelectedModelId(personalModel.id);
       }
     }
     if (briefsData) setBriefs(briefsData);
@@ -155,6 +166,8 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
   const selectedBrief = selectedBriefId ? briefs.find((b) => b.id === selectedBriefId) : null;
   const personalModels = writerModels.filter((m) => m.strategist_id === userId);
   const houseModels = writerModels.filter((m) => m.is_house_model);
+  // Models assigned by an admin that aren't the user's own and aren't house models
+  const assignedModels = writerModels.filter((m) => !m.is_house_model && m.strategist_id !== userId);
 
   const addSecondaryKeyword = () => {
     const raw = secondaryKeywordInput.trim();
@@ -426,6 +439,16 @@ export function NewProjectPageClient({ user }: NewProjectPageClientProps) {
                   <SelectValue placeholder="Select a writer model" />
                 </SelectTrigger>
                 <SelectContent>
+                  {assignedModels.length > 0 && (
+                    <SelectGroup>
+                      <SelectLabel>Your Model</SelectLabel>
+                      {assignedModels.map((model) => (
+                        <SelectItem key={model.id} value={model.id}>
+                          {model.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  )}
                   {personalModels.length > 0 && (
                     <SelectGroup>
                       <SelectLabel>Your Model</SelectLabel>

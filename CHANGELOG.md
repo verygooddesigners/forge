@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.11.3] - 2026-03-04
+
+### Fix: Writer Model not visible in project creation for admin-assigned users
+
+Users who had a writer model assigned by an admin (via `default_writer_model_id`) could not see or select that model in the project creation flow — only house models were shown.
+
+- **Root cause** — Both `NewProjectPageClient.tsx` and `ProjectCreationModal.tsx` used `.or('strategist_id.eq.${userId},is_house_model.eq.true')`, which excluded admin-assigned models entirely
+- **Fix** — Both files now first fetch `default_writer_model_id` from the `users` table, then append `id.eq.${defaultId}` to the Supabase OR filter so the assigned model is included in the query
+- **Dropdown** — Added an "assignedModels" group (models not owned by the user and not house models) rendered as "Your Model" at the top of the dropdown; the assigned model is also auto-selected on load
+- **Affected files**: `app/projects/new/NewProjectPageClient.tsx`, `components/modals/ProjectCreationModal.tsx`
+
+---
+
 ## [1.11.2] - 2026-03-03
 
 ### Fix: API Keys + Health Checks + Speed Insights
