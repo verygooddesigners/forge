@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.11.9] - 2026-03-04
+
+### Fix: Sidebar wordmark — center-aligned, larger font to fill column width
+
+- Centered both "FORGE" and "BETA v{VERSION}" lines using `items-center` on the container
+- Increased font size from 42px → 64px so FORGE nearly spans the 220px content area
+- Reduced horizontal padding from `px-5` → `px-4` to give a touch more room
+
+---
+
 ## [1.11.8] - 2026-03-04
 
 ### Redesign: Sidebar wordmark replaces logo image
