@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.7] - 2026-03-04
+
+### Fix: Sidebar logo — remove "Forge" wordmark, fill 50% width
+
+Removed the "Forge" text next to the logo in the sidebar (it's already in the logo image itself). Logo image now fills ~50% of the sidebar column width (`w-[50%] h-auto`).
+
+---
+
 ## [1.11.6] - 2026-03-04
 
 ### Improvement: Bug tracker deep-links + toolbar fix

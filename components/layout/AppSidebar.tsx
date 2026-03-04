@@ -105,18 +105,17 @@ export function AppSidebar({
 
   return (
     <aside className="app-sidebar w-[260px] flex-shrink-0 flex flex-col h-full">
-      {/* Logo — keep existing image, add wordmark */}
-      <div className="px-4 py-4 flex items-center gap-3 border-b border-white/40">
-        <button onClick={() => router.push('/dashboard')} className="focus:outline-none flex items-center gap-3">
+      {/* Logo */}
+      <div className="px-4 py-4 border-b border-white/40">
+        <button onClick={() => router.push('/dashboard')} className="focus:outline-none block">
           <Image
             src="/images/forge-icon.png"
             alt="Forge"
-            width={36}
-            height={36}
-            className="rounded-[10px] flex-shrink-0"
+            width={130}
+            height={130}
+            className="rounded-[10px] w-[50%] h-auto"
             priority
           />
-          <span className="text-[17px] font-bold text-text-primary tracking-tight">Forge</span>
         </button>
       </div>
 
