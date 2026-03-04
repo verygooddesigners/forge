@@ -25,6 +25,20 @@ export async function GET(req: NextRequest) {
 
     if (error) throw error;
 
+    // Auto-end betas whose scheduled_end_at has passed
+    const now = new Date().toISOString();
+    const toAutoEnd = (betas ?? []).filter(
+      (b: any) => b.status === 'active' && b.scheduled_end_at && b.scheduled_end_at <= now,
+    );
+    for (const b of toAutoEnd) {
+      await admin.from('betas').update({
+        status: 'ended',
+        ended_at: now,
+      }).eq('id', b.id);
+      b.status = 'ended';
+      b.ended_at = now;
+    }
+
     const { data: betaUsers } = await admin
       .from('beta_users')
       .select('*')
@@ -73,7 +87,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    const { name, notes } = await req.json();
+    const { name, notes, scheduled_start_at, scheduled_end_at } = await req.json();
     if (!name?.trim()) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
@@ -85,6 +99,8 @@ export async function POST(req: NextRequest) {
         name: name.trim(),
         notes: notes?.trim() ?? '',
         created_by: user.email,
+        scheduled_start_at: scheduled_start_at ?? null,
+        scheduled_end_at: scheduled_end_at ?? null,
       })
       .select()
       .single();

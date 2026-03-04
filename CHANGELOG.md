@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.11.13] - 2026-03-04
+
+### Feature: Beta Scheduling + Create Panel redesign
+
+- **New DB migration** (`20260304_beta_scheduling.sql`): Added `scheduled_start_at` and `scheduled_end_at` TIMESTAMPTZ columns to the `betas` table
+- **Create New Beta**: Converted from a Dialog modal to a right-side split panel (matches Bug Tracker and other master-detail screens)
+- **Scheduling fields**: New "Planned Start Date" (informational) and "Planned End Date" (auto-completes) datetime-local inputs on the create form
+- **Scheduled date display**: Draft and active beta cards in the list now show scheduled start/end dates inline
+- **Auto-end logic**: On every GET to `/api/admin/betas`, any active beta whose `scheduled_end_at` has passed is automatically marked as `ended` (status + `ended_at` timestamp set server-side)
+- **API update**: POST `/api/admin/betas` now accepts and stores `scheduled_start_at` and `scheduled_end_at`
+
+---
+
 ## [1.11.12] - 2026-03-04
 
 ### Feature: AI Helper Bot — full platform knowledge base

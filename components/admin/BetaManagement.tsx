@@ -21,10 +21,13 @@ import {
   Link2,
   Copy,
   Check,
+  Calendar,
+  CalendarClock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
@@ -65,6 +68,8 @@ interface Beta {
   created_at: string;
   started_at: string | null;
   ended_at: string | null;
+  scheduled_start_at: string | null;
+  scheduled_end_at: string | null;
   users: BetaUser[];
 }
 
@@ -79,13 +84,23 @@ function fmt(date: string | null) {
   return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+function fmtScheduled(date: string | null) {
+  if (!date) return null;
+  return new Date(date).toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric',
+    hour: 'numeric', minute: '2-digit',
+  });
+}
+
 export function BetaManagement({ adminUser }: { adminUser: User }) {
   const [betas, setBetas] = useState<Beta[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [createOpen, setCreateOpen] = useState(false);
+  const [createPanelOpen, setCreatePanelOpen] = useState(false);
   const [newName, setNewName] = useState('');
   const [newNotes, setNewNotes] = useState('');
+  const [newStartDate, setNewStartDate] = useState('');
+  const [newEndDate, setNewEndDate] = useState('');
   const [creating, setCreating] = useState(false);
 
   // Per-beta UI state
@@ -151,27 +166,47 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
   // ── Create ───────────────────────────────────────────────────────────────
   const handleCreate = async () => {
     if (!newName.trim()) return;
+    // Validate: end date must be after start date if both are provided
+    if (newStartDate && newEndDate && newEndDate <= newStartDate) {
+      toast.error('End date must be after start date');
+      return;
+    }
     setCreating(true);
     try {
       const res = await fetch('/api/admin/betas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newName.trim(), notes: newNotes.trim() }),
+        body: JSON.stringify({
+          name: newName.trim(),
+          notes: newNotes.trim(),
+          scheduled_start_at: newStartDate ? new Date(newStartDate).toISOString() : null,
+          scheduled_end_at: newEndDate ? new Date(newEndDate).toISOString() : null,
+        }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error);
       setBetas(prev => [json.data, ...prev]);
       setExpandedId(json.data.id);
       setNotesEditMap(m => ({ ...m, [json.data.id]: newNotes.trim() }));
-      setCreateOpen(false);
+      setCreatePanelOpen(false);
       setNewName('');
       setNewNotes('');
+      setNewStartDate('');
+      setNewEndDate('');
       toast.success(`Beta "${json.data.name}" created`);
     } catch (e: any) {
       toast.error(e.message);
     } finally {
       setCreating(false);
     }
+  };
+
+  const handleCloseCreatePanel = () => {
+    setCreatePanelOpen(false);
+    setNewName('');
+    setNewNotes('');
+    setNewStartDate('');
+    setNewEndDate('');
   };
 
   // ── Add User ─────────────────────────────────────────────────────────────
@@ -563,7 +598,27 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
               </span>
             )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {/* Scheduled dates (draft betas) */}
+            {beta.status === 'draft' && beta.scheduled_start_at && (
+              <span className="flex items-center gap-1 text-[11px] text-text-tertiary">
+                <CalendarClock className="w-3 h-3" />
+                Starts {fmtScheduled(beta.scheduled_start_at)}
+              </span>
+            )}
+            {beta.status === 'draft' && beta.scheduled_end_at && (
+              <span className="flex items-center gap-1 text-[11px] text-text-tertiary">
+                <Calendar className="w-3 h-3" />
+                Ends {fmtScheduled(beta.scheduled_end_at)}
+              </span>
+            )}
+            {/* Active / ended dates */}
+            {beta.status === 'active' && beta.scheduled_end_at && (
+              <span className="flex items-center gap-1 text-[11px] text-yellow-400/80">
+                <Calendar className="w-3 h-3" />
+                Ends {fmtScheduled(beta.scheduled_end_at)}
+              </span>
+            )}
             <span className="text-[12px] text-text-tertiary">
               {beta.status === 'active' && beta.started_at ? `Started ${fmt(beta.started_at)}` : ''}
               {beta.status === 'ended' && beta.ended_at ? `Ended ${fmt(beta.ended_at)}` : ''}
@@ -721,61 +776,89 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-6 max-w-4xl mx-auto w-full">
-      {/* Page header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-[22px] font-bold text-text-primary">Beta Management</h1>
-          <p className="text-[13px] text-text-tertiary mt-0.5">
-            Create and manage beta programs, invite users, and communicate updates.
-          </p>
-        </div>
-        <Button className="gap-2" onClick={() => setCreateOpen(true)}>
-          <Plus className="w-4 h-4" />
-          New Beta
-        </Button>
-      </div>
+    <div className="flex h-full min-h-0 overflow-hidden">
 
-      {/* Beta list */}
-      {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <Loader2 className="w-5 h-5 animate-spin text-text-tertiary" />
-        </div>
-      ) : betas.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 gap-3 text-center border border-dashed border-border-subtle rounded-xl">
-          <Send className="w-8 h-8 text-text-tertiary" />
-          <p className="text-[14px] font-medium text-text-primary">No betas yet</p>
-          <p className="text-[13px] text-text-tertiary">Create your first beta to get started.</p>
-          <Button size="sm" className="gap-2 mt-1" onClick={() => setCreateOpen(true)}>
-            <Plus className="w-4 h-4" /> New Beta
+      {/* ── LEFT: Beta list ─────────────────────────────────────────────── */}
+      <div className={`flex flex-col gap-6 p-6 overflow-y-auto transition-all duration-200 ${
+        createPanelOpen ? 'w-[55%] border-r border-border-subtle' : 'flex-1 max-w-4xl mx-auto'
+      }`}>
+        {/* Page header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-[22px] font-bold text-text-primary">Beta Management</h1>
+            <p className="text-[13px] text-text-tertiary mt-0.5">
+              Create and manage beta programs, invite users, and communicate updates.
+            </p>
+          </div>
+          <Button
+            className="gap-2"
+            onClick={() => setCreatePanelOpen(true)}
+            variant={createPanelOpen ? 'outline' : 'default'}
+          >
+            <Plus className="w-4 h-4" />
+            New Beta
           </Button>
         </div>
-      ) : (
-        <div className="space-y-3">
-          {betas.map(renderBeta)}
-        </div>
-      )}
 
-      {/* Create Beta dialog */}
-      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Create New Beta</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-2">
+        {/* Beta list */}
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="w-5 h-5 animate-spin text-text-tertiary" />
+          </div>
+        ) : betas.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 gap-3 text-center border border-dashed border-border-subtle rounded-xl">
+            <Send className="w-8 h-8 text-text-tertiary" />
+            <p className="text-[14px] font-medium text-text-primary">No betas yet</p>
+            <p className="text-[13px] text-text-tertiary">Create your first beta to get started.</p>
+            <Button size="sm" className="gap-2 mt-1" onClick={() => setCreatePanelOpen(true)}>
+              <Plus className="w-4 h-4" /> New Beta
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {betas.map(renderBeta)}
+          </div>
+        )}
+      </div>
+
+      {/* ── RIGHT: Create Beta panel ─────────────────────────────────────── */}
+      {createPanelOpen && (
+        <div className="w-[45%] flex flex-col min-h-0 overflow-hidden bg-bg-surface border-l border-border-subtle">
+          {/* Panel header */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle shrink-0">
+            <div>
+              <h2 className="text-[16px] font-semibold text-text-primary">Create New Beta</h2>
+              <p className="text-[12px] text-text-tertiary mt-0.5">Set up a new beta program</p>
+            </div>
+            <button
+              onClick={handleCloseCreatePanel}
+              className="text-text-tertiary hover:text-text-primary transition-colors rounded-lg p-1.5 hover:bg-bg-hover"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Panel body */}
+          <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+
+            {/* Name */}
             <div className="space-y-1.5">
-              <label className="text-[13px] font-medium text-text-secondary">Beta Name</label>
+              <label className="text-[13px] font-medium text-text-secondary">
+                Beta Name <span className="text-red-400">*</span>
+              </label>
               <Input
-                placeholder="e.g. Beta 1"
+                placeholder="e.g. Beta v1.12"
                 value={newName}
                 onChange={e => setNewName(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && !creating && handleCreate()}
                 autoFocus
               />
             </div>
+
+            {/* Description / Release Notes */}
             <div className="space-y-1.5">
               <label className="text-[13px] font-medium text-text-secondary">
-                Beta Notes <span className="text-text-tertiary font-normal">(optional)</span>
+                Description / Release Notes{' '}
+                <span className="text-text-tertiary font-normal">(optional)</span>
               </label>
               <BetaNotesEditor
                 value={newNotes}
@@ -786,16 +869,68 @@ export function BetaManagement({ adminUser }: { adminUser: User }) {
                 Beta users will see these notes in a modal on their first login.
               </p>
             </div>
+
+            {/* Schedule section */}
+            <div className="space-y-3 pt-1">
+              <div className="flex items-center gap-2">
+                <CalendarClock className="w-4 h-4 text-text-tertiary" />
+                <span className="text-[13px] font-semibold text-text-primary">Schedule</span>
+                <span className="text-[11px] text-text-tertiary">(optional)</span>
+              </div>
+              <p className="text-[12px] text-text-tertiary leading-relaxed">
+                Set dates to plan your beta in advance. The start date is informational — you still activate manually. The end date will automatically mark the beta as Completed when reached.
+              </p>
+
+              <div className="grid grid-cols-1 gap-4">
+                {/* Start date */}
+                <div className="space-y-1.5">
+                  <label className="text-[12px] font-medium text-text-secondary flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-text-tertiary" />
+                    Planned Start Date
+                  </label>
+                  <Input
+                    type="datetime-local"
+                    value={newStartDate}
+                    onChange={e => setNewStartDate(e.target.value)}
+                    className="text-[13px]"
+                  />
+                </div>
+
+                {/* End date */}
+                <div className="space-y-1.5">
+                  <label className="text-[12px] font-medium text-text-secondary flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-text-tertiary" />
+                    Planned End Date
+                    <span className="text-[11px] text-yellow-400/80 font-normal">— auto-completes</span>
+                  </label>
+                  <Input
+                    type="datetime-local"
+                    value={newEndDate}
+                    onChange={e => setNewEndDate(e.target.value)}
+                    min={newStartDate || undefined}
+                    className="text-[13px]"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setCreateOpen(false)}>Cancel</Button>
-            <Button onClick={handleCreate} disabled={creating || !newName.trim()} className="gap-2">
+
+          {/* Panel footer */}
+          <div className="shrink-0 px-6 py-4 border-t border-border-subtle flex items-center justify-end gap-2 bg-bg-surface">
+            <Button variant="ghost" onClick={handleCloseCreatePanel} disabled={creating}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCreate}
+              disabled={creating || !newName.trim()}
+              className="gap-2"
+            >
               {creating && <Loader2 className="w-4 h-4 animate-spin" />}
               Create Beta
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        </div>
+      )}
 
       {/* Login Link dialog */}
       <Dialog open={!!loginLink} onOpenChange={open => !open && setLoginLink(null)}>
