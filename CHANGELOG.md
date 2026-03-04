@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.11.12] - 2026-03-04
+
+### Feature: AI Helper Bot — full platform knowledge base
+
+- Created `docs/forge-ai-helper-context.md`: a curated knowledge document covering Forge's features, workflow, 8-agent AI system, user roles, Admin Panel, Bug Tracker, Beta Toolbar, and common Q&A
+- Updated `app/api/assistant/chat/route.ts` to load and inject this doc into every system prompt at request time (server-side `fs.readFileSync`)
+- Context loads as a static "Forge Platform Knowledge" section before the dynamic Q/A RAG results — the bot now has full platform knowledge even without any database entries
+- Load is non-fatal: if the file is missing, the bot continues without it
+
+---
+
 ## [1.11.11] - 2026-03-04
 
 ### Fix: Beta Toolbar — Bug Report opens modal, tracker icon uses custom SVG

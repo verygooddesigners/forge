@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { generateContent } from '@/lib/ai';
+import fs from 'fs';
+import path from 'path';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -60,11 +62,22 @@ export async function POST(request: NextRequest) {
       .textSearch('question', message, { type: 'websearch', config: 'english' })
       .limit(5);
 
+    // Load static platform knowledge from docs
+    let platformDocs = '';
+    try {
+      const docsPath = path.join(process.cwd(), 'docs', 'forge-ai-helper-context.md');
+      if (fs.existsSync(docsPath)) {
+        platformDocs = '\n\n---\n\n## Forge Platform Knowledge\n\n' + fs.readFileSync(docsPath, 'utf-8');
+      }
+    } catch {
+      // Non-fatal — continue without docs context
+    }
+
     // Build Q/A context
     let qaContext = '';
     if (qaEntries && qaEntries.length > 0) {
-      qaContext = '\n\nRelevant Q/A from knowledge base:\n\n' + 
-        qaEntries.map((entry, idx) => 
+      qaContext = '\n\n---\n\nRelevant Q/A from knowledge base:\n\n' +
+        qaEntries.map((entry, idx) =>
           `${idx + 1}. Q: ${entry.question}\n   A: ${entry.answer}`
         ).join('\n\n');
     }
@@ -99,7 +112,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Build the full prompt
-    const fullSystemPrompt = systemPrompt + qaContext + webContext;
+    const fullSystemPrompt = systemPrompt + platformDocs + qaContext + webContext;
 
     // Build message array for AI
     const messages = [
