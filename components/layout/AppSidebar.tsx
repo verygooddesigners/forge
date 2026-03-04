@@ -20,6 +20,7 @@ import {
   Bug,
 } from 'lucide-react';
 import Image from 'next/image';
+import { version as VERSION } from '@/package.json';
 import { createClient } from '@/lib/supabase/client';
 import { usePermissions } from '@/hooks/use-permissions';
 
@@ -105,17 +106,18 @@ export function AppSidebar({
 
   return (
     <aside className="app-sidebar w-[260px] flex-shrink-0 flex flex-col h-full">
-      {/* Logo */}
-      <div className="px-4 py-4 border-b border-white/40">
-        <button onClick={() => router.push('/dashboard')} className="focus:outline-none block">
-          <Image
-            src="/images/forge-icon.png"
-            alt="Forge"
-            width={130}
-            height={130}
-            className="rounded-[10px] w-[50%] h-auto"
-            priority
-          />
+      {/* Wordmark */}
+      <div className="px-5 pt-5 pb-4 border-b border-white/40">
+        <button onClick={() => router.push('/dashboard')} className="focus:outline-none block text-left">
+          <div
+            className="text-[42px] font-black leading-none text-accent-primary uppercase"
+            style={{ letterSpacing: '-0.07em' }}
+          >
+            FORGE
+          </div>
+          <div className="text-[10px] font-semibold tracking-[0.18em] text-text-tertiary uppercase mt-1">
+            BETA v{VERSION}
+          </div>
         </button>
       </div>
 

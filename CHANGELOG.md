@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.11.8] - 2026-03-04
+
+### Redesign: Sidebar wordmark replaces logo image
+
+Removed the `forge-icon.png` image from the sidebar header and replaced it with a styled text wordmark:
+
+- **"FORGE"** — `text-accent-primary`, `font-black`, `text-[42px]`, letter-spacing `-0.07em` (≈ -7%, close to the -10% Figma spec)
+- **"BETA v{VERSION}"** — below in `text-[10px]`, `tracking-[0.18em]`, `text-text-tertiary`; version is pulled live from `package.json` so it always matches the Beta Toolbar
+
+---
+
 ## [1.11.7] - 2026-03-04
 
 ### Fix: Sidebar logo — remove "Forge" wordmark, fill 50% width
