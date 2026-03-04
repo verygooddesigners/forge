@@ -20,16 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+
 import {
   Bug,
   Search,
@@ -730,30 +721,32 @@ export function BugTrackerPanel({ user }: { user: User }) {
       </Dialog>
 
       {/* ── Delete Confirmation ─────────────────────────────────────────────── */}
-      <AlertDialog open={!!deleteTarget} onOpenChange={open => { if (!open) setDeleteTarget(null); }}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-red-500" />
+      <Dialog open={!!deleteTarget} onOpenChange={open => { if (!open) setDeleteTarget(null); }}>
+        <DialogContent className="max-w-md bg-bg-surface border-border-default">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-text-primary">
+              <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
               Delete Bug Report?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete &quot;{deleteTarget?.title}&quot; along with all its comments. This cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-text-secondary">
+            This will permanently delete &quot;{deleteTarget?.title}&quot; along with all its comments. This cannot be undone.
+          </p>
+          <div className="flex justify-end gap-2 mt-2">
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>
+              Cancel
+            </Button>
+            <Button
               onClick={handleDelete}
               disabled={deleting}
               className="bg-red-500 hover:bg-red-600 text-white"
             >
               {deleting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
               Delete Forever
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
