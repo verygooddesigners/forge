@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Sparkles, Bug, X, Send, ChevronDown, ChevronUp, ScrollText, Paperclip, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { createClient } from '@/lib/supabase/client';
@@ -705,6 +706,7 @@ interface BetaToolbarProps {
 }
 
 export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
+  const router = useRouter();
   const [modal, setModal] = useState<'bug' | 'feature' | 'reports' | 'notes' | null>(null);
   const [collapsed, setCollapsed] = useState(() => {
     try { return localStorage.getItem(TOOLBAR_COLLAPSED_KEY) === 'true'; } catch { return false; }
@@ -828,7 +830,7 @@ export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
 
           {/* Bug Report */}
           <button
-            onClick={() => setModal('bug')}
+            onClick={() => router.push('/bugs')}
             style={{ ...pill, background: 'rgba(139, 92, 246, 0.12)', color: 'var(--beta-pill-color)' }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.2)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.12)'; }}

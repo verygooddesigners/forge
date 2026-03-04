@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -25,7 +24,7 @@ import {
   Bug,
   Search,
   Plus,
-  ChevronDown,
+  ChevronLeft,
   Archive,
   ArchiveRestore,
   Trash2,
@@ -36,6 +35,9 @@ import {
   User as UserIcon,
   Loader2,
   AlertTriangle,
+  Pencil,
+  Check,
+  X,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { ReportBugModal } from '@/components/modals/ReportBugModal';
@@ -91,6 +93,13 @@ const STATUS_OPTIONS = [
   { value: 'wont_fix',     label: "Won't Fix" },
 ];
 
+const SEVERITY_OPTIONS = [
+  { value: 'critical', label: 'Critical' },
+  { value: 'high',     label: 'High' },
+  { value: 'medium',   label: 'Medium' },
+  { value: 'low',      label: 'Low' },
+];
+
 const SEVERITY_ORDER = ['critical', 'high', 'medium', 'low'];
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
@@ -134,7 +143,7 @@ export function BugTrackerPanel({ user }: { user: User }) {
   const [selectedBug, setSelectedBug] = useState<BugReport | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<BugReport | null>(null);
 
-  // Detail dialog state
+  // Detail panel state
   const [comments, setComments] = useState<BugComment[]>([]);
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [newComment, setNewComment] = useState('');
@@ -144,6 +153,13 @@ export function BugTrackerPanel({ user }: { user: User }) {
   const [savingStatus, setSavingStatus] = useState(false);
   const [archiving, setArchiving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  // Edit mode state
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+  const [editSeverity, setEditSeverity] = useState('');
+  const [savingEdit, setSavingEdit] = useState(false);
 
   // ── Load bugs ────────────────────────────────────────────────────────────
 
@@ -169,6 +185,7 @@ export function BugTrackerPanel({ user }: { user: User }) {
   useEffect(() => {
     if (!selectedBug) return;
     setNotesValue(selectedBug.admin_notes ?? '');
+    setIsEditing(false);
     setCommentsLoading(true);
     fetch(`/api/bugs/${selectedBug.id}/comments`)
       .then(r => r.json())
@@ -190,7 +207,6 @@ export function BugTrackerPanel({ user }: { user: User }) {
       return true;
     })
     .sort((a, b) => {
-      // Sort by severity first (within active tab)
       if (tab === 'active') {
         const sa = SEVERITY_ORDER.indexOf(a.severity ?? 'medium');
         const sb = SEVERITY_ORDER.indexOf(b.severity ?? 'medium');
@@ -201,9 +217,8 @@ export function BugTrackerPanel({ user }: { user: User }) {
 
   // ── Stats ────────────────────────────────────────────────────────────────
 
-  const activeBugs = bugs;
-  const criticalCount = activeBugs.filter(b => b.severity === 'critical').length;
-  const highCount = activeBugs.filter(b => b.severity === 'high').length;
+  const criticalCount = bugs.filter(b => b.severity === 'critical').length;
+  const highCount = bugs.filter(b => b.severity === 'high').length;
 
   // ── Actions ──────────────────────────────────────────────────────────────
 
@@ -217,7 +232,6 @@ export function BugTrackerPanel({ user }: { user: User }) {
       });
       if (!res.ok) throw new Error('Failed');
       const { data } = await res.json();
-      // If completed, bug will be auto-archived — reload and close dialog
       if (status === 'completed') {
         toast.success('Bug marked complete and archived');
         setSelectedBug(null);
@@ -311,31 +325,69 @@ export function BugTrackerPanel({ user }: { user: User }) {
     }
   };
 
+  const startEdit = () => {
+    if (!selectedBug) return;
+    setEditTitle(selectedBug.title);
+    setEditDescription(selectedBug.description);
+    setEditSeverity(selectedBug.severity ?? 'medium');
+    setIsEditing(true);
+  };
+
+  const cancelEdit = () => setIsEditing(false);
+
+  const handleSaveEdit = async () => {
+    if (!selectedBug) return;
+    if (!editTitle.trim() || !editDescription.trim()) {
+      toast.error('Title and description are required');
+      return;
+    }
+    setSavingEdit(true);
+    try {
+      const res = await fetch(`/api/bugs/${selectedBug.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: editTitle.trim(),
+          description: editDescription.trim(),
+          severity: editSeverity,
+        }),
+      });
+      if (!res.ok) throw new Error('Failed');
+      const { data } = await res.json();
+      setSelectedBug(data);
+      setBugs(prev => prev.map(b => b.id === selectedBug.id ? data : b));
+      setIsEditing(false);
+      toast.success('Bug updated');
+    } catch {
+      toast.error('Failed to save changes');
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
   // ── Render ───────────────────────────────────────────────────────────────
 
   return (
     <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
-      <div className="flex-shrink-0 px-8 py-6 border-b border-border-default bg-bg-surface">
+      <div className="flex-shrink-0 px-8 py-5 border-b border-border-default bg-bg-surface">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-accent-primary/10">
-                <Bug className="w-5 h-5 text-accent-primary" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-text-primary">Bug Tracker</h1>
-                <p className="text-xs text-text-tertiary mt-0.5">
-                  {tab === 'active' ? `${bugs.length} active report${bugs.length !== 1 ? 's' : ''}` : `${bugs.length} archived`}
-                  {tab === 'active' && criticalCount > 0 && (
-                    <span className="ml-2 text-red-600 font-semibold">· {criticalCount} critical</span>
-                  )}
-                  {tab === 'active' && highCount > 0 && (
-                    <span className="ml-1.5 text-orange-600 font-semibold">· {highCount} high</span>
-                  )}
-                </p>
-              </div>
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-accent-primary/10">
+              <Bug className="w-5 h-5 text-accent-primary" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-text-primary">Bug Tracker</h1>
+              <p className="text-xs text-text-tertiary mt-0.5">
+                {tab === 'active' ? `${bugs.length} active report${bugs.length !== 1 ? 's' : ''}` : `${bugs.length} archived`}
+                {tab === 'active' && criticalCount > 0 && (
+                  <span className="ml-2 text-red-600 font-semibold">· {criticalCount} critical</span>
+                )}
+                {tab === 'active' && highCount > 0 && (
+                  <span className="ml-1.5 text-orange-600 font-semibold">· {highCount} high</span>
+                )}
+              </p>
             </div>
           </div>
           <Button onClick={() => setReportOpen(true)} size="sm" className="gap-2">
@@ -345,11 +397,17 @@ export function BugTrackerPanel({ user }: { user: User }) {
         </div>
 
         {/* ── Tabs ─────────────────────────────────────────────────────── */}
-        <div className="flex gap-1 mt-5">
+        <div className="flex gap-1 mt-4">
           {(['active', 'archive'] as const).map(t => (
             <button
               key={t}
-              onClick={() => { setTab(t); setSearch(''); setSeverityFilter('all'); setStatusFilter('all'); }}
+              onClick={() => {
+                setTab(t);
+                setSearch('');
+                setSeverityFilter('all');
+                setStatusFilter('all');
+                setSelectedBug(null);
+              }}
               className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
                 tab === t
                   ? 'bg-accent-primary/15 text-accent-primary'
@@ -362,162 +420,189 @@ export function BugTrackerPanel({ user }: { user: User }) {
         </div>
       </div>
 
-      {/* ── Filters ────────────────────────────────────────────────────────── */}
-      <div className="flex-shrink-0 px-8 py-3 border-b border-border-default bg-bg-surface flex items-center gap-3">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
-          <Input
-            placeholder="Search bugs..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="pl-9 h-9 text-sm"
-          />
-        </div>
+      {/* ── Main content: list + detail side by side ────────────────────── */}
+      <div className="flex-1 flex min-h-0 overflow-hidden">
 
-        <Select value={severityFilter} onValueChange={setSeverityFilter}>
-          <SelectTrigger className="h-9 w-[130px] text-sm">
-            <SelectValue placeholder="Severity" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Severities</SelectItem>
-            <SelectItem value="critical">Critical</SelectItem>
-            <SelectItem value="high">High</SelectItem>
-            <SelectItem value="medium">Medium</SelectItem>
-            <SelectItem value="low">Low</SelectItem>
-          </SelectContent>
-        </Select>
+        {/* ── Left: Bug List ──────────────────────────────────────────── */}
+        <div className={`flex flex-col border-r border-border-default transition-all duration-200 ${
+          selectedBug ? 'w-[380px] flex-shrink-0' : 'flex-1'
+        }`}>
 
-        {tab === 'active' && (
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="h-9 w-[150px] text-sm">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Statuses</SelectItem>
-              <SelectItem value="submitted">New</SelectItem>
-              <SelectItem value="under_review">Under Review</SelectItem>
-              <SelectItem value="in_progress">In Progress</SelectItem>
-              <SelectItem value="wont_fix">Won&apos;t Fix</SelectItem>
-            </SelectContent>
-          </Select>
-        )}
-
-        {(search || severityFilter !== 'all' || statusFilter !== 'all') && (
-          <button
-            onClick={() => { setSearch(''); setSeverityFilter('all'); setStatusFilter('all'); }}
-            className="text-xs text-text-tertiary hover:text-text-primary transition-colors"
-          >
-            Clear filters
-          </button>
-        )}
-      </div>
-
-      {/* ── Bug List ─────────────────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto px-8 py-4">
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-6 h-6 text-accent-primary animate-spin" />
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="p-4 rounded-2xl bg-bg-surface mb-4">
-              {tab === 'archive' ? (
-                <Archive className="w-8 h-8 text-text-tertiary" />
-              ) : (
-                <Bug className="w-8 h-8 text-text-tertiary" />
-              )}
+          {/* Filters */}
+          <div className="flex-shrink-0 px-4 py-3 border-b border-border-default bg-bg-surface flex items-center gap-2 flex-wrap">
+            <div className="relative flex-1 min-w-[140px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-tertiary" />
+              <Input
+                placeholder="Search..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="pl-8 h-8 text-sm"
+              />
             </div>
-            <p className="text-text-primary font-medium">
-              {search || severityFilter !== 'all' || statusFilter !== 'all'
-                ? 'No bugs match your filters'
-                : tab === 'archive' ? 'No archived bugs' : 'No active bugs — looking good!'}
-            </p>
-            {!search && tab === 'active' && (
-              <p className="text-text-tertiary text-sm mt-1">
-                Use the &quot;Report a Bug&quot; button to log a new issue.
-              </p>
+
+            <Select value={severityFilter} onValueChange={setSeverityFilter}>
+              <SelectTrigger className={`h-8 text-sm ${selectedBug ? 'w-[110px]' : 'w-[130px]'}`}>
+                <SelectValue placeholder="Severity" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Severities</SelectItem>
+                <SelectItem value="critical">Critical</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="low">Low</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {tab === 'active' && !selectedBug && (
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="h-8 w-[140px] text-sm">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="submitted">New</SelectItem>
+                  <SelectItem value="under_review">Under Review</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="wont_fix">Won&apos;t Fix</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+
+            {(search || severityFilter !== 'all' || statusFilter !== 'all') && (
+              <button
+                onClick={() => { setSearch(''); setSeverityFilter('all'); setStatusFilter('all'); }}
+                className="text-xs text-text-tertiary hover:text-text-primary transition-colors"
+              >
+                Clear
+              </button>
             )}
           </div>
-        ) : (
-          <div className="space-y-2">
-            {filtered.map(bug => (
-              <button
-                key={bug.id}
-                onClick={() => setSelectedBug(bug)}
-                className="w-full text-left p-4 rounded-xl border border-border-default bg-bg-surface hover:border-accent-primary/30 hover:bg-accent-primary/5 transition-all group"
-              >
-                <div className="flex items-start gap-3">
-                  {/* Severity dot */}
-                  <div className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${
-                    bug.severity === 'critical' ? 'bg-red-500' :
-                    bug.severity === 'high' ? 'bg-orange-400' :
-                    bug.severity === 'medium' ? 'bg-yellow-400' : 'bg-blue-400'
-                  }`} />
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-medium text-sm text-text-primary group-hover:text-accent-primary transition-colors truncate">
-                        {bug.title}
-                      </span>
-                      <SeverityBadge severity={bug.severity ?? 'medium'} />
-                      <StatusBadge status={bug.status} />
-                    </div>
-                    <p className="text-xs text-text-tertiary mt-1 line-clamp-1">
-                      {bug.description}
-                    </p>
-                    <div className="flex items-center gap-3 mt-2 text-[11px] text-text-tertiary">
-                      <span className="flex items-center gap-1">
-                        <UserIcon className="w-3 h-3" />
-                        {bug.user_email}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {formatDate(bug.created_at)}
-                      </span>
-                      {bug.screenshot_url && (
-                        <span className="flex items-center gap-1">
-                          <ImageIcon className="w-3 h-3" />
-                          Screenshot
-                        </span>
-                      )}
-                      {bug.admin_notes && (
-                        <span className="flex items-center gap-1 text-accent-primary">
-                          <MessageSquare className="w-3 h-3" />
-                          Notes
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <ChevronDown className="w-4 h-4 text-text-tertiary flex-shrink-0 mt-0.5 -rotate-90 group-hover:text-accent-primary transition-colors" />
+          {/* Bug list */}
+          <div className="flex-1 overflow-y-auto px-4 py-3">
+            {loading ? (
+              <div className="flex items-center justify-center py-16">
+                <Loader2 className="w-6 h-6 text-accent-primary animate-spin" />
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <div className="p-4 rounded-2xl bg-bg-elevated mb-3">
+                  {tab === 'archive' ? (
+                    <Archive className="w-7 h-7 text-text-tertiary" />
+                  ) : (
+                    <Bug className="w-7 h-7 text-text-tertiary" />
+                  )}
                 </div>
-              </button>
-            ))}
+                <p className="text-text-primary font-medium text-sm">
+                  {search || severityFilter !== 'all' || statusFilter !== 'all'
+                    ? 'No bugs match your filters'
+                    : tab === 'archive' ? 'No archived bugs' : 'No active bugs — looking good!'}
+                </p>
+                {!search && tab === 'active' && (
+                  <p className="text-text-tertiary text-xs mt-1">
+                    Use &quot;Report a Bug&quot; to log a new issue.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                {filtered.map(bug => (
+                  <button
+                    key={bug.id}
+                    onClick={() => setSelectedBug(bug)}
+                    className={`w-full text-left p-3 rounded-xl border transition-all group ${
+                      selectedBug?.id === bug.id
+                        ? 'border-accent-primary/40 bg-accent-primary/8 shadow-sm'
+                        : 'border-border-default bg-bg-surface hover:border-accent-primary/25 hover:bg-accent-primary/4'
+                    }`}
+                  >
+                    <div className="flex items-start gap-2.5">
+                      {/* Severity dot */}
+                      <div className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${
+                        bug.severity === 'critical' ? 'bg-red-500' :
+                        bug.severity === 'high' ? 'bg-orange-400' :
+                        bug.severity === 'medium' ? 'bg-yellow-400' : 'bg-blue-400'
+                      }`} />
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className={`font-medium text-sm truncate transition-colors ${
+                            selectedBug?.id === bug.id ? 'text-accent-primary' : 'text-text-primary group-hover:text-accent-primary'
+                          }`}>
+                            {bug.title}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                          <SeverityBadge severity={bug.severity ?? 'medium'} />
+                          <StatusBadge status={bug.status} />
+                        </div>
+                        <div className="flex items-center gap-2.5 mt-1.5 text-[10px] text-text-tertiary">
+                          <span className="flex items-center gap-0.5">
+                            <Calendar className="w-2.5 h-2.5" />
+                            {formatDate(bug.created_at)}
+                          </span>
+                          {bug.screenshot_url && (
+                            <span className="flex items-center gap-0.5">
+                              <ImageIcon className="w-2.5 h-2.5" />
+                              Screenshot
+                            </span>
+                          )}
+                          {bug.admin_notes && (
+                            <span className="flex items-center gap-0.5 text-accent-primary">
+                              <MessageSquare className="w-2.5 h-2.5" />
+                              Notes
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* ── Report Bug Modal ────────────────────────────────────────────────── */}
-      <ReportBugModal
-        open={reportOpen}
-        onOpenChange={setReportOpen}
-        userId={user.id}
-        onSubmitted={() => { loadBugs(); toast.success('Bug reported — thank you!'); }}
-      />
+        {/* ── Right: Bug Detail ────────────────────────────────────────── */}
+        {selectedBug && (
+          <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-bg-base">
 
-      {/* ── Bug Detail Dialog ───────────────────────────────────────────────── */}
-      <Dialog open={!!selectedBug} onOpenChange={open => { if (!open) setSelectedBug(null); }}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-bg-surface border-border-default">
-          {selectedBug && (
-            <>
-              <DialogHeader>
-                <div className="flex items-start gap-2 flex-wrap">
-                  <DialogTitle className="text-lg font-bold text-text-primary flex-1 min-w-0">
-                    {selectedBug.title}
-                  </DialogTitle>
-                </div>
-                <div className="flex items-center gap-2 flex-wrap pt-1">
-                  <SeverityBadge severity={selectedBug.severity ?? 'medium'} />
+            {/* Detail header */}
+            <div className="flex-shrink-0 px-6 py-4 border-b border-border-default bg-bg-surface flex items-start gap-3">
+              <button
+                onClick={() => { setSelectedBug(null); setIsEditing(false); }}
+                className="mt-0.5 p-1.5 rounded-lg hover:bg-bg-hover transition-colors text-text-tertiary hover:text-text-primary flex-shrink-0"
+                title="Back to list"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              <div className="flex-1 min-w-0">
+                {isEditing ? (
+                  <Input
+                    value={editTitle}
+                    onChange={e => setEditTitle(e.target.value)}
+                    className="text-base font-bold h-8 px-2"
+                    autoFocus
+                  />
+                ) : (
+                  <h2 className="text-base font-bold text-text-primary leading-snug">{selectedBug.title}</h2>
+                )}
+                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                  {isEditing ? (
+                    <Select value={editSeverity} onValueChange={setEditSeverity}>
+                      <SelectTrigger className="h-7 w-[120px] text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SEVERITY_OPTIONS.map(o => (
+                          <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <SeverityBadge severity={selectedBug.severity ?? 'medium'} />
+                  )}
                   <StatusBadge status={selectedBug.status} />
                   {selectedBug.archived_at && (
                     <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold border bg-gray-100 text-gray-600 border-gray-200">
@@ -525,104 +610,153 @@ export function BugTrackerPanel({ user }: { user: User }) {
                     </span>
                   )}
                 </div>
-              </DialogHeader>
+              </div>
 
-              <div className="space-y-5 mt-2">
-                {/* Meta */}
-                <div className="flex items-center gap-4 text-xs text-text-tertiary">
-                  <span className="flex items-center gap-1.5">
-                    <UserIcon className="w-3.5 h-3.5" />
-                    {selectedBug.user_email}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5" />
-                    {formatDate(selectedBug.created_at)}
-                  </span>
-                </div>
+              {/* Edit / Save / Cancel buttons */}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {isEditing ? (
+                  <>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={cancelEdit}
+                      className="h-8 gap-1.5"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleSaveEdit}
+                      disabled={savingEdit}
+                      className="h-8 gap-1.5"
+                    >
+                      {savingEdit ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                      Save
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={startEdit}
+                    className="h-8 gap-1.5"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                    Edit
+                  </Button>
+                )}
+              </div>
+            </div>
 
-                {/* Description */}
-                <div>
-                  <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-2">Description</h3>
-                  <p className="text-sm text-text-primary whitespace-pre-wrap bg-bg-base rounded-lg p-3">
+            {/* Detail body */}
+            <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+
+              {/* Meta */}
+              <div className="flex items-center gap-4 text-xs text-text-tertiary">
+                <span className="flex items-center gap-1.5">
+                  <UserIcon className="w-3.5 h-3.5" />
+                  {selectedBug.user_email}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5" />
+                  {formatDate(selectedBug.created_at)}
+                </span>
+              </div>
+
+              {/* Description */}
+              <div>
+                <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-2">Description</h3>
+                {isEditing ? (
+                  <Textarea
+                    value={editDescription}
+                    onChange={e => setEditDescription(e.target.value)}
+                    rows={5}
+                    className="text-sm"
+                  />
+                ) : (
+                  <p className="text-sm text-text-primary whitespace-pre-wrap bg-bg-surface rounded-lg p-3 border border-border-default">
                     {selectedBug.description}
                   </p>
+                )}
+              </div>
+
+              {/* Screenshot */}
+              {selectedBug.screenshot_url && (
+                <div>
+                  <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-2">Screenshot</h3>
+                  <a href={selectedBug.screenshot_url} target="_blank" rel="noopener noreferrer">
+                    <img
+                      src={selectedBug.screenshot_url}
+                      alt="Bug screenshot"
+                      className="rounded-lg border border-border-default max-h-64 object-contain hover:opacity-90 transition-opacity cursor-pointer"
+                    />
+                  </a>
                 </div>
+              )}
 
-                {/* Screenshot */}
-                {selectedBug.screenshot_url && (
-                  <div>
-                    <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-2">Screenshot</h3>
-                    <a href={selectedBug.screenshot_url} target="_blank" rel="noopener noreferrer">
-                      <img
-                        src={selectedBug.screenshot_url}
-                        alt="Bug screenshot"
-                        className="rounded-lg border border-border-default max-h-64 object-contain hover:opacity-90 transition-opacity cursor-pointer"
+              {/* Admin: Status change */}
+              {canManage && !isEditing && (
+                <div>
+                  <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-2">Status</h3>
+                  <Select
+                    value={selectedBug.status}
+                    onValueChange={val => handleStatusChange(selectedBug.id, val)}
+                    disabled={savingStatus}
+                  >
+                    <SelectTrigger className="w-full max-w-xs">
+                      {savingStatus ? (
+                        <span className="flex items-center gap-2 text-sm text-text-tertiary">
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" /> Saving...
+                        </span>
+                      ) : (
+                        <SelectValue />
+                      )}
+                    </SelectTrigger>
+                    <SelectContent>
+                      {STATUS_OPTIONS.map(opt => (
+                        <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {/* Notes (admin write / everyone read) */}
+              {!isEditing && (canManage || selectedBug.admin_notes) && (
+                <div>
+                  <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-2">
+                    Notes {canManage ? <span className="text-text-tertiary font-normal normal-case">(admin)</span> : ''}
+                  </h3>
+                  {canManage ? (
+                    <div className="space-y-2">
+                      <Textarea
+                        value={notesValue}
+                        onChange={e => setNotesValue(e.target.value)}
+                        placeholder="Add internal notes visible to the reporter..."
+                        rows={3}
+                        className="text-sm"
                       />
-                    </a>
-                  </div>
-                )}
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleSaveNotes}
+                        disabled={savingNotes}
+                      >
+                        {savingNotes ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" /> : null}
+                        Save Notes
+                      </Button>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-text-primary bg-bg-surface rounded-lg p-3 border border-border-default whitespace-pre-wrap">
+                      {selectedBug.admin_notes}
+                    </p>
+                  )}
+                </div>
+              )}
 
-                {/* Admin: Status change */}
-                {canManage && (
-                  <div>
-                    <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-2">Status</h3>
-                    <Select
-                      value={selectedBug.status}
-                      onValueChange={val => handleStatusChange(selectedBug.id, val)}
-                      disabled={savingStatus}
-                    >
-                      <SelectTrigger className="w-full">
-                        {savingStatus ? (
-                          <span className="flex items-center gap-2 text-sm text-text-tertiary">
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" /> Saving...
-                          </span>
-                        ) : (
-                          <SelectValue />
-                        )}
-                      </SelectTrigger>
-                      <SelectContent>
-                        {STATUS_OPTIONS.map(opt => (
-                          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-
-                {/* Notes (admin write / everyone read) */}
-                {(canManage || selectedBug.admin_notes) && (
-                  <div>
-                    <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-2">
-                      Notes {canManage ? <span className="text-text-tertiary font-normal normal-case">(admin)</span> : ''}
-                    </h3>
-                    {canManage ? (
-                      <div className="space-y-2">
-                        <Textarea
-                          value={notesValue}
-                          onChange={e => setNotesValue(e.target.value)}
-                          placeholder="Add internal notes visible to the reporter..."
-                          rows={3}
-                          className="text-sm"
-                        />
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={handleSaveNotes}
-                          disabled={savingNotes}
-                        >
-                          {savingNotes ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" /> : null}
-                          Save Notes
-                        </Button>
-                      </div>
-                    ) : (
-                      <p className="text-sm text-text-primary bg-bg-base rounded-lg p-3 whitespace-pre-wrap">
-                        {selectedBug.admin_notes}
-                      </p>
-                    )}
-                  </div>
-                )}
-
-                {/* Comments / Activity */}
+              {/* Comments / Activity */}
+              {!isEditing && (
                 <div>
                   <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-3">
                     Comments
@@ -676,49 +810,63 @@ export function BugTrackerPanel({ user }: { user: User }) {
                     </Button>
                   </div>
                 </div>
+              )}
 
-                {/* Admin actions: Archive / Delete */}
-                {canManage && (
-                  <div className="flex items-center gap-2 pt-2 border-t border-border-default">
-                    {selectedBug.archived_at ? (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleArchive(selectedBug, false)}
-                        disabled={archiving}
-                        className="gap-1.5"
-                      >
-                        {archiving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ArchiveRestore className="w-3.5 h-3.5" />}
-                        Restore
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleArchive(selectedBug, true)}
-                        disabled={archiving}
-                        className="gap-1.5"
-                      >
-                        {archiving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Archive className="w-3.5 h-3.5" />}
-                        Archive
-                      </Button>
-                    )}
+              {/* Admin actions: Archive / Delete */}
+              {canManage && !isEditing && (
+                <div className="flex items-center gap-2 pt-2 border-t border-border-default">
+                  {selectedBug.archived_at ? (
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      onClick={() => setDeleteTarget(selectedBug)}
-                      className="gap-1.5 text-red-500 hover:text-red-600 hover:bg-red-50 ml-auto"
+                      onClick={() => handleArchive(selectedBug, false)}
+                      disabled={archiving}
+                      className="gap-1.5"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      Delete
+                      {archiving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ArchiveRestore className="w-3.5 h-3.5" />}
+                      Restore
                     </Button>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleArchive(selectedBug, true)}
+                      disabled={archiving}
+                      className="gap-1.5"
+                    >
+                      {archiving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Archive className="w-3.5 h-3.5" />}
+                      Archive
+                    </Button>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setDeleteTarget(selectedBug)}
+                    className="gap-1.5 text-red-500 hover:text-red-600 hover:bg-red-50 ml-auto"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Delete
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── Empty state when no bug selected (detail placeholder) ──── */}
+      {!selectedBug && !loading && filtered.length > 0 && (
+        /* No placeholder needed — full-width list is the natural state */
+        null
+      )}
+
+      {/* ── Report Bug Modal ────────────────────────────────────────────────── */}
+      <ReportBugModal
+        open={reportOpen}
+        onOpenChange={setReportOpen}
+        userId={user.id}
+        onSubmitted={() => { loadBugs(); toast.success('Bug reported — thank you!'); }}
+      />
 
       {/* ── Delete Confirmation ─────────────────────────────────────────────── */}
       <Dialog open={!!deleteTarget} onOpenChange={open => { if (!open) setDeleteTarget(null); }}>

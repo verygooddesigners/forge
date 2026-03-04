@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.11.5] - 2026-03-04
+
+### Improvement: Bug Tracker UX polish
+
+- **Master-detail layout** — Bug detail now opens inline in the same panel (list collapses to 380px left column, detail fills the right); no more modal dialog
+- **Edit button** — Any permissioned user can edit a bug's title, description, and severity directly in the detail view; Save/Cancel buttons replace Edit when in edit mode; saves via `PATCH /api/bugs/[id]`
+- **Beta Toolbar** — "Bug Report" button now navigates to `/bugs` instead of opening the old inline submission modal; `API /api/beta-feedback` modal submission path removed from that button
+- **API** — `PATCH /api/bugs/[id]` now accepts `title`, `description`, and `severity` fields in addition to existing `status`, `admin_notes`, and `archive`
+
+---
+
 ## [1.11.4] - 2026-03-04
 
 ### Feature: Full-Page Bug Tracker

@@ -21,9 +21,13 @@ export async function PATCH(
     if (!canManage) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
     const body = await req.json();
-    const { status, admin_notes, archive } = body;
+    const { status, admin_notes, archive, title, description, severity } = body;
 
     const updates: Record<string, unknown> = {};
+
+    if (title !== undefined) updates.title = title;
+    if (description !== undefined) updates.description = description;
+    if (severity !== undefined) updates.severity = severity;
 
     if (status !== undefined) {
       updates.status = status;
