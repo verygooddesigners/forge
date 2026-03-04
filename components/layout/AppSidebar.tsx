@@ -17,6 +17,7 @@ import {
   PenTool,
   Plus,
   KeyRound,
+  Bug,
 } from 'lucide-react';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
@@ -187,6 +188,13 @@ export function AppSidebar({
           <Wrench className="w-[18px] h-[18px] shrink-0" />
           <span>Writer Factory</span>
         </button>
+
+        {(hasPermission('can_view_bugs') || hasPermission('can_manage_bugs') || hasPermission('can_access_admin')) && (
+          <button onClick={() => router.push('/bugs')} className={navLinkClass('/bugs')}>
+            <Bug className="w-[18px] h-[18px] shrink-0" />
+            <span>Bug Tracker</span>
+          </button>
+        )}
 
         {hasPermission('can_access_admin') && (
           <button onClick={() => router.push('/admin')} className={navLinkClass('/admin')}>

@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.11.4] - 2026-03-04
+
+### Feature: Full-Page Bug Tracker
+
+Replaced the old bug tracker modal with a proper full-page tracker at `/bugs`.
+
+- **`/bugs` route** — New dedicated page (server + client) with full app chrome, accessible from the sidebar
+- **`BugTrackerPanel`** — Full-page panel with Active / Archive tabs, sortable bug list (severity → date), inline search, severity filter, and status filter
+- **`ReportBugModal`** — Revamped report form with title, description, severity selector (Critical/High/Medium/Low) with color indicators, and screenshot upload to Supabase Storage (`bug-screenshots` bucket)
+- **Bug detail dialog** — Click any bug to open full detail: description, screenshot display, admin notes (editable by managers, visible to all), status change dropdown, comments/activity thread, Archive/Restore + Delete buttons
+- **Auto-archive** — Setting status to "Completed" automatically moves the bug to the Archive tab; bugs can be manually restored
+- **Delete** — Admins can permanently delete bugs (with confirmation dialog); cascade-deletes all comments
+- **Comments** — Any permissioned user can add comments on a bug; threaded with user name, email, and timestamp
+- **DB migration `00034_bug_tracker.sql`** — Adds `severity` + `archived_at` to `beta_feedback`; creates `bug_comments` table with RLS; creates `bug-screenshots` storage bucket
+- **Permissions** — Two new permission keys: `can_view_bugs` (view/submit) and `can_manage_bugs` (status/notes/delete/archive); both added to RolesEditor and UserManagement permission overrides panel
+- **Sidebar** — "Bug Tracker" nav link added, visible to anyone with `can_view_bugs`, `can_manage_bugs`, or `can_access_admin`
+
+**Required manual step:** Run `supabase/migrations/00034_bug_tracker.sql` in the Supabase Dashboard SQL Editor.
+
+---
+
 ## [1.11.3] - 2026-03-04
 
 ### Fix: Writer Model not visible in project creation for admin-assigned users

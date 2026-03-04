@@ -64,6 +64,8 @@ const ALL_PERMISSIONS = [
   { key: 'can_manage_sso', label: 'Manage SSO' },
   { key: 'can_manage_tools', label: 'Manage Tools' },
   { key: 'can_manage_role_permissions', label: 'Manage Role Permissions' },
+  { key: 'can_view_bugs', label: 'View & Submit Bug Reports' },
+  { key: 'can_manage_bugs', label: 'Manage Bugs (status, notes, delete, archive)' },
 ];
 
 const DEFAULT_ROLES = [

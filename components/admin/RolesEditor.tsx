@@ -81,6 +81,13 @@ const PERMISSION_GROUPS: Array<{
     ],
   },
   {
+    group: 'Bug Tracker',
+    permissions: [
+      { key: 'can_view_bugs', label: 'View & Submit Bug Reports' },
+      { key: 'can_manage_bugs', label: 'Manage Bugs (status, notes, delete, archive)' },
+    ],
+  },
+  {
     group: 'Admin Access',
     permissions: [
       { key: 'can_access_admin', label: 'Access Admin Panel' },
