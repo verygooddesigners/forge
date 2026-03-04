@@ -765,7 +765,7 @@ export function BugTrackerPanel({ user, initialBugId }: { user: User; initialBug
               )}
 
               {/* Notes (admin write / everyone read) */}
-              {!isEditing && (canManage || selectedBug.admin_notes) && (
+              {!isEditing && (
                 <div>
                   <h3 className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-2">
                     Notes {canManage ? <span className="text-text-tertiary font-normal normal-case">(admin)</span> : ''}
@@ -775,7 +775,7 @@ export function BugTrackerPanel({ user, initialBugId }: { user: User; initialBug
                       <Textarea
                         value={notesValue}
                         onChange={e => setNotesValue(e.target.value)}
-                        placeholder="Add internal notes visible to the reporter..."
+                        placeholder="Add internal notes visible to everyone..."
                         rows={3}
                         className="text-sm"
                       />
@@ -789,10 +789,12 @@ export function BugTrackerPanel({ user, initialBugId }: { user: User; initialBug
                         Save Notes
                       </Button>
                     </div>
-                  ) : (
+                  ) : selectedBug.admin_notes ? (
                     <p className="text-sm text-text-primary bg-bg-surface rounded-lg p-3 border border-border-default whitespace-pre-wrap">
                       {selectedBug.admin_notes}
                     </p>
+                  ) : (
+                    <p className="text-sm text-text-tertiary italic">No notes from the team yet.</p>
                   )}
                 </div>
               )}

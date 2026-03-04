@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.11.10] - 2026-03-04
+
+### Feature: Bug tracker notes visible to all users
+
+- Notes section in the bug detail panel is now always visible to every permissioned user, not just admins
+- Non-admins see a "No notes from the team yet." placeholder when no notes exist
+- Admins retain the editable textarea with updated placeholder ("visible to everyone")
+- Removed the `canManage || admin_notes` visibility gate from the Notes block
+
+---
+
 ## [1.11.9] - 2026-03-04
 
 ### Fix: Sidebar wordmark — center-aligned, larger font to fill column width
