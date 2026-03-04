@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { User } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,6 +39,7 @@ import {
   Pencil,
   Check,
   X,
+  Link as LinkIcon,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { ReportBugModal } from '@/components/modals/ReportBugModal';
@@ -130,7 +132,8 @@ function StatusBadge({ status }: { status: string }) {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export function BugTrackerPanel({ user }: { user: User }) {
+export function BugTrackerPanel({ user, initialBugId }: { user: User; initialBugId?: string }) {
+  const router = useRouter();
   const [tab, setTab] = useState<'active' | 'archive'>('active');
   const [bugs, setBugs] = useState<BugReport[]>([]);
   const [loading, setLoading] = useState(true);
@@ -179,6 +182,23 @@ export function BugTrackerPanel({ user }: { user: User }) {
   }, [tab]);
 
   useEffect(() => { loadBugs(); }, [loadBugs]);
+
+  // ── Load initial bug from URL param ──────────────────────────────────────
+
+  useEffect(() => {
+    if (!initialBugId) return;
+    fetch(`/api/bugs/${initialBugId}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(json => {
+        if (json?.data) {
+          setSelectedBug(json.data);
+          // If the bug is archived, switch to archive tab
+          if (json.data.archived_at) setTab('archive');
+        }
+      })
+      .catch(() => {/* ignore — just don't pre-select */});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialBugId]);
 
   // ── Load comments when bug selected ──────────────────────────────────────
 
@@ -407,6 +427,7 @@ export function BugTrackerPanel({ user }: { user: User }) {
                 setSeverityFilter('all');
                 setStatusFilter('all');
                 setSelectedBug(null);
+                router.push('/bugs', { scroll: false });
               }}
               className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
                 tab === t
@@ -509,7 +530,10 @@ export function BugTrackerPanel({ user }: { user: User }) {
                 {filtered.map(bug => (
                   <button
                     key={bug.id}
-                    onClick={() => setSelectedBug(bug)}
+                    onClick={() => {
+                      setSelectedBug(bug);
+                      router.push(`/bugs/${bug.id}`, { scroll: false });
+                    }}
                     className={`w-full text-left p-3 rounded-xl border transition-all group ${
                       selectedBug?.id === bug.id
                         ? 'border-accent-primary/40 bg-accent-primary/8 shadow-sm'
@@ -570,7 +594,11 @@ export function BugTrackerPanel({ user }: { user: User }) {
             {/* Detail header */}
             <div className="flex-shrink-0 px-6 py-4 border-b border-border-default bg-bg-surface flex items-start gap-3">
               <button
-                onClick={() => { setSelectedBug(null); setIsEditing(false); }}
+                onClick={() => {
+                  setSelectedBug(null);
+                  setIsEditing(false);
+                  router.push('/bugs', { scroll: false });
+                }}
                 className="mt-0.5 p-1.5 rounded-lg hover:bg-bg-hover transition-colors text-text-tertiary hover:text-text-primary flex-shrink-0"
                 title="Back to list"
               >
@@ -612,7 +640,7 @@ export function BugTrackerPanel({ user }: { user: User }) {
                 </div>
               </div>
 
-              {/* Edit / Save / Cancel buttons */}
+              {/* Edit / Save / Cancel + Copy link buttons */}
               <div className="flex items-center gap-2 flex-shrink-0">
                 {isEditing ? (
                   <>
@@ -636,15 +664,29 @@ export function BugTrackerPanel({ user }: { user: User }) {
                     </Button>
                   </>
                 ) : (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={startEdit}
-                    className="h-8 gap-1.5"
-                  >
-                    <Pencil className="w-3.5 h-3.5" />
-                    Edit
-                  </Button>
+                  <>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        const url = `${window.location.origin}/bugs/${selectedBug.id}`;
+                        navigator.clipboard.writeText(url).then(() => toast.success('Link copied!'));
+                      }}
+                      className="h-8 w-8 p-0"
+                      title="Copy shareable link"
+                    >
+                      <LinkIcon className="w-3.5 h-3.5" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={startEdit}
+                      className="h-8 gap-1.5"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                      Edit
+                    </Button>
+                  </>
                 )}
               </div>
             </div>

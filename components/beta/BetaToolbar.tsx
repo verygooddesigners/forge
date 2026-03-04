@@ -854,7 +854,7 @@ export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
 
           {/* My Reports / All Feedback */}
           <button
-            onClick={() => setModal('reports')}
+            onClick={() => router.push('/bugs')}
             style={iconBtn}
             title={isAdmin ? 'View all feedback' : 'My submissions'}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.1)'; }}

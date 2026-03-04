@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.11.6] - 2026-03-04
+
+### Improvement: Bug tracker deep-links + toolbar fix
+
+- **Per-bug URLs** — Each bug now has its own route at `/bugs/[id]`; navigating directly to that URL loads the tracker with that bug pre-selected in the detail panel
+- **URL updates** — Selecting a bug pushes `/bugs/[id]` to the browser history; deselecting or switching tabs navigates back to `/bugs`; works with browser back/forward
+- **Copy link button** — Link icon button in the bug detail header copies the shareable URL to clipboard with a toast confirmation
+- **Beta Toolbar reports icon** — The 📋/📬 icon now navigates to `/bugs` instead of opening the old My Reports modal
+- **API** — `GET /api/bugs/[id]` added for fetching a single bug by ID
+
+---
+
 ## [1.11.5] - 2026-03-04
 
 ### Improvement: Bug Tracker UX polish
