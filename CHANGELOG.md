@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.11.11] - 2026-03-04
+
+### Fix: Beta Toolbar — Bug Report opens modal, tracker icon uses custom SVG
+
+- Restored "Bug Report" button to open the in-toolbar bug report modal (`setModal('bug')`)
+- Replaced emoji (📋/📬) reports icon with custom `bug-icon.svg` (purple gradient bug icon)
+- Icon navigates to `/bugs` tracker page; both buttons now serve distinct purposes
+- Added `public/bug-icon.svg` asset
+
+---
+
 ## [1.11.10] - 2026-03-04
 
 ### Feature: Bug tracker notes visible to all users

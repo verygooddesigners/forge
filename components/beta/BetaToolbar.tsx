@@ -830,7 +830,7 @@ export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
 
           {/* Bug Report */}
           <button
-            onClick={() => router.push('/bugs')}
+            onClick={() => setModal('bug')}
             style={{ ...pill, background: 'rgba(139, 92, 246, 0.12)', color: 'var(--beta-pill-color)' }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.2)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.12)'; }}
@@ -852,15 +852,16 @@ export function BetaToolbar({ userEmail, betaData }: BetaToolbarProps) {
             </button>
           )}
 
-          {/* My Reports / All Feedback */}
+          {/* Bug Tracker */}
           <button
             onClick={() => router.push('/bugs')}
-            style={iconBtn}
-            title={isAdmin ? 'View all feedback' : 'My submissions'}
+            style={{ ...iconBtn, padding: '3px 6px' }}
+            title="Bug Tracker"
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(139, 92, 246, 0.1)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'none'; }}
           >
-            {isAdmin ? '📋' : '📬'}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/bug-icon.svg" alt="Bug Tracker" width={20} height={20} style={{ borderRadius: '5px' }} />
           </button>
 
           {/* Collapse button */}
