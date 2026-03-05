@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.11.19] - 2026-03-05
+
+### Fix: Research stories not appearing in Editor for super admin
+
+After research pipeline completed successfully, stories weren't showing in the RightSidebar when a super admin (Jeremy) viewed another user's project. Root cause: `RightSidebar` used the browser-side Supabase client to query `project_research` directly, which still hit RLS even after the v1.11.18 migration.
+
+**New API endpoint** `GET/PATCH /api/research/load`:
+- Server-side endpoint with explicit `isPrivileged` bypass (same pattern as `/api/research/pipeline`)
+- GET: fetches full `project_research` row for any project the caller has access to
+- PATCH: updates `selected_story_ids` for the research record
+
+**Updated `RightSidebar`**:
+- Added `loadResearchData()` helper that fetches from `/api/research/load` instead of querying Supabase directly
+- `loadProject()` now uses the new API for research data (projects data still from client Supabase — not affected by this issue)
+- Retry effect updated to use new API
+- `toggleStorySelection` uses PATCH `/api/research/load` instead of direct client update
+
+---
+
 ## [1.11.18] - 2026-03-05
 
 ### Fix: Super admin research pipeline — RLS blocking project_research access

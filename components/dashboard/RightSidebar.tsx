@@ -51,6 +51,18 @@ export function RightSidebar({
     }
   }, [projectId]);
 
+  // Helper: load research data via server-side API (bypasses client-side RLS for admin users)
+  const loadResearchData = async (pid: string): Promise<any | null> => {
+    try {
+      const res = await fetch(`/api/research/load?projectId=${pid}`);
+      if (!res.ok) return null;
+      const json = await res.json();
+      return json.research ?? null;
+    } catch {
+      return null;
+    }
+  };
+
   // After research completes, editor may load before DB write is visible; refetch research once if we have no stories
   useEffect(() => {
     if (!projectId || researchRetryRef.current) return;
@@ -58,11 +70,7 @@ export function RightSidebar({
     if (hasStories) return;
     const t = setTimeout(async () => {
       researchRetryRef.current = true;
-      const [researchRes, briefRes] = await Promise.all([
-        supabase.from('project_research').select('*').eq('project_id', projectId).single(),
-        supabase.from('projects').select('research_brief').eq('id', projectId).single(),
-      ]);
-      const data = researchRes.data;
+      const data = await loadResearchData(projectId);
       if (!data) return;
       const raw = data.stories;
       let stories: ResearchStory[] = Array.isArray(raw) ? (raw as ResearchStory[]) : [];
@@ -75,7 +83,8 @@ export function RightSidebar({
         }
       }
       if (stories.length === 0 && (data.status === 'completed' || data.status === 'failed')) {
-        const articles = (briefRes.data?.research_brief as any)?.articles;
+        const { data: briefRes } = await supabase.from('projects').select('research_brief').eq('id', projectId).single();
+        const articles = (briefRes?.research_brief as any)?.articles;
         if (Array.isArray(articles) && articles.length > 0) {
           stories = articles.map((a: any, i: number) => ({
             ...a,
@@ -98,7 +107,7 @@ export function RightSidebar({
       }
     }, 2500);
     return () => clearTimeout(t);
-  }, [projectId, projectResearch, supabase]);
+  }, [projectId, projectResearch]);
 
   useEffect(() => {
     if (project && (project.headline || project.primary_keyword)) {
@@ -111,17 +120,14 @@ export function RightSidebar({
 
     try {
       // Load project and project_research in parallel so research stories show even if project fetch fails (e.g. 400)
-      const [projectRes, researchRes] = await Promise.all([
+      // project_research is loaded via server-side API to bypass client-side RLS for admin users
+      const [projectRes, research] = await Promise.all([
         supabase
           .from('projects')
           .select(`*, brief:brief_id (*)`)
           .eq('id', projectId)
           .single(),
-        supabase
-          .from('project_research')
-          .select('*')
-          .eq('project_id', projectId)
-          .single(),
+        loadResearchData(projectId),
       ]);
 
       const { data: projectData, error: projectError } = projectRes;
@@ -134,10 +140,6 @@ export function RightSidebar({
         console.error('Error loading project:', projectError);
       }
 
-      const { data: research, error: researchError } = researchRes;
-      if (researchError && researchError.code !== 'PGRST116') {
-        console.error('[RightSidebar] project_research load error', researchError);
-      }
       if (research) {
         let stories: ResearchStory[] = [];
         const raw = research.stories;
@@ -204,10 +206,12 @@ export function RightSidebar({
     const next = current.includes(storyId)
       ? current.filter((id) => id !== storyId)
       : [...current, storyId];
-    await supabase
-      .from('project_research')
-      .update({ selected_story_ids: next, updated_at: new Date().toISOString() })
-      .eq('project_id', projectId);
+    // Use server-side API to bypass client RLS for admin users viewing other users' projects
+    await fetch('/api/research/load', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ projectId, selected_story_ids: next }),
+    });
     setProjectResearch((prev) => (prev ? { ...prev, selected_story_ids: next } : null));
   };
 
