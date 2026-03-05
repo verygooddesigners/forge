@@ -11,7 +11,7 @@ interface BugsPageClientProps {
 
 export function BugsPageClient({ user, initialBugId }: BugsPageClientProps) {
   return (
-    <div className="flex h-screen bg-bg-base overflow-hidden">
+    <div className="flex h-full w-full overflow-hidden">
       <AppSidebar user={user} />
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <BugTrackerPanel user={user} initialBugId={initialBugId} />

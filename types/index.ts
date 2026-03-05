@@ -204,6 +204,7 @@ export interface ResearchStory extends ResearchArticle {
   synopsis?: string;
   is_selected?: boolean;
   verification_status?: VerificationStatus;
+  is_manual?: boolean;
 }
 
 export type ProjectResearchStatus = 'pending' | 'running' | 'completed' | 'failed';

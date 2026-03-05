@@ -1,3 +1,5 @@
+Whenever Claude has a SQL migration for me to run, paste it inline in the chat in a code box for me to easily copy.
+
 <!-- spark-task-instructions -->
 # Spark Task Instructions for Forge
 

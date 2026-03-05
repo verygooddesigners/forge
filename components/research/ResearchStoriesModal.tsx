@@ -14,6 +14,7 @@ interface ResearchStoriesModalProps {
   onOpenChange: (open: boolean) => void;
   projectResearch: ProjectResearch | null;
   onToggleStorySelection: (storyId: string) => void;
+  onRemoveStory?: (storyId: string) => void;
 }
 
 const INSTRUCTIONS =
@@ -24,6 +25,7 @@ export function ResearchStoriesModal({
   onOpenChange,
   projectResearch,
   onToggleStorySelection,
+  onRemoveStory,
 }: ResearchStoriesModalProps) {
   const stories = projectResearch?.stories ?? [];
   const selectedIds = projectResearch?.selected_story_ids ?? [];
@@ -53,6 +55,7 @@ export function ResearchStoriesModal({
                   story={story}
                   selected={selectedIds.includes(story.id)}
                   onToggleSelect={onToggleStorySelection}
+                  onRemove={onRemoveStory}
                 />
               ))}
             </div>

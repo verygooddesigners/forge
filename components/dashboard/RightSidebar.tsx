@@ -5,7 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Newspaper, TrendingUp, RefreshCw, BookOpen, RotateCcw } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Newspaper, TrendingUp, RefreshCw, BookOpen, RotateCcw, Plus, Loader2, X } from 'lucide-react';
+import { toast } from 'sonner';
 import { NewsArticle, Project, Brief } from '@/types';
 import type { ProjectResearch, ResearchStory } from '@/types';
 import { NewsCard } from './NewsCard';
@@ -38,6 +40,9 @@ export function RightSidebar({
   const [brief, setBrief] = useState<Brief | null>(null);
   const [projectResearch, setProjectResearch] = useState<ProjectResearch | null>(null);
   const [researchModalOpen, setResearchModalOpen] = useState(false);
+  const [showAddStory, setShowAddStory] = useState(false);
+  const [addStoryUrl, setAddStoryUrl] = useState('');
+  const [addingStory, setAddingStory] = useState(false);
   const researchRetryRef = useRef(false);
   const supabase = createClient();
 
@@ -215,6 +220,80 @@ export function RightSidebar({
     setProjectResearch((prev) => (prev ? { ...prev, selected_story_ids: next } : null));
   };
 
+  const handleAddStory = async () => {
+    if (!projectId || !addStoryUrl.trim() || addingStory) return;
+    setAddingStory(true);
+    try {
+      const res = await fetch('/api/research/add-story', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId, url: addStoryUrl.trim() }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        toast.error(json.error || 'Failed to add story');
+        return;
+      }
+      const newStory = json.story;
+      setProjectResearch((prev) => {
+        if (!prev) {
+          return {
+            id: crypto.randomUUID(),
+            project_id: projectId,
+            stories: [newStory],
+            suggested_keywords: [],
+            selected_story_ids: [newStory.id],
+            selected_keywords: [],
+            orchestrator_log: [],
+            loops_completed: 0,
+            status: 'completed' as const,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+        }
+        return {
+          ...prev,
+          stories: [...prev.stories, newStory],
+          selected_story_ids: [...(prev.selected_story_ids || []), newStory.id],
+        };
+      });
+      setAddStoryUrl('');
+      setShowAddStory(false);
+      toast.success('Reference story added');
+    } catch {
+      toast.error('Failed to add story');
+    } finally {
+      setAddingStory(false);
+    }
+  };
+
+  const handleRemoveStory = async (storyId: string) => {
+    if (!projectId) return;
+    try {
+      const res = await fetch('/api/research/remove-story', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId, storyId }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        toast.error(json.error || 'Failed to remove story');
+        return;
+      }
+      setProjectResearch((prev) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          stories: prev.stories.filter((s) => s.id !== storyId),
+          selected_story_ids: (prev.selected_story_ids || []).filter((id) => id !== storyId),
+        };
+      });
+      toast.success('Story removed');
+    } catch {
+      toast.error('Failed to remove story');
+    }
+  };
+
   const fetchNews = async () => {
     if (!project?.headline && !project?.primary_keyword) return;
 
@@ -285,10 +364,72 @@ export function RightSidebar({
                     View / Select Reference Sources
                   </Button>
                   <p className="text-[10px] text-text-tertiary">
-                    {projectResearch.stories.length} story{projectResearch.stories.length !== 1 ? 'ies' : ''} · {projectResearch.selected_story_ids?.length ?? 0} selected
+                    {projectResearch.stories.length} {projectResearch.stories.length !== 1 ? 'stories' : 'story'} · {projectResearch.selected_story_ids?.length ?? 0} selected
                   </p>
                 </>
               )}
+
+              {/* Manually-added stories list */}
+              {projectResearch && projectResearch.stories.some((s) => s.is_manual) && (
+                <div className="space-y-1">
+                  <p className="text-[10px] text-text-tertiary font-medium uppercase tracking-wide">Manually added</p>
+                  {projectResearch.stories
+                    .filter((s) => s.is_manual)
+                    .map((s) => (
+                      <div key={s.id} className="flex items-center gap-1.5 group">
+                        <p className="flex-1 text-xs text-text-secondary truncate" title={s.title}>{s.title}</p>
+                        <button
+                          className="shrink-0 text-text-tertiary hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
+                          onClick={() => handleRemoveStory(s.id)}
+                          title="Remove story"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                </div>
+              )}
+
+              {/* Add Reference Story */}
+              <div className="pt-1 border-t border-border-subtle">
+                <button
+                  className="flex items-center gap-1 text-xs text-text-tertiary hover:text-text-primary transition-colors w-full"
+                  onClick={() => {
+                    setShowAddStory((v) => !v);
+                    setAddStoryUrl('');
+                  }}
+                >
+                  <Plus className="w-3 h-3 shrink-0" />
+                  Add Reference Story
+                </button>
+                {showAddStory && (
+                  <div className="flex gap-1.5 mt-2">
+                    <Input
+                      placeholder="https://..."
+                      value={addStoryUrl}
+                      onChange={(e) => setAddStoryUrl(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleAddStory()}
+                      className="h-7 text-xs"
+                      autoFocus
+                      disabled={addingStory}
+                    />
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 w-7 p-0 shrink-0"
+                      onClick={handleAddStory}
+                      disabled={addingStory || !addStoryUrl.trim()}
+                      title="Add story"
+                    >
+                      {addingStory ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Plus className="w-3 h-3" />
+                      )}
+                    </Button>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
           <ResearchStoriesModal
@@ -296,6 +437,7 @@ export function RightSidebar({
             onOpenChange={setResearchModalOpen}
             projectResearch={projectResearch}
             onToggleStorySelection={toggleStorySelection}
+            onRemoveStory={handleRemoveStory}
           />
         </>
       )}

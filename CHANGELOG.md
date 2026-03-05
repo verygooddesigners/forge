@@ -1,5 +1,42 @@
 # Changelog
 
+## [1.11.25] - 2026-03-05
+
+### Feature: Manual research curation — badge, remove, sidebar list
+
+- **Manual badge**: Manually-added stories now show a distinct "Manual" badge (with a pen icon) in the Reference Sources modal, visually distinguishing them from pipeline-researched stories. The standard Verified/Unresolved badge is suppressed for manual stories since verification doesn't apply.
+- **Remove from modal**: Each manually-added story card in the modal now has an × button (top-right of the title). Pipeline stories cannot be removed this way.
+- **Remove from sidebar**: The Research panel now shows a compact "Manually added" list below the main content. Each entry shows the story title truncated, with a × that appears on hover to remove it.
+- **`is_manual` flag**: Added `is_manual?: boolean` to the `ResearchStory` type. Set to `true` in the `add-story` route. Used throughout to gate remove controls and badge display.
+- **New `POST /api/research/remove-story` route**: Validates auth, verifies project access, confirms `is_manual: true` before removing (pipeline stories are protected), updates `stories` and `selected_story_ids` in `project_research`.
+- **`onRemoveStory` prop**: Threaded through `ResearchStoriesModal` → `ResearchStoryCard` for the in-modal remove flow.
+
+---
+
+## [1.11.24] - 2026-03-05
+
+### Feature: Add Reference Story to Research panel
+
+- **Add Reference Story link**: A new "Add Reference Story" link (with Plus icon) now appears at the bottom of the Research panel in the RightSidebar, separated by a subtle border line.
+- **Expandable URL input**: Clicking the link expands a URL input field with a Plus button to the right. User can type a URL and press Enter or click the button to submit.
+- **URL scraping + AI extraction**: New `POST /api/research/add-story` endpoint fetches the URL, extracts og/meta tags for title/description/published date, strips HTML, and uses AI to extract the clean article body.
+- **Auto-added to bundle**: The new story is appended to `project_research.stories` and auto-selected in `selected_story_ids` so it's immediately included when generating content.
+- **Creates research record if needed**: If no `project_research` record exists yet for the project, one is created.
+- **Error handling**: Toast errors for invalid URL, fetch failure, timeout, and content extraction failure.
+
+---
+
+## [1.11.23] - 2026-03-05
+
+### Bug Tracker: Email-app layout + UserPanel layout fix + typo fix
+
+- **Bug Tracker redesign**: Bug list is now always visible in a fixed 380px left column. Clicking a bug shows the detail in the right panel. When no bug is selected, the right panel shows an empty state ("Select a bug to view details"). Removed the back/chevron button since both panels are always visible.
+- **UserPanel layout fix**: `BugsPageClient` was using `h-screen` (100vh) for the outer container, which overflowed the root layout's `p-6` padding by ~48px, pushing the UserPanel off-screen. Changed to `h-full` to correctly resolve against the `app-container` height (consistent with `DashboardPageClient`).
+- **Status filter always visible**: Status filter in the Bug Tracker list header now shows regardless of whether a bug is selected (previously hidden when a bug was selected).
+- **"storyies" typo fix**: `RightSidebar.tsx` — the research panel was generating "storyies" instead of "stories". Fixed the broken pluralization pattern.
+
+---
+
 ## [1.11.22] - 2026-03-05
 
 ### Fix: Research pipeline stories not saved for regular users

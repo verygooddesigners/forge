@@ -25,7 +25,6 @@ import {
   Bug,
   Search,
   Plus,
-  ChevronLeft,
   Archive,
   ArchiveRestore,
   Trash2,
@@ -445,9 +444,7 @@ export function BugTrackerPanel({ user, initialBugId }: { user: User; initialBug
       <div className="flex-1 flex min-h-0 overflow-hidden">
 
         {/* ── Left: Bug List ──────────────────────────────────────────── */}
-        <div className={`flex flex-col border-r border-border-default transition-all duration-200 ${
-          selectedBug ? 'w-[380px] flex-shrink-0' : 'flex-1'
-        }`}>
+        <div className="flex flex-col border-r border-border-default w-[380px] flex-shrink-0">
 
           {/* Filters */}
           <div className="flex-shrink-0 px-4 py-3 border-b border-border-default bg-bg-surface flex items-center gap-2 flex-wrap">
@@ -462,7 +459,7 @@ export function BugTrackerPanel({ user, initialBugId }: { user: User; initialBug
             </div>
 
             <Select value={severityFilter} onValueChange={setSeverityFilter}>
-              <SelectTrigger className={`h-8 text-sm ${selectedBug ? 'w-[110px]' : 'w-[130px]'}`}>
+              <SelectTrigger className="h-8 text-sm w-[110px]">
                 <SelectValue placeholder="Severity" />
               </SelectTrigger>
               <SelectContent>
@@ -474,9 +471,9 @@ export function BugTrackerPanel({ user, initialBugId }: { user: User; initialBug
               </SelectContent>
             </Select>
 
-            {tab === 'active' && !selectedBug && (
+            {tab === 'active' && (
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="h-8 w-[140px] text-sm">
+                <SelectTrigger className="h-8 w-[130px] text-sm">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -588,23 +585,19 @@ export function BugTrackerPanel({ user, initialBugId }: { user: User; initialBug
         </div>
 
         {/* ── Right: Bug Detail ────────────────────────────────────────── */}
-        {selectedBug && (
-          <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-bg-base">
-
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-bg-base">
+          {!selectedBug ? (
+            <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center p-8">
+              <div className="p-4 rounded-2xl bg-bg-elevated">
+                <Bug className="w-7 h-7 text-text-tertiary" />
+              </div>
+              <p className="text-text-secondary text-sm font-medium">Select a bug to view details</p>
+              <p className="text-text-tertiary text-xs">Click any item in the list to open it here.</p>
+            </div>
+          ) : (
+            <>
             {/* Detail header */}
             <div className="flex-shrink-0 px-6 py-4 border-b border-border-default bg-bg-surface flex items-start gap-3">
-              <button
-                onClick={() => {
-                  setSelectedBug(null);
-                  setIsEditing(false);
-                  router.push('/bugs', { scroll: false });
-                }}
-                className="mt-0.5 p-1.5 rounded-lg hover:bg-bg-hover transition-colors text-text-tertiary hover:text-text-primary flex-shrink-0"
-                title="Back to list"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
               <div className="flex-1 min-w-0">
                 {isEditing ? (
                   <Input
@@ -894,15 +887,10 @@ export function BugTrackerPanel({ user, initialBugId }: { user: User; initialBug
                 </div>
               )}
             </div>
-          </div>
-        )}
+            </>
+          )}
+        </div>
       </div>
-
-      {/* ── Empty state when no bug selected (detail placeholder) ──── */}
-      {!selectedBug && !loading && filtered.length > 0 && (
-        /* No placeholder needed — full-width list is the natural state */
-        null
-      )}
 
       {/* ── Report Bug Modal ────────────────────────────────────────────────── */}
       <ReportBugModal
