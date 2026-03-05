@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.11.18] - 2026-03-05
+
+### Fix: Super admin research pipeline — RLS blocking project_research access
+
+Root cause of "Failed to start research" when Jeremy ran research on Tyler's or Blake's project:
+
+1. `is_admin()` DB function only checked `role = 'admin'`, not `'Super Administrator'` — so the `projects` SELECT/UPDATE RLS policies blocked Jeremy server-side even though the API route code skipped the `user_id` filter.
+2. `project_research` RLS policy had no `is_admin()` check at all — Jeremy was blocked from reading/writing `project_research` rows for other users' projects regardless.
+
+**New migration** `20260305_fix_super_admin_research_rls.sql`:
+- Updates `is_admin()` to include `'Super Administrator'` (cascades to all existing project/brief/model policies)
+- Drops and recreates `project_research` policy with `is_admin(auth.uid())` bypass
+
+⚠️ **Run this migration in Supabase SQL editor to activate the fix.**
+
+---
+
 ## [1.11.13] - 2026-03-04
 
 ### Feature: Beta Scheduling + Create Panel redesign
