@@ -38,19 +38,19 @@ export async function generateContent(
   }
   
   if (request.targetWordCount) {
-    userMessage += `TARGET WORD COUNT: ${request.targetWordCount}\n`;
+    userMessage += `TARGET WORD COUNT: ${request.targetWordCount} words — THIS IS A HARD REQUIREMENT. Your prose (paragraphs, headings, lists) must total approximately ${request.targetWordCount} words (within ±10%). Table cell content does NOT count toward this total — write enough prose around any tables to reach the target. Do not go significantly over or under.\n`;
   }
-  
+
   if (request.writerModelContext) {
     userMessage += `\nWRITER STYLE CONTEXT:\n${request.writerModelContext}\n`;
   }
-  
+
   if (request.additionalInstructions) {
     userMessage += `\nADDITIONAL INSTRUCTIONS:\n${request.additionalInstructions}\n`;
   }
-  
+
   userMessage += `\nIMPORTANT: Output ONLY markdown format (## for headings, ** for bold, - for lists). Do NOT use HTML tags like <p>, <h2>, <table>, etc.`;
-  
+
   const messages: AgentMessage[] = [
     {
       role: 'system',
@@ -61,7 +61,7 @@ export async function generateContent(
       content: userMessage,
     },
   ];
-  
+
   return callClaude(messages, config);
 }
 
@@ -87,13 +87,13 @@ export async function generateContentStream(
   }
   
   if (request.targetWordCount) {
-    userMessage += `TARGET WORD COUNT: ${request.targetWordCount}\n`;
+    userMessage += `TARGET WORD COUNT: ${request.targetWordCount} words — THIS IS A HARD REQUIREMENT. Your prose (paragraphs, headings, lists) must total approximately ${request.targetWordCount} words (within ±10%). Table cell content does NOT count toward this total — write enough prose around any tables to reach the target. Do not go significantly over or under.\n`;
   }
-  
+
   if (request.writerModelContext) {
     userMessage += `\nWRITER STYLE CONTEXT:\n${request.writerModelContext}\n`;
   }
-  
+
   if (request.additionalInstructions) {
     userMessage += `\nADDITIONAL INSTRUCTIONS:\n${request.additionalInstructions}\n`;
   }

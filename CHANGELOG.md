@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.11.21] - 2026-03-05
+
+### Fix: Content generation now strictly enforces word count target
+
+The word count instruction was a soft suggestion that Claude routinely ignored, producing 2,000+ words when 550 were requested.
+
+Changes:
+- `lib/agents/prompts/content-generation.ts` — Added a WORD COUNT CRITICAL RULE section to the system prompt explaining the hard ±10% constraint and clarifying that table cell content does not count toward the word total.
+- `lib/agents/content-generation.ts` — Replaced the weak `TARGET WORD COUNT: N` label in both `generateContent` and `generateContentStream` with an explicit hard-requirement instruction including the ±10% tolerance, the table exclusion rule, and a call-out that significant violations are a critical error.
+
+---
+
 ## [1.11.20] - 2026-03-05
 
 ### Fix: Use service role key for all privileged research DB operations
