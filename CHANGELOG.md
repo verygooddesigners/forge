@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.00] - 2026-03-05
+
+### Minor version bump — closes the 1.11 research curation cycle
+
+The 1.11 family (25 patch versions) is now closed. v1.12.00 marks the completion of the manual research curation feature set: users can now add reference stories by URL, see them badged as "Manual" in the modal, and remove them from both the modal and the sidebar. The full add/badge/remove loop is complete.
+
+---
+
 ## [1.11.25] - 2026-03-05
 
 ### Feature: Manual research curation — badge, remove, sidebar list
