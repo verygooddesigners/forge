@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.11.20] - 2026-03-05
+
+### Fix: Use service role key for all privileged research DB operations
+
+The `is_admin()` RLS function wasn't reliably returning true for Super Administrator in all contexts (pipeline writes, sidebar reads). Root fix: privileged users (Super Administrator / admin) now use the Supabase service role client for all `project_research` read/write operations — completely bypassing RLS. Auth is still enforced in code (session check + role check) before the service client is ever used.
+
+Affected: `GET /api/research/load`, `PATCH /api/research/load`, `POST /api/research/pipeline` (all project_research and projects writes).
+
+---
+
 ## [1.11.19] - 2026-03-05
 
 ### Fix: Research stories not appearing in Editor for super admin

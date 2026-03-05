@@ -1,7 +1,15 @@
 import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createClient as createServiceClient } from '@supabase/supabase-js';
 import { runResearchPipeline } from '@/lib/agents/research-orchestrator';
 import { debugLog } from '@/lib/debug-log';
+
+// Service-role client — bypasses RLS entirely for privileged writes
+function getServiceClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  return createServiceClient(url, key);
+}
 
 export const maxDuration = 120;
 
@@ -61,7 +69,10 @@ export async function POST(request: NextRequest) {
     }
     debugLog('ResearchPipeline', 'Auth OK', projectId);
 
-    const { data: existing } = await supabase
+    // Privileged users use service role so all project_research writes bypass RLS
+    const db = isPrivileged ? getServiceClient() : supabase;
+
+    const { data: existing } = await db
       .from('project_research')
       .select('id')
       .eq('project_id', projectId)
@@ -71,12 +82,12 @@ export async function POST(request: NextRequest) {
     if (existing) {
       researchId = existing.id;
       debugLog('ResearchPipeline', 'Using existing project_research', researchId);
-      await supabase
+      await db
         .from('project_research')
         .update({ status: 'running', updated_at: new Date().toISOString() })
         .eq('id', researchId);
     } else {
-      const { data: inserted, error: insertError } = await supabase
+      const { data: inserted, error: insertError } = await db
         .from('project_research')
         .insert({
           project_id: projectId,
@@ -109,7 +120,7 @@ export async function POST(request: NextRequest) {
         try {
           debugLog('ResearchPipeline', 'Pipeline started', projectId);
           const result = await runResearchPipeline(
-            supabase,
+            db,
             {
               projectId,
               headline,
@@ -139,7 +150,7 @@ export async function POST(request: NextRequest) {
           const selected_story_ids = result.stories.filter((s) => s.is_selected).map((s) => s.id);
           const storiesPayload = JSON.parse(JSON.stringify(result.stories)) as typeof result.stories;
 
-          const { error: updateError } = await supabase
+          const { error: updateError } = await db
             .from('project_research')
             .update({
               stories: storiesPayload,
@@ -155,7 +166,7 @@ export async function POST(request: NextRequest) {
 
           if (updateError) {
             debugLog('ResearchPipeline', 'project_research update failed', updateError.message);
-            await supabase
+            await db
               .from('project_research')
               .update({ status: 'failed', updated_at: new Date().toISOString() })
               .eq('id', researchId);
@@ -168,7 +179,7 @@ export async function POST(request: NextRequest) {
               research_timestamp: result.research_brief.research_timestamp,
               confidence_score: result.research_brief.confidence_score,
             };
-            await supabase
+            await db
               .from('projects')
               .update({ research_brief: researchBrief, updated_at: new Date().toISOString() })
               .eq('id', projectId);
@@ -186,7 +197,7 @@ export async function POST(request: NextRequest) {
             research_timestamp: result.research_brief.research_timestamp,
             confidence_score: result.research_brief.confidence_score,
           };
-          await supabase
+          await db
             .from('projects')
             .update({
               research_brief: researchBrief,
@@ -198,7 +209,7 @@ export async function POST(request: NextRequest) {
         } catch (err: any) {
           debugLog('ResearchPipeline', 'Pipeline error', err?.message ?? err);
           console.error('[research/pipeline]', err);
-          await supabase
+          await db
             .from('project_research')
             .update({
               status: 'failed',

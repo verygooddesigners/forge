@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createClient as createServiceClient } from '@supabase/supabase-js';
+
+// Service-role client — bypasses RLS entirely. Only used after privilege is verified in code.
+function getServiceClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  return createServiceClient(url, key);
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -27,7 +35,7 @@ export async function GET(request: NextRequest) {
   const isPrivileged =
     userRow?.role === 'Super Administrator' || userRow?.role === 'admin';
 
-  // Verify project access
+  // Verify project access — privileged users skip user_id check
   let projectQuery = supabase.from('projects').select('id').eq('id', projectId);
   if (!isPrivileged) {
     projectQuery = projectQuery.eq('user_id', user.id);
@@ -38,8 +46,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Project not found or access denied' }, { status: 403 });
   }
 
-  // Fetch research data
-  const { data: research, error } = await supabase
+  // Privileged users use service role to bypass RLS entirely; regular users use their session
+  const db = isPrivileged ? getServiceClient() : supabase;
+
+  const { data: research, error } = await db
     .from('project_research')
     .select('*')
     .eq('project_id', projectId)
@@ -88,7 +98,10 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: 'Project not found or access denied' }, { status: 403 });
   }
 
-  const { error } = await supabase
+  // Privileged users use service role to bypass RLS entirely
+  const db = isPrivileged ? getServiceClient() : supabase;
+
+  const { error } = await db
     .from('project_research')
     .update({ selected_story_ids, updated_at: new Date().toISOString() })
     .eq('project_id', projectId);
