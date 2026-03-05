@@ -64,10 +64,18 @@ export function ProjectSettingsPanel({
         setSelectedBriefId(proj.brief_id || '');
       }
 
+      // Always include the current user's models + house models.
+      // If this project belongs to someone else, also include the project owner's
+      // models so their assigned writer model appears in the dropdown.
+      const ownerIdFilter =
+        proj?.user_id && proj.user_id !== userId
+          ? `strategist_id.eq.${userId},strategist_id.eq.${proj.user_id},is_house_model.eq.true`
+          : `strategist_id.eq.${userId},is_house_model.eq.true`;
+
       const { data: models } = await supabase
         .from('writer_models')
         .select('*')
-        .or(`strategist_id.eq.${userId},is_house_model.eq.true`)
+        .or(ownerIdFilter)
         .order('name');
       setWriterModels(models ?? []);
 
@@ -82,7 +90,10 @@ export function ProjectSettingsPanel({
     load();
   }, [projectId, userId, supabase]);
 
-  const personalModels = writerModels.filter((m) => m.strategist_id === userId);
+  const personalModels = writerModels.filter((m) => m.strategist_id === userId && !m.is_house_model);
+  const ownerModels = writerModels.filter(
+    (m) => project?.user_id && m.strategist_id === project.user_id && m.strategist_id !== userId && !m.is_house_model
+  );
   const houseModels = writerModels.filter((m) => m.is_house_model);
 
   const handleSave = async () => {
@@ -160,6 +171,16 @@ export function ProjectSettingsPanel({
             <SelectValue placeholder="Select model" />
           </SelectTrigger>
           <SelectContent>
+            {ownerModels.length > 0 && (
+              <SelectGroup>
+                <SelectLabel>Owner's Model</SelectLabel>
+                {ownerModels.map((m) => (
+                  <SelectItem key={m.id} value={m.id}>
+                    {m.name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            )}
             {personalModels.length > 0 && (
               <SelectGroup>
                 <SelectLabel>Your Model</SelectLabel>

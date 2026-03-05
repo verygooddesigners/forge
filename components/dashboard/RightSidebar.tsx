@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Newspaper, TrendingUp, RefreshCw, BookOpen } from 'lucide-react';
+import { Newspaper, TrendingUp, RefreshCw, BookOpen, RotateCcw } from 'lucide-react';
 import { NewsArticle, Project, Brief } from '@/types';
 import type { ProjectResearch, ResearchStory } from '@/types';
 import { NewsCard } from './NewsCard';
@@ -20,14 +20,16 @@ interface RightSidebarProps {
   content?: any;
   onContentUpdate?: (content: any) => void;
   onProjectUpdate?: () => void;
+  onResearchAgain?: () => void;
 }
 
-export function RightSidebar({ 
-  projectId, 
+export function RightSidebar({
+  projectId,
   writerModelId,
   content,
   onContentUpdate,
   onProjectUpdate,
+  onResearchAgain,
 }: RightSidebarProps) {
   const [activeTab, setActiveTab] = useState('seo');
   const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([]);
@@ -243,7 +245,21 @@ export function RightSidebar({
         <>
           <Card className="bg-bg-surface border-border-subtle shadow-lg">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Research</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium">Research</CardTitle>
+                {onResearchAgain && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2 text-xs text-text-tertiary hover:text-text-primary gap-1"
+                    onClick={onResearchAgain}
+                    title="Re-run research pipeline"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    Research Again
+                  </Button>
+                )}
+              </div>
             </CardHeader>
             <CardContent className="pt-0 space-y-3">
               {!projectResearch ? (

@@ -33,6 +33,12 @@ export function DashboardPageClient({ user }: DashboardPageClientProps) {
     router.replace(`/dashboard?${params.toString()}`);
   }, [router, searchParams]);
 
+  const handleResearchAgain = useCallback(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('research', 'true');
+    router.push(`/dashboard?${params.toString()}`);
+  }, [router, searchParams]);
+
   const showEditor = projectId && writerModelId && !researchMode;
   const showResearchHub = projectId && writerModelId && researchMode;
 
@@ -70,6 +76,7 @@ export function DashboardPageClient({ user }: DashboardPageClientProps) {
               writerModelId={writerModelId}
               content={editorContent}
               onProjectUpdate={handleProjectUpdate}
+              onResearchAgain={handleResearchAgain}
             />
           </div>
         ) : (
