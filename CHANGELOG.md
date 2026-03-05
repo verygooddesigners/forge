@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.11.22] - 2026-03-05
+
+### Fix: Research pipeline stories not saved for regular users
+
+Root cause: Inside a Next.js App Router `ReadableStream` async callback, the Supabase SSR client's auth context (`auth.uid()`) can become unavailable. Supabase RLS silently rejects the `project_research` UPDATE — returns success with 0 rows modified and no error — so the pipeline reported "done" but stories were never persisted to the DB.
+
+Fix: `POST /api/research/pipeline` now always uses the service role client for all `project_research` and `projects` writes, regardless of whether the caller is an admin or a regular user. Project ownership is still verified in application code (session check + `user_id` match) before the service role client is ever used.
+
+---
+
 ## [1.11.21] - 2026-03-05
 
 ### Fix: Content generation now strictly enforces word count target

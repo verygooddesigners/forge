@@ -69,8 +69,12 @@ export async function POST(request: NextRequest) {
     }
     debugLog('ResearchPipeline', 'Auth OK', projectId);
 
-    // Privileged users use service role so all project_research writes bypass RLS
-    const db = isPrivileged ? getServiceClient() : supabase;
+    // Always use service role for all project_research / projects writes.
+    // auth.uid() can become null inside a ReadableStream async callback (Next.js SSR context
+    // is not always available after streaming starts), which makes RLS silently reject UPDATEs
+    // for regular users — returning success with 0 rows and no error. We've already verified
+    // project ownership above, so bypassing RLS here is safe.
+    const db = getServiceClient();
 
     const { data: existing } = await db
       .from('project_research')
