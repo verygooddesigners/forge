@@ -6,7 +6,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { loadAgentConfig, callClaude } from './base';
 import type { AgentMessage } from './types';
-import { loadTrustedSources, searchTavily } from '@/lib/research';
+import { loadTrustedSources, searchTavily, searchSerper, mergeArticles } from '@/lib/research';
 import { evaluateResearchRelevance } from './quality-assurance';
 import { verifyFacts } from './fact-verification';
 import { generateKeywordSuggestions } from './seo-optimization';
@@ -183,14 +183,32 @@ export async function runResearchPipeline(
   while (loopsCompleted < MAX_LOOPS) {
     push('search', `Searching for: ${currentQuery.slice(0, 60)}...`);
     debugLog('ResearchOrchestrator', 'Search', { loop: loopsCompleted + 1, query: currentQuery.slice(0, 60) });
-    const articles = await searchTavily(
-      currentQuery,
-      trustedSourcesMap,
-      { max_results: 15, days: 21, search_depth: 'advanced' },
-      `research-${projectId}`
-    );
-    push('search', `Found ${articles.length} articles`);
-    debugLog('ResearchOrchestrator', 'Search result', { articles: articles.length });
+
+    // Run Tavily (news) + Serper (web) in parallel for broadest coverage
+    const [tavilyArticles, serperArticles] = await Promise.all([
+      searchTavily(
+        currentQuery,
+        trustedSourcesMap,
+        { max_results: 15, days: 21, search_depth: 'advanced' },
+        `research-${projectId}`
+      ).catch((err) => {
+        debugLog('ResearchOrchestrator', 'Tavily error (continuing)', err?.message ?? err);
+        return [] as ResearchArticle[];
+      }),
+      searchSerper(
+        currentQuery,
+        trustedSourcesMap,
+        10,
+        `serper-${projectId}`
+      ).catch((err) => {
+        debugLog('ResearchOrchestrator', 'Serper error (continuing)', err?.message ?? err);
+        return [] as ResearchArticle[];
+      }),
+    ]);
+
+    const articles = mergeArticles(tavilyArticles, serperArticles, 20);
+    push('search', `Found ${articles.length} articles (Tavily: ${tavilyArticles.length}, Web: ${serperArticles.length})`);
+    debugLog('ResearchOrchestrator', 'Search result', { tavily: tavilyArticles.length, serper: serperArticles.length, merged: articles.length });
     if (articles.length === 0 && loopsCompleted === 0) {
       push('error', 'No articles found');
       break;

@@ -1,7 +1,7 @@
 # Forge - Project Status
 
-**Last Updated:** March 4, 2026
-**Version:** v1.11.13
+**Last Updated:** March 5, 2026
+**Version:** v1.11.14
 **Production:** https://gdcforge.vercel.app
 **Repository:** https://github.com/verygooddesigners/forge  
 **Local Dev:** http://localhost:5309  
@@ -18,7 +18,7 @@
 | Editor | TipTap 3.10 |
 | Database | Supabase (PostgreSQL, Auth, RLS) |
 | AI | Claude API (Anthropic) |
-| News | Tavily AI Search API |
+| News | Tavily AI Search API + Serper.dev (Google Search) |
 | Deployment | Vercel |
 
 ---
@@ -56,6 +56,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 CLAUDE_API_KEY=
 TAVILY_API_KEY=
+SERPER_API_KEY=
 NEXT_PUBLIC_APP_URL=
 BETA_SIGNUP_TOKEN=
 ```
@@ -75,6 +76,9 @@ None currently tracked.
 ---
 
 ## Change Log
+
+### March 5, 2026
+- Serper.dev Google Search integration in research pipeline — runs in parallel with Tavily, results merged/deduplicated. Fixes "0 articles" failures for evergreen/non-news topics.
 
 ### February 18, 2026
 - Cleaned up codebase documentation (removed ~40 redundant files)
