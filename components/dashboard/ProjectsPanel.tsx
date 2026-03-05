@@ -57,32 +57,49 @@ export function ProjectsPanel({ user, onSelectProject, onCreateProject }: Projec
     loadProjects();
   }, []);
 
+  const isSuperAdmin = user.role === 'Super Administrator';
+
   const loadProjects = async () => {
     setLoading(true);
     try {
-      // My projects
-      const { data: rawMine, error: mineErr } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('updated_at', { ascending: false });
-      const mine = (rawMine ?? []) as Project[];
+      if (isSuperAdmin) {
+        // Super admins see ALL projects from every user
+        const { data: rawAll, error: allErr } = await supabase
+          .from('projects')
+          .select('*')
+          .order('updated_at', { ascending: false });
 
-      if (!mineErr && mine.length) {
-        setMyProjects(mine.map((p) => ({ ...p, file_name: p.file_name || p.headline })));
-      }
+        if (!allErr) {
+          const mine = (rawAll ?? []).filter((p) => p.user_id === user.id) as Project[];
+          const others = (rawAll ?? []).filter((p) => p.user_id !== user.id) as Project[];
+          setMyProjects(mine.map((p) => ({ ...p, file_name: p.file_name || p.headline })));
+          setSharedProjects(others.map((p) => ({ ...p, file_name: p.file_name || p.headline })));
+        }
+      } else {
+        // My projects
+        const { data: rawMine, error: mineErr } = await supabase
+          .from('projects')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('updated_at', { ascending: false });
+        const mine = (rawMine ?? []) as Project[];
 
-      // Shared projects (other users' projects shared with everyone)
-      const { data: rawShared, error: sharedErr } = await supabase
-        .from('projects')
-        .select('*')
-        .neq('user_id', user.id)
-        .eq('is_shared', true)
-        .order('updated_at', { ascending: false });
-      const shared = (rawShared ?? []) as Project[];
+        if (!mineErr && mine.length) {
+          setMyProjects(mine.map((p) => ({ ...p, file_name: p.file_name || p.headline })));
+        }
 
-      if (!sharedErr && shared.length) {
-        setSharedProjects(shared.map((p) => ({ ...p, file_name: p.file_name || p.headline })));
+        // Shared projects (other users' projects shared with everyone)
+        const { data: rawShared, error: sharedErr } = await supabase
+          .from('projects')
+          .select('*')
+          .neq('user_id', user.id)
+          .eq('is_shared', true)
+          .order('updated_at', { ascending: false });
+        const shared = (rawShared ?? []) as Project[];
+
+        if (!sharedErr && shared.length) {
+          setSharedProjects(shared.map((p) => ({ ...p, file_name: p.file_name || p.headline })));
+        }
       }
     } catch (error) {
       console.error('Error loading projects:', error);
@@ -345,24 +362,28 @@ export function ProjectsPanel({ user, onSelectProject, onCreateProject }: Projec
               )}
             </section>
 
-            {/* Shared Projects */}
+            {/* Shared / All Team Projects */}
             <section>
               <div className="flex items-center gap-2 mb-4 pt-2 border-t border-border-subtle">
                 <Users2 className="w-4 h-4 text-text-tertiary mt-2" />
                 <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-wide mt-2">
-                  Shared Projects
+                  {isSuperAdmin ? 'All Team Projects' : 'Shared Projects'}
                 </h2>
                 <span className="text-xs text-text-tertiary font-mono mt-2">({filteredShared.length})</span>
               </div>
 
               {filteredShared.length === 0 ? (
                 <p className="text-sm text-text-tertiary py-2">
-                  {searchQuery ? 'No shared projects match your search.' : 'No projects have been shared yet.'}
+                  {searchQuery
+                    ? 'No projects match your search.'
+                    : isSuperAdmin
+                    ? 'No other team members have created projects yet.'
+                    : 'No projects have been shared yet.'}
                 </p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredShared.map((project) => (
-                    <ProjectCard key={project.id} project={project} canDelete={false} />
+                    <ProjectCard key={project.id} project={project} canDelete={isSuperAdmin} />
                   ))}
                 </div>
               )}

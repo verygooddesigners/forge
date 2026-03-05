@@ -1,7 +1,7 @@
 # Forge - Project Status
 
 **Last Updated:** March 5, 2026
-**Version:** v1.11.14
+**Version:** v1.11.15
 **Production:** https://gdcforge.vercel.app
 **Repository:** https://github.com/verygooddesigners/forge  
 **Local Dev:** http://localhost:5309  
@@ -78,6 +78,8 @@ None currently tracked.
 ## Change Log
 
 ### March 5, 2026
+- Super admin full project access: updated is_admin() DB function to include Super Administrator role; ProjectsPanel now loads all team projects (not just shared) for super admins.
+
 - Serper.dev Google Search integration in research pipeline — runs in parallel with Tavily, results merged/deduplicated. Fixes "0 articles" failures for evergreen/non-news topics.
 
 ### February 18, 2026
