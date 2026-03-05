@@ -38,12 +38,20 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const { data: project } = await supabase
-      .from('projects')
-      .select('id')
-      .eq('id', projectId)
-      .eq('user_id', user.id)
+    // Check if current user is an admin/super admin — they can run research on any project
+    const { data: userRow } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
       .single();
+    const isPrivileged = userRow?.role === 'Super Administrator' || userRow?.role === 'admin';
+
+    let projectQuery = supabase.from('projects').select('id').eq('id', projectId);
+    if (!isPrivileged) {
+      projectQuery = projectQuery.eq('user_id', user.id);
+    }
+    const { data: project } = await projectQuery.single();
+
     if (!project) {
       debugLog('ResearchPipeline', '403 Project not found or access denied', projectId);
       return new Response(JSON.stringify({ error: 'Project not found or access denied' }), {

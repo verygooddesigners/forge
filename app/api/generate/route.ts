@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { findSimilarTrainingContent, buildContextFromExamples, buildContentGenerationPrompt } from '@/lib/rag';
 import { generateContentStream, ContentGenerationRequest } from '@/lib/agents';
-import { getUserPermissions } from '@/lib/auth-config';
 import { replaceTwigs, getDateTwigValues } from '@/lib/twigs';
 
 /**
@@ -74,14 +73,14 @@ export async function POST(request: NextRequest) {
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
-    // Verify project ownership if projectId provided
+    // Verify project access (super admins/admins can access any project)
+    const { data: userProfile } = await supabase.from('users').select('role').eq('id', user.id).single();
+    const isPrivileged = userProfile?.role === 'Super Administrator' || userProfile?.role === 'admin';
+
     if (projectId) {
-      const { data: project } = await supabase
-        .from('projects')
-        .select('id')
-        .eq('id', projectId)
-        .eq('user_id', user.id)
-        .single();
+      let projectQuery = supabase.from('projects').select('id').eq('id', projectId);
+      if (!isPrivileged) projectQuery = projectQuery.eq('user_id', user.id);
+      const { data: project } = await projectQuery.single();
       if (!project) {
         return new Response(
           JSON.stringify({ error: 'Project not found or access denied' }),
@@ -105,17 +104,9 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const { data: profile } = await supabase
-        .from('users')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-
-      const userPerms = profile ? await getUserPermissions(user.id) : {};
-      const isAdminOrAbove = userPerms['can_edit_users'] === true;
       const ownsModel = model.strategist_id === user.id || model.created_by === user.id;
 
-      if (!isAdminOrAbove && !ownsModel) {
+      if (!isPrivileged && !ownsModel) {
         return new Response(
           JSON.stringify({ error: 'Writer model not found or access denied' }),
           { status: 403, headers: { 'Content-Type': 'application/json' } }

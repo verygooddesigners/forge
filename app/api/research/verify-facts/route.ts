@@ -22,13 +22,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get project details (verify ownership)
-    const { data: project } = await supabase
+    // Admins/super-admins can access any project; others are restricted to their own
+    const { data: userRow } = await supabase.from('users').select('role').eq('id', user.id).single();
+    const isPrivileged = userRow?.role === 'Super Administrator' || userRow?.role === 'admin';
+
+    let projectQuery = supabase
       .from('projects')
       .select('headline, topic, primary_keyword')
-      .eq('id', projectId)
-      .eq('user_id', user.id)
-      .single();
+      .eq('id', projectId);
+    if (!isPrivileged) projectQuery = projectQuery.eq('user_id', user.id);
+    const { data: project } = await projectQuery.single();
 
     if (!project) {
       return NextResponse.json(
@@ -61,14 +64,12 @@ export async function POST(request: NextRequest) {
     };
 
     // Store research brief in project metadata
-    const { error: updateError } = await supabase
+    let updateQuery = supabase
       .from('projects')
-      .update({
-        research_brief: researchBrief,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', projectId)
-      .eq('user_id', user.id);
+      .update({ research_brief: researchBrief, updated_at: new Date().toISOString() })
+      .eq('id', projectId);
+    if (!isPrivileged) updateQuery = updateQuery.eq('user_id', user.id);
+    const { error: updateError } = await updateQuery;
 
     if (updateError) {
       console.error('Error updating project with research brief:', updateError);
