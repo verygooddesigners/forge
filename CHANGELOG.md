@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.12.01] - 2026-03-05
+
+### Fix: Generate Content — "Writer model not found or access denied" for all users
+
+Root cause: The generate route's model access check only allowed users who owned the model via `strategist_id` or `created_by`. Admin-assigned models (where `strategist_id` is null) and house models were both blocked for regular users.
+
+Fix: Added two additional access checks — `is_house_model === true` and `default_writer_model_id` match — mirroring the same fix already applied to the training route (v1.10.51) and project creation (v1.11.3). All four paths now grant access: privileged user, model owner, house model, or admin-assigned default.
+
+---
+
 ## [1.12.00] - 2026-03-05
 
 ### Minor version bump — closes the 1.11 research curation cycle

@@ -89,11 +89,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Verify writer model access (ownership or admin+)
+    // Verify writer model access (ownership, house model, assigned default, or admin+)
     if (writerModelId) {
       const { data: model, error: modelError } = await supabase
         .from('writer_models')
-        .select('id, strategist_id, created_by')
+        .select('id, strategist_id, created_by, is_house_model')
         .eq('id', writerModelId)
         .single();
 
@@ -105,8 +105,17 @@ export async function POST(request: NextRequest) {
       }
 
       const ownsModel = model.strategist_id === user.id || model.created_by === user.id;
+      const isHouseModel = model.is_house_model === true;
 
-      if (!isPrivileged && !ownsModel) {
+      // Also check if this is the user's admin-assigned default model
+      const { data: userRecord } = await supabase
+        .from('users')
+        .select('default_writer_model_id')
+        .eq('id', user.id)
+        .single();
+      const isAssignedDefault = userRecord?.default_writer_model_id === writerModelId;
+
+      if (!isPrivileged && !ownsModel && !isHouseModel && !isAssignedDefault) {
         return new Response(
           JSON.stringify({ error: 'Writer model not found or access denied' }),
           { status: 403, headers: { 'Content-Type': 'application/json' } }
