@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { createClient } from '@/lib/supabase/client';
 import { version as VERSION } from '@/package.json';
 
-const UPDATED = '03/02/26';
+const UPDATED = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
 
 // ─── Types ──────────────────────────────────────────────────────
 interface BetaData {

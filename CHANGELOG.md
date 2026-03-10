@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.02] - 2026-03-05
+
+### Fix: Beta Toolbar date now dynamic
+
+`UPDATED` constant in `BetaToolbar.tsx` was hardcoded to `'03/02/26'`. Replaced with `new Date().toLocaleDateString(...)` so it always shows the current date without needing a manual update.
+
+---
+
 ## [1.12.01] - 2026-03-05
 
 ### Fix: Generate Content — "Writer model not found or access denied" for all users
