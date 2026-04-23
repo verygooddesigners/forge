@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.03] - 2026-04-23
+
+### Change: Replace logo with new Forge wordmark
+
+Swapped the old `forge-icon.png` square icon for the new horizontal `fgForge_logo-2500.png` wordmark in the left sidebar and login page. Copied the 500px PNG to `public/images/forge-logo.png` and updated both image references with appropriate sizing.
+
+---
+
 ## [1.12.02] - 2026-03-05
 
 ### Fix: Beta Toolbar date now dynamic

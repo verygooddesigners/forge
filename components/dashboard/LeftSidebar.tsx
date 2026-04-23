@@ -151,11 +151,11 @@ export function LeftSidebar({ user, projectId, onOpenProjectModal, onOpenWriterF
       {/* Logo */}
       <div className="mb-4 flex justify-center">
         <Image
-          src="/images/forge-icon.png"
+          src="/images/forge-logo.png"
           alt="Forge"
-          width={80}
+          width={200}
           height={80}
-          className="rounded-lg"
+          className="w-full max-w-[200px] h-auto"
           priority
         />
       </div>

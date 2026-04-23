@@ -146,11 +146,11 @@ export default function LoginForm() {
         <CardHeader className="space-y-3 text-center">
           <div className="flex items-center justify-center mb-2">
             <Image
-              src="/images/forge-icon.png"
+              src="/images/forge-logo.png"
               alt="Forge"
-              width={80}
+              width={200}
               height={80}
-              className="rounded-lg"
+              className="h-auto"
               priority
             />
           </div>
