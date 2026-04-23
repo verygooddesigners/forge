@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.04] - 2026-04-23
+
+### Fix: Replace text wordmark in AppSidebar with logo image
+
+The actual text wordmark ("FORGE" styled div) was in `AppSidebar.tsx`, not `LeftSidebar.tsx`. Replaced it with the same `forge-logo.png` image used on the login page.
+
+---
+
 ## [1.12.03] - 2026-04-23
 
 ### Change: Replace logo with new Forge wordmark

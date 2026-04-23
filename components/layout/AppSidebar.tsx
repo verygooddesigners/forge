@@ -109,12 +109,14 @@ export function AppSidebar({
       {/* Wordmark */}
       <div className="px-4 pt-5 pb-4 border-b border-white/40 flex flex-col items-center">
         <button onClick={() => router.push('/dashboard')} className="focus:outline-none text-center">
-          <div
-            className="font-black leading-none text-accent-primary uppercase w-full"
-            style={{ letterSpacing: '-0.07em', fontSize: '64px' }}
-          >
-            FORGE
-          </div>
+          <Image
+            src="/images/forge-logo.png"
+            alt="Forge"
+            width={200}
+            height={80}
+            className="w-full max-w-[200px] h-auto"
+            priority
+          />
           <div className="text-[10px] font-semibold tracking-[0.18em] text-text-tertiary uppercase mt-1.5">
             BETA v{VERSION}
           </div>
