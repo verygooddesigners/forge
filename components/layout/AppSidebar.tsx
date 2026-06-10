@@ -18,6 +18,7 @@ import {
   Plus,
   KeyRound,
   Bug,
+  Newspaper,
 } from 'lucide-react';
 import Image from 'next/image';
 import { version as VERSION } from '@/package.json';
@@ -144,7 +145,7 @@ export function AppSidebar({
           {/* Dropdown */}
           <div
             className={`overflow-hidden transition-all duration-200 ease-out ${
-              createDropdownOpen ? 'max-h-24 opacity-100 mt-1' : 'max-h-0 opacity-0'
+              createDropdownOpen ? 'max-h-40 opacity-100 mt-1' : 'max-h-0 opacity-0'
             }`}
           >
             <div className="app-floating-menu rounded-xl overflow-hidden shadow-xl">
@@ -162,6 +163,14 @@ export function AppSidebar({
               >
                 <BookOpen className="w-4 h-4 shrink-0 text-accent-primary" />
                 SmartBrief
+              </button>
+              <div className="border-t border-black/5" />
+              <button
+                onClick={() => { setCreateDropdownOpen(false); router.push('/news-forge?new=true'); }}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-black/5 hover:text-text-primary transition-all"
+              >
+                <Newspaper className="w-4 h-4 shrink-0 text-accent-primary" />
+                News Forge Project
               </button>
             </div>
           </div>
@@ -190,6 +199,11 @@ export function AppSidebar({
         <button onClick={() => router.push('/writer-factory')} className={navLinkClass('/writer-factory')}>
           <Wrench className="w-[18px] h-[18px] shrink-0" />
           <span>Writer Factory</span>
+        </button>
+
+        <button onClick={() => router.push('/news-forge')} className={navLinkClass('/news-forge')}>
+          <Newspaper className="w-[18px] h-[18px] shrink-0" />
+          <span>News Forge</span>
         </button>
 
         {(hasPermission('can_view_bugs') || hasPermission('can_manage_bugs') || hasPermission('can_access_admin')) && (

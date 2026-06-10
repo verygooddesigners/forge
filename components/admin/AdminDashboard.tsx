@@ -16,6 +16,7 @@ import { AuditLog } from './AuditLog';
 import { SystemHealth } from './SystemHealth';
 import { WriterModelsAdmin } from './WriterModelsAdmin';
 import { BetaManagement } from './BetaManagement';
+import { NewsSitesAdmin } from './NewsSitesAdmin';
 import type { AdminSectionId } from './AdminMenu';
 
 interface AdminDashboardProps {
@@ -55,6 +56,8 @@ export function AdminDashboard({ user, activeSection }: AdminDashboardProps) {
       return <AuditLog />;
     case 'system-health':
       return <SystemHealth />;
+    case 'news-sites':
+      return <NewsSitesAdmin />;
     default:
       return <UserManagement adminUser={user} />;
   }

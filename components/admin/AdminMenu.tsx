@@ -20,6 +20,7 @@ import {
   Link2,
   PenLine,
   FlaskConical,
+  Globe,
 } from 'lucide-react';
 import {
   Tooltip,
@@ -46,7 +47,8 @@ export type AdminSectionId =
   | 'roles-editor'
   | 'odds-api'
   | 'audit-log'
-  | 'system-health';
+  | 'system-health'
+  | 'news-sites';
 
 interface AdminMenuProps {
   user: User;
@@ -86,6 +88,7 @@ const MENU_ITEMS: MenuItem[] = [
 
   // Platform
   { id: 'tools', label: 'Tools Management', icon: Wrench, requiredPermission: 'can_manage_tools', group: 'Platform' },
+  { id: 'news-sites', label: 'News Sites', icon: Globe, requiredPermission: 'can_manage_tools', group: 'Platform' },
   { id: 'audit-log', label: 'Audit Log', icon: ScrollText, requiredPermission: 'can_access_admin', group: 'Platform' },
   { id: 'system-health', label: 'System Health', icon: Activity, requiredPermission: 'can_manage_api_keys', group: 'Platform' },
 ];
